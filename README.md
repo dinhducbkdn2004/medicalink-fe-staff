@@ -1,8 +1,6 @@
-# Vite React Boilerplate
+# Medical Link Frontend
 
-![](/public/vite-react-boilerplate.png)
-
-Everything you need to kick off your next Vite + React web app!
+Ứng dụng frontend cho hệ thống Medical Link, được xây dựng với Vite + React và TypeScript.
 
 ## Table of Contents
 
@@ -17,7 +15,7 @@ Everything you need to kick off your next Vite + React web app!
 
 ## Overview
 
-Built with type safety, scalability, and developer experience in mind. A batteries included Vite + React template.
+Ứng dụng Medical Link Frontend được xây dựng với tính bảo mật, khả năng mở rộng và trải nghiệm phát triển tốt. Dựa trên template Vite + React với đầy đủ tính năng cần thiết.
 
 - [pnpm](https://pnpm.io) - A strict and efficient alternative to npm with up to 3x faster performance
 - [TypeScript](https://www.typescriptlang.org) - A typed superset of JavaScript designed with large scale applications in mind
@@ -55,47 +53,27 @@ If you'd like to use the included Dockerfile then [Docker](https://www.docker.co
 
 ## Getting Started
 
-Getting started is a simple as cloning the repository
+Để bắt đầu phát triển ứng dụng Medical Link Frontend:
 
-```
-git clone git@github.com:RicardoValdovinos/vite-react-boilerplate.git
-```
-
-Changing into the new directory
-
-```
-cd vite-react-boilerplate
-```
-
-Removing the .git folder (and any additional files, folders or dependencies you may not need)
-
-```
-rm -rf .git
-```
-
-Installing dependencies
+Cài đặt dependencies
 
 ```
 pnpm install
 ```
 
-And running the setup script (initializes git repository and husky and installs playwright)
+Chạy script setup (khởi tạo git repository, husky và cài đặt playwright)
 
 ```
 pnpm run setup
 ```
 
-Congrats! You're ready to starting working on that new project!
-
-If you'd rather run the commands above in one go, check out the command below:
+Chạy ứng dụng ở môi trường development
 
 ```
-git clone git@github.com:RicardoValdovinos/vite-react-boilerplate.git &&\
-cd vite-react-boilerplate &&\
-rm -rf .git &&\
-pnpm install &&\
-pnpm run setup
+pnpm run dev
 ```
+
+Chúc mừng! Bạn đã sẵn sàng để phát triển dự án Medical Link!
 
 **Note**: This project comes with two git hooks added by [husky](https://typicode.github.io/husky/). A prepare-commit-msg hook to run the [Commitizen](https://github.com/commitizen/cz-cli#readme) cli for those nice commit messages and a commit-msg hook to run [Commitlint](https://commitlint.js.org/#/) on the message itself. Commitlint will ensure the commit message follows the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) (it will if you used commitizen).
 
