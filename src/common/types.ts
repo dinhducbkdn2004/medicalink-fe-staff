@@ -1,9 +1,4 @@
 export type FunctionComponent = React.ReactElement | null;
 
-type HeroIconSVGProps = React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> &
-	React.RefAttributes<SVGSVGElement>;
-type IconProps = HeroIconSVGProps & {
-	title?: string;
-	titleId?: string;
-};
-export type Heroicon = React.FC<IconProps>;
+// Note: Heroicon types removed as we're using shadcn/ui with Lucide icons instead
+// For icon components, use Lucide React icons or shadcn/ui icon components

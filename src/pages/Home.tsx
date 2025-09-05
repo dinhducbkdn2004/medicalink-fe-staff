@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
+import { Link } from "@tanstack/react-router";
 import type { FunctionComponent } from "../common/types";
+import { Button } from "@/components/ui/button";
 
 export const Home = (): FunctionComponent => {
 	const { t, i18n } = useTranslation();
@@ -13,15 +15,18 @@ export const Home = (): FunctionComponent => {
 	};
 
 	return (
-		<div className="bg-blue-300 font-bold w-screen h-screen flex flex-col justify-center items-center">
-			<p className="text-white text-6xl">{t("home.greeting")}</p>
-			<button
-				className="hover:cursor-pointer"
-				type="submit"
-				onClick={onTranslateButtonClick}
-			>
-				translate
-			</button>
+		<div className="min-h-screen bg-background flex flex-col justify-center items-center gap-8">
+			<h1 className="text-foreground text-6xl font-bold">
+				{t("home.greeting")}
+			</h1>
+			<div className="flex gap-4">
+				<Button size="lg" variant="default" onClick={onTranslateButtonClick}>
+					Translate
+				</Button>
+				<Button asChild size="lg" variant="outline">
+					<Link to="/components">View Components</Link>
+				</Button>
+			</div>
 		</div>
 	);
 };

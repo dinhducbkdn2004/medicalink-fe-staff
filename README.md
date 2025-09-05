@@ -274,10 +274,8 @@ A simplified list can be found in the [Overview](#overview) section.
 ### UI
 
 - [Tailwind CSS](https://tailwindcss.com)
-- [HeadlessUI](https://headlessui.com)
-- [heroicons](https://heroicons.com)
+- [shadcn/ui](https://ui.shadcn.com) (UI component library with Radix primitives)
 - [TanStack Table](https://tanstack.com/table/v8)
-- [Storybook](https://storybook.js.org)
 
 ### Forms
 
