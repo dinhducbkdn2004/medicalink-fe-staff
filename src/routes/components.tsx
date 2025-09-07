@@ -1,6 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ComponentsShowcase } from "../pages/ComponentsShowcase";
+// import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/components")({
-	component: ComponentsShowcase,
-});
+// export const Route = createFileRoute("/components")({
+// 	component: <></>
+// });

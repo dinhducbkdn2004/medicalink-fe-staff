@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "@tanstack/react-router";
 import type { FunctionComponent } from "../common/types";
 import { Button } from "@/components/ui/button";
 
@@ -22,9 +21,6 @@ export const Home = (): FunctionComponent => {
 			<div className="flex gap-4">
 				<Button size="lg" variant="default" onClick={onTranslateButtonClick}>
 					Translate
-				</Button>
-				<Button asChild size="lg" variant="outline">
-					<Link to="/components">View Components</Link>
 				</Button>
 			</div>
 		</div>
