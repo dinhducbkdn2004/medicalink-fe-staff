@@ -1,6 +1,6 @@
-# Medical Link Frontend
+# Medical Link Staff Portal
 
-Ứng dụng frontend cho hệ thống Medical Link, được xây dựng với Vite + React và TypeScript.
+Ứng dụng Staff Portal cho hệ thống Medical Link - Dashboard dành cho Bác sĩ, Quản trị viên và Super Admin. Được xây dựng với Vite + React và TypeScript.
 
 ## Table of Contents
 
@@ -15,7 +15,13 @@
 
 ## Overview
 
-Ứng dụng Medical Link Frontend được xây dựng với tính bảo mật, khả năng mở rộng và trải nghiệm phát triển tốt. Dựa trên template Vite + React với đầy đủ tính năng cần thiết.
+Medical Link Staff Portal là ứng dụng dashboard được thiết kế dành riêng cho các nhân viên y tế và quản trị viên hệ thống. Ứng dụng hỗ trợ 3 vai trò chính:
+
+- **Doctor**: Bác sĩ có thể quản lý bệnh nhân, lịch khám, và hồ sơ y tế
+- **Admin**: Quản trị viên có thể quản lý người dùng, báo cáo, và các tính năng nâng cao
+- **Super Admin**: Quản trị viên cấp cao có toàn quyền quản lý hệ thống
+
+Ứng dụng được xây dựng với tính bảo mật cao, khả năng mở rộng và trải nghiệm phát triển tốt. Dựa trên template Vite + React với đầy đủ tính năng cần thiết.
 
 - [pnpm](https://pnpm.io) - A strict and efficient alternative to npm with up to 3x faster performance
 - [TypeScript](https://www.typescriptlang.org) - A typed superset of JavaScript designed with large scale applications in mind
