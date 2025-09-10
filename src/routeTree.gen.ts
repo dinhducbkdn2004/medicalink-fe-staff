@@ -8,161 +8,161 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as LoginRouteImport } from "./routes/login";
-import { Route as ChangePasswordRouteImport } from "./routes/change-password";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as SuperAdminDashboardRouteImport } from "./routes/super-admin/dashboard";
-import { Route as DoctorDashboardRouteImport } from "./routes/doctor/dashboard";
-import { Route as AdminDashboardRouteImport } from "./routes/admin/dashboard";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ChangePasswordRouteImport } from './routes/change-password'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as SuperAdminDashboardRouteImport } from './routes/super-admin/dashboard'
+import { Route as DoctorDashboardRouteImport } from './routes/doctor/dashboard'
+import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 
 const LoginRoute = LoginRouteImport.update({
-	id: "/login",
-	path: "/login",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChangePasswordRoute = ChangePasswordRouteImport.update({
-	id: "/change-password",
-	path: "/change-password",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/change-password',
+  path: '/change-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SuperAdminDashboardRoute = SuperAdminDashboardRouteImport.update({
-	id: "/super-admin/dashboard",
-	path: "/super-admin/dashboard",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/super-admin/dashboard',
+  path: '/super-admin/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DoctorDashboardRoute = DoctorDashboardRouteImport.update({
-	id: "/doctor/dashboard",
-	path: "/doctor/dashboard",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/doctor/dashboard',
+  path: '/doctor/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
-	id: "/admin/dashboard",
-	path: "/admin/dashboard",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/admin/dashboard',
+  path: '/admin/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
-	"/": typeof IndexRoute;
-	"/change-password": typeof ChangePasswordRoute;
-	"/login": typeof LoginRoute;
-	"/admin/dashboard": typeof AdminDashboardRoute;
-	"/doctor/dashboard": typeof DoctorDashboardRoute;
-	"/super-admin/dashboard": typeof SuperAdminDashboardRoute;
+  '/': typeof IndexRoute
+  '/change-password': typeof ChangePasswordRoute
+  '/login': typeof LoginRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/doctor/dashboard': typeof DoctorDashboardRoute
+  '/super-admin/dashboard': typeof SuperAdminDashboardRoute
 }
 export interface FileRoutesByTo {
-	"/": typeof IndexRoute;
-	"/change-password": typeof ChangePasswordRoute;
-	"/login": typeof LoginRoute;
-	"/admin/dashboard": typeof AdminDashboardRoute;
-	"/doctor/dashboard": typeof DoctorDashboardRoute;
-	"/super-admin/dashboard": typeof SuperAdminDashboardRoute;
+  '/': typeof IndexRoute
+  '/change-password': typeof ChangePasswordRoute
+  '/login': typeof LoginRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/doctor/dashboard': typeof DoctorDashboardRoute
+  '/super-admin/dashboard': typeof SuperAdminDashboardRoute
 }
 export interface FileRoutesById {
-	__root__: typeof rootRouteImport;
-	"/": typeof IndexRoute;
-	"/change-password": typeof ChangePasswordRoute;
-	"/login": typeof LoginRoute;
-	"/admin/dashboard": typeof AdminDashboardRoute;
-	"/doctor/dashboard": typeof DoctorDashboardRoute;
-	"/super-admin/dashboard": typeof SuperAdminDashboardRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/change-password': typeof ChangePasswordRoute
+  '/login': typeof LoginRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/doctor/dashboard': typeof DoctorDashboardRoute
+  '/super-admin/dashboard': typeof SuperAdminDashboardRoute
 }
 export interface FileRouteTypes {
-	fileRoutesByFullPath: FileRoutesByFullPath;
-	fullPaths:
-		| "/"
-		| "/change-password"
-		| "/login"
-		| "/admin/dashboard"
-		| "/doctor/dashboard"
-		| "/super-admin/dashboard";
-	fileRoutesByTo: FileRoutesByTo;
-	to:
-		| "/"
-		| "/change-password"
-		| "/login"
-		| "/admin/dashboard"
-		| "/doctor/dashboard"
-		| "/super-admin/dashboard";
-	id:
-		| "__root__"
-		| "/"
-		| "/change-password"
-		| "/login"
-		| "/admin/dashboard"
-		| "/doctor/dashboard"
-		| "/super-admin/dashboard";
-	fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/change-password'
+    | '/login'
+    | '/admin/dashboard'
+    | '/doctor/dashboard'
+    | '/super-admin/dashboard'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/change-password'
+    | '/login'
+    | '/admin/dashboard'
+    | '/doctor/dashboard'
+    | '/super-admin/dashboard'
+  id:
+    | '__root__'
+    | '/'
+    | '/change-password'
+    | '/login'
+    | '/admin/dashboard'
+    | '/doctor/dashboard'
+    | '/super-admin/dashboard'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-	IndexRoute: typeof IndexRoute;
-	ChangePasswordRoute: typeof ChangePasswordRoute;
-	LoginRoute: typeof LoginRoute;
-	AdminDashboardRoute: typeof AdminDashboardRoute;
-	DoctorDashboardRoute: typeof DoctorDashboardRoute;
-	SuperAdminDashboardRoute: typeof SuperAdminDashboardRoute;
+  IndexRoute: typeof IndexRoute
+  ChangePasswordRoute: typeof ChangePasswordRoute
+  LoginRoute: typeof LoginRoute
+  AdminDashboardRoute: typeof AdminDashboardRoute
+  DoctorDashboardRoute: typeof DoctorDashboardRoute
+  SuperAdminDashboardRoute: typeof SuperAdminDashboardRoute
 }
 
-declare module "@tanstack/react-router" {
-	interface FileRoutesByPath {
-		"/login": {
-			id: "/login";
-			path: "/login";
-			fullPath: "/login";
-			preLoaderRoute: typeof LoginRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/change-password": {
-			id: "/change-password";
-			path: "/change-password";
-			fullPath: "/change-password";
-			preLoaderRoute: typeof ChangePasswordRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/": {
-			id: "/";
-			path: "/";
-			fullPath: "/";
-			preLoaderRoute: typeof IndexRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/super-admin/dashboard": {
-			id: "/super-admin/dashboard";
-			path: "/super-admin/dashboard";
-			fullPath: "/super-admin/dashboard";
-			preLoaderRoute: typeof SuperAdminDashboardRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/doctor/dashboard": {
-			id: "/doctor/dashboard";
-			path: "/doctor/dashboard";
-			fullPath: "/doctor/dashboard";
-			preLoaderRoute: typeof DoctorDashboardRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/admin/dashboard": {
-			id: "/admin/dashboard";
-			path: "/admin/dashboard";
-			fullPath: "/admin/dashboard";
-			preLoaderRoute: typeof AdminDashboardRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-	}
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/change-password': {
+      id: '/change-password'
+      path: '/change-password'
+      fullPath: '/change-password'
+      preLoaderRoute: typeof ChangePasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/super-admin/dashboard': {
+      id: '/super-admin/dashboard'
+      path: '/super-admin/dashboard'
+      fullPath: '/super-admin/dashboard'
+      preLoaderRoute: typeof SuperAdminDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/doctor/dashboard': {
+      id: '/doctor/dashboard'
+      path: '/doctor/dashboard'
+      fullPath: '/doctor/dashboard'
+      preLoaderRoute: typeof DoctorDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/admin/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-	IndexRoute: IndexRoute,
-	ChangePasswordRoute: ChangePasswordRoute,
-	LoginRoute: LoginRoute,
-	AdminDashboardRoute: AdminDashboardRoute,
-	DoctorDashboardRoute: DoctorDashboardRoute,
-	SuperAdminDashboardRoute: SuperAdminDashboardRoute,
-};
+  IndexRoute: IndexRoute,
+  ChangePasswordRoute: ChangePasswordRoute,
+  LoginRoute: LoginRoute,
+  AdminDashboardRoute: AdminDashboardRoute,
+  DoctorDashboardRoute: DoctorDashboardRoute,
+  SuperAdminDashboardRoute: SuperAdminDashboardRoute,
+}
 export const routeTree = rootRouteImport
-	._addFileChildren(rootRouteChildren)
-	._addFileTypes<FileRouteTypes>();
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()

@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/react-router";
 import type { FunctionComponent } from "./common/types";
 import type { TanstackRouter } from "./main";
+import { Toaster } from "sonner";
 // import { TanStackRouterDevelopmentTools } from "./components/utils/development-tools/TanStackRouterDevelopmentTools";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/contexts";
@@ -24,6 +25,16 @@ const App = ({ router }: AppProps): FunctionComponent => {
 					/>
 					<ReactQueryDevtools initialIsOpen={false} position="bottom" /> */}
 				</QueryClientProvider>
+				<Toaster
+					position="top-right"
+					toastOptions={{
+						duration: 3000,
+						style: {
+							background: "#333",
+							color: "#fff",
+						},
+					}}
+				/>
 			</AuthProvider>
 		</ThemeProvider>
 	);
