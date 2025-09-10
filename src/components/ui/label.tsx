@@ -3,7 +3,8 @@ import * as LabelPrimitive from "@radix-ui/react-label";
 
 import { cn } from "@/lib/utilities";
 
-const labelClasses = "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70";
+const labelClasses =
+	"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70";
 
 const Label = React.forwardRef<
 	React.ElementRef<typeof LabelPrimitive.Root>,

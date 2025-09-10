@@ -1,1 +1,1 @@
-export { SharedDashboardLayout } from './SharedDashboardLayout'
+export { SharedDashboardLayout } from "./SharedDashboardLayout";

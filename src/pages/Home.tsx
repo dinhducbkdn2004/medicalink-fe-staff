@@ -12,22 +12,22 @@ export const Home = (): FunctionComponent => {
 		if (!isLoading && isAuthenticated && user) {
 			// Redirect based on user role
 			switch (user.role) {
-				case 'DOCTOR':
-					void navigate({ to: '/doctor/dashboard' });
+				case "DOCTOR":
+					void navigate({ to: "/doctor/dashboard" });
 					break;
-				case 'ADMIN':
-					void navigate({ to: '/admin/dashboard' });
+				case "ADMIN":
+					void navigate({ to: "/admin/dashboard" });
 					break;
-				case 'SUPER_ADMIN':
-					void navigate({ to: '/super-admin/dashboard' });
+				case "SUPER_ADMIN":
+					void navigate({ to: "/super-admin/dashboard" });
 					break;
 				default:
 					// Fallback to login if role is not recognized
-					void navigate({ to: '/login' });
+					void navigate({ to: "/login" });
 			}
 		} else if (!isLoading && !isAuthenticated) {
 			// Redirect to login if not authenticated
-			void navigate({ to: '/login' });
+			void navigate({ to: "/login" });
 		}
 	}, [isAuthenticated, isLoading, user, navigate]);
 
@@ -48,18 +48,16 @@ export const Home = (): FunctionComponent => {
 					<h1 className="text-foreground text-6xl font-bold mb-4">
 						Medical Link
 					</h1>
-					<h2 className="text-2xl text-muted-foreground mb-8">
-						Staff Portal
-					</h2>
+					<h2 className="text-2xl text-muted-foreground mb-8">Staff Portal</h2>
 					<p className="text-lg text-muted-foreground max-w-md">
 						Dashboard dành cho Bác sĩ, Quản trị viên và Super Admin
 					</p>
 				</div>
 				<div className="flex gap-4">
-					<Button 
-						size="lg" 
-						variant="default" 
-						onClick={() => void navigate({ to: '/login' })}
+					<Button
+						size="lg"
+						variant="default"
+						onClick={() => void navigate({ to: "/login" })}
 					>
 						Đăng nhập
 					</Button>
