@@ -1,9 +1,19 @@
+import { AppSidebarDoctor } from "@/components/app-sidebar-doctor";
+import BigCalendar from "@/components/big-calendar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { CalendarProvider } from "@/components/event-calendar/calendar-context";
+
 export const DoctorDashboard = () => {
 	return (
-		<>
-			<div>
-				<h1>Doctor Dashboard</h1>
-			</div>
-		</>
+		<CalendarProvider>
+			<SidebarProvider>
+				<AppSidebarDoctor />
+				<SidebarInset>
+					<div className="flex flex-1 flex-col gap-4 p-2 pt-0">
+						<BigCalendar />
+					</div>
+				</SidebarInset>
+			</SidebarProvider>
+		</CalendarProvider>
 	);
 };

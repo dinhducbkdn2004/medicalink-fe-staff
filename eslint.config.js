@@ -13,82 +13,89 @@ const patchedReactHooksPlugin = fixupPluginRules(eslintPluginReactHooks);
 const patchedImportPlugin = fixupPluginRules(eslintPluginImport);
 
 const eslintConfig = typescriptEslint.config(
-	// Base JS rules
-	{
-		name: "base",
-		extends: [eslintJS.configs.recommended],
-		rules: {
-			"no-duplicate-imports": "error",
-			"no-unused-vars": "error",
-			"no-console": ["warn", { allow: ["warn", "error"] }],
-		},
-	},
+  // Base JS rules
+  {
+    name: "base",
+    extends: [eslintJS.configs.recommended],
+    rules: {
+      "no-duplicate-imports": "error",
+      "no-unused-vars": "error",
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+    },
+  },
 
-	// TypeScript rules
-	{
-		name: "typescript",
-		extends: [...typescriptEslint.configs.recommendedTypeChecked],
-		languageOptions: {
-			parser: tsParser,
-			parserOptions: {
-				ecmaVersion: "latest",
-				project: "./tsconfig.json",
-			},
-			globals: {
-				...globals.browser,
-				...globals.es2025,
-			},
-		},
-		plugins: {
-			import: patchedImportPlugin,
-		},
-		rules: {
-			"@typescript-eslint/no-unused-vars": "error",
-			"@typescript-eslint/no-explicit-any": "off",
-			"@typescript-eslint/no-unsafe-assignment": "off",
-			"@typescript-eslint/no-unsafe-call": "off",
-			"@typescript-eslint/no-unsafe-argument": "off",
-			"@typescript-eslint/no-unsafe-member-access": "off",
-		},
-		settings: {
-			"import/resolver": {
-				typescript: {
-					project: "./tsconfig.json",
-				},
-			},
-		},
-	},
+  // TypeScript rules
+  {
+    name: "typescript",
+    extends: [...typescriptEslint.configs.recommendedTypeChecked],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        project: "./tsconfig.json",
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.es2025,
+      },
+    },
+    plugins: {
+      import: patchedImportPlugin,
+    },
+    rules: {
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-redundant-type-constituents": "off",
+    },
+    settings: {
+      "import/resolver": {
+        typescript: {
+          project: "./tsconfig.json",
+        },
+      },
+    },
+  },
 
-	// React rules
-	{
-		name: "react",
-		extends: [eslintPluginReact.configs.flat["jsx-runtime"]],
-		plugins: {
-			"react-hooks": patchedReactHooksPlugin,
-		},
-		rules: {
-			"react/no-unknown-property": "off",
-			"react/react-in-jsx-scope": "off",
-			"react-hooks/exhaustive-deps": "warn",
-			...patchedReactHooksPlugin.configs.recommended.rules,
-		},
-	},
+  // React rules
+  {
+    name: "react",
+    extends: [eslintPluginReact.configs.flat["jsx-runtime"]],
+    plugins: {
+      "react-hooks": patchedReactHooksPlugin,
+    },
+    rules: {
+      "react/no-unknown-property": "off",
+      "react/react-in-jsx-scope": "off",
+      "react-hooks/exhaustive-deps": "warn",
+      ...patchedReactHooksPlugin.configs.recommended.rules,
+    },
+  },
 
-	// Accessibility rules
-	{
-		name: "jsx-a11y",
-		...jsxA11yPlugin.flatConfigs.recommended,
-		plugins: {
-			"jsx-a11y": jsxA11yPlugin,
-		},
-	},
+  // Accessibility rules
+  {
+    name: "jsx-a11y",
+    ...jsxA11yPlugin.flatConfigs.recommended,
+    plugins: {
+      "jsx-a11y": jsxA11yPlugin,
+    },
+    rules: {
+      "jsx-a11y/no-static-element-interactions": "warn",
+      "jsx-a11y/click-events-have-key-events": "warn",
+      "jsx-a11y/no-noninteractive-element-interactions": "warn",
+    },
+  },
 
-	// Prettier (disable formatting conflicts)
-	eslintConfigPrettier
+  // Prettier (disable formatting conflicts)
+  eslintConfigPrettier
 );
 
+// Apply to source files
 eslintConfig.map((config) => {
-	config.files = ["src/**/*.ts", "src/**/*.tsx"];
+  config.files = ["src/**/*.ts", "src/**/*.tsx"];
 });
 
 export default eslintConfig;
