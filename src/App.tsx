@@ -25,9 +25,7 @@ const App = ({ router }: AppProps): FunctionComponent => {
 					/>
 					<ReactQueryDevtools initialIsOpen={false} position="bottom" /> */}
 				</QueryClientProvider>
-				<Toaster
-					position="bottom-right"
-				/>
+				<Toaster position="bottom-right" />
 			</AuthProvider>
 		</ThemeProvider>
 	);
