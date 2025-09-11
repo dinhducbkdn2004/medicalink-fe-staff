@@ -1,6 +1,9 @@
-import type * as React from "react";
-import { SharedDashboardLayout } from "@/components/layout/SharedDashboardLayout";
-
-export const DoctorDashboard = (): React.JSX.Element => {
-	return <SharedDashboardLayout />;
+export const DoctorDashboard = () => {
+	return (
+		<>
+			<div>
+				<h1>Doctor Dashboard</h1>
+			</div>
+		</>
+	);
 };

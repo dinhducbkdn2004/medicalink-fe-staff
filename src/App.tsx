@@ -26,14 +26,7 @@ const App = ({ router }: AppProps): FunctionComponent => {
 					<ReactQueryDevtools initialIsOpen={false} position="bottom" /> */}
 				</QueryClientProvider>
 				<Toaster
-					position="top-right"
-					toastOptions={{
-						duration: 3000,
-						style: {
-							background: "#333",
-							color: "#fff",
-						},
-					}}
+					position="bottom-right"
 				/>
 			</AuthProvider>
 		</ThemeProvider>

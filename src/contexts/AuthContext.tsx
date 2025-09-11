@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prevent-abbreviations, no-use-before-define, @typescript-eslint/no-unused-vars */
 import { createContext, useContext, useEffect, useState } from "react";
 import type * as React from "react";
 import api from "@/api/axios";
@@ -63,7 +62,6 @@ export const AuthProvider = ({
 				return;
 			}
 
-			// Sử dụng cached user trước (fast UX)
 			if (cachedUser) {
 				try {
 					const user = JSON.parse(cachedUser) as StaffAccount;
@@ -74,18 +72,15 @@ export const AuthProvider = ({
 						isAuthenticated: true,
 					});
 				} catch {
-					// Invalid cached user data, clear it
 					localStorage.removeItem("user");
 				}
 			}
 
-			// Verify với server và lấy fresh data (security)
 			try {
 				const response =
 					await api.get<ApiResponse<StaffAccount>>("/auth/profile");
 				const freshUser = response.data.data;
 
-				// Update với data mới từ server
 				localStorage.setItem("user", JSON.stringify(freshUser));
 				setState({
 					user: freshUser,
@@ -94,19 +89,16 @@ export const AuthProvider = ({
 					isAuthenticated: true,
 				});
 			} catch (apiError) {
-				// API /auth/profile chưa có hoặc token invalid
 				if (cachedUser) {
-					// Nếu có cached user, vẫn cho phép sử dụng (fallback)
 					console.warn(
 						"API /auth/profile not available, using cached user data"
 					);
 				} else {
-					// Không có cached user và API fail -> logout
 					throw apiError;
 				}
 			}
 		} catch (error) {
-			// Clear everything on error
+			console.error("Auth check failed:", error);
 			localStorage.removeItem("accessToken");
 			localStorage.removeItem("refreshToken");
 			localStorage.removeItem("user");
@@ -175,13 +167,10 @@ export const AuthProvider = ({
 
 	const logout = async (): Promise<void> => {
 		try {
-			// Call logout API để invalidate token trên server
 			await api.post("/auth/logout");
 		} catch (error) {
-			// Nếu API fail, vẫn logout locally
-			console.warn("Logout API failed, proceeding with local logout");
+			console.error("Logout API error:", error);
 		} finally {
-			// Always clear local storage
 			localStorage.removeItem("accessToken");
 			localStorage.removeItem("refreshToken");
 			localStorage.removeItem("user");

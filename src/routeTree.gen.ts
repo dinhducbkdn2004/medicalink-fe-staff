@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as ChangePasswordRouteImport } from './routes/change-password'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SuperAdminDashboardRouteImport } from './routes/super-admin/dashboard'
 import { Route as DoctorDashboardRouteImport } from './routes/doctor/dashboard'
@@ -19,11 +18,6 @@ import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChangePasswordRoute = ChangePasswordRouteImport.update({
-  id: '/change-password',
-  path: '/change-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -49,7 +43,6 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/change-password': typeof ChangePasswordRoute
   '/login': typeof LoginRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/doctor/dashboard': typeof DoctorDashboardRoute
@@ -57,7 +50,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/change-password': typeof ChangePasswordRoute
   '/login': typeof LoginRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/doctor/dashboard': typeof DoctorDashboardRoute
@@ -66,7 +58,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/change-password': typeof ChangePasswordRoute
   '/login': typeof LoginRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/doctor/dashboard': typeof DoctorDashboardRoute
@@ -76,7 +67,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/change-password'
     | '/login'
     | '/admin/dashboard'
     | '/doctor/dashboard'
@@ -84,7 +74,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/change-password'
     | '/login'
     | '/admin/dashboard'
     | '/doctor/dashboard'
@@ -92,7 +81,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/change-password'
     | '/login'
     | '/admin/dashboard'
     | '/doctor/dashboard'
@@ -101,7 +89,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ChangePasswordRoute: typeof ChangePasswordRoute
   LoginRoute: typeof LoginRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   DoctorDashboardRoute: typeof DoctorDashboardRoute
@@ -115,13 +102,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/change-password': {
-      id: '/change-password'
-      path: '/change-password'
-      fullPath: '/change-password'
-      preLoaderRoute: typeof ChangePasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -157,7 +137,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ChangePasswordRoute: ChangePasswordRoute,
   LoginRoute: LoginRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   DoctorDashboardRoute: DoctorDashboardRoute,

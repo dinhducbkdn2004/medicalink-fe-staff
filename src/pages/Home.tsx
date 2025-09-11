@@ -33,9 +33,9 @@ export const Home = (): FunctionComponent => {
 
 	if (isLoading) {
 		return (
-			<div className="min-h-screen bg-background flex flex-col justify-center items-center">
-				<div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-				<p className="mt-4 text-muted-foreground">Loading...</p>
+			<div className="bg-background flex min-h-screen flex-col items-center justify-center">
+				<div className="border-primary h-32 w-32 animate-spin rounded-full border-b-2"></div>
+				<p className="text-muted-foreground mt-4">Loading...</p>
 			</div>
 		);
 	}
@@ -43,13 +43,13 @@ export const Home = (): FunctionComponent => {
 	// Show welcome screen only if not authenticated and not loading
 	if (!isAuthenticated) {
 		return (
-			<div className="min-h-screen bg-background flex flex-col justify-center items-center gap-8">
+			<div className="bg-background flex min-h-screen flex-col items-center justify-center gap-8">
 				<div className="text-center">
-					<h1 className="text-foreground text-6xl font-bold mb-4">
+					<h1 className="text-foreground mb-4 text-6xl font-bold">
 						Medical Link
 					</h1>
-					<h2 className="text-2xl text-muted-foreground mb-8">Staff Portal</h2>
-					<p className="text-lg text-muted-foreground max-w-md">
+					<h2 className="text-muted-foreground mb-8 text-2xl">Staff Portal</h2>
+					<p className="text-muted-foreground max-w-md text-lg">
 						Dashboard dành cho Bác sĩ, Quản trị viên và Super Admin
 					</p>
 				</div>

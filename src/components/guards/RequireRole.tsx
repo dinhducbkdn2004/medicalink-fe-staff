@@ -1,5 +1,9 @@
 import type * as React from "react";
-import { useAuth, type StaffRole } from "@/contexts";
+import { useEffect } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { useAuth } from "@/contexts";
+import type { StaffRole } from "@/common/types";
+import { Spinner } from "@/components/ui/shadcn-io/spinner";
 
 interface RequireRoleProps {
 	roles: Array<StaffRole>;
@@ -10,27 +14,51 @@ interface RequireRoleProps {
 export const RequireRole = ({
 	roles,
 	children,
-	fallback = <div>Access Denied</div>,
+	fallback,
 }: RequireRoleProps): React.JSX.Element => {
 	const { user, isAuthenticated, isLoading } = useAuth();
+	const navigate = useNavigate();
 
-	// Show loading while checking authentication
+	useEffect(() => {
+		if (!isLoading) {
+			if (!isAuthenticated || !user) {
+				// Redirect to login if not authenticated
+				void navigate({ to: "/login" });
+				return;
+			}
+
+			if (!roles.includes(user.role)) {
+				// Redirect to appropriate dashboard if user doesn't have required role
+				switch (user.role) {
+					case "SUPER_ADMIN":
+						void navigate({ to: "/super-admin/dashboard", replace: true });
+						break;
+					case "ADMIN":
+						void navigate({ to: "/admin/dashboard", replace: true });
+						break;
+					case "DOCTOR":
+						void navigate({ to: "/doctor/dashboard", replace: true });
+						break;
+					default:
+						void navigate({ to: "/", replace: true });
+				}
+				return;
+			}
+		}
+	}, [isLoading, isAuthenticated, user, roles, navigate]);
+
 	if (isLoading) {
-		return (
-			<div className="flex items-center justify-center min-h-screen">
-				<div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+		return <Spinner size={48} className="text-primary" />;
+	}
+
+	if (!isAuthenticated || !user || !roles.includes(user.role)) {
+		return fallback ? (
+			<>{fallback}</>
+		) : (
+			<div className="flex min-h-screen items-center justify-center">
+				<Spinner size={48} className="text-primary" />
 			</div>
 		);
-	}
-
-	// Show fallback if not authenticated
-	if (!isAuthenticated || !user) {
-		return <>{fallback}</>;
-	}
-
-	// Check if user has required role
-	if (!roles.includes(user.role)) {
-		return <>{fallback}</>;
 	}
 
 	return <>{children}</>;
@@ -43,20 +71,33 @@ interface RequireAuthProps {
 
 export const RequireAuth = ({
 	children,
-	fallback = <div>Please login to continue</div>,
+	fallback,
 }: RequireAuthProps): React.JSX.Element => {
 	const { isAuthenticated, isLoading } = useAuth();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (!isLoading && !isAuthenticated) {
+			void navigate({ to: "/login" });
+		}
+	}, [isLoading, isAuthenticated, navigate]);
 
 	if (isLoading) {
 		return (
-			<div className="flex items-center justify-center min-h-screen">
-				<div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+			<div className="flex min-h-screen items-center justify-center">
+				<Spinner size={48} className="text-primary" />
 			</div>
 		);
 	}
 
 	if (!isAuthenticated) {
-		return <>{fallback}</>;
+		return fallback ? (
+			<>{fallback}</>
+		) : (
+			<div className="flex min-h-screen items-center justify-center">
+				<Spinner size={48} className="text-primary" />
+			</div>
+		);
 	}
 
 	return <>{children}</>;
