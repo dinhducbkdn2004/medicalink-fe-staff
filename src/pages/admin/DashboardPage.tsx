@@ -1,6 +1,9 @@
-import type * as React from "react";
-import { SharedDashboardLayout } from "@/components/layout/SharedDashboardLayout";
-
-export const AdminDashboard = (): React.JSX.Element => {
-	return <SharedDashboardLayout />;
+export const AdminDashboard = () => {
+	return (
+		<>
+			<div>
+				<h1>Admin Dashboard</h1>
+			</div>
+		</>
+	);
 };

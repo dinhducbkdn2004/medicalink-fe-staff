@@ -10,6 +10,7 @@ export interface StaffAccount {
 	fullName: string;
 	email: string;
 	role: StaffRole;
+	avatar?: string;
 	gender: Gender;
 	dateOfBirth: string | null;
 	createdAt: string;

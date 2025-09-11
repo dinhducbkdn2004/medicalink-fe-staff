@@ -1,2 +1,1 @@
-export { LoginForm } from "./LoginForm";
-export { ChangePasswordForm } from "./ChangePasswordForm";
+export { LoginForm } from "./login-form";

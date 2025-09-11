@@ -4,7 +4,7 @@ import { RequireRole } from "@/components/guards/RequireRole";
 
 export const Route = createFileRoute("/admin/dashboard")({
 	component: () => (
-		<RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+		<RequireRole roles={["ADMIN"]}>
 			<AdminDashboard />
 		</RequireRole>
 	),
