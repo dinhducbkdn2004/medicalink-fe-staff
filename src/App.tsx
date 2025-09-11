@@ -20,7 +20,7 @@ const App = ({ router }: AppProps): FunctionComponent => {
 					<RouterProvider router={router} />
 					{/* <TanStackRouterDevelopmentTools
 						initialIsOpen={false}
-						position="bottom-left"
+						position="bottom-right"
 						router={router}
 					/>
 					<ReactQueryDevtools initialIsOpen={false} position="bottom" /> */}
