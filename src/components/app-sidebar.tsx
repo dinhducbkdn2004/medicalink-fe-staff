@@ -25,7 +25,7 @@ import {
 	SidebarHeader,
 	SidebarRail,
 } from "@/components/ui/sidebar";
-import { useAuth } from "@/contexts";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
 
 // Hospital Management System Data for Super Admin
 const data = {
@@ -157,7 +157,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-	const { user } = useAuth();
+	const { user } = useAuthStatus();
 
 	return (
 		<Sidebar collapsible="icon" {...props}>

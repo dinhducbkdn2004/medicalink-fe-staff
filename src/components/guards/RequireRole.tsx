@@ -1,8 +1,8 @@
 import type * as React from "react";
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useAuth } from "@/contexts";
-import type { StaffRole } from "@/common/types";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
+import type { StaffRole } from "@/types/api";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 
 interface RequireRoleProps {
@@ -16,31 +16,29 @@ export const RequireRole = ({
 	children,
 	fallback,
 }: RequireRoleProps): React.JSX.Element => {
-	const { user, isAuthenticated, isLoading } = useAuth();
+	const { user, isLoading, isAuthenticated } = useAuthStatus();
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (!isLoading) {
 			if (!isAuthenticated || !user) {
-				// Redirect to login if not authenticated
-				void navigate({ to: "/login" });
+				navigate({ to: "/login" });
 				return;
 			}
 
 			if (!roles.includes(user.role)) {
-				// Redirect to appropriate dashboard if user doesn't have required role
 				switch (user.role) {
 					case "SUPER_ADMIN":
-						void navigate({ to: "/super-admin/dashboard", replace: true });
+						navigate({ to: "/super-admin/dashboard", replace: true });
 						break;
 					case "ADMIN":
-						void navigate({ to: "/admin/dashboard", replace: true });
+						navigate({ to: "/admin/dashboard", replace: true });
 						break;
 					case "DOCTOR":
-						void navigate({ to: "/doctor/dashboard", replace: true });
+						navigate({ to: "/doctor/dashboard", replace: true });
 						break;
 					default:
-						void navigate({ to: "/", replace: true });
+						navigate({ to: "/", replace: true });
 				}
 				return;
 			}
@@ -73,7 +71,7 @@ export const RequireAuth = ({
 	children,
 	fallback,
 }: RequireAuthProps): React.JSX.Element => {
-	const { isAuthenticated, isLoading } = useAuth();
+	const { isLoading, isAuthenticated } = useAuthStatus();
 	const navigate = useNavigate();
 
 	useEffect(() => {

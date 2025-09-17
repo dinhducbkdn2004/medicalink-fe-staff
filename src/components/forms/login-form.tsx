@@ -1,12 +1,10 @@
 import { useState } from "react";
-import type { AxiosError } from "axios";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/contexts";
-import type { LoginRequest } from "@/contexts/AuthContext";
-import type { ApiError } from "@/api/axios";
+import { useLogin } from "@/hooks/api";
+import type { LoginRequest } from "@/types/api";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 
 export function LoginForm({
@@ -17,8 +15,7 @@ export function LoginForm({
 		email: "",
 		password: "",
 	});
-	const [error, setError] = useState<string>("");
-	const { login, isLoading } = useAuth();
+	const loginMutation = useLogin();
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -26,46 +23,16 @@ export function LoginForm({
 			...prev,
 			[name]: value,
 		}));
-		if (error) {
-			setError("");
-		}
 	};
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		setError("");
 
-		void (async () => {
-			try {
-				await login(credentials);
-			} catch (err) {
-				console.error("Login error:", err);
-
-				if (err && typeof err === "object" && "response" in err) {
-					const axiosError = err as AxiosError<ApiError>;
-					const status = axiosError.response?.status;
-					const errorData = axiosError.response?.data;
-
-					if (status === 401) {
-						setError("Invalid email or password. Please try again.");
-					} else if (status === 403) {
-						setError("Your account is not authorized to access this system.");
-					} else if (status === 429) {
-						setError("Too many login attempts. Please try again later.");
-					} else if (errorData?.message) {
-						setError(errorData.message);
-					} else {
-						setError(
-							"Login failed. Please check your internet connection and try again."
-						);
-					}
-				} else if (err instanceof Error) {
-					setError(err.message);
-				} else {
-					setError("An unexpected error occurred. Please try again.");
-				}
-			}
-		})();
+		loginMutation.mutate(credentials, {
+			onSuccess: () => {
+				window.location.href = "/";
+			},
+		});
 	};
 
 	return (
@@ -80,11 +47,6 @@ export function LoginForm({
 					Enter your email below to login to your account
 				</p>
 			</div>
-			{error && (
-				<div className="bg-destructive/15 text-destructive border-destructive/20 rounded-md border p-3 text-sm">
-					{error}
-				</div>
-			)}
 			<div className="grid gap-6">
 				<div className="grid gap-3">
 					<Label htmlFor="email">Email</Label>
@@ -96,7 +58,7 @@ export function LoginForm({
 						value={credentials.email}
 						onChange={handleInputChange}
 						required
-						disabled={isLoading}
+						disabled={loginMutation.isPending}
 					/>
 				</div>
 				<div className="grid gap-3">
@@ -116,11 +78,19 @@ export function LoginForm({
 						value={credentials.password}
 						onChange={handleInputChange}
 						required
-						disabled={isLoading}
+						disabled={loginMutation.isPending}
 					/>
 				</div>
-				<Button type="submit" className="w-full" disabled={isLoading}>
-					{isLoading ? <Spinner size={20} className="text-light" /> : "Login"}
+				<Button
+					type="submit"
+					className="w-full"
+					disabled={loginMutation.isPending}
+				>
+					{loginMutation.isPending ? (
+						<Spinner size={20} className="text-light" />
+					) : (
+						"Login"
+					)}
 				</Button>
 				<div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
 					<span className="bg-background text-muted-foreground relative z-10 px-2">

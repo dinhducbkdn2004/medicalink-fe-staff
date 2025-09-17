@@ -1,0 +1,69 @@
+import { apiClient } from "./client";
+import type {
+	LoginRequest,
+	LoginResponse,
+	ChangePasswordRequest,
+	StaffAccount,
+	ApiResponse,
+} from "@/types/api";
+
+/**
+ * Authentication API endpoints
+ */
+
+// Login
+export const login = (data: LoginRequest) =>
+	apiClient.post<ApiResponse<LoginResponse>>("/auth/login", data);
+
+// Logout
+export const logout = () =>
+	apiClient.post<ApiResponse<{ message: string }>>("/auth/logout");
+
+// Refresh token
+export const refreshToken = (refreshToken: string) =>
+	apiClient.post<ApiResponse<{ token: string }>>("/auth/refresh", {
+		refreshToken,
+	});
+
+// Change password
+export const changePassword = (data: ChangePasswordRequest) =>
+	apiClient.patch<ApiResponse<{ message: string }>>(
+		"/auth/change-password",
+		data
+	);
+
+// Get current user profile
+export const getCurrentUser = () =>
+	apiClient.get<ApiResponse<StaffAccount>>("/auth/profile");
+
+// Update current user profile
+export const updateProfile = (data: Partial<StaffAccount>) =>
+	apiClient.patch<ApiResponse<StaffAccount>>("/auth/profile", data);
+
+// Forgot password
+export const forgotPassword = (email: string) =>
+	apiClient.post<ApiResponse<{ message: string }>>("/auth/forgot-password", {
+		email,
+	});
+
+// Reset password
+export const resetPassword = (data: { token: string; newPassword: string }) =>
+	apiClient.post<ApiResponse<{ message: string }>>(
+		"/auth/reset-password",
+		data
+	);
+
+// Verify email
+export const verifyEmail = (token: string) =>
+	apiClient.post<ApiResponse<{ message: string }>>("/auth/verify-email", {
+		token,
+	});
+
+// Resend verification email
+export const resendVerificationEmail = (email: string) =>
+	apiClient.post<ApiResponse<{ message: string }>>(
+		"/auth/resend-verification",
+		{
+			email,
+		}
+	);
