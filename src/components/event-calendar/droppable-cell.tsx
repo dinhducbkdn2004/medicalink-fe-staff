@@ -44,6 +44,14 @@ export function DroppableCell({
 		<div
 			ref={setNodeRef}
 			onClick={onClick}
+			onKeyDown={(e) => {
+				if (e.key === "Enter" || e.key === " ") {
+					e.preventDefault();
+					onClick?.(e as any);
+				}
+			}}
+			role="button"
+			tabIndex={0}
 			className={cn(
 				"data-dragging:bg-accent flex h-full flex-col px-0.5 py-1 sm:px-1",
 				className

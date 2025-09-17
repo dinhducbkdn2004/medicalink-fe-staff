@@ -22,7 +22,7 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { useAuth } from "@/contexts/AuthContext";
+import { useLogout } from "@/hooks/api";
 import { useNavigate } from "@tanstack/react-router";
 
 export function NavUser({
@@ -31,17 +31,18 @@ export function NavUser({
 	user: { fullName: string; email: string; avatar?: string };
 }) {
 	const { isMobile } = useSidebar();
-	const { logout } = useAuth();
+	const logoutMutation = useLogout();
 	const navigate = useNavigate();
 
 	const handleLogout = () => {
-		logout()
-			.then(() => {
+		logoutMutation.mutate(undefined, {
+			onSuccess: () => {
 				void navigate({ to: "/login" });
-			})
-			.catch((error) => {
+			},
+			onError: (error) => {
 				console.error("Logout failed:", error);
-			});
+			},
+		});
 	};
 	return (
 		<SidebarMenu>

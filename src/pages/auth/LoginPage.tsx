@@ -1,28 +1,29 @@
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useAuth } from "@/contexts";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { Hospital } from "lucide-react";
+import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { LoginForm } from "@/components/forms/login-form";
 import loginImage from "@/assets/images/login/bg-login.jpeg";
 
 export const LoginPage = () => {
-	const { isAuthenticated, user } = useAuth();
+	const { user, isAuthenticated } = useAuthStatus();
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (isAuthenticated && user) {
 			switch (user.role) {
 				case "SUPER_ADMIN":
-					void navigate({ to: "/super-admin/dashboard" });
+					navigate({ to: "/super-admin/dashboard" });
 					break;
 				case "ADMIN":
-					void navigate({ to: "/admin/dashboard" });
+					navigate({ to: "/admin/dashboard" });
 					break;
 				case "DOCTOR":
-					void navigate({ to: "/doctor/dashboard" });
+					navigate({ to: "/doctor/dashboard" });
 					break;
 				default:
-					void navigate({ to: "/" });
+					navigate({ to: "/" });
 			}
 		}
 	}, [isAuthenticated, user, navigate]);
@@ -30,7 +31,7 @@ export const LoginPage = () => {
 	if (isAuthenticated) {
 		return (
 			<div className="flex min-h-screen items-center justify-center">
-				<div className="border-primary h-32 w-32 animate-spin rounded-full border-b-2"></div>
+				<Spinner size={48} className="text-primary" />
 			</div>
 		);
 	}

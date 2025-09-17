@@ -118,6 +118,14 @@ export function EventsPopup({
 								key={event.id}
 								className="cursor-pointer"
 								onClick={() => handleEventClick(event)}
+								onKeyDown={(e) => {
+									if (e.key === "Enter" || e.key === " ") {
+										e.preventDefault();
+										handleEventClick(event);
+									}
+								}}
+								role="button"
+								tabIndex={0}
 							>
 								<EventItem
 									event={event}
