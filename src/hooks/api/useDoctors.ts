@@ -111,8 +111,8 @@ export const useCreateDoctor = () => {
 			extractApiData(await createDoctor(data)),
 		onSuccess: () => {
 			// Invalidate doctor lists and stats
-			void queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
 		},
 	});
 };
@@ -131,9 +131,9 @@ export const useUpdateDoctor = () => {
 		}) => extractApiData(await updateDoctor(id, data)),
 		onSuccess: (_, { id }) => {
 			// Invalidate doctor lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: doctorKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
 		},
 	});
 };
@@ -146,10 +146,10 @@ export const useDeleteDoctor = () => {
 		mutationFn: async (id: string) => extractApiData(await deleteDoctor(id)),
 		onSuccess: (_, id) => {
 			// Invalidate doctor lists and stats
-			void queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
 			// Remove detail from cache
-			void queryClient.removeQueries({ queryKey: doctorKeys.detail(id) });
+			queryClient.removeQueries({ queryKey: doctorKeys.detail(id) });
 		},
 	});
 };
@@ -168,9 +168,9 @@ export const useToggleDoctorAvailability = () => {
 		}) => extractApiData(await toggleDoctorAvailability(id, isAvailable)),
 		onSuccess: (_, { id }) => {
 			// Invalidate doctor lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: doctorKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
 		},
 	});
 };
@@ -184,9 +184,9 @@ export const useToggleDoctorStatus = () => {
 			extractApiData(await toggleDoctorStatus(id, isActive)),
 		onSuccess: (_, { id }) => {
 			// Invalidate doctor lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: doctorKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
 		},
 	});
 };

@@ -101,9 +101,9 @@ export const useCreateLocation = () => {
 			extractApiData(await createLocation(data)),
 		onSuccess: () => {
 			// Invalidate location lists, active list, and stats
-			void queryClient.invalidateQueries({ queryKey: locationKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: locationKeys.active() });
-			void queryClient.invalidateQueries({ queryKey: locationKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: locationKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: locationKeys.active() });
+			queryClient.invalidateQueries({ queryKey: locationKeys.stats() });
 		},
 	});
 };
@@ -122,10 +122,10 @@ export const useUpdateLocation = () => {
 		}) => extractApiData(await updateLocation(id, data)),
 		onSuccess: (_, { id }) => {
 			// Invalidate location lists, active list, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: locationKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: locationKeys.active() });
-			void queryClient.invalidateQueries({ queryKey: locationKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: locationKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: locationKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: locationKeys.active() });
+			queryClient.invalidateQueries({ queryKey: locationKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: locationKeys.stats() });
 		},
 	});
 };
@@ -138,11 +138,11 @@ export const useDeleteLocation = () => {
 		mutationFn: async (id: string) => extractApiData(await deleteLocation(id)),
 		onSuccess: (_, id) => {
 			// Invalidate location lists, active list, and stats
-			void queryClient.invalidateQueries({ queryKey: locationKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: locationKeys.active() });
-			void queryClient.invalidateQueries({ queryKey: locationKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: locationKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: locationKeys.active() });
+			queryClient.invalidateQueries({ queryKey: locationKeys.stats() });
 			// Remove detail from cache
-			void queryClient.removeQueries({ queryKey: locationKeys.detail(id) });
+			queryClient.removeQueries({ queryKey: locationKeys.detail(id) });
 		},
 	});
 };
@@ -156,10 +156,10 @@ export const useToggleLocationStatus = () => {
 			extractApiData(await toggleLocationStatus(id, isActive)),
 		onSuccess: (_, { id }) => {
 			// Invalidate location lists, active list, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: locationKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: locationKeys.active() });
-			void queryClient.invalidateQueries({ queryKey: locationKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: locationKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: locationKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: locationKeys.active() });
+			queryClient.invalidateQueries({ queryKey: locationKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: locationKeys.stats() });
 		},
 	});
 };

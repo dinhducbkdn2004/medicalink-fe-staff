@@ -67,8 +67,8 @@ export const useCreateAdmin = () => {
 			extractApiData(await createAdmin(data)),
 		onSuccess: () => {
 			// Invalidate admin lists and stats
-			void queryClient.invalidateQueries({ queryKey: adminKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: adminKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
 		},
 	});
 };
@@ -87,9 +87,9 @@ export const useUpdateAdmin = () => {
 		}) => extractApiData(await updateAdmin(id, data)),
 		onSuccess: (_, { id }) => {
 			// Invalidate admin lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: adminKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: adminKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: adminKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: adminKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
 		},
 	});
 };
@@ -102,10 +102,10 @@ export const useDeleteAdmin = () => {
 		mutationFn: async (id: string) => extractApiData(await deleteAdmin(id)),
 		onSuccess: (_, id) => {
 			// Invalidate admin lists and stats
-			void queryClient.invalidateQueries({ queryKey: adminKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: adminKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
 			// Remove detail from cache
-			void queryClient.removeQueries({ queryKey: adminKeys.detail(id) });
+			queryClient.removeQueries({ queryKey: adminKeys.detail(id) });
 		},
 	});
 };
@@ -119,9 +119,9 @@ export const useToggleAdminStatus = () => {
 			extractApiData(await toggleAdminStatus(id, isActive)),
 		onSuccess: (_, { id }) => {
 			// Invalidate admin lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: adminKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: adminKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: adminKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: adminKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: adminKeys.stats() });
 		},
 	});
 };

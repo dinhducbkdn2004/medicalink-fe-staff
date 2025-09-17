@@ -8,8 +8,7 @@ import type { ApiError, ApiResponse } from "@/types/api";
 import { REQUEST_TIMEOUT, STORAGE_KEYS } from "@/constants/api";
 
 const API_BASE_URL =
-	(import.meta.env["VITE_API_BASE_URL"]) ||
-	"https://medicalink-be.onrender.com";
+	import.meta.env["VITE_API_BASE_URL"] || "https://medicalink-be.onrender.com";
 
 export const apiClient = axios.create({
 	baseURL: API_BASE_URL,

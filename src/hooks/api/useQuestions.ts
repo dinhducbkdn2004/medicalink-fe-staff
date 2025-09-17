@@ -142,8 +142,8 @@ export const useCreateQuestion = () => {
 			extractApiData(await createQuestion(data)),
 		onSuccess: () => {
 			// Invalidate question lists and stats
-			void queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
 		},
 	});
 };
@@ -162,9 +162,9 @@ export const useUpdateQuestion = () => {
 		}) => extractApiData(await updateQuestion(id, data)),
 		onSuccess: (_, { id }) => {
 			// Invalidate question lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
 		},
 	});
 };
@@ -177,10 +177,10 @@ export const useDeleteQuestion = () => {
 		mutationFn: async (id: string) => extractApiData(await deleteQuestion(id)),
 		onSuccess: (_, id) => {
 			// Invalidate question lists and stats
-			void queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
 			// Remove detail from cache
-			void queryClient.removeQueries({ queryKey: questionKeys.detail(id) });
+			queryClient.removeQueries({ queryKey: questionKeys.detail(id) });
 		},
 	});
 };
@@ -199,9 +199,9 @@ export const useAnswerQuestion = () => {
 		}) => extractApiData(await answerQuestion(id, data)),
 		onSuccess: (_, { id }) => {
 			// Invalidate question lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
 		},
 	});
 };
@@ -220,9 +220,9 @@ export const useUpdateQuestionStatus = () => {
 		}) => extractApiData(await updateQuestionStatus(id, status)),
 		onSuccess: (_, { id }) => {
 			// Invalidate question lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
 		},
 	});
 };
@@ -241,9 +241,9 @@ export const useUpdateQuestionPriority = () => {
 		}) => extractApiData(await updateQuestionPriority(id, priority)),
 		onSuccess: (_, { id }) => {
 			// Invalidate question lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
 		},
 	});
 };
@@ -257,9 +257,9 @@ export const useAssignQuestionToDoctor = () => {
 			extractApiData(await assignQuestionToDoctor(id, doctorId)),
 		onSuccess: (_, { id }) => {
 			// Invalidate question lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
 		},
 	});
 };
@@ -273,9 +273,9 @@ export const useToggleQuestionPublic = () => {
 			extractApiData(await toggleQuestionPublic(id, isPublic)),
 		onSuccess: (_, { id }) => {
 			// Invalidate question lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: questionKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: questionKeys.stats() });
 		},
 	});
 };
@@ -285,5 +285,5 @@ export const useIncrementQuestionView = () =>
 	useMutation({
 		mutationFn: async (id: string) =>
 			extractApiData(await incrementQuestionView(id)),
-		// Don't invalidate queries for view increments to avoid excessive refetches
+		// Don't invalidate queries for view increments to a excessive refetches
 	});
