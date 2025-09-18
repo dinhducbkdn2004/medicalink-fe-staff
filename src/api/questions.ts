@@ -1,4 +1,4 @@
-import { apiClient } from "./client";
+import { apiClient } from "./core/client";
 import type {
 	Question,
 	CreateQuestionRequest,
@@ -9,7 +9,7 @@ import type {
 	ApiResponse,
 	QuestionStatus,
 	QuestionPriority,
-} from "@/types/api";
+} from "@/types";
 
 /**
  * Question management API endpoints

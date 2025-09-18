@@ -1,11 +1,11 @@
-import { apiClient } from "./client";
+import { apiClient } from "./core/client";
 import type {
 	LoginRequest,
 	LoginResponse,
 	ChangePasswordRequest,
 	StaffAccount,
 	ApiResponse,
-} from "@/types/api";
+} from "@/types";
 
 /**
  * Authentication API endpoints

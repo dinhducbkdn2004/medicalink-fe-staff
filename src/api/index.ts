@@ -3,7 +3,9 @@
  */
 
 // Client and utilities
-export { apiClient, extractApiData, apiCall } from "./client";
+export { apiClient } from "./core/client";
+export { extractApiData, apiCall } from "./core/utils";
+export { handleApiError } from "./core/errorHandler";
 
 // API modules
 export * from "./auth";

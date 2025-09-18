@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLogin } from "@/hooks/api";
-import type { LoginRequest } from "@/types/api";
+import type { LoginRequest } from "@/types";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 
 export function LoginForm({
@@ -83,7 +83,7 @@ export function LoginForm({
 				</div>
 				<Button
 					type="submit"
-					className="w-full"
+					className="w-full cursor-pointer"
 					disabled={loginMutation.isPending}
 				>
 					{loginMutation.isPending ? (
@@ -97,7 +97,7 @@ export function LoginForm({
 						Or continue with
 					</span>
 				</div>
-				<Button variant="outline" className="w-full">
+				<Button variant="outline" className="w-full cursor-pointer">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						x="0px"

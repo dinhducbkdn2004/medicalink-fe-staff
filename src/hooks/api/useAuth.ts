@@ -8,13 +8,13 @@ import {
 	forgotPassword,
 	resetPassword,
 } from "@/api/auth";
-import { extractApiData } from "@/api/client";
+import { extractApiData } from "@/api/core/utils";
 import { CACHE_TIME, STORAGE_KEYS } from "@/constants/api";
 import type {
 	LoginRequest,
 	ChangePasswordRequest,
 	StaffAccount,
-} from "@/types/api";
+} from "@/types";
 
 // Query keys
 export const authKeys = {
@@ -56,6 +56,7 @@ export const useLogin = () => {
 			// Store tokens
 			localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.token);
 			localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, data.refreshToken);
+			localStorage.setItem(STORAGE_KEYS.USER_ROLE, data.user.role);
 
 			// Set user data in cache
 			queryClient.setQueryData(authKeys.profile(), data.user);

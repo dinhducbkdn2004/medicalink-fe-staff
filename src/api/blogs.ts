@@ -1,4 +1,4 @@
-import { apiClient } from "./client";
+import { apiClient } from "./core/client";
 import type {
 	Blog,
 	CreateBlogRequest,
@@ -7,7 +7,7 @@ import type {
 	PaginatedResponse,
 	ApiResponse,
 	BlogStatus,
-} from "@/types/api";
+} from "@/types";
 
 /**
  * Blog management API endpoints

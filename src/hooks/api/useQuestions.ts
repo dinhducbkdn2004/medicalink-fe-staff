@@ -16,7 +16,7 @@ import {
 	incrementQuestionView,
 	getQuestionStats,
 } from "@/api/questions";
-import { extractApiData } from "@/api/client";
+import { extractApiData } from "@/api/core/utils";
 import type {
 	PaginationParams,
 	CreateQuestionRequest,
@@ -24,7 +24,7 @@ import type {
 	AnswerQuestionRequest,
 	QuestionStatus,
 	QuestionPriority,
-} from "@/types/api";
+} from "@/types";
 
 // Query keys
 export const questionKeys = {

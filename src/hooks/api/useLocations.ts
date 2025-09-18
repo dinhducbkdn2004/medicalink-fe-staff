@@ -10,12 +10,12 @@ import {
 	getLocationsByCity,
 	getLocationStats,
 } from "@/api/locations";
-import { extractApiData } from "@/api/client";
+import { extractApiData } from "@/api/core/utils";
 import type {
 	PaginationParams,
 	CreateLocationRequest,
 	UpdateLocationRequest,
-} from "@/types/api";
+} from "@/types";
 
 // Query keys
 export const locationKeys = {

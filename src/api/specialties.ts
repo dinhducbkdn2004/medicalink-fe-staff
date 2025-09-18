@@ -1,4 +1,4 @@
-import { apiClient } from "./client";
+import { apiClient } from "./core/client";
 import type {
 	Specialty,
 	CreateSpecialtyRequest,
@@ -6,7 +6,7 @@ import type {
 	PaginationParams,
 	PaginatedResponse,
 	ApiResponse,
-} from "@/types/api";
+} from "@/types";
 
 /**
  * Specialty management API endpoints

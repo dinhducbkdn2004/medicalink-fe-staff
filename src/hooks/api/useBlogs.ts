@@ -15,13 +15,13 @@ import {
 	incrementBlogView,
 	getBlogStats,
 } from "@/api/blogs";
-import { extractApiData } from "@/api/client";
+import { extractApiData } from "@/api/core/utils";
 import type {
 	PaginationParams,
 	CreateBlogRequest,
 	UpdateBlogRequest,
 	BlogStatus,
-} from "@/types/api";
+} from "@/types";
 
 // Query keys
 export const blogKeys = {

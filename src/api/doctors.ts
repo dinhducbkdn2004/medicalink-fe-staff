@@ -1,4 +1,4 @@
-import { apiClient } from "./client";
+import { apiClient } from "./core/client";
 import type {
 	Doctor,
 	CreateDoctorRequest,
@@ -6,7 +6,7 @@ import type {
 	PaginationParams,
 	PaginatedResponse,
 	ApiResponse,
-} from "@/types/api";
+} from "@/types";
 
 /**
  * Doctor management API endpoints

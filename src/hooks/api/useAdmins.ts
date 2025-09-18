@@ -8,13 +8,13 @@ import {
 	toggleAdminStatus,
 	getAdminStats,
 } from "@/api/admins";
-import { extractApiData } from "@/api/client";
+import { extractApiData } from "@/api/core/utils";
 import { CACHE_TIME } from "@/constants/api";
 import type {
 	PaginationParams,
 	CreateAdminRequest,
 	UpdateAdminRequest,
-} from "@/types/api";
+} from "@/types";
 
 // Query keys
 export const adminKeys = {

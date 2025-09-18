@@ -15,4 +15,4 @@ export type {
 	PaginatedResponse,
 	ApiResponse,
 	ApiError,
-} from "@/types/api";
+} from "@/types";

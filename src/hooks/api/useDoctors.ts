@@ -11,12 +11,12 @@ import {
 	getDoctorsByLocation,
 	getDoctorStats,
 } from "@/api/doctors";
-import { extractApiData } from "@/api/client";
+import { extractApiData } from "@/api/core/utils";
 import type {
 	PaginationParams,
 	CreateDoctorRequest,
 	UpdateDoctorRequest,
-} from "@/types/api";
+} from "@/types";
 
 // Query keys
 export const doctorKeys = {

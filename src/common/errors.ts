@@ -3,7 +3,7 @@
  */
 
 import type { AxiosError } from "axios";
-import type { ApiError } from "@/types/api";
+import type { ApiError } from "@/types";
 
 // Custom error classes
 export class ApiErrorException extends Error {

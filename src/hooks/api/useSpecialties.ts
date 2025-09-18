@@ -9,12 +9,12 @@ import {
 	toggleSpecialtyStatus,
 	getSpecialtyStats,
 } from "@/api/specialties";
-import { extractApiData } from "@/api/client";
+import { extractApiData } from "@/api/core/utils";
 import type {
 	PaginationParams,
 	CreateSpecialtyRequest,
 	UpdateSpecialtyRequest,
-} from "@/types/api";
+} from "@/types";
 
 // Query keys
 export const specialtyKeys = {

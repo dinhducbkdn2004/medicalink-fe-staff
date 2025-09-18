@@ -1,4 +1,4 @@
-import { apiClient } from "./client";
+import { apiClient } from "./core/client";
 import type {
 	StaffAccount,
 	CreateAdminRequest,
@@ -6,7 +6,7 @@ import type {
 	PaginationParams,
 	PaginatedResponse,
 	ApiResponse,
-} from "@/types/api";
+} from "@/types";
 
 /**
  * Admin management API endpoints
