@@ -1,4 +1,4 @@
-import { apiClient } from "./client";
+import { apiClient } from "./core/client";
 import type {
 	Question,
 	CreateQuestionRequest,
@@ -9,11 +9,7 @@ import type {
 	ApiResponse,
 	QuestionStatus,
 	QuestionPriority,
-} from "@/types/api";
-
-/**
- * Question management API endpoints
- */
+} from "@/types";
 
 // Get all questions with pagination and filters
 export const getQuestions = (

@@ -9,12 +9,12 @@ import {
 	toggleSpecialtyStatus,
 	getSpecialtyStats,
 } from "@/api/specialties";
-import { extractApiData } from "@/api/client";
+import { extractApiData, extractPaginatedData } from "@/api/core/utils";
 import type {
 	PaginationParams,
 	CreateSpecialtyRequest,
 	UpdateSpecialtyRequest,
-} from "@/types/api";
+} from "@/types";
 
 // Query keys
 export const specialtyKeys = {
@@ -45,7 +45,7 @@ export const useSpecialties = (
 ) =>
 	useQuery({
 		queryKey: specialtyKeys.list(params),
-		queryFn: async () => extractApiData(await getSpecialties(params)),
+		queryFn: async () => extractPaginatedData(await getSpecialties(params)),
 		staleTime: 1000 * 60 * 5, // 5 minutes
 	});
 
@@ -86,9 +86,9 @@ export const useCreateSpecialty = () => {
 			extractApiData(await createSpecialty(data)),
 		onSuccess: () => {
 			// Invalidate specialty lists, active list, and stats
-			void queryClient.invalidateQueries({ queryKey: specialtyKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: specialtyKeys.active() });
-			void queryClient.invalidateQueries({ queryKey: specialtyKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.active() });
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.stats() });
 		},
 	});
 };
@@ -107,12 +107,12 @@ export const useUpdateSpecialty = () => {
 		}) => extractApiData(await updateSpecialty(id, data)),
 		onSuccess: (_, { id }) => {
 			// Invalidate specialty lists, active list, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: specialtyKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: specialtyKeys.active() });
-			void queryClient.invalidateQueries({
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.active() });
+			queryClient.invalidateQueries({
 				queryKey: specialtyKeys.detail(id),
 			});
-			void queryClient.invalidateQueries({ queryKey: specialtyKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.stats() });
 		},
 	});
 };
@@ -125,11 +125,11 @@ export const useDeleteSpecialty = () => {
 		mutationFn: async (id: string) => extractApiData(await deleteSpecialty(id)),
 		onSuccess: (_, id) => {
 			// Invalidate specialty lists, active list, and stats
-			void queryClient.invalidateQueries({ queryKey: specialtyKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: specialtyKeys.active() });
-			void queryClient.invalidateQueries({ queryKey: specialtyKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.active() });
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.stats() });
 			// Remove detail from cache
-			void queryClient.removeQueries({ queryKey: specialtyKeys.detail(id) });
+			queryClient.removeQueries({ queryKey: specialtyKeys.detail(id) });
 		},
 	});
 };
@@ -143,12 +143,12 @@ export const useToggleSpecialtyStatus = () => {
 			extractApiData(await toggleSpecialtyStatus(id, isActive)),
 		onSuccess: (_, { id }) => {
 			// Invalidate specialty lists, active list, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: specialtyKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: specialtyKeys.active() });
-			void queryClient.invalidateQueries({
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.active() });
+			queryClient.invalidateQueries({
 				queryKey: specialtyKeys.detail(id),
 			});
-			void queryClient.invalidateQueries({ queryKey: specialtyKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.stats() });
 		},
 	});
 };

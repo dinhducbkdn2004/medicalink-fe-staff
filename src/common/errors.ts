@@ -1,9 +1,5 @@
-/**
- * Enhanced Error Types and Utilities
- */
-
 import type { AxiosError } from "axios";
-import type { ApiError } from "@/types/api";
+import type { ApiError } from "@/types";
 
 // Custom error classes
 export class ApiErrorException extends Error {
@@ -75,7 +71,7 @@ export const parseApiError = (
 	if (isApiError(error)) {
 		const statusCode = error.response?.status;
 		return {
-			message: error.response?.data?.message || "Đã xảy ra lỗi không xác định",
+			message: error.response?.data?.message || "An unknown error occurred",
 			...(statusCode && { statusCode }),
 			type: "api",
 		};
@@ -83,21 +79,21 @@ export const parseApiError = (
 
 	if (isNetworkError(error)) {
 		return {
-			message: "Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet.",
+			message: "Network connection error. Please check your internet connection.",
 			type: "network",
 		};
 	}
 
 	if (isTimeoutError(error)) {
 		return {
-			message: "Yêu cầu đã hết thời gian chờ. Vui lòng thử lại.",
+			message: "Request timed out. Please try again.",
 			type: "timeout",
 		};
 	}
 
 	return {
 		message:
-			error instanceof Error ? error.message : "Đã xảy ra lỗi không xác định",
+			error instanceof Error ? error.message : "An unknown error occurred",
 		type: "unknown",
 	};
 };

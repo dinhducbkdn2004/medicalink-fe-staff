@@ -22,17 +22,17 @@ const formatTimeWithOptionalMinutes = (date: Date) => {
 
 interface EventWrapperProps {
 	event: CalendarEvent;
-	isFirstDay?: boolean;
-	isLastDay?: boolean;
-	isDragging?: boolean;
-	onClick?: (e: React.MouseEvent) => void;
+	isFirstDay?: boolean | undefined;
+	isLastDay?: boolean | undefined;
+	isDragging?: boolean | undefined;
+	onClick?: ((e: React.MouseEvent) => void) | undefined;
 	className?: string;
 	children: React.ReactNode;
-	currentTime?: Date;
-	dndListeners?: SyntheticListenerMap;
-	dndAttributes?: DraggableAttributes;
-	onMouseDown?: (e: React.MouseEvent) => void;
-	onTouchStart?: (e: React.TouchEvent) => void;
+	currentTime?: Date | undefined;
+	dndListeners?: SyntheticListenerMap | undefined;
+	dndAttributes?: DraggableAttributes | undefined;
+	onMouseDown?: ((e: React.MouseEvent) => void) | undefined;
+	onTouchStart?: ((e: React.TouchEvent) => void) | undefined;
 }
 
 // Shared wrapper component for event styling
@@ -84,18 +84,18 @@ function EventWrapper({
 interface EventItemProps {
 	event: CalendarEvent;
 	view: "month" | "week" | "day" | "agenda";
-	isDragging?: boolean;
-	onClick?: (e: React.MouseEvent) => void;
-	showTime?: boolean;
-	currentTime?: Date; // For updating time during drag
-	isFirstDay?: boolean;
-	isLastDay?: boolean;
+	isDragging?: boolean | undefined;
+	onClick?: ((e: React.MouseEvent) => void) | undefined;
+	showTime?: boolean | undefined;
+	currentTime?: Date | undefined;
+	isFirstDay?: boolean | undefined;
+	isLastDay?: boolean | undefined;
 	children?: React.ReactNode;
 	className?: string;
-	dndListeners?: SyntheticListenerMap;
-	dndAttributes?: DraggableAttributes;
-	onMouseDown?: (e: React.MouseEvent) => void;
-	onTouchStart?: (e: React.TouchEvent) => void;
+	dndListeners?: SyntheticListenerMap | undefined;
+	dndAttributes?: DraggableAttributes | undefined;
+	onMouseDown?: ((e: React.MouseEvent) => void) | undefined;
+	onTouchStart?: ((e: React.TouchEvent) => void) | undefined;
 }
 
 export function EventItem({

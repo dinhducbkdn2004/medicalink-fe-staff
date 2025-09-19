@@ -89,6 +89,16 @@ const eslintConfig = typescriptEslint.config(
     },
   },
 
+  // API rules (relaxed for API files)
+  {
+    name: "api",
+    files: ["src/api/**/*.ts", "src/api/**/*.tsx"],
+    rules: {
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-floating-promises": "off",
+    },
+  },
+
   // Prettier (disable formatting conflicts)
   eslintConfigPrettier
 );

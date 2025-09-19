@@ -10,9 +10,9 @@ export type {
 	ChangePasswordRequest,
 	Doctor,
 	Specialty,
-	Location,
+	WorkLocation,
 	PaginationParams,
 	PaginatedResponse,
 	ApiResponse,
 	ApiError,
-} from "@/types/api";
+} from "@/types";

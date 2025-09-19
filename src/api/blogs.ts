@@ -1,4 +1,4 @@
-import { apiClient } from "./client";
+import { apiClient } from "./core/client";
 import type {
 	Blog,
 	CreateBlogRequest,
@@ -7,11 +7,7 @@ import type {
 	PaginatedResponse,
 	ApiResponse,
 	BlogStatus,
-} from "@/types/api";
-
-/**
- * Blog management API endpoints
- */
+} from "@/types";
 
 // Get all blogs with pagination and filters
 export const getBlogs = (

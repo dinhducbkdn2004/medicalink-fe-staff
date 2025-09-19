@@ -419,7 +419,6 @@ export function EventDialog({
 						</legend>
 						<RadioGroup
 							className="flex gap-1.5"
-							defaultValue={colorOptions[0]?.value}
 							value={color}
 							onValueChange={(value: EventColor) => setColor(value)}
 						>

@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils";
 import { useCalendarDnd } from "@/components/event-calendar";
 
 interface DroppableCellProps {
-	id: string;
-	date: Date;
-	time?: number; // For week/day views, represents hours (e.g., 9.25 for 9:15)
-	children?: React.ReactNode;
-	className?: string;
-	onClick?: () => void;
+	readonly id: string;
+	readonly date: Date;
+	readonly time?: number;
+	readonly children?: React.ReactNode;
+	readonly className?: string;
+	readonly onClick?: () => void;
 }
 
 export function DroppableCell({
@@ -47,7 +47,7 @@ export function DroppableCell({
 			onKeyDown={(e) => {
 				if (e.key === "Enter" || e.key === " ") {
 					e.preventDefault();
-					onClick?.(e as any);
+					onClick?.();
 				}
 			}}
 			role="button"

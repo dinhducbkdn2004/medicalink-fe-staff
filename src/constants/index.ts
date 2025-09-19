@@ -1,7 +1,3 @@
-/**
- * Application Constants
- */
-
 export * from "./api";
 
 // App metadata

@@ -15,13 +15,13 @@ import {
 	incrementBlogView,
 	getBlogStats,
 } from "@/api/blogs";
-import { extractApiData } from "@/api/client";
+import { extractApiData } from "@/api/core/utils";
 import type {
 	PaginationParams,
 	CreateBlogRequest,
 	UpdateBlogRequest,
 	BlogStatus,
-} from "@/types/api";
+} from "@/types";
 
 // Query keys
 export const blogKeys = {
@@ -156,8 +156,8 @@ export const useCreateBlog = () => {
 			extractApiData(await createBlog(data)),
 		onSuccess: () => {
 			// Invalidate blog lists and stats
-			void queryClient.invalidateQueries({ queryKey: blogKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: blogKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: blogKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: blogKeys.stats() });
 		},
 	});
 };
@@ -171,9 +171,9 @@ export const useUpdateBlog = () => {
 			extractApiData(await updateBlog(id, data)),
 		onSuccess: (_, { id }) => {
 			// Invalidate blog lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: blogKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: blogKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: blogKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: blogKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: blogKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: blogKeys.stats() });
 		},
 	});
 };
@@ -186,10 +186,10 @@ export const useDeleteBlog = () => {
 		mutationFn: async (id: string) => extractApiData(await deleteBlog(id)),
 		onSuccess: (_, id) => {
 			// Invalidate blog lists and stats
-			void queryClient.invalidateQueries({ queryKey: blogKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: blogKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: blogKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: blogKeys.stats() });
 			// Remove detail from cache
-			void queryClient.removeQueries({ queryKey: blogKeys.detail(id) });
+			queryClient.removeQueries({ queryKey: blogKeys.detail(id) });
 		},
 	});
 };
@@ -203,9 +203,9 @@ export const useToggleBlogStatus = () => {
 			extractApiData(await toggleBlogStatus(id, status)),
 		onSuccess: (_, { id }) => {
 			// Invalidate blog lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: blogKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: blogKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: blogKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: blogKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: blogKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: blogKeys.stats() });
 		},
 	});
 };
@@ -219,9 +219,9 @@ export const useToggleBlogActive = () => {
 			extractApiData(await toggleBlogActive(id, isActive)),
 		onSuccess: (_, { id }) => {
 			// Invalidate blog lists, detail, and stats
-			void queryClient.invalidateQueries({ queryKey: blogKeys.lists() });
-			void queryClient.invalidateQueries({ queryKey: blogKeys.detail(id) });
-			void queryClient.invalidateQueries({ queryKey: blogKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: blogKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: blogKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: blogKeys.stats() });
 		},
 	});
 };
@@ -231,5 +231,5 @@ export const useIncrementBlogView = () =>
 	useMutation({
 		mutationFn: async (id: string) =>
 			extractApiData(await incrementBlogView(id)),
-		// Don't invalidate queries for view increments to avoid excessive refetches
+		// Don't invalidate queries for view increments to a excessive refetches
 	});

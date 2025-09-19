@@ -1,4 +1,4 @@
-import { apiClient } from "./client";
+import { apiClient } from "./core/client";
 import type {
 	Doctor,
 	CreateDoctorRequest,
@@ -6,11 +6,7 @@ import type {
 	PaginationParams,
 	PaginatedResponse,
 	ApiResponse,
-} from "@/types/api";
-
-/**
- * Doctor management API endpoints
- */
+} from "@/types";
 
 // Get all doctors with pagination and filters
 export const getDoctors = (

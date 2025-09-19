@@ -2,7 +2,7 @@ import type * as React from "react";
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
-import type { StaffRole } from "@/types/api";
+import type { StaffRole } from "@/types";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 
 interface RequireRoleProps {
@@ -22,7 +22,8 @@ export const RequireRole = ({
 	useEffect(() => {
 		if (!isLoading) {
 			if (!isAuthenticated || !user) {
-				navigate({ to: "/login" });
+				console.log("Redirecting to login: not authenticated or no user");
+				navigate({ to: "/login", replace: true });
 				return;
 			}
 
