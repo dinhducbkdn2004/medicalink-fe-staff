@@ -1,73 +1,55 @@
 import { apiClient } from "./core/client";
 import type {
-	Location,
-	CreateLocationRequest,
-	UpdateLocationRequest,
+	WorkLocation,
+	CreateWorkLocationRequest,
+	UpdateWorkLocationRequest,
 	PaginationParams,
 	PaginatedResponse,
 	ApiResponse,
 } from "@/types";
 
-/**
- * Location management API endpoints
- */
-
-// Get all locations with pagination
-export const getLocations = (
+// Get all work locations with pagination
+export const getWorkLocations = (
 	params?: PaginationParams & {
 		search?: string;
-		city?: string;
-		state?: string;
 		isActive?: boolean;
+		includeMetadata?: boolean;
 	}
 ) =>
-	apiClient.get<ApiResponse<PaginatedResponse<Location>>>("/locations", {
-		params,
-	});
-
-// Get all active locations (for dropdowns)
-export const getActiveLocations = () =>
-	apiClient.get<ApiResponse<Location[]>>("/locations/active");
-
-// Get location by ID
-export const getLocationById = (id: string) =>
-	apiClient.get<ApiResponse<Location>>(`/locations/${id}`);
-
-// Create new location
-export const createLocation = (data: CreateLocationRequest) =>
-	apiClient.post<ApiResponse<Location>>("/locations", data);
-
-// Update location
-export const updateLocation = (id: string, data: UpdateLocationRequest) =>
-	apiClient.patch<ApiResponse<Location>>(`/locations/${id}`, data);
-
-// Delete location (soft delete)
-export const deleteLocation = (id: string) =>
-	apiClient.delete<ApiResponse<{ message: string }>>(`/locations/${id}`);
-
-// Activate/Deactivate location
-export const toggleLocationStatus = (id: string, isActive: boolean) =>
-	apiClient.patch<ApiResponse<Location>>(`/locations/${id}/status`, {
-		isActive,
-	});
-
-// Get locations by city
-export const getLocationsByCity = (city: string, params?: PaginationParams) =>
-	apiClient.get<ApiResponse<PaginatedResponse<Location>>>(
-		`/locations/city/${city}`,
+	apiClient.get<ApiResponse<PaginatedResponse<WorkLocation>>>(
+		"/work-locations",
 		{
 			params,
 		}
 	);
 
-// Get location statistics
-export const getLocationStats = () =>
+// Get all active work locations (for dropdowns)
+export const getActiveWorkLocations = () =>
+	apiClient.get<ApiResponse<WorkLocation[]>>("/work-locations/public");
+
+// Get work location by ID
+export const getWorkLocationById = (id: string) =>
+	apiClient.get<ApiResponse<WorkLocation>>(`/work-locations/${id}`);
+
+// Create new work location
+export const createWorkLocation = (data: CreateWorkLocationRequest) =>
+	apiClient.post<ApiResponse<WorkLocation>>("/work-locations", data);
+
+// Update work location
+export const updateWorkLocation = (
+	id: string,
+	data: UpdateWorkLocationRequest
+) => apiClient.patch<ApiResponse<WorkLocation>>(`/work-locations/${id}`, data);
+
+// Delete work location (soft delete)
+export const deleteWorkLocation = (id: string) =>
+	apiClient.delete<ApiResponse<{ message: string }>>(`/work-locations/${id}`);
+
+// Get work location statistics
+export const getWorkLocationStats = () =>
 	apiClient.get<
 		ApiResponse<{
 			total: number;
-			active: number;
-			inactive: number;
-			byCities: Array<{ city: string; count: number }>;
-			byStates: Array<{ state: string; count: number }>;
+			recentlyCreated: number;
 		}>
-	>("/locations/stats");
+	>("/work-locations/stats");

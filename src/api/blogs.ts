@@ -9,10 +9,6 @@ import type {
 	BlogStatus,
 } from "@/types";
 
-/**
- * Blog management API endpoints
- */
-
 // Get all blogs with pagination and filters
 export const getBlogs = (
 	params?: PaginationParams & {

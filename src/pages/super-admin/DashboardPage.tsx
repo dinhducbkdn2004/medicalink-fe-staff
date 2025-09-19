@@ -11,8 +11,8 @@ import {
 
 export const SuperAdminDashboard = () => {
 	const mockStats = {
-		totalAdmins: 24,
-		activeAdmins: 18,
+		totalStaffs: 24,
+		activeStaffs: 18,
 		totalDoctors: 156,
 		totalLocations: 8,
 		totalSpecialties: 25,
@@ -171,10 +171,10 @@ export const SuperAdminDashboard = () => {
 										<div className="grid grid-cols-2 gap-3">
 											<div className="text-center">
 												<div className="text-xl font-bold text-green-600">
-													{mockStats.activeAdmins}
+													{mockStats.activeStaffs}
 												</div>
 												<div className="text-muted-foreground text-xs">
-													Online Admins
+													Online Staffs
 												</div>
 											</div>
 											<div className="text-center">

@@ -7,23 +7,17 @@ import type {
 	ApiResponse,
 } from "@/types";
 
-/**
- * Authentication API endpoints
- */
-
 // Login
 export const login = (data: LoginRequest) =>
 	apiClient.post<ApiResponse<LoginResponse>>("/auth/login", data);
 
-// Logout
-export const logout = () =>
-	apiClient.post<ApiResponse<{ message: string }>>("/auth/logout");
-
-// Refresh token
 export const refreshToken = (refreshToken: string) =>
-	apiClient.post<ApiResponse<{ token: string }>>("/auth/refresh", {
-		refreshToken,
-	});
+	apiClient.post<ApiResponse<{ access_token: string; refresh_token: string }>>(
+		"/auth/refresh",
+		{
+			refresh_token: refreshToken,
+		}
+	);
 
 // Change password
 export const changePassword = (data: ChangePasswordRequest) =>

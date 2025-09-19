@@ -15,13 +15,12 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-	token: string;
-	refreshToken: string;
-	tokenExpires: number;
+	access_token: string;
+	refresh_token: string;
 	user: StaffAccount;
 }
 
 export interface ChangePasswordRequest {
-	oldPassword: string;
+	currentPassword: string; 
 	newPassword: string;
 }

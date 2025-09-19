@@ -8,10 +8,6 @@ import type {
 	ApiResponse,
 } from "@/types";
 
-/**
- * Doctor management API endpoints
- */
-
 // Get all doctors with pagination and filters
 export const getDoctors = (
 	params?: PaginationParams & {

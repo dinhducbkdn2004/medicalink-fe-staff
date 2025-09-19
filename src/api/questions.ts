@@ -11,10 +11,6 @@ import type {
 	QuestionPriority,
 } from "@/types";
 
-/**
- * Question management API endpoints
- */
-
 // Get all questions with pagination and filters
 export const getQuestions = (
 	params?: PaginationParams & {

@@ -1,165 +1,112 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-	getLocations,
-	getActiveLocations,
-	getLocationById,
-	createLocation,
-	updateLocation,
-	deleteLocation,
-	toggleLocationStatus,
-	getLocationsByCity,
-	getLocationStats,
+	getWorkLocations,
+	getActiveWorkLocations,
+	getWorkLocationById,
+	createWorkLocation,
+	updateWorkLocation,
+	deleteWorkLocation,
+	getWorkLocationStats,
 } from "@/api/locations";
-import { extractApiData } from "@/api/core/utils";
+import { extractApiData, extractPaginatedData } from "@/api/core/utils";
 import type {
 	PaginationParams,
-	CreateLocationRequest,
-	UpdateLocationRequest,
+	CreateWorkLocationRequest,
+	UpdateWorkLocationRequest,
 } from "@/types";
 
-// Query keys
-export const locationKeys = {
-	all: ["locations"] as const,
-	lists: () => [...locationKeys.all, "list"] as const,
+export const workLocationKeys = {
+	all: ["work-locations"] as const,
+	lists: () => [...workLocationKeys.all, "list"] as const,
 	list: (
 		params?: PaginationParams & {
 			search?: string;
-			city?: string;
-			state?: string;
 			isActive?: boolean;
+			includeMetadata?: boolean;
 		}
-	) => [...locationKeys.lists(), params] as const,
-	active: () => [...locationKeys.all, "active"] as const,
-	details: () => [...locationKeys.all, "detail"] as const,
-	detail: (id: string) => [...locationKeys.details(), id] as const,
-	byCity: (city: string, params?: PaginationParams) =>
-		[...locationKeys.all, "city", city, params] as const,
-	stats: () => [...locationKeys.all, "stats"] as const,
+	) => [...workLocationKeys.lists(), params] as const,
+	active: () => [...workLocationKeys.all, "active"] as const,
+	details: () => [...workLocationKeys.all, "detail"] as const,
+	detail: (id: string) => [...workLocationKeys.details(), id] as const,
+	stats: () => [...workLocationKeys.all, "stats"] as const,
 };
 
-/**
- * Location Query Hooks
- */
-
-// Get locations with pagination and filters
-export const useLocations = (
+export const useWorkLocations = (
 	params?: PaginationParams & {
 		search?: string;
-		city?: string;
-		state?: string;
 		isActive?: boolean;
+		includeMetadata?: boolean;
 	}
 ) =>
 	useQuery({
-		queryKey: locationKeys.list(params),
-		queryFn: async () => extractApiData(await getLocations(params)),
-		staleTime: 1000 * 60 * 5, // 5 minutes
+		queryKey: workLocationKeys.list(params),
+		queryFn: async () => extractPaginatedData(await getWorkLocations(params)),
+		staleTime: 1000 * 60 * 5,
 	});
 
-// Get active locations (for dropdowns)
-export const useActiveLocations = () =>
+export const useActiveWorkLocations = () =>
 	useQuery({
-		queryKey: locationKeys.active(),
-		queryFn: async () => extractApiData(await getActiveLocations()),
-		staleTime: 1000 * 60 * 10, // 10 minutes
+		queryKey: workLocationKeys.active(),
+		queryFn: async () => extractApiData(await getActiveWorkLocations()),
+		staleTime: 1000 * 60 * 10,
 	});
 
-// Get location by ID
-export const useLocation = (id: string) =>
+export const useWorkLocation = (id: string) =>
 	useQuery({
-		queryKey: locationKeys.detail(id),
-		queryFn: async () => extractApiData(await getLocationById(id)),
+		queryKey: workLocationKeys.detail(id),
+		queryFn: async () => extractApiData(await getWorkLocationById(id)),
 		enabled: !!id,
 	});
 
-// Get locations by city
-export const useLocationsByCity = (city: string, params?: PaginationParams) =>
+export const useWorkLocationStats = () =>
 	useQuery({
-		queryKey: locationKeys.byCity(city, params),
-		queryFn: async () => extractApiData(await getLocationsByCity(city, params)),
-		enabled: !!city,
+		queryKey: workLocationKeys.stats(),
+		queryFn: async () => extractApiData(await getWorkLocationStats()),
+		staleTime: 1000 * 60 * 5,
 	});
 
-// Get location statistics
-export const useLocationStats = () =>
-	useQuery({
-		queryKey: locationKeys.stats(),
-		queryFn: async () => extractApiData(await getLocationStats()),
-		staleTime: 1000 * 60 * 5, // 5 minutes
-	});
-
-/**
- * Location Mutation Hooks
- */
-
-// Create location mutation
-export const useCreateLocation = () => {
+export const useCreateWorkLocation = () => {
 	const queryClient = useQueryClient();
-
 	return useMutation({
-		mutationFn: async (data: CreateLocationRequest) =>
-			extractApiData(await createLocation(data)),
+		mutationFn: async (data: CreateWorkLocationRequest) =>
+			extractApiData(await createWorkLocation(data)),
 		onSuccess: () => {
-			// Invalidate location lists, active list, and stats
-			queryClient.invalidateQueries({ queryKey: locationKeys.lists() });
-			queryClient.invalidateQueries({ queryKey: locationKeys.active() });
-			queryClient.invalidateQueries({ queryKey: locationKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: workLocationKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: workLocationKeys.active() });
+			queryClient.invalidateQueries({ queryKey: workLocationKeys.stats() });
 		},
 	});
 };
 
-// Update location mutation
-export const useUpdateLocation = () => {
+export const useUpdateWorkLocation = () => {
 	const queryClient = useQueryClient();
-
 	return useMutation({
 		mutationFn: async ({
 			id,
 			data,
 		}: {
 			id: string;
-			data: UpdateLocationRequest;
-		}) => extractApiData(await updateLocation(id, data)),
+			data: UpdateWorkLocationRequest;
+		}) => extractApiData(await updateWorkLocation(id, data)),
 		onSuccess: (_, { id }) => {
-			// Invalidate location lists, active list, detail, and stats
-			queryClient.invalidateQueries({ queryKey: locationKeys.lists() });
-			queryClient.invalidateQueries({ queryKey: locationKeys.active() });
-			queryClient.invalidateQueries({ queryKey: locationKeys.detail(id) });
-			queryClient.invalidateQueries({ queryKey: locationKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: workLocationKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: workLocationKeys.active() });
+			queryClient.invalidateQueries({ queryKey: workLocationKeys.detail(id) });
+			queryClient.invalidateQueries({ queryKey: workLocationKeys.stats() });
 		},
 	});
 };
 
-// Delete location mutation
-export const useDeleteLocation = () => {
+export const useDeleteWorkLocation = () => {
 	const queryClient = useQueryClient();
-
 	return useMutation({
-		mutationFn: async (id: string) => extractApiData(await deleteLocation(id)),
+		mutationFn: async (id: string) =>
+			extractApiData(await deleteWorkLocation(id)),
 		onSuccess: (_, id) => {
-			// Invalidate location lists, active list, and stats
-			queryClient.invalidateQueries({ queryKey: locationKeys.lists() });
-			queryClient.invalidateQueries({ queryKey: locationKeys.active() });
-			queryClient.invalidateQueries({ queryKey: locationKeys.stats() });
-			// Remove detail from cache
-			queryClient.removeQueries({ queryKey: locationKeys.detail(id) });
-		},
-	});
-};
-
-// Toggle location status mutation
-export const useToggleLocationStatus = () => {
-	const queryClient = useQueryClient();
-
-	return useMutation({
-		mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) =>
-			extractApiData(await toggleLocationStatus(id, isActive)),
-		onSuccess: (_, { id }) => {
-			// Invalidate location lists, active list, detail, and stats
-			queryClient.invalidateQueries({ queryKey: locationKeys.lists() });
-			queryClient.invalidateQueries({ queryKey: locationKeys.active() });
-			queryClient.invalidateQueries({ queryKey: locationKeys.detail(id) });
-			queryClient.invalidateQueries({ queryKey: locationKeys.stats() });
+			queryClient.invalidateQueries({ queryKey: workLocationKeys.lists() });
+			queryClient.invalidateQueries({ queryKey: workLocationKeys.active() });
+			queryClient.invalidateQueries({ queryKey: workLocationKeys.stats() });
+			queryClient.removeQueries({ queryKey: workLocationKeys.detail(id) });
 		},
 	});
 };

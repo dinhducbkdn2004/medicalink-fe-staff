@@ -1,31 +1,25 @@
 import type { StaffAccount, Gender } from "./common";
 
-/**
- * Admin Types
- */
-export interface CreateAdminRequest {
+export interface CreateStaffRequest {
 	fullName: string;
 	email: string;
 	password: string;
-	gender: Gender;
-	dateOfBirth?: string;
-	phone?: string;
-	address?: string;
+	role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
+	phone?: string | null;
+	isMale?: boolean | null;
+	dateOfBirth?: Date | null;
 }
 
-export interface UpdateAdminRequest {
+export interface UpdateStaffRequest {
 	fullName?: string;
 	email?: string;
-	gender?: Gender;
-	dateOfBirth?: string;
-	phone?: string;
-	address?: string;
-	isActive?: boolean;
+	password?: string;
+	role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
+	phone?: string | null;
+	isMale?: boolean | null;
+	dateOfBirth?: Date | null;
 }
 
-/**
- * Doctor Types
- */
 export interface Doctor extends StaffAccount {
 	specialtyId?: string;
 	specialty?: Specialty;
@@ -95,39 +89,30 @@ export interface UpdateSpecialtyRequest {
 }
 
 /**
- * Location Types
+ * Work Location Types (updated to match backend)
  */
-export interface Location {
+export interface WorkLocation {
 	id: string;
 	name: string;
-	address: string;
-	city: string;
-	state?: string;
-	zipCode?: string;
+	address?: string; // Made optional to match backend
 	phone?: string;
-	email?: string;
-	isActive: boolean;
-	createdAt: string;
-	updatedAt: string;
+	timezone: string; // Added to match backend
+	isActive?: boolean; // Optional in backend
+	createdAt?: string;
+	updatedAt?: string;
 }
 
-export interface CreateLocationRequest {
+export interface CreateWorkLocationRequest {
 	name: string;
-	address: string;
-	city: string;
-	state?: string;
-	zipCode?: string;
+	address?: string;
 	phone?: string;
-	email?: string;
+	timezone: string; // Required in backend
 }
 
-export interface UpdateLocationRequest {
+export interface UpdateWorkLocationRequest {
 	name?: string;
 	address?: string;
-	city?: string;
-	state?: string;
-	zipCode?: string;
 	phone?: string;
-	email?: string;
+	timezone?: string;
 	isActive?: boolean;
 }

@@ -4,103 +4,108 @@ import { apiClient } from "./client";
 import { STORAGE_KEYS } from "@/constants/api";
 import type { ApiError } from "@/types";
 
-/**
- * Handle API errors with user-friendly messages
- */
 export const handleApiError = (error: AxiosError<ApiError>) => {
 	const originalRequest = error.config as InternalAxiosRequestConfig & {
 		_retry?: boolean;
 	};
-
-	// Handle token refresh
 	if (error.response?.status === 401 && !originalRequest._retry) {
 		return handleTokenRefresh(error, originalRequest);
 	}
-
-	// Handle different error types
 	const errorMessage = getErrorMessage(error);
 	toast.error(errorMessage);
-
 	return Promise.reject(error);
 };
 
-/**
- * Handle token refresh logic
- */
 const handleTokenRefresh = async (
 	error: AxiosError,
 	originalRequest: InternalAxiosRequestConfig & { _retry?: boolean }
 ) => {
 	originalRequest._retry = true;
-
 	try {
 		const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
-		if (refreshToken) {
-			const response = await apiClient.post("/auth/refresh", {
-				refreshToken,
-			});
-
-			const { accessToken } = response.data.data as { accessToken: string };
-			localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
-
-			if (originalRequest.headers) {
-				originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-			}
-			return await apiClient(originalRequest);
-		} else {
+		if (!refreshToken) {
 			handleAuthFailure();
 			return Promise.reject(error);
 		}
-	} catch {
+		const response = await apiClient.post("/auth/refresh", {
+			refresh_token: refreshToken,
+		});
+		const responseData = response.data;
+		const newToken = responseData.data?.access_token;
+		if (!newToken) {
+			console.error("No token received from refresh endpoint:", responseData);
+			handleAuthFailure();
+			return Promise.reject(error);
+		}
+		localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, newToken);
+		if (originalRequest.headers) {
+			originalRequest.headers.Authorization = `Bearer ${newToken}`;
+		}
+		return await apiClient(originalRequest);
+	} catch (refreshError) {
+		console.error("Token refresh failed:", refreshError);
 		handleAuthFailure();
 		return Promise.reject(error);
 	}
 };
 
-/**
- * Handle authentication failure
- */
 const handleAuthFailure = () => {
 	localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
 	localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-	window.location.href = "/login";
-	toast.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+	localStorage.removeItem(STORAGE_KEYS.USER_DATA);
+	localStorage.removeItem(STORAGE_KEYS.USER_ROLE);
+	if (typeof window !== "undefined" && (window as any).queryClient) {
+		(window as any).queryClient.clear();
+	}
+	toast.error("Session expired. Please log in again.");
+	setTimeout(() => {
+		window.location.href = "/login";
+	}, 1000);
 };
 
-/**
- * Get user-friendly error message
- */
 const getErrorMessage = (error: AxiosError<ApiError>): string => {
-	const errorMessage =
-		error.response?.data?.message || "Đã xảy ra lỗi không xác định";
+	const errorData = error.response?.data;
+	// Ưu tiên message từ backend
+	const backendMessage = errorData?.message;
+	let detailedMessage = backendMessage || "An unknown error occurred";
+
+	if (errorData?.details && Array.isArray(errorData.details)) {
+		const detailsText = errorData.details
+			.map((detail) =>
+				typeof detail === "string" ? detail : JSON.stringify(detail)
+			)
+			.join("; ");
+		detailedMessage = `${detailedMessage}. Details: ${detailsText}`;
+	}
 
 	switch (error.response?.status) {
 		case 400:
-			return `Dữ liệu không hợp lệ: ${errorMessage}`;
+			return backendMessage || `Invalid data: ${detailedMessage}`;
 		case 401:
-			return "Bạn không có quyền truy cập. Vui lòng đăng nhập lại.";
+			return backendMessage || "You are not authorized. Please log in again.";
 		case 403:
-			return "Bạn không có quyền thực hiện hành động này.";
+			return backendMessage || "You do not have permission to perform this action.";
 		case 404:
-			return "Không tìm thấy tài nguyên yêu cầu.";
+			return backendMessage || `Resource not found.`;
 		case 409:
-			return `Xung đột dữ liệu: ${errorMessage}`;
+			return backendMessage || `Data conflict: ${detailedMessage}`;
 		case 422:
-			return `Dữ liệu không được xác thực: ${errorMessage}`;
+			return backendMessage || `Unprocessable entity: ${detailedMessage}`;
 		case 429:
-			return "Quá nhiều yêu cầu. Vui lòng thử lại sau.";
+			return backendMessage || "Too many requests. Please try again later.";
 		case 500:
-			return "Lỗi máy chủ nội bộ. Vui lòng thử lại sau.";
+			return backendMessage || "Internal server error. Please try again later.";
 		case 502:
 		case 503:
 		case 504:
-			return "Dịch vụ tạm thời không khả dụng. Vui lòng thử lại sau.";
+			return backendMessage || "Service temporarily unavailable. Please try again later.";
 		default:
 			if (error.code === "ECONNABORTED") {
-				return "Yêu cầu đã hết thời gian chờ. Vui lòng thử lại sau.";
+				return "Request timed out. Please try again later.";
 			} else if (error.code === "ERR_NETWORK") {
-				return "Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet.";
+				return "Network error. Please check your internet connection.";
 			}
-			return errorMessage;
+			return detailedMessage;
 	}
 };
+

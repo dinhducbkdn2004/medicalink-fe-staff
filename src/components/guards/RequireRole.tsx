@@ -22,7 +22,8 @@ export const RequireRole = ({
 	useEffect(() => {
 		if (!isLoading) {
 			if (!isAuthenticated || !user) {
-				navigate({ to: "/login" });
+				console.log("Redirecting to login: not authenticated or no user");
+				navigate({ to: "/login", replace: true });
 				return;
 			}
 

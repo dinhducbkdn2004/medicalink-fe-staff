@@ -10,7 +10,7 @@ export type {
 	ChangePasswordRequest,
 	Doctor,
 	Specialty,
-	Location,
+	WorkLocation,
 	PaginationParams,
 	PaginatedResponse,
 	ApiResponse,

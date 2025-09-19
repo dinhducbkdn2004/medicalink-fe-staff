@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { Hospital } from "lucide-react";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
@@ -7,26 +6,10 @@ import { LoginForm } from "@/components/forms/login-form";
 import loginImage from "@/assets/images/login/bg-login.jpeg";
 
 export const LoginPage = () => {
-	const { user, isAuthenticated } = useAuthStatus();
-	const navigate = useNavigate();
+	const { isAuthenticated } = useAuthStatus();
 
-	useEffect(() => {
-		if (isAuthenticated && user) {
-			switch (user.role) {
-				case "SUPER_ADMIN":
-					navigate({ to: "/super-admin/dashboard" });
-					break;
-				case "ADMIN":
-					navigate({ to: "/admin/dashboard" });
-					break;
-				case "DOCTOR":
-					navigate({ to: "/doctor/dashboard" });
-					break;
-				default:
-					navigate({ to: "/" });
-			}
-		}
-	}, [isAuthenticated, user, navigate]);
+	// Sử dụng custom hook để xử lý auth redirect
+	useAuthRedirect();
 
 	if (isAuthenticated) {
 		return (

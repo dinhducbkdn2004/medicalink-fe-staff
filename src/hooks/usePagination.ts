@@ -1,77 +1,74 @@
-import { useState, useCallback } from "react";
-import type { PaginationParams } from "@/types";
+import { useState, useCallback, useMemo } from "react";
 
-interface UsePaginationOptions {
+export interface UsePaginationProps {
+	totalItems: number;
+	itemsPerPage?: number;
 	initialPage?: number;
-	initialLimit?: number;
 }
 
 interface UsePaginationReturn {
-	params: PaginationParams;
+	currentPage: number;
+	totalPages: number;
+	hasNextPage: boolean;
+	hasPrevPage: boolean;
 	setPage: (page: number) => void;
-	setLimit: (limit: number) => void;
-	setSort: (sortBy: string, sortOrder?: "asc" | "desc") => void;
-	reset: () => void;
 	nextPage: () => void;
 	prevPage: () => void;
-	goToPage: (page: number) => void;
+	reset: () => void;
 }
 
-/**
- * Custom hook for pagination management
- */
-export const usePagination = (
-	options: UsePaginationOptions = {}
-): UsePaginationReturn => {
-	const { initialPage = 1, initialLimit = 10 } = options;
+export const usePagination = ({
+	totalItems,
+	itemsPerPage = 10,
+	initialPage = 1,
+}: UsePaginationProps): UsePaginationReturn => {
+	const [currentPage, setCurrentPage] = useState(initialPage);
 
-	const [params, setParams] = useState<PaginationParams>({
-		page: initialPage,
-		limit: initialLimit,
-	});
-
-	const setPage = useCallback((page: number) => {
-		setParams((prev) => ({ ...prev, page }));
-	}, []);
-
-	const setLimit = useCallback((limit: number) => {
-		setParams((prev) => ({ ...prev, limit, page: 1 })); // Reset to first page when changing limit
-	}, []);
-
-	const setSort = useCallback(
-		(sortBy: string, sortOrder: "asc" | "desc" = "asc") => {
-			setParams((prev) => ({ ...prev, sortBy, sortOrder }));
-		},
-		[]
+	const totalPages = useMemo(
+		() => Math.ceil(totalItems / itemsPerPage),
+		[totalItems, itemsPerPage]
 	);
 
-	const reset = useCallback(() => {
-		setParams({
-			page: initialPage,
-			limit: initialLimit,
-		});
-	}, [initialPage, initialLimit]);
+	const hasNextPage = useMemo(
+		() => currentPage < totalPages,
+		[currentPage, totalPages]
+	);
+
+	const hasPrevPage = useMemo(() => currentPage > 1, [currentPage]);
+
+	const setPage = useCallback(
+		(page: number) => {
+			if (page >= 1 && page <= totalPages) {
+				setCurrentPage(page);
+			}
+		},
+		[totalPages]
+	);
 
 	const nextPage = useCallback(() => {
-		setParams((prev) => ({ ...prev, page: (prev.page || 1) + 1 }));
-	}, []);
+		if (hasNextPage) {
+			setCurrentPage((prev) => prev + 1);
+		}
+	}, [hasNextPage]);
 
 	const prevPage = useCallback(() => {
-		setParams((prev) => ({ ...prev, page: Math.max(1, (prev.page || 1) - 1) }));
-	}, []);
+		if (hasPrevPage) {
+			setCurrentPage((prev) => prev - 1);
+		}
+	}, [hasPrevPage]);
 
-	const goToPage = useCallback((page: number) => {
-		setParams((prev) => ({ ...prev, page: Math.max(1, page) }));
-	}, []);
+	const reset = useCallback(() => {
+		setCurrentPage(initialPage);
+	}, [initialPage]);
 
 	return {
-		params,
+		currentPage,
+		totalPages,
+		hasNextPage,
+		hasPrevPage,
 		setPage,
-		setLimit,
-		setSort,
-		reset,
 		nextPage,
 		prevPage,
-		goToPage,
+		reset,
 	};
 };

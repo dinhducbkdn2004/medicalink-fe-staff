@@ -4,10 +4,12 @@ import { REQUEST_TIMEOUT, STORAGE_KEYS } from "@/constants/api";
 import { handleApiError } from "./errorHandler";
 
 const API_BASE_URL =
-	import.meta.env["VITE_API_BASE_URL"] || "https://medicalink-be.onrender.com";
+	import.meta.env["VITE_APP_ENVIRONMENT"] === "production"
+		? import.meta.env["VITE_API_BASE_URL_PRO"] || "https://api.medicalink.com"
+		: import.meta.env["VITE_API_BASE_URL_DEV"] || "http://localhost:3000";
 
 export const apiClient = axios.create({
-	baseURL: API_BASE_URL,
+	baseURL: API_BASE_URL + "/api",
 	timeout: REQUEST_TIMEOUT,
 	headers: {
 		"Content-Type": "application/json",
@@ -38,13 +40,13 @@ apiClient.interceptors.response.use(
 				response.config.method?.toLowerCase() || ""
 			)
 		) {
-			// Show success toast for mutating requests
-			toast.success("Operation successful");
+			toast.success(
+				response.data?.message || "Operation completed successfully"
+			);
 		}
 		return response;
 	},
 	async (error) => {
-		// Use centralized error handler
 		return handleApiError(error);
 	}
 );

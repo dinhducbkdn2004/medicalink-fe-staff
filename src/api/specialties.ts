@@ -8,10 +8,6 @@ import type {
 	ApiResponse,
 } from "@/types";
 
-/**
- * Specialty management API endpoints
- */
-
 // Get all specialties with pagination
 export const getSpecialties = (
 	params?: PaginationParams & {
@@ -25,7 +21,7 @@ export const getSpecialties = (
 
 // Get all active specialties (for dropdowns)
 export const getActiveSpecialties = () =>
-	apiClient.get<ApiResponse<Specialty[]>>("/specialties/active");
+	apiClient.get<ApiResponse<Specialty[]>>("/specialties/public");
 
 // Get specialty by ID
 export const getSpecialtyById = (id: string) =>

@@ -2,19 +2,27 @@
  * Common API Types
  */
 export interface ApiResponse<T = unknown> {
+	success: boolean;
 	data: T;
 	message: string;
-	statusCode: number;
+	statusCode?: number;
 	timestamp: string;
 	path: string;
+	method: string;
+	meta?: any;
 }
 
 export interface ApiError {
+	success: false;
 	message: string;
 	statusCode: number;
 	timestamp: string;
 	path: string;
+	method: string;
 	error?: string;
+	details?: any[];
+	code?: string | number;
+	requestId?: string;
 }
 
 export interface PaginationParams {
@@ -27,10 +35,13 @@ export interface PaginationParams {
 export interface PaginatedResponse<T> {
 	data: T[];
 	meta: {
-		page: number;
+		page?: number; // For frontend compatibility
+		skip?: number; // From backend
 		limit: number;
 		total: number;
-		totalPages: number;
+		totalPages?: number; // Calculated field
+		hasNext: boolean; // From backend
+		hasPrev: boolean; // From backend
 	};
 }
 
@@ -45,12 +56,9 @@ export interface StaffAccount {
 	fullName: string;
 	email: string;
 	role: StaffRole;
-	avatar?: string;
-	gender: Gender;
-	dateOfBirth: string | null;
-	phone?: string;
-	address?: string;
-	isActive: boolean;
-	createdAt: string;
-	updatedAt: string;
+	phone?: string | null;
+	isMale?: boolean | null;
+	dateOfBirth?: Date | null;
+	createdAt: Date;
+	updatedAt: Date;
 }

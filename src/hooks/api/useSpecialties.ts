@@ -9,7 +9,7 @@ import {
 	toggleSpecialtyStatus,
 	getSpecialtyStats,
 } from "@/api/specialties";
-import { extractApiData } from "@/api/core/utils";
+import { extractApiData, extractPaginatedData } from "@/api/core/utils";
 import type {
 	PaginationParams,
 	CreateSpecialtyRequest,
@@ -45,7 +45,7 @@ export const useSpecialties = (
 ) =>
 	useQuery({
 		queryKey: specialtyKeys.list(params),
-		queryFn: async () => extractApiData(await getSpecialties(params)),
+		queryFn: async () => extractPaginatedData(await getSpecialties(params)),
 		staleTime: 1000 * 60 * 5, // 5 minutes
 	});
 

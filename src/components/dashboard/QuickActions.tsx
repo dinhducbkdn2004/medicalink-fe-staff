@@ -33,12 +33,12 @@ interface QuickActionsProps {
 export const QuickActions = ({ onActionClick }: QuickActionsProps) => {
 	const actions: QuickAction[] = [
 		{
-			id: "manage-admins",
-			title: "Manage Admins",
-			description: "View, add, edit, delete admin accounts",
+			id: "manage-staffs",
+			title: "Manage Staffs",
+			description: "View, add, edit, delete staff accounts",
 			icon: <Users className="h-5 w-5" />,
 			color: "bg-blue-500 hover:bg-blue-600",
-			onClick: () => onActionClick?.("manage-admins"),
+			onClick: () => onActionClick?.("manage-staffs"),
 		},
 		{
 			id: "manage-doctors",

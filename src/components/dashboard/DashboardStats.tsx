@@ -72,8 +72,8 @@ const StatCard = ({
 
 interface DashboardStatsProps {
 	stats: {
-		totalAdmins: number;
-		activeAdmins: number;
+		totalStaffs: number;
+		activeStaffs: number;
 		totalDoctors: number;
 		totalLocations: number;
 		totalSpecialties: number;
@@ -86,16 +86,16 @@ interface DashboardStatsProps {
 export const DashboardStats = ({ stats }: DashboardStatsProps) => {
 	const statCards = [
 		{
-			title: "Total Admins",
-			value: stats.totalAdmins,
+			title: "Total Staffs",
+			value: stats.totalStaffs,
 			description: "System administrators",
 			icon: <Users className="h-4 w-4" />,
 			trend: { value: 12, isPositive: true },
 			color: "blue" as const,
 		},
 		{
-			title: "Active Admins",
-			value: stats.activeAdmins,
+			title: "Active Staffs",
+			value: stats.activeStaffs,
 			description: "Currently online",
 			icon: <UserCheck className="h-4 w-4" />,
 			trend: { value: 8, isPositive: true },

@@ -1,8 +1,3 @@
-/**
- * API Constants
- */
-
-// Cache times
 export const CACHE_TIME = {
 	SHORT: 1000 * 60 * 2,
 	MEDIUM: 1000 * 60 * 5,
@@ -10,7 +5,6 @@ export const CACHE_TIME = {
 	VERY_LONG: 1000 * 60 * 60,
 } as const;
 
-// Pagination defaults
 export const PAGINATION_DEFAULTS = {
 	PAGE: 1,
 	LIMIT: 10,
@@ -19,9 +13,10 @@ export const PAGINATION_DEFAULTS = {
 
 export const API_ENDPOINTS = {
 	AUTH: "/auth",
-	ADMINS: "/admins",
+	STAFFS: "/staffs",
 	DOCTORS: "/doctors",
 	SPECIALTIES: "/specialties",
+	WORK_LOCATIONS: "/work-locations",
 	BLOGS: "/blogs",
 	QUESTIONS: "/questions",
 } as const;
@@ -31,5 +26,6 @@ export const REQUEST_TIMEOUT = 30000;
 export const STORAGE_KEYS = {
 	ACCESS_TOKEN: "access_token",
 	REFRESH_TOKEN: "refresh_token",
+	USER_DATA: "user_data",
 	USER_ROLE: "user_role",
 } as const;
