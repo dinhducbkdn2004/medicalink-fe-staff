@@ -3,7 +3,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { useAuthStatus } from "./useAuthStatus";
 import type { StaffRole } from "@/types";
 
-
 export const useAuthRedirect = () => {
 	const { user, isAuthenticated, isLoading } = useAuthStatus();
 	const navigate = useNavigate();
@@ -20,7 +19,6 @@ export const useAuthRedirect = () => {
 		}
 	}, [isLoading, isAuthenticated, user, navigate]);
 };
-
 
 export const getDashboardPath = (role: StaffRole): string => {
 	switch (role) {

@@ -18,7 +18,7 @@ export const extractPaginatedData = <T>(
 		"data" in responseData &&
 		"meta" in responseData
 	) {
-		const { data, meta } = responseData as PaginatedResponse<T>;
+		const { data, meta } = responseData;
 		return {
 			data,
 			meta: {
