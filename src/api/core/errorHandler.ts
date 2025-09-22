@@ -84,7 +84,9 @@ const getErrorMessage = (error: AxiosError<ApiError>): string => {
 		case 401:
 			return backendMessage || "You are not authorized. Please log in again.";
 		case 403:
-			return backendMessage || "You do not have permission to perform this action.";
+			return (
+				backendMessage || "You do not have permission to perform this action."
+			);
 		case 404:
 			return backendMessage || `Resource not found.`;
 		case 409:
@@ -98,7 +100,10 @@ const getErrorMessage = (error: AxiosError<ApiError>): string => {
 		case 502:
 		case 503:
 		case 504:
-			return backendMessage || "Service temporarily unavailable. Please try again later.";
+			return (
+				backendMessage ||
+				"Service temporarily unavailable. Please try again later."
+			);
 		default:
 			if (error.code === "ECONNABORTED") {
 				return "Request timed out. Please try again later.";
@@ -108,4 +113,3 @@ const getErrorMessage = (error: AxiosError<ApiError>): string => {
 			return detailedMessage;
 	}
 };
-

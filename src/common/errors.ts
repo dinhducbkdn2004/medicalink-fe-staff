@@ -79,7 +79,8 @@ export const parseApiError = (
 
 	if (isNetworkError(error)) {
 		return {
-			message: "Network connection error. Please check your internet connection.",
+			message:
+				"Network connection error. Please check your internet connection.",
 			type: "network",
 		};
 	}

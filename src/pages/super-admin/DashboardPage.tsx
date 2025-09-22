@@ -119,7 +119,7 @@ export const SuperAdminDashboard = () => {
 		// Navigate to activities page
 	};
 
-	const handleQuickAction = (_actionId: string) => {
+	const handleQuickAction = () => {
 		// Handle quick actions - navigation logic will be implemented later
 	};
 
