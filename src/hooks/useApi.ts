@@ -8,9 +8,6 @@ interface UseApiState<T> {
 	error: string | null;
 }
 
-/**
- * Custom hook for API calls with loading and error states
- */
 export const useApi = <T>() => {
 	const [state, setState] = useState<UseApiState<T>>({
 		data: null,

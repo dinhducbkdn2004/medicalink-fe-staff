@@ -1,33 +1,42 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
-	DashboardHeader,
 	DashboardStats,
 	RecentActivities,
 	QuickActions,
 } from "@/components/dashboard";
+import { useStaffStats } from "@/hooks/api/useStaffs";
+import { useDoctorStats } from "@/hooks/api/useDoctors";
+import { useSpecialtyStats } from "@/hooks/api/useSpecialties";
+import { useLocationStats } from "@/hooks/api/useLocations";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const SuperAdminDashboard = () => {
-	const mockStats = {
-		totalStaffs: 24,
-		activeStaffs: 18,
-		totalDoctors: 156,
-		totalLocations: 8,
-		totalSpecialties: 25,
-		totalBlogs: 89,
-		totalQuestions: 234,
+	const { data: staffStats, isLoading: isLoadingStaffStats } = useStaffStats();
+	const { data: doctorStats, isLoading: isLoadingDoctorStats } =
+		useDoctorStats();
+	const { data: specialtyStats, isLoading: isLoadingSpecialtyStats } =
+		useSpecialtyStats();
+	const { data: locationStats, isLoading: isLoadingLocationStats } =
+		useLocationStats();
+
+	const isLoading =
+		isLoadingStaffStats ||
+		isLoadingDoctorStats ||
+		isLoadingSpecialtyStats ||
+		isLoadingLocationStats;
+
+	const stats = {
+		totalStaffs: staffStats?.total || 0,
+		activeStaffs: staffStats?.recentlyCreated || 0,
+		totalDoctors: doctorStats?.total || 0,
+		totalLocations: locationStats?.total || 0,
+		totalSpecialties: specialtyStats?.total || 0,
+		totalBlogs: 0,
+		totalQuestions: 0,
 		systemHealth: 98,
 	};
 
-	const mockSystemMetrics = {
-		activeUsers: 1247,
-		totalRequests: 15420,
-		errorRate: 0.8,
-	};
-
-	const mockActivities = [
+	const activities = [
 		{
 			id: "1",
 			type: "admin_created" as const,
@@ -38,7 +47,7 @@ export const SuperAdminDashboard = () => {
 				name: "Super Admin",
 				role: "Super Admin",
 			},
-			timestamp: new Date(Date.now() - 1000 * 60 * 5).toISOString(), // 5 minutes ago
+			timestamp: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
 			status: "success" as const,
 		},
 		{
@@ -50,7 +59,7 @@ export const SuperAdminDashboard = () => {
 				name: "Dr. Tran Thi B",
 				role: "Doctor",
 			},
-			timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString(), // 15 minutes ago
+			timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
 			status: "success" as const,
 		},
 		{
@@ -62,7 +71,7 @@ export const SuperAdminDashboard = () => {
 				name: "Admin System",
 				role: "Admin",
 			},
-			timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 minutes ago
+			timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
 			status: "info" as const,
 		},
 		{
@@ -71,10 +80,10 @@ export const SuperAdminDashboard = () => {
 			title: "New Location Added",
 			description: "Hanoi branch has been added to the system",
 			user: {
-				name: "Super Admin",
-				role: "Super Admin",
+				name: "Admin User",
+				role: "Admin",
 			},
-			timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString(), // 45 minutes ago
+			timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
 			status: "success" as const,
 		},
 		{
@@ -86,7 +95,7 @@ export const SuperAdminDashboard = () => {
 				name: "Admin Medical",
 				role: "Admin",
 			},
-			timestamp: new Date(Date.now() - 1000 * 60 * 60).toISOString(), // 1 hour ago
+			timestamp: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
 			status: "info" as const,
 		},
 		{
@@ -98,22 +107,10 @@ export const SuperAdminDashboard = () => {
 				name: "Super Admin",
 				role: "Super Admin",
 			},
-			timestamp: new Date(Date.now() - 1000 * 60 * 90).toISOString(), // 1.5 hours ago
+			timestamp: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
 			status: "warning" as const,
 		},
 	];
-
-	const handleRefresh = () => {
-		// Refresh dashboard data
-	};
-
-	const handleAddNew = () => {
-		// Open add new dialog
-	};
-
-	const handleExport = () => {
-		// Export data
-	};
 
 	const handleViewAllActivities = () => {
 		// Navigate to activities page
@@ -124,91 +121,48 @@ export const SuperAdminDashboard = () => {
 	};
 
 	return (
-		<SidebarProvider>
-			<AppSidebar />
-			<SidebarInset>
-				<DashboardHeader
-					title="Dashboard"
-					showSearch={true}
-					showFilters={true}
-					onRefresh={handleRefresh}
-					onAddNew={handleAddNew}
-					onExport={handleExport}
-				/>
-
-				<div className="flex flex-1 flex-col gap-4 p-4 pt-6">
-					{/* Statistics Cards */}
-					<div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
-						<DashboardStats stats={mockStats} />
+		<>
+			{/* Statistics Cards */}
+			<div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
+				{isLoading ? (
+					<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+						{Array.from(
+							{ length: 6 },
+							(_, i) => `skeleton-SUPER_ADMIN-${i}`
+						).map((key) => (
+							<Card key={key}>
+								<CardHeader className="pb-2">
+									<Skeleton className="h-4 w-[150px]" />
+								</CardHeader>
+								<CardContent className="pt-0">
+									<div className="mb-2 flex items-baseline justify-between">
+										<Skeleton className="h-8 w-[80px]" />{" "}
+										<Skeleton className="h-4 w-[40px]" />
+									</div>
+									<Skeleton className="h-3 w-[140px]" />
+								</CardContent>
+							</Card>
+						))}
 					</div>
+				) : (
+					<DashboardStats stats={stats} />
+				)}
+			</div>
 
-					{/* Main Content */}
-					<div className="grid gap-4 lg:grid-cols-12">
-						<div className="animate-in fade-in-0 slide-in-from-left-4 delay-200 duration-700 lg:col-span-7">
-							<RecentActivities
-								activities={mockActivities}
-								onViewAll={handleViewAllActivities}
-							/>
-						</div>
-
-						{/* Right Sidebar */}
-						<div className="space-y-4 lg:col-span-5">
-							{/* Quick Actions */}
-							<div className="animate-in fade-in-0 slide-in-from-right-4 delay-400 duration-700">
-								<QuickActions onActionClick={handleQuickAction} />
-							</div>
-
-							{/* System Overview - Compact version */}
-							<div className="animate-in fade-in-0 slide-in-from-right-4 delay-600 duration-700">
-								<Card>
-									<CardHeader className="pb-3">
-										<CardTitle className="flex items-center gap-2 text-base">
-											<Activity className="h-4 w-4" />
-											System Overview
-										</CardTitle>
-									</CardHeader>
-									<CardContent className="pt-0">
-										<div className="grid grid-cols-2 gap-3">
-											<div className="text-center">
-												<div className="text-xl font-bold text-green-600">
-													{mockStats.activeStaffs}
-												</div>
-												<div className="text-muted-foreground text-xs">
-													Online Staffs
-												</div>
-											</div>
-											<div className="text-center">
-												<div className="text-xl font-bold text-blue-600">
-													{mockSystemMetrics.activeUsers}
-												</div>
-												<div className="text-muted-foreground text-xs">
-													Active Users
-												</div>
-											</div>
-											<div className="text-center">
-												<div className="text-xl font-bold text-purple-600">
-													{mockSystemMetrics.totalRequests.toLocaleString()}
-												</div>
-												<div className="text-muted-foreground text-xs">
-													Total Requests
-												</div>
-											</div>
-											<div className="text-center">
-												<div className="text-xl font-bold text-orange-600">
-													{mockSystemMetrics.errorRate}%
-												</div>
-												<div className="text-muted-foreground text-xs">
-													Error Rate
-												</div>
-											</div>
-										</div>
-									</CardContent>
-								</Card>
-							</div>
-						</div>
-					</div>
+			{/* Main Content */}
+			<div className="grid gap-4 lg:grid-cols-12">
+				<div className="animate-in fade-in-0 slide-in-from-left-4 delay-200 duration-700 lg:col-span-7">
+					<RecentActivities
+						activities={activities}
+						onViewAll={handleViewAllActivities}
+					/>
 				</div>
-			</SidebarInset>
-		</SidebarProvider>
+
+				{/* Quick Actions */}
+				<div className="animate-in fade-in-0 slide-in-from-right-4 delay-400 duration-700 lg:col-span-5">
+					<QuickActions onActionClick={handleQuickAction} />
+				</div>
+			</div>
+		</>
 	);
 };

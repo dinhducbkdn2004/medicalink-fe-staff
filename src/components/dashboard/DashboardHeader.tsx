@@ -19,33 +19,19 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-	Plus,
-	Download,
-	RefreshCw,
-	Settings,
-	Bell,
-	Search,
-	Filter,
-} from "lucide-react";
+import { RefreshCw, Settings, Bell, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 interface DashboardHeaderProps {
 	title?: string;
 	showSearch?: boolean;
-	showFilters?: boolean;
 	onRefresh?: () => void;
-	onAddNew?: () => void;
-	onExport?: () => void;
 }
 
 export const DashboardHeader = ({
 	title = "Dashboard",
 	showSearch = false,
-	showFilters = false,
 	onRefresh,
-	onAddNew,
-	onExport,
 }: DashboardHeaderProps) => {
 	return (
 		<header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 flex h-16 shrink-0 items-center gap-2 border-b backdrop-blur transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
@@ -80,31 +66,10 @@ export const DashboardHeader = ({
 
 			{/* Actions */}
 			<div className="ml-auto flex items-center gap-2 px-4">
-				{showFilters && (
-					<Button variant="outline" size="sm">
-						<Filter className="mr-2 h-4 w-4" />
-						Filters
-					</Button>
-				)}
-
 				{onRefresh && (
 					<Button variant="outline" size="sm" onClick={onRefresh}>
 						<RefreshCw className="mr-2 h-4 w-4" />
 						Refresh
-					</Button>
-				)}
-
-				{onExport && (
-					<Button variant="outline" size="sm" onClick={onExport}>
-						<Download className="mr-2 h-4 w-4" />
-						Export
-					</Button>
-				)}
-
-				{onAddNew && (
-					<Button size="sm" onClick={onAddNew}>
-						<Plus className="mr-2 h-4 w-4" />
-						Add New
 					</Button>
 				)}
 

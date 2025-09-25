@@ -11,7 +11,6 @@ export const useAuthRedirect = () => {
 		if (!isLoading && isAuthenticated && user) {
 			const currentPath = window.location.pathname;
 
-			// Nếu đang ở login page và đã authenticated, redirect tới dashboard phù hợp
 			if (currentPath === "/login") {
 				const dashboardPath = getDashboardPath(user.role);
 				navigate({ to: dashboardPath, replace: true });

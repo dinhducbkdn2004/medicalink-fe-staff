@@ -1,8 +1,5 @@
 import type { StaffAccount } from "./common";
 
-/**
- * Authentication Types
- */
 export interface AuthTokens {
 	accessToken: string;
 	refreshToken: string;

@@ -1,10 +1,5 @@
-import {
-	BadgeCheck,
-	Bell,
-	ChevronsUpDown,
-	LogOut,
-	Sparkles,
-} from "lucide-react";
+import { useState } from "react";
+import { BadgeCheck, Bell, ChevronsUpDown, LogOut, Lock } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -24,6 +19,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useLogout } from "@/hooks/api";
 import { useNavigate } from "@tanstack/react-router";
+import { ChangePasswordModal } from "@/components/modals";
 
 export function NavUser({
 	user,
@@ -33,6 +29,7 @@ export function NavUser({
 	const { isMobile } = useSidebar();
 	const logoutMutation = useLogout();
 	const navigate = useNavigate();
+	const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
 	const handleLogout = () => {
 		logoutMutation.mutate(undefined, {
@@ -86,9 +83,11 @@ export function NavUser({
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<Sparkles />
-								Upgrade to Pro
+							<DropdownMenuItem
+								onClick={() => setShowChangePasswordModal(true)}
+							>
+								<Lock />
+								Change Password
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
@@ -110,6 +109,12 @@ export function NavUser({
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</SidebarMenuItem>
+
+			{/* Change Password Modal */}
+			<ChangePasswordModal
+				open={showChangePasswordModal}
+				onOpenChange={setShowChangePasswordModal}
+			/>
 		</SidebarMenu>
 	);
 }

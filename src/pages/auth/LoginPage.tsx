@@ -8,7 +8,6 @@ import loginImage from "@/assets/images/login/bg-login.jpeg";
 export const LoginPage = () => {
 	const { isAuthenticated } = useAuthStatus();
 
-	// Sử dụng custom hook để xử lý auth redirect
 	useAuthRedirect();
 
 	if (isAuthenticated) {

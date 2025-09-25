@@ -15,7 +15,8 @@ interface ApiProviderProps {
 export const ApiProvider = ({
 	children,
 	baseURL = import.meta.env["VITE_APP_ENVIRONMENT"] === "production"
-		? import.meta.env["VITE_API_BASE_URL_PRO"] || "https://api.medicalink.com"
+		? import.meta.env["VITE_API_BASE_URL_PRO"] ||
+			"https://medicalink-be.onrender.com"
 		: import.meta.env["VITE_API_BASE_URL_DEV"] || "http://localhost:3000",
 }: ApiProviderProps) => {
 	const isOnline = navigator.onLine;

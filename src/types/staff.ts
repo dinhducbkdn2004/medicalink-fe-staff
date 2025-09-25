@@ -62,9 +62,6 @@ export interface UpdateDoctorRequest {
 	isAvailable?: boolean;
 }
 
-/**
- * Specialty Types
- */
 export interface Specialty {
 	id: string;
 	name: string;
@@ -87,17 +84,13 @@ export interface UpdateSpecialtyRequest {
 	icon?: string;
 	isActive?: boolean;
 }
-
-/**
- * Work Location Types (updated to match backend)
- */
 export interface WorkLocation {
 	id: string;
 	name: string;
-	address?: string; // Made optional to match backend
+	address?: string;
 	phone?: string;
-	timezone: string; // Added to match backend
-	isActive?: boolean; // Optional in backend
+	timezone: string;
+	isActive?: boolean;
 	createdAt?: string;
 	updatedAt?: string;
 }
@@ -106,7 +99,7 @@ export interface CreateWorkLocationRequest {
 	name: string;
 	address?: string;
 	phone?: string;
-	timezone: string; // Required in backend
+	timezone: string;
 }
 
 export interface UpdateWorkLocationRequest {
