@@ -26,147 +26,116 @@ import {
 	SidebarRail,
 } from "@/components/ui/sidebar";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
+import { getNavigationForRole, getProjectsForRole } from "@/lib/permissions";
+import type { StaffRole } from "@/types/common";
 
-// Hospital Management System Data for Super Admin
-const data = {
-	teams: [
-		{
-			name: "MediCaLink Hospital",
-			logo: GalleryVerticalEnd,
-			plan: "Super Admin",
-		},
-		{
-			name: "Admin Panel",
-			logo: Activity,
-			plan: "Management",
-		},
-		{
-			name: "System Control",
-			logo: Command,
-			plan: "Enterprise",
-		},
-	],
-	navMain: [
-		{
-			title: "Dashboard",
-			url: "/super-admin/dashboard",
-			icon: SquareTerminal,
-			isActive: true,
-			items: [
-				{
-					title: "Overview",
-					url: "/super-admin/dashboard",
-				},
-				{
-					title: "Analytics",
-					url: "/super-admin/analytics",
-				},
-				{
-					title: "Reports",
-					url: "/super-admin/reports",
-				},
-			],
-		},
-		{
-			title: "User Management",
-			url: "/super-admin/users",
-			icon: Users,
-			items: [
-				{
-					title: "Admin Accounts",
-					url: "/super-admin/admin-accounts",
-				},
-				{
-					title: "Doctor Accounts",
-					url: "/super-admin/doctor-accounts",
-				},
-				{
-					title: "Patients",
-					url: "/super-admin/patients",
-				},
-				{
-					title: "Permissions",
-					url: "/super-admin/permissions",
-				},
-			],
-		},
-		{
-			title: "Hospital Setup",
-			url: "/super-admin/hospital",
-			icon: Building2,
-			items: [
-				{
-					title: "Specialties",
-					url: "/super-admin/specialties",
-				},
-				{
-					title: "Work Locations",
-					url: "/super-admin/work-locations",
-				},
-				{
-					title: "Schedules",
-					url: "/super-admin/schedules",
-				},
-				{
-					title: "Appointments",
-					url: "/super-admin/appointments",
-				},
-			],
-		},
-		{
-			title: "System Settings",
-			url: "/super-admin/settings",
-			icon: Settings2,
-			items: [
-				{
-					title: "General",
-					url: "/super-admin/settings/general",
-				},
-				{
-					title: "Security",
-					url: "/super-admin/settings/security",
-				},
-				{
-					title: "Backup",
-					url: "/super-admin/settings/backup",
-				},
-				{
-					title: "Logs",
-					url: "/super-admin/settings/logs",
-				},
-			],
-		},
-	],
-	projects: [
-		{
-			name: "Content Management",
-			url: "/super-admin/content",
-			icon: FileText,
-		},
-		{
-			name: "Q&A Management",
-			url: "/super-admin/qa",
-			icon: MessageCircleQuestion,
-		},
-		{
-			name: "Reviews & Feedback",
-			url: "/super-admin/reviews",
-			icon: Star,
-		},
-	],
+// Icons mapping for navigation items
+const NAVIGATION_ICONS = {
+	Dashboard: SquareTerminal,
+	"User Management": Users,
+	"Hospital Setup": Building2,
+	"System Settings": Settings2,
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+// Icons mapping for project items
+const PROJECT_ICONS = {
+	"Content Management": FileText,
+	"Q&A Management": MessageCircleQuestion,
+	"Reviews & Feedback": Star,
+};
+
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+	readonly userRole?: StaffRole;
+}
+
+export function AppSidebar({ userRole, ...props }: AppSidebarProps) {
 	const { user } = useAuthStatus();
+
+	// Use provided userRole or fallback to authenticated user's role
+	const effectiveRole = userRole || user?.role;
+
+	// Generate role-based navigation
+	const navigation = React.useMemo(() => {
+		if (!effectiveRole) return [];
+
+		const navItems = getNavigationForRole(effectiveRole);
+
+		// Add icons to navigation items
+		return navItems.map((item) => ({
+			...item,
+			icon:
+				NAVIGATION_ICONS[item.title as keyof typeof NAVIGATION_ICONS] ||
+				SquareTerminal,
+		}));
+	}, [effectiveRole]);
+
+	// Generate role-based projects
+	const projects = React.useMemo(() => {
+		if (!effectiveRole) return [];
+
+		const projectItems = getProjectsForRole(effectiveRole);
+
+		// Add icons to project items
+		return projectItems.map((item) => ({
+			...item,
+			icon: PROJECT_ICONS[item.name as keyof typeof PROJECT_ICONS] || FileText,
+		}));
+	}, [effectiveRole]);
+
+	// Generate team switcher data based on role
+	const teams = React.useMemo(() => {
+		const roleLabels = {
+			SUPER_ADMIN: "Super Admin",
+			ADMIN: "Admin",
+			DOCTOR: "Doctor",
+		};
+
+		const baseTeams = [
+			{
+				name: "MediCaLink Hospital",
+				logo: GalleryVerticalEnd,
+				plan: effectiveRole ? roleLabels[effectiveRole] : "Staff",
+			},
+		];
+
+		if (effectiveRole === "SUPER_ADMIN") {
+			return [
+				...baseTeams,
+				{
+					name: "Admin Panel",
+					logo: Activity,
+					plan: "Management",
+				},
+				{
+					name: "System Control",
+					logo: Command,
+					plan: "Enterprise",
+				},
+			];
+		}
+
+		if (effectiveRole === "ADMIN") {
+			return [
+				...baseTeams,
+				{
+					name: "Admin Panel",
+					logo: Activity,
+					plan: "Management",
+				},
+			];
+		}
+
+		return baseTeams;
+	}, [effectiveRole]);
 
 	return (
 		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
-				<TeamSwitcher teams={data.teams} />
+				<TeamSwitcher teams={teams} />
 			</SidebarHeader>
 			<SidebarContent>
-				<NavMain items={data.navMain} />
-				<NavProjects projects={data.projects} />
+				<NavMain items={navigation} />
+				{projects.length > 0 && <NavProjects projects={projects} />}
 			</SidebarContent>
 			<SidebarFooter>{user && <NavUser user={user} />}</SidebarFooter>
 			<SidebarRail />

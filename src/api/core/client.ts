@@ -16,7 +16,6 @@ export const apiClient = axios.create({
 	},
 });
 
-// Setup request interceptor
 apiClient.interceptors.request.use(
 	(config: InternalAxiosRequestConfig) => {
 		const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
@@ -31,10 +30,8 @@ apiClient.interceptors.request.use(
 	}
 );
 
-// Setup response interceptor
 apiClient.interceptors.response.use(
 	(response: AxiosResponse) => {
-		// Handle success responses
 		if (
 			["post", "put", "patch", "delete"].includes(
 				response.config.method?.toLowerCase() || ""

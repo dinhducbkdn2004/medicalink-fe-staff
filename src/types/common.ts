@@ -1,6 +1,3 @@
-/**
- * Common API Types
- */
 export interface ApiResponse<T = unknown> {
 	success: boolean;
 	data: T;
@@ -35,19 +32,16 @@ export interface PaginationParams {
 export interface PaginatedResponse<T> {
 	data: T[];
 	meta: {
-		page?: number; // For frontend compatibility
-		skip?: number; // From backend
+		page?: number;
+		skip?: number;
 		limit: number;
 		total: number;
-		totalPages?: number; // Calculated field
-		hasNext: boolean; // From backend
-		hasPrev: boolean; // From backend
+		totalPages?: number;
+		hasNext: boolean;
+		hasPrev: boolean;
 	};
 }
 
-/**
- * Common Types
- */
 export type StaffRole = "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
 export type Gender = "MALE" | "FEMALE" | "UNKNOWN";
 

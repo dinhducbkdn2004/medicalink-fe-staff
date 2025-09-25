@@ -1,10 +1,3 @@
-/**
- * Content Types - Blogs and Questions
- */
-
-/**
- * Blog Types
- */
 export interface Blog {
 	id: string;
 	title: string;
@@ -55,9 +48,6 @@ export interface UpdateBlogRequest {
 	isActive?: boolean;
 }
 
-/**
- * Question Types
- */
 export interface Question {
 	id: string;
 	title: string;

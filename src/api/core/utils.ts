@@ -86,7 +86,7 @@ export const isApiError = (
 
 export const getApiErrorMessage = (error: any): string => {
 	if (isApiError(error)) {
-		return error.response?.data?.message || "Đã xảy ra lỗi không xác định";
+		return error.response?.data?.message || "An unknown error occurred";
 	}
-	return error.message || "Đã xảy ra lỗi không xác định";
+	return error.message || "An unknown error occurred";
 };

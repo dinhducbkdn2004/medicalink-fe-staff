@@ -3,5 +3,3 @@ export * from "./useStaffs";
 export * from "./useDoctors";
 export * from "./useSpecialties";
 export * from "./useLocations";
-export * from "./useBlogs";
-export * from "./useQuestions";

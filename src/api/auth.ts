@@ -46,18 +46,3 @@ export const resetPassword = (data: { token: string; newPassword: string }) =>
 		"/auth/reset-password",
 		data
 	);
-
-// Verify email
-export const verifyEmail = (token: string) =>
-	apiClient.post<ApiResponse<{ message: string }>>("/auth/verify-email", {
-		token,
-	});
-
-// Resend verification email
-export const resendVerificationEmail = (email: string) =>
-	apiClient.post<ApiResponse<{ message: string }>>(
-		"/auth/resend-verification",
-		{
-			email,
-		}
-	);

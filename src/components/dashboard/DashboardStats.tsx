@@ -43,8 +43,10 @@ const StatCard = ({
 			className={`${colorClasses[color]} transition-all duration-200 hover:scale-[1.02] hover:shadow-md`}
 		>
 			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-				<CardTitle className="text-sm font-medium">{title}</CardTitle>
-				<div className="h-6 w-6 rounded-full bg-white/50 p-1">{icon}</div>
+				<div className="flex items-center space-x-2">
+					{icon}
+					<CardTitle className="text-sm font-medium">{title}</CardTitle>
+				</div>
 			</CardHeader>
 			<CardContent className="pt-0">
 				<div className="text-xl font-bold">{value}</div>
@@ -81,6 +83,7 @@ interface DashboardStatsProps {
 		totalQuestions: number;
 		systemHealth: number;
 	};
+	isLoading?: boolean;
 }
 
 export const DashboardStats = ({ stats }: DashboardStatsProps) => {

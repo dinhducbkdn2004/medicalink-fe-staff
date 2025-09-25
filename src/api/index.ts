@@ -9,5 +9,3 @@ export * from "./staffs";
 export * from "./doctors";
 export * from "./specialties";
 export * from "./locations";
-export * from "./blogs";
-export * from "./questions";

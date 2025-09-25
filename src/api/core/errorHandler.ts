@@ -65,7 +65,6 @@ const handleAuthFailure = () => {
 
 const getErrorMessage = (error: AxiosError<ApiError>): string => {
 	const errorData = error.response?.data;
-	// Ưu tiên message từ backend
 	const backendMessage = errorData?.message;
 	let detailedMessage = backendMessage || "An unknown error occurred";
 
