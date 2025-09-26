@@ -54,7 +54,6 @@ export const DashboardHeader = ({
 				</Breadcrumb>
 			</div>
 
-			{/* Search Bar */}
 			{showSearch && (
 				<div className="mx-4 max-w-sm flex-1">
 					<div className="relative">
@@ -64,7 +63,6 @@ export const DashboardHeader = ({
 				</div>
 			)}
 
-			{/* Actions */}
 			<div className="ml-auto flex items-center gap-2 px-4">
 				{onRefresh && (
 					<Button variant="outline" size="sm" onClick={onRefresh}>
@@ -73,7 +71,6 @@ export const DashboardHeader = ({
 					</Button>
 				)}
 
-				{/* Notifications */}
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant="outline" size="sm" className="relative">
@@ -116,7 +113,6 @@ export const DashboardHeader = ({
 					</DropdownMenuContent>
 				</DropdownMenu>
 
-				{/* Settings */}
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant="outline" size="sm">

@@ -41,9 +41,11 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DoctorModal, DeleteConfirmationModal } from "@/components/modals";
+import { useDoctors, useDeleteDoctor } from "@/hooks/api/useDoctors";
+import { toast } from "sonner";
 
-// Mock data for demonstration
-const mockDoctorAccounts = [
+// Mock data for demonstration - currently unused
+/* const mockDoctorAccounts = [
 	{
 		id: "1",
 		fullName: "Dr. Nguyễn Văn Minh",
@@ -67,10 +69,10 @@ const mockDoctorAccounts = [
 		experience: 8,
 		status: "active",
 		isAvailable: true,
-		consultationFee: 400000,
+		consultationFee: 450000,
 		qualification: "MD",
 		phone: "+84 901 234 568",
-		lastLogin: "2024-01-15 09:15:00",
+		lastLogin: "2024-01-14 10:15:00",
 		createdAt: "2024-01-02 00:00:00",
 		avatar: null,
 	},
@@ -89,9 +91,12 @@ const mockDoctorAccounts = [
 		createdAt: "2024-01-03 00:00:00",
 		avatar: null,
 	},
-];
+]; */
 
 export function DoctorAccountsPage() {
+	const { data: doctorsData, isLoading } = useDoctors();
+	const deleteDoctorMutation = useDeleteDoctor();
+
 	const [searchTerm, setSearchTerm] = useState("");
 	const [statusFilter, setStatusFilter] = useState<
 		"all" | "active" | "inactive"
@@ -101,14 +106,14 @@ export function DoctorAccountsPage() {
 	>("all");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage] = useState(10);
-	const [isLoading] = useState(false);
 	const [showDoctorModal, setShowDoctorModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const [selectedDoctor, setSelectedDoctor] = useState<
-		(typeof mockDoctorAccounts)[0] | null
-	>(null);
+	const [selectedDoctor, setSelectedDoctor] = useState<any | null>(null);
 	const [doctorToDelete, setDoctorToDelete] = useState<string | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
+
+	// Use real API data instead of mock data
+	const mockDoctorAccounts = doctorsData?.data || [];
 
 	const doctorStats = {
 		total: mockDoctorAccounts.length,
@@ -180,15 +185,20 @@ export function DoctorAccountsPage() {
 
 		try {
 			setIsDeleting(true);
-			// TODO: Implement actual API call
-			await new Promise((resolve) => setTimeout(resolve, 1500));
-			console.warn("Delete doctor:", doctorToDelete);
+			await deleteDoctorMutation.mutateAsync(doctorToDelete);
+
+			toast.success("Doctor deleted successfully", {
+				description: "The doctor account has been removed from the system.",
+			});
 
 			// Close modal and reset state
 			setShowDeleteModal(false);
 			setDoctorToDelete(null);
 		} catch (error) {
 			console.error("Failed to delete doctor:", error);
+			toast.error("Failed to delete doctor", {
+				description: "Please try again.",
+			});
 		} finally {
 			setIsDeleting(false);
 		}

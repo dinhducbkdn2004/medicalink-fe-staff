@@ -1,4 +1,4 @@
-import type { StaffAccount, Gender } from "./common";
+import type { StaffAccount } from "./common";
 
 export interface CreateStaffRequest {
 	fullName: string;
@@ -6,6 +6,7 @@ export interface CreateStaffRequest {
 	password: string;
 	role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
 	phone?: string | null;
+	locationId?: string | null;
 	isMale?: boolean | null;
 	dateOfBirth?: Date | null;
 }
@@ -16,6 +17,7 @@ export interface UpdateStaffRequest {
 	password?: string;
 	role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
 	phone?: string | null;
+	locationId?: string | null;
 	isMale?: boolean | null;
 	dateOfBirth?: Date | null;
 }
@@ -35,29 +37,27 @@ export interface CreateDoctorRequest {
 	fullName: string;
 	email: string;
 	password: string;
-	gender: Gender;
-	dateOfBirth?: string;
 	phone?: string;
-	address?: string;
 	specialtyId?: string;
 	locationId?: string;
 	experience?: number;
 	qualification?: string;
 	consultationFee?: number;
+	isMale?: boolean;
+	dateOfBirth?: Date | null;
 }
 
 export interface UpdateDoctorRequest {
 	fullName?: string;
 	email?: string;
-	gender?: Gender;
-	dateOfBirth?: string;
 	phone?: string;
-	address?: string;
 	specialtyId?: string;
 	locationId?: string;
 	experience?: number;
 	qualification?: string;
 	consultationFee?: number;
+	isMale?: boolean;
+	dateOfBirth?: Date | null;
 	isActive?: boolean;
 	isAvailable?: boolean;
 }

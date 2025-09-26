@@ -5,13 +5,14 @@ import {
 	createDoctor,
 	updateDoctor,
 	deleteDoctor,
+	changeDoctorPassword,
 	toggleDoctorAvailability,
 	toggleDoctorStatus,
 	getDoctorsBySpecialty,
 	getDoctorsByLocation,
 	getDoctorStats,
 } from "@/api/doctors";
-import { extractApiData } from "@/api/core/utils";
+import { extractApiData, extractPaginatedData } from "@/api/core/utils";
 import type {
 	PaginationParams,
 	CreateDoctorRequest,
@@ -28,6 +29,10 @@ export const doctorKeys = {
 			locationId?: string;
 			isAvailable?: boolean;
 			search?: string;
+			email?: string;
+			isMale?: boolean;
+			createdFrom?: string;
+			createdTo?: string;
 		}
 	) => [...doctorKeys.lists(), params] as const,
 	details: () => [...doctorKeys.all, "detail"] as const,
@@ -50,13 +55,31 @@ export const useDoctors = (
 		locationId?: string;
 		isAvailable?: boolean;
 		search?: string;
+		email?: string;
+		isMale?: boolean;
+		createdFrom?: string;
+		createdTo?: string;
 	}
-) =>
-	useQuery({
+) => {
+	// Convert page to skip and remove page parameter
+	const apiParams = params?.page
+		? {
+				...params,
+				skip: (params.page - 1) * (params.limit || 10),
+				page: undefined, // Remove page parameter
+			}
+		: params;
+
+	// Remove page from the final params object
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const { page: _, ...finalParams } = apiParams || {};
+
+	return useQuery({
 		queryKey: doctorKeys.list(params),
-		queryFn: async () => extractApiData(await getDoctors(params)),
+		queryFn: async () => extractPaginatedData(await getDoctors(finalParams)),
 		staleTime: 1000 * 60 * 5, // 5 minutes
 	});
+};
 
 // Get doctor by ID
 export const useDoctor = (id: string) =>
@@ -187,6 +210,23 @@ export const useToggleDoctorStatus = () => {
 			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
 			queryClient.invalidateQueries({ queryKey: doctorKeys.detail(id) });
 			queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
+		},
+	});
+};
+
+// Change doctor password (admin function)
+export const useChangeDoctorPassword = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: async ({
+			userId,
+			newPassword,
+		}: {
+			userId: string;
+			newPassword: string;
+		}) => extractApiData(await changeDoctorPassword(userId, newPassword)),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
 		},
 	});
 };

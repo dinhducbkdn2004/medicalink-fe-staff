@@ -46,12 +46,10 @@ export const AdminDashboardLayout = ({
 		totalSpecialties: specialtyStats?.total || 0,
 		totalBlogs: 0,
 		totalQuestions: 0,
-		systemHealth: 0,
 	};
 
 	const superAdminStats = {
 		...baseStats,
-		systemHealth: 98,
 	};
 
 	const stats = userRole === "SUPER_ADMIN" ? superAdminStats : baseStats;
@@ -172,7 +170,6 @@ export const AdminDashboardLayout = ({
 				<div className="flex flex-1 flex-col gap-4 p-4 pt-6">
 					{children || (
 						<>
-							{/* Statistics Cards */}
 							<div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
 								{isLoading ? (
 									<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -199,7 +196,6 @@ export const AdminDashboardLayout = ({
 								)}
 							</div>
 
-							{/* Main Content */}
 							<div className="grid gap-4 lg:grid-cols-12">
 								<div className="animate-in fade-in-0 slide-in-from-left-4 delay-200 duration-700 lg:col-span-7">
 									<RecentActivities
@@ -208,7 +204,6 @@ export const AdminDashboardLayout = ({
 									/>
 								</div>
 
-								{/* Quick Actions */}
 								<div className="animate-in fade-in-0 slide-in-from-right-4 delay-400 duration-700 lg:col-span-5">
 									<QuickActions onActionClick={handleQuickAction} />
 								</div>

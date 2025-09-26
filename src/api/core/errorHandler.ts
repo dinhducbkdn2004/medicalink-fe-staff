@@ -8,9 +8,17 @@ export const handleApiError = (error: AxiosError<ApiError>) => {
 	const originalRequest = error.config as InternalAxiosRequestConfig & {
 		_retry?: boolean;
 	};
-	if (error.response?.status === 401 && !originalRequest._retry) {
+
+	const isLoginRequest = originalRequest?.url?.includes("/auth/login");
+
+	if (
+		error.response?.status === 401 &&
+		!originalRequest._retry &&
+		!isLoginRequest
+	) {
 		return handleTokenRefresh(error, originalRequest);
 	}
+
 	const errorMessage = getErrorMessage(error);
 	toast.error(errorMessage);
 	return Promise.reject(error);

@@ -8,7 +8,17 @@ import type {
 	ApiResponse,
 } from "@/types";
 
-export const getStaffs = (params?: PaginationParams) =>
+export const getStaffs = (
+	params?: PaginationParams & {
+		search?: string;
+		email?: string;
+		isMale?: boolean;
+		createdFrom?: string;
+		createdTo?: string;
+		role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
+		skip?: number; // API uses skip instead of page
+	}
+) =>
 	apiClient.get<ApiResponse<PaginatedResponse<StaffAccount>>>("/staffs", {
 		params,
 	});
@@ -24,6 +34,12 @@ export const updateStaff = (id: string, data: UpdateStaffRequest) =>
 
 export const deleteStaff = (id: string) =>
 	apiClient.delete<ApiResponse<{ message: string }>>(`/staffs/${id}`);
+
+// Change user password (admin function)
+export const changeStaffPassword = (id: string, newPassword: string) =>
+	apiClient.patch<ApiResponse<{ message: string }>>(`/staffs/${id}`, {
+		password: newPassword,
+	});
 
 export const getStaffStats = () =>
 	apiClient.get<

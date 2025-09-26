@@ -1,16 +1,14 @@
 import { useState } from "react";
 import {
 	Plus,
-	Search,
-	Filter,
 	MoreHorizontal,
 	Pencil,
 	Trash2,
 	Users,
+	Lock,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
 	Table,
 	TableBody,
@@ -32,86 +30,61 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-	DropdownMenuCheckboxItem,
-	DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AdminModal, DeleteConfirmationModal } from "@/components/modals";
-
-// Mock data for demonstration
-const mockAdminAccounts = [
-	{
-		id: "1",
-		fullName: "Nguyễn Văn Admin",
-		email: "admin1@medicalink.com",
-		role: "ADMIN",
-		status: "active",
-		lastLogin: "2024-01-15 10:30:00",
-		createdAt: "2024-01-01 00:00:00",
-		avatar: null,
-	},
-	{
-		id: "2",
-		fullName: "Trần Thị Quản Lý",
-		email: "admin2@medicalink.com",
-		role: "ADMIN",
-		status: "active",
-		lastLogin: "2024-01-14 16:45:00",
-		createdAt: "2024-01-02 00:00:00",
-		avatar: null,
-	},
-	{
-		id: "3",
-		fullName: "Lê Văn Hệ Thống",
-		email: "admin3@medicalink.com",
-		role: "ADMIN",
-		status: "inactive",
-		lastLogin: "2024-01-10 09:15:00",
-		createdAt: "2024-01-03 00:00:00",
-		avatar: null,
-	},
-];
+import { DeleteConfirmationModal } from "@/components/modals";
+import { AdminProfileModal } from "@/components/modals/AdminProfileModal";
+import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
+import { useStaffs, useDeleteStaff } from "@/hooks/api/useStaffs";
+import { toast } from "sonner";
+import {
+	SimpleFilter,
+	type SimpleFilterParams,
+} from "@/components/filters/SimpleFilter";
 
 export function AdminAccountsPage() {
-	const [searchTerm, setSearchTerm] = useState("");
-	const [statusFilter, setStatusFilter] = useState<
-		"all" | "active" | "inactive"
-	>("all");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage] = useState(10);
-	const [isLoading] = useState(false);
 	const [showAdminModal, setShowAdminModal] = useState(false);
+	const [showPasswordModal, setShowPasswordModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const [selectedAdmin, setSelectedAdmin] = useState<
-		(typeof mockAdminAccounts)[0] | null
+	const [selectedAdmin, setSelectedAdmin] = useState<any | null>(null);
+	const [selectedAdminForPassword, setSelectedAdminForPassword] = useState<
+		any | null
 	>(null);
 	const [adminToDelete, setAdminToDelete] = useState<string | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
-
-	const filteredAccounts = mockAdminAccounts.filter((account) => {
-		const matchesSearch =
-			account.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			account.email.toLowerCase().includes(searchTerm.toLowerCase());
-
-		const matchesStatus =
-			statusFilter === "all" || account.status === statusFilter;
-
-		return matchesSearch && matchesStatus;
+	const [filters, setFilters] = useState<SimpleFilterParams>({
+		// No default role filter needed - this page is specifically for admins
 	});
 
+	// Fetch staff with advanced filters
+	const { data: staffsData, isLoading } = useStaffs({
+		page: currentPage,
+		limit: itemsPerPage,
+		...filters,
+	});
+
+	const deleteStaffMutation = useDeleteStaff();
+
+	// Use real API data - API trả về { data: [...admins], meta: {...} }
+	const adminAccounts = staffsData?.data || [];
+	const totalCount = staffsData?.meta?.total || 0;
+	const totalPages = Math.ceil(totalCount / itemsPerPage);
+
 	const adminStats = {
-		total: mockAdminAccounts.length,
-		active: mockAdminAccounts.filter((a) => a.status === "active").length,
-		inactive: mockAdminAccounts.filter((a) => a.status === "inactive").length,
+		total: totalCount,
+		active: adminAccounts.filter((a) => a.role === "ADMIN").length,
+		superAdmins: adminAccounts.filter((a) => a.role === "SUPER_ADMIN").length,
 	};
-	const totalPages = Math.ceil(filteredAccounts.length / itemsPerPage);
-	const startIndex = (currentPage - 1) * itemsPerPage;
-	const paginatedAccounts = filteredAccounts.slice(
-		startIndex,
-		startIndex + itemsPerPage
-	);
+
+	// Reset page when filters change - always maintain ADMIN role for this page
+	const handleFiltersChange = (newFilters: SimpleFilterParams) => {
+		// Force role to ADMIN since this page only manages admins
+		setFilters({ ...newFilters, role: "ADMIN" });
+		setCurrentPage(1);
+	};
 
 	const handleCreateAdmin = () => {
 		setSelectedAdmin(null);
@@ -119,26 +92,27 @@ export function AdminAccountsPage() {
 	};
 
 	const handleEditAdmin = (adminId: string) => {
-		const admin = mockAdminAccounts.find((a) => a.id === adminId);
+		const admin = adminAccounts.find((a) => a.id === adminId);
 		if (admin) {
 			setSelectedAdmin(admin);
 			setShowAdminModal(true);
 		}
 	};
 
+	const handleChangePassword = (adminId: string) => {
+		const admin = adminAccounts.find((a) => a.id === adminId);
+		if (admin) {
+			setSelectedAdminForPassword(admin);
+			setShowPasswordModal(true);
+		}
+	};
+
 	const handleDeleteAdmin = (adminId: string) => {
-		const admin = mockAdminAccounts.find((a) => a.id === adminId);
+		const admin = adminAccounts.find((a) => a.id === adminId);
 		if (admin) {
 			setAdminToDelete(adminId);
 			setShowDeleteModal(true);
 		}
-	};
-
-	const getEmptyStateMessage = () => {
-		if (searchTerm || statusFilter !== "all") {
-			return "No admins found matching your search criteria.";
-		}
-		return "No admin accounts found.";
 	};
 
 	const confirmDeleteAdmin = async () => {
@@ -146,15 +120,20 @@ export function AdminAccountsPage() {
 
 		try {
 			setIsDeleting(true);
-			// TODO: Implement actual API call
-			await new Promise((resolve) => setTimeout(resolve, 1500));
-			console.warn("Delete admin:", adminToDelete);
+			await deleteStaffMutation.mutateAsync(adminToDelete);
+
+			toast.success("Admin deleted successfully", {
+				description: "The admin account has been removed from the system.",
+			});
 
 			// Close modal and reset state
 			setShowDeleteModal(false);
 			setAdminToDelete(null);
 		} catch (error) {
 			console.error("Failed to delete admin:", error);
+			toast.error("Failed to delete admin", {
+				description: "Please try again.",
+			});
 		} finally {
 			setIsDeleting(false);
 		}
@@ -162,28 +141,6 @@ export function AdminAccountsPage() {
 
 	const handleConfirmDelete = () => {
 		void confirmDeleteAdmin();
-	};
-
-	const getStatusBadge = (status: string) => {
-		switch (status) {
-			case "active":
-				return (
-					<Badge
-						variant="default"
-						className="bg-green-100 text-green-800 hover:bg-green-100"
-					>
-						Active
-					</Badge>
-				);
-			case "inactive":
-				return (
-					<Badge variant="secondary" className="bg-gray-100 text-gray-800">
-						Inactive
-					</Badge>
-				);
-			default:
-				return <Badge variant="outline">{status}</Badge>;
-		}
 	};
 
 	const getInitials = (name: string) => {
@@ -229,14 +186,14 @@ export function AdminAccountsPage() {
 					<CardContent className="flex items-center justify-between p-6">
 						<div>
 							<p className="text-muted-foreground text-sm font-medium">
-								Inactive
+								Super Admins
 							</p>
-							<p className="text-2xl font-bold text-gray-600">
-								{adminStats.inactive}
+							<p className="text-2xl font-bold text-purple-600">
+								{adminStats.superAdmins}
 							</p>
 						</div>
-						<div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
-							<div className="h-3 w-3 rounded-full bg-gray-600"></div>
+						<div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100">
+							<div className="h-3 w-3 rounded-full bg-purple-600"></div>
 						</div>
 					</CardContent>
 				</Card>
@@ -263,53 +220,13 @@ export function AdminAccountsPage() {
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					{/* Search and Filter Bar */}
-					<div className="mb-6 flex items-center gap-4">
-						<div className="relative flex-1">
-							<Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-							<Input
-								placeholder="Search by name or email..."
-								value={searchTerm}
-								onChange={(e) => setSearchTerm(e.target.value)}
-								className="pl-10"
-							/>
-						</div>
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button variant="outline" className="gap-2">
-									<Filter className="h-4 w-4" />
-									Filter
-									{statusFilter !== "all" && (
-										<span className="ml-1 rounded-sm bg-blue-100 px-1 text-xs text-blue-800">
-											1
-										</span>
-									)}
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end">
-								<DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
-								<DropdownMenuSeparator />
-								<DropdownMenuCheckboxItem
-									checked={statusFilter === "all"}
-									onCheckedChange={() => setStatusFilter("all")}
-								>
-									All Status
-								</DropdownMenuCheckboxItem>
-								<DropdownMenuCheckboxItem
-									checked={statusFilter === "active"}
-									onCheckedChange={() => setStatusFilter("active")}
-								>
-									Active Only
-								</DropdownMenuCheckboxItem>
-								<DropdownMenuCheckboxItem
-									checked={statusFilter === "inactive"}
-									onCheckedChange={() => setStatusFilter("inactive")}
-								>
-									Inactive Only
-								</DropdownMenuCheckboxItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</div>
+					{/* Simple Filters - No role filter needed for admin-specific page */}
+					<SimpleFilter
+						filters={filters}
+						onFiltersChange={handleFiltersChange}
+						showGender={true}
+						className="mb-6"
+					/>
 
 					{/* Table */}
 					<div className="rounded-md border">
@@ -317,9 +234,8 @@ export function AdminAccountsPage() {
 							<TableHeader>
 								<TableRow>
 									<TableHead>Admin</TableHead>
-									<TableHead>Email</TableHead>
-									<TableHead>Status</TableHead>
-									<TableHead>Last Login</TableHead>
+									<TableHead>Contact Info</TableHead>
+									<TableHead>Gender</TableHead>
 									<TableHead>Created</TableHead>
 									<TableHead className="w-[70px]">Actions</TableHead>
 								</TableRow>
@@ -345,9 +261,6 @@ export function AdminAccountsPage() {
 												<Skeleton className="h-6 w-[60px]" />
 											</TableCell>
 											<TableCell>
-												<Skeleton className="h-4 w-[140px]" />
-											</TableCell>
-											<TableCell>
 												<Skeleton className="h-4 w-[100px]" />
 											</TableCell>
 											<TableCell>
@@ -355,19 +268,18 @@ export function AdminAccountsPage() {
 											</TableCell>
 										</TableRow>
 									))
-								) : filteredAccounts.length === 0 ? (
+								) : adminAccounts.length === 0 ? (
 									<TableRow>
-										<TableCell colSpan={6} className="h-24 text-center">
-											{getEmptyStateMessage()}
+										<TableCell colSpan={5} className="h-24 text-center">
+											No admin accounts found
 										</TableCell>
 									</TableRow>
 								) : (
-									paginatedAccounts.map((admin) => (
+									adminAccounts.map((admin) => (
 										<TableRow key={admin.id}>
 											<TableCell>
 												<div className="flex items-center space-x-3">
 													<Avatar className="h-10 w-10">
-														<AvatarImage src={admin.avatar ?? undefined} />
 														<AvatarFallback>
 															{getInitials(admin.fullName)}
 														</AvatarFallback>
@@ -375,15 +287,23 @@ export function AdminAccountsPage() {
 													<div>
 														<div className="font-medium">{admin.fullName}</div>
 														<div className="text-muted-foreground text-sm">
-															{admin.role}
+															ID: {admin.id.slice(0, 8)}...
 														</div>
 													</div>
 												</div>
 											</TableCell>
-											<TableCell>{admin.email}</TableCell>
-											<TableCell>{getStatusBadge(admin.status)}</TableCell>
-											<TableCell className="text-sm">
-												{new Date(admin.lastLogin).toLocaleString()}
+											<TableCell>
+												<div>
+													<div className="font-medium">{admin.email}</div>
+													<div className="text-muted-foreground text-sm">
+														{admin.phone || "No phone"}
+													</div>
+												</div>
+											</TableCell>
+											<TableCell>
+												<span className="text-sm font-medium">
+													{admin.isMale ? "Male" : "Female"}
+												</span>
 											</TableCell>
 											<TableCell className="text-sm">
 												{new Date(admin.createdAt).toLocaleDateString()}
@@ -400,7 +320,13 @@ export function AdminAccountsPage() {
 															onClick={() => handleEditAdmin(admin.id)}
 														>
 															<Pencil className="mr-2 h-4 w-4" />
-															Edit
+															Edit Profile
+														</DropdownMenuItem>
+														<DropdownMenuItem
+															onClick={() => handleChangePassword(admin.id)}
+														>
+															<Lock className="mr-2 h-4 w-4" />
+															Change Password
 														</DropdownMenuItem>
 														<DropdownMenuSeparator />
 														<DropdownMenuItem
@@ -423,10 +349,9 @@ export function AdminAccountsPage() {
 					{/* Pagination */}
 					<div className="flex items-center justify-between space-x-2 py-4">
 						<div className="text-muted-foreground text-sm">
-							Showing {startIndex + 1} to{" "}
-							{Math.min(startIndex + itemsPerPage, filteredAccounts.length)} of{" "}
-							{filteredAccounts.length} admin(s)
-							{statusFilter !== "all" && ` (filtered by ${statusFilter})`}
+							Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+							{Math.min(currentPage * itemsPerPage, totalCount)} of {totalCount}{" "}
+							admin(s)
 						</div>
 						<div className="flex items-center space-x-2">
 							<Button
@@ -453,11 +378,19 @@ export function AdminAccountsPage() {
 				</CardContent>
 			</Card>
 
-			{/* Admin Modal */}
-			<AdminModal
+			{/* Admin Profile Modal */}
+			<AdminProfileModal
 				open={showAdminModal}
 				onOpenChange={setShowAdminModal}
 				admin={selectedAdmin}
+			/>
+
+			{/* Change Password Modal */}
+			<AdminChangePasswordModal
+				open={showPasswordModal}
+				onOpenChange={setShowPasswordModal}
+				user={selectedAdminForPassword}
+				userType="admin"
 			/>
 
 			{/* Delete Confirmation Modal */}
@@ -469,7 +402,7 @@ export function AdminAccountsPage() {
 				description="Are you sure you want to delete this admin account? This action cannot be undone."
 				itemName={
 					adminToDelete
-						? mockAdminAccounts.find((a) => a.id === adminToDelete)?.fullName ||
+						? adminAccounts.find((a) => a.id === adminToDelete)?.fullName ||
 							"Unknown Admin"
 						: ""
 				}

@@ -9,3 +9,4 @@ export * from "./staffs";
 export * from "./doctors";
 export * from "./specialties";
 export * from "./locations";
+export * from "./permissions";

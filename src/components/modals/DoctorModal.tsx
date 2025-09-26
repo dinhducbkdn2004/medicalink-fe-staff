@@ -30,6 +30,8 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import { useCreateDoctor, useUpdateDoctor } from "@/hooks/api/useDoctors";
+import type { CreateDoctorRequest, UpdateDoctorRequest } from "@/types";
 
 const doctorFormSchema = z.object({
 	fullName: z
@@ -60,10 +62,6 @@ const doctorFormSchema = z.object({
 		.number()
 		.min(0, "Experience must be at least 0 years")
 		.max(50, "Experience cannot exceed 50 years"),
-	consultationFee: z
-		.number()
-		.min(0, "Consultation fee must be at least 0")
-		.max(10000000, "Consultation fee cannot exceed 10,000,000 VND"),
 	isAvailable: z.boolean().default(true),
 	dateOfBirth: z.string().optional().or(z.literal("")),
 });
@@ -107,6 +105,8 @@ const specialties = [
 ];
 
 export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
+	const createDoctorMutation = useCreateDoctor();
+	const updateDoctorMutation = useUpdateDoctor();
 	const [showPassword, setShowPassword] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const isEditing = !!doctor;
@@ -121,7 +121,6 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 			specialty: doctor?.specialty || "",
 			qualification: doctor?.qualification || "",
 			experience: doctor?.experience || 0,
-			consultationFee: doctor?.consultationFee || 0,
 			isAvailable: doctor?.isAvailable ?? true,
 			dateOfBirth: doctor?.dateOfBirth || "",
 		},
@@ -138,7 +137,6 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 				specialty: doctor.specialty,
 				qualification: doctor.qualification,
 				experience: doctor.experience,
-				consultationFee: doctor.consultationFee,
 				isAvailable: doctor.isAvailable,
 				dateOfBirth: doctor.dateOfBirth || "",
 			});
@@ -151,7 +149,6 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 				specialty: "",
 				qualification: "",
 				experience: 0,
-				consultationFee: 0,
 				isAvailable: true,
 				dateOfBirth: "",
 			});
@@ -161,20 +158,47 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 	const onSubmit = async (values: DoctorFormValues) => {
 		setIsLoading(true);
 		try {
-			// TODO: Implement API call to create/update doctor
-			console.warn(isEditing ? "Update doctor:" : "Create doctor:", values);
+			if (isEditing && doctor) {
+				// Update existing doctor
+				const updateData: UpdateDoctorRequest = {
+					fullName: values.fullName,
+					email: values.email,
+					specialty: values.specialty,
+					qualification: values.qualification,
+					experience: values.experience,
+					consultationFee: values.consultationFee,
+					isAvailable: values.isAvailable,
+					phone: values.phone || undefined,
+					dateOfBirth: values.dateOfBirth || undefined,
+				};
 
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
+				await updateDoctorMutation.mutateAsync({
+					id: doctor.id,
+					data: updateData,
+				});
+				toast.success("Doctor updated successfully", {
+					description: `Dr. ${values.fullName} has been updated.`,
+				});
+			} else {
+				// Create new doctor
+				const createData: CreateDoctorRequest = {
+					fullName: values.fullName,
+					email: values.email,
+					password: values.password,
+					specialty: values.specialty,
+					qualification: values.qualification,
+					experience: values.experience,
+					consultationFee: values.consultationFee,
+					isAvailable: values.isAvailable,
+					phone: values.phone || undefined,
+					dateOfBirth: values.dateOfBirth || undefined,
+				};
 
-			toast.success(
-				isEditing
-					? "Doctor updated successfully"
-					: "Doctor created successfully",
-				{
-					description: `Dr. ${values.fullName} has been ${isEditing ? "updated" : "added"} to the system.`,
-				}
-			);
+				await createDoctorMutation.mutateAsync(createData);
+				toast.success("Doctor created successfully", {
+					description: `Dr. ${values.fullName} has been added to the system.`,
+				});
+			}
 
 			handleClose();
 		} catch (error: unknown) {

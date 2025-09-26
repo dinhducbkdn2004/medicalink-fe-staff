@@ -29,7 +29,10 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useCreateStaff, useUpdateStaff } from "@/hooks/api/useStaffs";
+import type { CreateStaffRequest, UpdateStaffRequest } from "@/types";
 
+// Base schema for admin data (used for updates)
 const adminFormSchema = z.object({
 	fullName: z
 		.string()
@@ -39,13 +42,6 @@ const adminFormSchema = z.object({
 		.string()
 		.email("Please enter a valid email address")
 		.min(1, "Email is required"),
-	password: z
-		.string()
-		.min(8, "Password must be at least 8 characters")
-		.regex(
-			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-			"Password must contain at least one uppercase letter, one lowercase letter, and one number"
-		),
 	phone: z
 		.string()
 		.optional()
@@ -56,8 +52,20 @@ const adminFormSchema = z.object({
 	role: z.enum(["ADMIN", "SUPER_ADMIN"], {
 		message: "Please select a role.",
 	}),
+	isMale: z.boolean().optional(),
 	dateOfBirth: z.string().optional().or(z.literal("")),
 });
+
+// Schema for create (includes password) - currently unused, kept for future use
+// const createAdminFormSchema = adminFormSchema.extend({
+// 	password: z
+// 		.string()
+// 		.min(8, "Password must be at least 8 characters")
+// 		.regex(
+// 			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+// 			"Password must contain at least one uppercase letter, one lowercase letter, and one number"
+// 		),
+// });
 
 type AdminFormValues = z.infer<typeof adminFormSchema>;
 
@@ -75,6 +83,8 @@ interface AdminModalProps {
 }
 
 export function AdminModal({ open, onOpenChange, admin }: AdminModalProps) {
+	const createStaffMutation = useCreateStaff();
+	const updateStaffMutation = useUpdateStaff();
 	const [showPassword, setShowPassword] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const isEditing = !!admin;
@@ -117,18 +127,55 @@ export function AdminModal({ open, onOpenChange, admin }: AdminModalProps) {
 	const onSubmit = async (values: AdminFormValues) => {
 		setIsLoading(true);
 		try {
-			// TODO: Implement API call to create/update admin
-			console.warn(isEditing ? "Update admin:" : "Create admin:", values);
+			if (isEditing && admin) {
+				// Update existing admin
+				const updateData: UpdateStaffRequest = {
+					fullName: values.fullName,
+					email: values.email,
+					role: values.role as "ADMIN",
+					phone: values.phone || null,
+					isMale:
+						values.isMale === "true"
+							? true
+							: values.isMale === "false"
+								? false
+								: undefined,
+					dateOfBirth: values.dateOfBirth
+						? new Date(values.dateOfBirth)
+						: undefined,
+				};
 
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
+				await updateStaffMutation.mutateAsync({
+					id: admin.id,
+					data: updateData,
+				});
+				toast.success("Admin updated successfully", {
+					description: `${values.fullName} has been updated.`,
+				});
+			} else {
+				// Create new admin
+				const createData: CreateStaffRequest = {
+					fullName: values.fullName,
+					email: values.email,
+					password: values.password,
+					role: values.role as "ADMIN",
+					phone: values.phone || null,
+					isMale:
+						values.isMale === "true"
+							? true
+							: values.isMale === "false"
+								? false
+								: undefined,
+					dateOfBirth: values.dateOfBirth
+						? new Date(values.dateOfBirth)
+						: undefined,
+				};
 
-			toast.success(
-				isEditing ? "Admin updated successfully" : "Admin created successfully",
-				{
-					description: `${values.fullName} has been ${isEditing ? "updated" : "added"} to the system.`,
-				}
-			);
+				await createStaffMutation.mutateAsync(createData);
+				toast.success("Admin created successfully", {
+					description: `${values.fullName} has been added to the system.`,
+				});
+			}
 
 			handleClose();
 		} catch (error: unknown) {

@@ -1,18 +1,14 @@
 import { useState } from "react";
 import {
 	Plus,
-	Search,
-	Filter,
 	MoreHorizontal,
 	Pencil,
 	Trash2,
-	Stethoscope,
 	Users,
-	Heart,
+	Lock,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
 	Table,
 	TableBody,
@@ -34,118 +30,60 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-	DropdownMenuCheckboxItem,
-	DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DoctorModal, DeleteConfirmationModal } from "@/components/modals";
-
-// Mock data for demonstration
-const mockDoctorAccounts = [
-	{
-		id: "1",
-		fullName: "Dr. Nguyễn Văn Minh",
-		email: "dr.minh@medicalink.com",
-		specialty: "Cardiology",
-		experience: 10,
-		status: "active",
-		isAvailable: true,
-		consultationFee: 500000,
-		qualification: "MD, PhD",
-		phone: "+84 901 234 567",
-		lastLogin: "2024-01-15 14:30:00",
-		createdAt: "2024-01-01 00:00:00",
-		avatar: null,
-	},
-	{
-		id: "2",
-		fullName: "Dr. Trần Thị Hoa",
-		email: "dr.hoa@medicalink.com",
-		specialty: "Pediatrics",
-		experience: 8,
-		status: "active",
-		isAvailable: true,
-		consultationFee: 400000,
-		qualification: "MD",
-		phone: "+84 901 234 568",
-		lastLogin: "2024-01-15 09:15:00",
-		createdAt: "2024-01-02 00:00:00",
-		avatar: null,
-	},
-	{
-		id: "3",
-		fullName: "Dr. Lê Văn Đức",
-		email: "dr.duc@medicalink.com",
-		specialty: "Neurology",
-		experience: 15,
-		status: "inactive",
-		isAvailable: false,
-		consultationFee: 600000,
-		qualification: "MD, PhD",
-		phone: "+84 901 234 569",
-		lastLogin: "2024-01-10 16:45:00",
-		createdAt: "2024-01-03 00:00:00",
-		avatar: null,
-	},
-];
+import { DeleteConfirmationModal } from "@/components/modals";
+import { DoctorProfileModal } from "@/components/modals/DoctorProfileModal";
+import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
+import { useDoctors, useDeleteDoctor } from "@/hooks/api/useDoctors";
+import { toast } from "sonner";
+import {
+	SimpleFilter,
+	type SimpleFilterParams,
+} from "@/components/filters/SimpleFilter";
 
 export function DoctorAccountsPage() {
-	const [searchTerm, setSearchTerm] = useState("");
-	const [statusFilter, setStatusFilter] = useState<
-		"all" | "active" | "inactive"
-	>("all");
-	const [availabilityFilter, setAvailabilityFilter] = useState<
-		"all" | "available" | "busy"
-	>("all");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage] = useState(10);
-	const [isLoading] = useState(false);
 	const [showDoctorModal, setShowDoctorModal] = useState(false);
+	const [showPasswordModal, setShowPasswordModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const [selectedDoctor, setSelectedDoctor] = useState<
-		(typeof mockDoctorAccounts)[0] | null
+	const [selectedDoctor, setSelectedDoctor] = useState<any | null>(null);
+	const [selectedDoctorForPassword, setSelectedDoctorForPassword] = useState<
+		any | null
 	>(null);
 	const [doctorToDelete, setDoctorToDelete] = useState<string | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
+	const [filters, setFilters] = useState<SimpleFilterParams>({});
 
-	const doctorStats = {
-		total: mockDoctorAccounts.length,
-		active: mockDoctorAccounts.filter((d) => d.status === "active").length,
-		available: mockDoctorAccounts.filter(
-			(d) => d.status === "active" && d.isAvailable
-		).length,
-		specialties: new Set(mockDoctorAccounts.map((d) => d.specialty)).size,
-	};
-
-	const filteredAccounts = mockDoctorAccounts.filter((doctor) => {
-		const matchesSearch =
-			doctor.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			doctor.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
-
-		const matchesStatus =
-			statusFilter === "all" || doctor.status === statusFilter;
-
-		const matchesAvailability =
-			availabilityFilter === "all" ||
-			(availabilityFilter === "available" &&
-				doctor.isAvailable &&
-				doctor.status === "active") ||
-			(availabilityFilter === "busy" &&
-				(!doctor.isAvailable || doctor.status === "inactive"));
-
-		return matchesSearch && matchesStatus && matchesAvailability;
+	// Fetch doctors with advanced filters
+	const { data: doctorsData, isLoading } = useDoctors({
+		page: currentPage,
+		limit: itemsPerPage,
+		...filters,
 	});
 
-	// Pagination logic
-	const totalPages = Math.ceil(filteredAccounts.length / itemsPerPage);
-	const startIndex = (currentPage - 1) * itemsPerPage;
-	const paginatedAccounts = filteredAccounts.slice(
-		startIndex,
-		startIndex + itemsPerPage
-	);
+	const deleteDoctorMutation = useDeleteDoctor();
+
+	// Use real API data - extractPaginatedData returns { data: [...], meta: {...} }
+	const doctorAccounts = doctorsData?.data || [];
+	const totalCount = doctorsData?.meta?.total || 0;
+	const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+	const doctorStats = {
+		total: totalCount,
+		active: doctorAccounts.length, // All fetched doctors are considered active
+		male: doctorAccounts.filter((d) => d.isMale).length,
+		female: doctorAccounts.filter((d) => !d.isMale).length,
+	};
+
+	// Reset page when filters change
+	const handleFiltersChange = (newFilters: SimpleFilterParams) => {
+		setFilters(newFilters);
+		setCurrentPage(1);
+	};
 
 	const handleCreateDoctor = () => {
 		setSelectedDoctor(null);
@@ -153,26 +91,27 @@ export function DoctorAccountsPage() {
 	};
 
 	const handleEditDoctor = (doctorId: string) => {
-		const doctor = mockDoctorAccounts.find((d) => d.id === doctorId);
+		const doctor = doctorAccounts.find((d) => d.id === doctorId);
 		if (doctor) {
 			setSelectedDoctor(doctor);
 			setShowDoctorModal(true);
 		}
 	};
 
+	const handleChangePassword = (doctorId: string) => {
+		const doctor = doctorAccounts.find((d) => d.id === doctorId);
+		if (doctor) {
+			setSelectedDoctorForPassword(doctor);
+			setShowPasswordModal(true);
+		}
+	};
+
 	const handleDeleteDoctor = (doctorId: string) => {
-		const doctor = mockDoctorAccounts.find((d) => d.id === doctorId);
+		const doctor = doctorAccounts.find((d) => d.id === doctorId);
 		if (doctor) {
 			setDoctorToDelete(doctorId);
 			setShowDeleteModal(true);
 		}
-	};
-
-	const getEmptyStateMessage = () => {
-		if (searchTerm || statusFilter !== "all" || availabilityFilter !== "all") {
-			return "No doctors found matching your search criteria.";
-		}
-		return "No doctor accounts found.";
 	};
 
 	const confirmDeleteDoctor = async () => {
@@ -180,15 +119,20 @@ export function DoctorAccountsPage() {
 
 		try {
 			setIsDeleting(true);
-			// TODO: Implement actual API call
-			await new Promise((resolve) => setTimeout(resolve, 1500));
-			console.warn("Delete doctor:", doctorToDelete);
+			await deleteDoctorMutation.mutateAsync(doctorToDelete);
+
+			toast.success("Doctor deleted successfully", {
+				description: "The doctor account has been removed from the system.",
+			});
 
 			// Close modal and reset state
 			setShowDeleteModal(false);
 			setDoctorToDelete(null);
 		} catch (error) {
 			console.error("Failed to delete doctor:", error);
+			toast.error("Failed to delete doctor", {
+				description: "Please try again.",
+			});
 		} finally {
 			setIsDeleting(false);
 		}
@@ -198,28 +142,6 @@ export function DoctorAccountsPage() {
 		void confirmDeleteDoctor();
 	};
 
-	const getStatusBadge = (status: string, isAvailable: boolean) => {
-		if (status === "active") {
-			return isAvailable ? (
-				<Badge
-					variant="default"
-					className="bg-green-100 text-green-800 hover:bg-green-100"
-				>
-					Available
-				</Badge>
-			) : (
-				<Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-					Busy
-				</Badge>
-			);
-		}
-		return (
-			<Badge variant="secondary" className="bg-gray-100 text-gray-800">
-				Inactive
-			</Badge>
-		);
-	};
-
 	const getInitials = (name: string) => {
 		return name
 			.split(" ")
@@ -227,13 +149,6 @@ export function DoctorAccountsPage() {
 			.join("")
 			.toUpperCase()
 			.slice(0, 2);
-	};
-
-	const formatCurrency = (amount: number) => {
-		return new Intl.NumberFormat("vi-VN", {
-			style: "currency",
-			currency: "VND",
-		}).format(amount);
 	};
 
 	return (
@@ -270,26 +185,26 @@ export function DoctorAccountsPage() {
 					<CardContent className="flex items-center justify-between p-6">
 						<div>
 							<p className="text-muted-foreground text-sm font-medium">
-								Available
+								Male Doctors
 							</p>
 							<p className="text-2xl font-bold text-blue-600">
-								{doctorStats.available}
+								{doctorStats.male}
 							</p>
 						</div>
-						<Heart className="h-8 w-8 text-blue-600" />
+						<Users className="h-8 w-8 text-blue-600" />
 					</CardContent>
 				</Card>
 				<Card>
 					<CardContent className="flex items-center justify-between p-6">
 						<div>
 							<p className="text-muted-foreground text-sm font-medium">
-								Specialties
+								Female Doctors
 							</p>
 							<p className="text-2xl font-bold text-purple-600">
-								{doctorStats.specialties}
+								{doctorStats.female}
 							</p>
 						</div>
-						<Stethoscope className="h-8 w-8 text-purple-600" />
+						<Users className="h-8 w-8 text-purple-600" />
 					</CardContent>
 				</Card>
 			</div>
@@ -310,7 +225,7 @@ export function DoctorAccountsPage() {
 			<Card>
 				<CardHeader>
 					<CardTitle className="flex items-center gap-2">
-						<Stethoscope className="h-5 w-5" />
+						<Users className="h-5 w-5" />
 						Doctor Management
 					</CardTitle>
 					<CardDescription>
@@ -319,77 +234,14 @@ export function DoctorAccountsPage() {
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					{/* Search and Filter Bar */}
-					<div className="mb-6 flex items-center gap-4">
-						<div className="relative flex-1">
-							<Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-							<Input
-								placeholder="Search by name, email, or specialty..."
-								value={searchTerm}
-								onChange={(e) => setSearchTerm(e.target.value)}
-								className="pl-10"
-							/>
-						</div>
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button variant="outline" className="gap-2">
-									<Filter className="h-4 w-4" />
-									Filter
-									{(statusFilter !== "all" || availabilityFilter !== "all") && (
-										<span className="ml-1 rounded-sm bg-blue-100 px-1 text-xs text-blue-800">
-											{
-												[
-													statusFilter !== "all",
-													availabilityFilter !== "all",
-												].filter(Boolean).length
-											}
-										</span>
-									)}
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end" className="w-56">
-								<DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
-								<DropdownMenuCheckboxItem
-									checked={statusFilter === "all"}
-									onCheckedChange={() => setStatusFilter("all")}
-								>
-									All Status
-								</DropdownMenuCheckboxItem>
-								<DropdownMenuCheckboxItem
-									checked={statusFilter === "active"}
-									onCheckedChange={() => setStatusFilter("active")}
-								>
-									Active Only
-								</DropdownMenuCheckboxItem>
-								<DropdownMenuCheckboxItem
-									checked={statusFilter === "inactive"}
-									onCheckedChange={() => setStatusFilter("inactive")}
-								>
-									Inactive Only
-								</DropdownMenuCheckboxItem>
-								<DropdownMenuSeparator />
-								<DropdownMenuLabel>Filter by Availability</DropdownMenuLabel>
-								<DropdownMenuCheckboxItem
-									checked={availabilityFilter === "all"}
-									onCheckedChange={() => setAvailabilityFilter("all")}
-								>
-									All Availability
-								</DropdownMenuCheckboxItem>
-								<DropdownMenuCheckboxItem
-									checked={availabilityFilter === "available"}
-									onCheckedChange={() => setAvailabilityFilter("available")}
-								>
-									Available Only
-								</DropdownMenuCheckboxItem>
-								<DropdownMenuCheckboxItem
-									checked={availabilityFilter === "busy"}
-									onCheckedChange={() => setAvailabilityFilter("busy")}
-								>
-									Busy/Inactive Only
-								</DropdownMenuCheckboxItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</div>
+					{/* Simple Filters */}
+					<SimpleFilter
+						filters={filters}
+						onFiltersChange={handleFiltersChange}
+						showGender={true}
+						showAvailability={true}
+						className="mb-6"
+					/>
 
 					{/* Table */}
 					<div className="rounded-md border">
@@ -397,11 +249,9 @@ export function DoctorAccountsPage() {
 							<TableHeader>
 								<TableRow>
 									<TableHead>Doctor</TableHead>
-									<TableHead>Contact</TableHead>
-									<TableHead>Specialty</TableHead>
-									<TableHead>Experience</TableHead>
-									<TableHead>Fee</TableHead>
-									<TableHead>Status</TableHead>
+									<TableHead>Contact Info</TableHead>
+									<TableHead>Gender</TableHead>
+									<TableHead>Availability</TableHead>
 									<TableHead className="w-[70px]">Actions</TableHead>
 								</TableRow>
 							</TableHeader>
@@ -424,12 +274,6 @@ export function DoctorAccountsPage() {
 												<Skeleton className="h-3 w-[120px]" />
 											</TableCell>
 											<TableCell>
-												<Skeleton className="h-6 w-[80px]" />
-											</TableCell>
-											<TableCell>
-												<Skeleton className="h-4 w-[60px]" />
-											</TableCell>
-											<TableCell>
 												<Skeleton className="h-4 w-[80px]" />
 											</TableCell>
 											<TableCell>
@@ -440,19 +284,18 @@ export function DoctorAccountsPage() {
 											</TableCell>
 										</TableRow>
 									))
-								) : filteredAccounts.length === 0 ? (
+								) : doctorAccounts.length === 0 ? (
 									<TableRow>
-										<TableCell colSpan={7} className="h-24 text-center">
-											{getEmptyStateMessage()}
+										<TableCell colSpan={5} className="h-24 text-center">
+											No doctors found
 										</TableCell>
 									</TableRow>
 								) : (
-									paginatedAccounts.map((doctor) => (
+									doctorAccounts.map((doctor) => (
 										<TableRow key={doctor.id}>
 											<TableCell>
 												<div className="flex items-center space-x-3">
 													<Avatar className="h-10 w-10">
-														<AvatarImage src={doctor.avatar ?? undefined} />
 														<AvatarFallback>
 															{getInitials(doctor.fullName)}
 														</AvatarFallback>
@@ -460,7 +303,7 @@ export function DoctorAccountsPage() {
 													<div>
 														<div className="font-medium">{doctor.fullName}</div>
 														<div className="text-muted-foreground text-sm">
-															{doctor.qualification}
+															{doctor.qualification || "N/A"}
 														</div>
 													</div>
 												</div>
@@ -469,21 +312,19 @@ export function DoctorAccountsPage() {
 												<div>
 													<div className="font-medium">{doctor.email}</div>
 													<div className="text-muted-foreground text-sm">
-														{doctor.phone}
+														{doctor.phone || "No phone"}
 													</div>
 												</div>
 											</TableCell>
-											<TableCell>
-												<Badge variant="outline">{doctor.specialty}</Badge>
-											</TableCell>
-											<TableCell className="text-sm">
-												{doctor.experience} years
-											</TableCell>
 											<TableCell className="text-sm font-medium">
-												{formatCurrency(doctor.consultationFee)}
+												{doctor.isMale ? "Male" : "Female"}
 											</TableCell>
 											<TableCell>
-												{getStatusBadge(doctor.status, doctor.isAvailable)}
+												<Badge
+													variant={doctor.isAvailable ? "default" : "secondary"}
+												>
+													{doctor.isAvailable ? "Available" : "Unavailable"}
+												</Badge>
 											</TableCell>
 											<TableCell>
 												<DropdownMenu>
@@ -497,7 +338,13 @@ export function DoctorAccountsPage() {
 															onClick={() => handleEditDoctor(doctor.id)}
 														>
 															<Pencil className="mr-2 h-4 w-4" />
-															Edit
+															Edit Profile
+														</DropdownMenuItem>
+														<DropdownMenuItem
+															onClick={() => handleChangePassword(doctor.id)}
+														>
+															<Lock className="mr-2 h-4 w-4" />
+															Change Password
 														</DropdownMenuItem>
 														<DropdownMenuSeparator />
 														<DropdownMenuItem
@@ -520,11 +367,9 @@ export function DoctorAccountsPage() {
 					{/* Pagination */}
 					<div className="flex items-center justify-between space-x-2 py-4">
 						<div className="text-muted-foreground text-sm">
-							Showing {startIndex + 1} to{" "}
-							{Math.min(startIndex + itemsPerPage, filteredAccounts.length)} of{" "}
-							{filteredAccounts.length} doctor(s)
-							{(statusFilter !== "all" || availabilityFilter !== "all") &&
-								" (filtered)"}
+							Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+							{Math.min(currentPage * itemsPerPage, totalCount)} of {totalCount}{" "}
+							doctor(s)
 						</div>
 						<div className="flex items-center space-x-2">
 							<Button
@@ -551,11 +396,19 @@ export function DoctorAccountsPage() {
 				</CardContent>
 			</Card>
 
-			{/* Doctor Modal */}
-			<DoctorModal
+			{/* Doctor Profile Modal */}
+			<DoctorProfileModal
 				open={showDoctorModal}
 				onOpenChange={setShowDoctorModal}
 				doctor={selectedDoctor}
+			/>
+
+			{/* Change Password Modal */}
+			<AdminChangePasswordModal
+				open={showPasswordModal}
+				onOpenChange={setShowPasswordModal}
+				user={selectedDoctorForPassword}
+				userType="doctor"
 			/>
 
 			{/* Delete Confirmation Modal */}
@@ -567,8 +420,8 @@ export function DoctorAccountsPage() {
 				description="Are you sure you want to delete this doctor account? This will also remove their appointment history."
 				itemName={
 					doctorToDelete
-						? mockDoctorAccounts.find((d) => d.id === doctorToDelete)
-								?.fullName || "Unknown Doctor"
+						? doctorAccounts.find((d) => d.id === doctorToDelete)?.fullName ||
+							"Unknown Doctor"
 						: ""
 				}
 				isLoading={isDeleting}
