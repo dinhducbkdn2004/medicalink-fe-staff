@@ -8,13 +8,41 @@ import type {
 	ApiResponse,
 } from "@/types";
 
-// Get all specialties with pagination
-export const getSpecialties = (
-	params?: PaginationParams & {
-		search?: string;
-		isActive?: boolean;
-	}
-) =>
+// Re-export Specialty type for convenience
+export type { Specialty };
+
+export interface InfoSection {
+	id: string;
+	specialtyId: string;
+	name: string;
+	content: string;
+	order?: number;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface CreateInfoSectionRequest {
+	specialtyId: string;
+	name: string;
+	content: string;
+	order?: number;
+}
+
+export interface UpdateInfoSectionRequest {
+	name?: string;
+	content?: string;
+	order?: number;
+}
+
+export interface SpecialtyQueryParams extends PaginationParams {
+	search?: string;
+	sortBy?: string;
+	sortOrder?: "asc" | "desc";
+	isActive?: boolean;
+}
+
+// Get all specialties with enhanced filtering and sorting
+export const getSpecialties = (params?: SpecialtyQueryParams) =>
 	apiClient.get<ApiResponse<PaginatedResponse<Specialty>>>("/specialties", {
 		params,
 	});
@@ -55,3 +83,24 @@ export const getSpecialtyStats = () =>
 			withDoctors: number;
 		}>
 	>("/specialties/stats");
+
+// Get all info sections for a specialty
+export const getInfoSections = (specialtyId: string) =>
+	apiClient.get<ApiResponse<InfoSection[]>>(
+		`/specialties/${specialtyId}/info-sections`
+	);
+
+// Create info section
+export const createInfoSection = (data: CreateInfoSectionRequest) =>
+	apiClient.post<ApiResponse<InfoSection>>("/specialties/info-sections", data);
+
+// Update info section
+export const updateInfoSection = (id: string, data: UpdateInfoSectionRequest) =>
+	apiClient.put<ApiResponse<InfoSection>>(
+		`/specialties/info-section/${id}`,
+		data
+	);
+
+// Delete info section
+export const deleteInfoSection = (id: string) =>
+	apiClient.delete<ApiResponse<void>>(`/specialties/info-section/${id}`);

@@ -31,9 +31,6 @@ export const SuperAdminDashboard = () => {
 		totalDoctors: doctorStats?.total || 0,
 		totalLocations: locationStats?.total || 0,
 		totalSpecialties: specialtyStats?.total || 0,
-		totalBlogs: 0,
-		totalQuestions: 0,
-		systemHealth: 98,
 	};
 
 	const activities = [
@@ -125,9 +122,9 @@ export const SuperAdminDashboard = () => {
 			{/* Statistics Cards */}
 			<div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
 				{isLoading ? (
-					<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+					<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 						{Array.from(
-							{ length: 6 },
+							{ length: 5 },
 							(_, i) => `skeleton-SUPER_ADMIN-${i}`
 						).map((key) => (
 							<Card key={key}>

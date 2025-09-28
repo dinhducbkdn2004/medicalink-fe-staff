@@ -8,372 +8,456 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as SuperAdminRouteImport } from "./routes/super-admin";
-import { Route as LoginRouteImport } from "./routes/login";
-import { Route as DoctorRouteImport } from "./routes/doctor";
-import { Route as AdminRouteImport } from "./routes/admin";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as SuperAdminIndexRouteImport } from "./routes/super-admin/index";
-import { Route as DoctorIndexRouteImport } from "./routes/doctor/index";
-import { Route as AdminIndexRouteImport } from "./routes/admin/index";
-import { Route as SuperAdminSpecialtiesRouteImport } from "./routes/super-admin/specialties";
-import { Route as SuperAdminDoctorAccountsRouteImport } from "./routes/super-admin/doctor-accounts";
-import { Route as SuperAdminDashboardRouteImport } from "./routes/super-admin/dashboard";
-import { Route as SuperAdminAdminAccountsRouteImport } from "./routes/super-admin/admin-accounts";
-import { Route as DoctorDashboardRouteImport } from "./routes/doctor/dashboard";
-import { Route as AdminDoctorAccountsRouteImport } from "./routes/admin/doctor-accounts";
-import { Route as AdminDashboardRouteImport } from "./routes/admin/dashboard";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as SuperAdminRouteImport } from './routes/super-admin'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as DoctorRouteImport } from './routes/doctor'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as SuperAdminIndexRouteImport } from './routes/super-admin/index'
+import { Route as DoctorIndexRouteImport } from './routes/doctor/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as SuperAdminWorkLocationsRouteImport } from './routes/super-admin/work-locations'
+import { Route as SuperAdminSpecialtiesRouteImport } from './routes/super-admin/specialties'
+import { Route as SuperAdminSchedulesRouteImport } from './routes/super-admin/schedules'
+import { Route as SuperAdminPermissionsRouteImport } from './routes/super-admin/permissions'
+import { Route as SuperAdminDoctorAccountsRouteImport } from './routes/super-admin/doctor-accounts'
+import { Route as SuperAdminDashboardRouteImport } from './routes/super-admin/dashboard'
+import { Route as SuperAdminAppointmentsRouteImport } from './routes/super-admin/appointments'
+import { Route as SuperAdminAdminAccountsRouteImport } from './routes/super-admin/admin-accounts'
+import { Route as DoctorDashboardRouteImport } from './routes/doctor/dashboard'
+import { Route as AdminDoctorAccountsRouteImport } from './routes/admin/doctor-accounts'
+import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 
 const SuperAdminRoute = SuperAdminRouteImport.update({
-	id: "/super-admin",
-	path: "/super-admin",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/super-admin',
+  path: '/super-admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
-	id: "/login",
-	path: "/login",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DoctorRoute = DoctorRouteImport.update({
-	id: "/doctor",
-	path: "/doctor",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/doctor',
+  path: '/doctor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
-	id: "/admin",
-	path: "/admin",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SuperAdminIndexRoute = SuperAdminIndexRouteImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => SuperAdminRoute,
-} as any);
+  id: '/',
+  path: '/',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
 const DoctorIndexRoute = DoctorIndexRouteImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => DoctorRoute,
-} as any);
+  id: '/',
+  path: '/',
+  getParentRoute: () => DoctorRoute,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => AdminRoute,
-} as any);
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const SuperAdminWorkLocationsRoute = SuperAdminWorkLocationsRouteImport.update({
+  id: '/work-locations',
+  path: '/work-locations',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
 const SuperAdminSpecialtiesRoute = SuperAdminSpecialtiesRouteImport.update({
-	id: "/specialties",
-	path: "/specialties",
-	getParentRoute: () => SuperAdminRoute,
-} as any);
+  id: '/specialties',
+  path: '/specialties',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
+const SuperAdminSchedulesRoute = SuperAdminSchedulesRouteImport.update({
+  id: '/schedules',
+  path: '/schedules',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
+const SuperAdminPermissionsRoute = SuperAdminPermissionsRouteImport.update({
+  id: '/permissions',
+  path: '/permissions',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
 const SuperAdminDoctorAccountsRoute =
-	SuperAdminDoctorAccountsRouteImport.update({
-		id: "/doctor-accounts",
-		path: "/doctor-accounts",
-		getParentRoute: () => SuperAdminRoute,
-	} as any);
+  SuperAdminDoctorAccountsRouteImport.update({
+    id: '/doctor-accounts',
+    path: '/doctor-accounts',
+    getParentRoute: () => SuperAdminRoute,
+  } as any)
 const SuperAdminDashboardRoute = SuperAdminDashboardRouteImport.update({
-	id: "/dashboard",
-	path: "/dashboard",
-	getParentRoute: () => SuperAdminRoute,
-} as any);
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
+const SuperAdminAppointmentsRoute = SuperAdminAppointmentsRouteImport.update({
+  id: '/appointments',
+  path: '/appointments',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
 const SuperAdminAdminAccountsRoute = SuperAdminAdminAccountsRouteImport.update({
-	id: "/admin-accounts",
-	path: "/admin-accounts",
-	getParentRoute: () => SuperAdminRoute,
-} as any);
+  id: '/admin-accounts',
+  path: '/admin-accounts',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
 const DoctorDashboardRoute = DoctorDashboardRouteImport.update({
-	id: "/dashboard",
-	path: "/dashboard",
-	getParentRoute: () => DoctorRoute,
-} as any);
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => DoctorRoute,
+} as any)
 const AdminDoctorAccountsRoute = AdminDoctorAccountsRouteImport.update({
-	id: "/doctor-accounts",
-	path: "/doctor-accounts",
-	getParentRoute: () => AdminRoute,
-} as any);
+  id: '/doctor-accounts',
+  path: '/doctor-accounts',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
-	id: "/dashboard",
-	path: "/dashboard",
-	getParentRoute: () => AdminRoute,
-} as any);
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-	"/": typeof IndexRoute;
-	"/admin": typeof AdminRouteWithChildren;
-	"/doctor": typeof DoctorRouteWithChildren;
-	"/login": typeof LoginRoute;
-	"/super-admin": typeof SuperAdminRouteWithChildren;
-	"/admin/dashboard": typeof AdminDashboardRoute;
-	"/admin/doctor-accounts": typeof AdminDoctorAccountsRoute;
-	"/doctor/dashboard": typeof DoctorDashboardRoute;
-	"/super-admin/admin-accounts": typeof SuperAdminAdminAccountsRoute;
-	"/super-admin/dashboard": typeof SuperAdminDashboardRoute;
-	"/super-admin/doctor-accounts": typeof SuperAdminDoctorAccountsRoute;
-	"/super-admin/specialties": typeof SuperAdminSpecialtiesRoute;
-	"/admin/": typeof AdminIndexRoute;
-	"/doctor/": typeof DoctorIndexRoute;
-	"/super-admin/": typeof SuperAdminIndexRoute;
+  '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/doctor': typeof DoctorRouteWithChildren
+  '/login': typeof LoginRoute
+  '/super-admin': typeof SuperAdminRouteWithChildren
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/doctor-accounts': typeof AdminDoctorAccountsRoute
+  '/doctor/dashboard': typeof DoctorDashboardRoute
+  '/super-admin/admin-accounts': typeof SuperAdminAdminAccountsRoute
+  '/super-admin/appointments': typeof SuperAdminAppointmentsRoute
+  '/super-admin/dashboard': typeof SuperAdminDashboardRoute
+  '/super-admin/doctor-accounts': typeof SuperAdminDoctorAccountsRoute
+  '/super-admin/permissions': typeof SuperAdminPermissionsRoute
+  '/super-admin/schedules': typeof SuperAdminSchedulesRoute
+  '/super-admin/specialties': typeof SuperAdminSpecialtiesRoute
+  '/super-admin/work-locations': typeof SuperAdminWorkLocationsRoute
+  '/admin/': typeof AdminIndexRoute
+  '/doctor/': typeof DoctorIndexRoute
+  '/super-admin/': typeof SuperAdminIndexRoute
 }
 export interface FileRoutesByTo {
-	"/": typeof IndexRoute;
-	"/login": typeof LoginRoute;
-	"/admin/dashboard": typeof AdminDashboardRoute;
-	"/admin/doctor-accounts": typeof AdminDoctorAccountsRoute;
-	"/doctor/dashboard": typeof DoctorDashboardRoute;
-	"/super-admin/admin-accounts": typeof SuperAdminAdminAccountsRoute;
-	"/super-admin/dashboard": typeof SuperAdminDashboardRoute;
-	"/super-admin/doctor-accounts": typeof SuperAdminDoctorAccountsRoute;
-	"/super-admin/specialties": typeof SuperAdminSpecialtiesRoute;
-	"/admin": typeof AdminIndexRoute;
-	"/doctor": typeof DoctorIndexRoute;
-	"/super-admin": typeof SuperAdminIndexRoute;
+  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/doctor-accounts': typeof AdminDoctorAccountsRoute
+  '/doctor/dashboard': typeof DoctorDashboardRoute
+  '/super-admin/admin-accounts': typeof SuperAdminAdminAccountsRoute
+  '/super-admin/appointments': typeof SuperAdminAppointmentsRoute
+  '/super-admin/dashboard': typeof SuperAdminDashboardRoute
+  '/super-admin/doctor-accounts': typeof SuperAdminDoctorAccountsRoute
+  '/super-admin/permissions': typeof SuperAdminPermissionsRoute
+  '/super-admin/schedules': typeof SuperAdminSchedulesRoute
+  '/super-admin/specialties': typeof SuperAdminSpecialtiesRoute
+  '/super-admin/work-locations': typeof SuperAdminWorkLocationsRoute
+  '/admin': typeof AdminIndexRoute
+  '/doctor': typeof DoctorIndexRoute
+  '/super-admin': typeof SuperAdminIndexRoute
 }
 export interface FileRoutesById {
-	__root__: typeof rootRouteImport;
-	"/": typeof IndexRoute;
-	"/admin": typeof AdminRouteWithChildren;
-	"/doctor": typeof DoctorRouteWithChildren;
-	"/login": typeof LoginRoute;
-	"/super-admin": typeof SuperAdminRouteWithChildren;
-	"/admin/dashboard": typeof AdminDashboardRoute;
-	"/admin/doctor-accounts": typeof AdminDoctorAccountsRoute;
-	"/doctor/dashboard": typeof DoctorDashboardRoute;
-	"/super-admin/admin-accounts": typeof SuperAdminAdminAccountsRoute;
-	"/super-admin/dashboard": typeof SuperAdminDashboardRoute;
-	"/super-admin/doctor-accounts": typeof SuperAdminDoctorAccountsRoute;
-	"/super-admin/specialties": typeof SuperAdminSpecialtiesRoute;
-	"/admin/": typeof AdminIndexRoute;
-	"/doctor/": typeof DoctorIndexRoute;
-	"/super-admin/": typeof SuperAdminIndexRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/doctor': typeof DoctorRouteWithChildren
+  '/login': typeof LoginRoute
+  '/super-admin': typeof SuperAdminRouteWithChildren
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/doctor-accounts': typeof AdminDoctorAccountsRoute
+  '/doctor/dashboard': typeof DoctorDashboardRoute
+  '/super-admin/admin-accounts': typeof SuperAdminAdminAccountsRoute
+  '/super-admin/appointments': typeof SuperAdminAppointmentsRoute
+  '/super-admin/dashboard': typeof SuperAdminDashboardRoute
+  '/super-admin/doctor-accounts': typeof SuperAdminDoctorAccountsRoute
+  '/super-admin/permissions': typeof SuperAdminPermissionsRoute
+  '/super-admin/schedules': typeof SuperAdminSchedulesRoute
+  '/super-admin/specialties': typeof SuperAdminSpecialtiesRoute
+  '/super-admin/work-locations': typeof SuperAdminWorkLocationsRoute
+  '/admin/': typeof AdminIndexRoute
+  '/doctor/': typeof DoctorIndexRoute
+  '/super-admin/': typeof SuperAdminIndexRoute
 }
 export interface FileRouteTypes {
-	fileRoutesByFullPath: FileRoutesByFullPath;
-	fullPaths:
-		| "/"
-		| "/admin"
-		| "/doctor"
-		| "/login"
-		| "/super-admin"
-		| "/admin/dashboard"
-		| "/admin/doctor-accounts"
-		| "/doctor/dashboard"
-		| "/super-admin/admin-accounts"
-		| "/super-admin/dashboard"
-		| "/super-admin/doctor-accounts"
-		| "/super-admin/specialties"
-		| "/admin/"
-		| "/doctor/"
-		| "/super-admin/";
-	fileRoutesByTo: FileRoutesByTo;
-	to:
-		| "/"
-		| "/login"
-		| "/admin/dashboard"
-		| "/admin/doctor-accounts"
-		| "/doctor/dashboard"
-		| "/super-admin/admin-accounts"
-		| "/super-admin/dashboard"
-		| "/super-admin/doctor-accounts"
-		| "/super-admin/specialties"
-		| "/admin"
-		| "/doctor"
-		| "/super-admin";
-	id:
-		| "__root__"
-		| "/"
-		| "/admin"
-		| "/doctor"
-		| "/login"
-		| "/super-admin"
-		| "/admin/dashboard"
-		| "/admin/doctor-accounts"
-		| "/doctor/dashboard"
-		| "/super-admin/admin-accounts"
-		| "/super-admin/dashboard"
-		| "/super-admin/doctor-accounts"
-		| "/super-admin/specialties"
-		| "/admin/"
-		| "/doctor/"
-		| "/super-admin/";
-	fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/doctor'
+    | '/login'
+    | '/super-admin'
+    | '/admin/dashboard'
+    | '/admin/doctor-accounts'
+    | '/doctor/dashboard'
+    | '/super-admin/admin-accounts'
+    | '/super-admin/appointments'
+    | '/super-admin/dashboard'
+    | '/super-admin/doctor-accounts'
+    | '/super-admin/permissions'
+    | '/super-admin/schedules'
+    | '/super-admin/specialties'
+    | '/super-admin/work-locations'
+    | '/admin/'
+    | '/doctor/'
+    | '/super-admin/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/login'
+    | '/admin/dashboard'
+    | '/admin/doctor-accounts'
+    | '/doctor/dashboard'
+    | '/super-admin/admin-accounts'
+    | '/super-admin/appointments'
+    | '/super-admin/dashboard'
+    | '/super-admin/doctor-accounts'
+    | '/super-admin/permissions'
+    | '/super-admin/schedules'
+    | '/super-admin/specialties'
+    | '/super-admin/work-locations'
+    | '/admin'
+    | '/doctor'
+    | '/super-admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/doctor'
+    | '/login'
+    | '/super-admin'
+    | '/admin/dashboard'
+    | '/admin/doctor-accounts'
+    | '/doctor/dashboard'
+    | '/super-admin/admin-accounts'
+    | '/super-admin/appointments'
+    | '/super-admin/dashboard'
+    | '/super-admin/doctor-accounts'
+    | '/super-admin/permissions'
+    | '/super-admin/schedules'
+    | '/super-admin/specialties'
+    | '/super-admin/work-locations'
+    | '/admin/'
+    | '/doctor/'
+    | '/super-admin/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-	IndexRoute: typeof IndexRoute;
-	AdminRoute: typeof AdminRouteWithChildren;
-	DoctorRoute: typeof DoctorRouteWithChildren;
-	LoginRoute: typeof LoginRoute;
-	SuperAdminRoute: typeof SuperAdminRouteWithChildren;
+  IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  DoctorRoute: typeof DoctorRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  SuperAdminRoute: typeof SuperAdminRouteWithChildren
 }
 
-declare module "@tanstack/react-router" {
-	interface FileRoutesByPath {
-		"/super-admin": {
-			id: "/super-admin";
-			path: "/super-admin";
-			fullPath: "/super-admin";
-			preLoaderRoute: typeof SuperAdminRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/login": {
-			id: "/login";
-			path: "/login";
-			fullPath: "/login";
-			preLoaderRoute: typeof LoginRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/doctor": {
-			id: "/doctor";
-			path: "/doctor";
-			fullPath: "/doctor";
-			preLoaderRoute: typeof DoctorRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/admin": {
-			id: "/admin";
-			path: "/admin";
-			fullPath: "/admin";
-			preLoaderRoute: typeof AdminRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/": {
-			id: "/";
-			path: "/";
-			fullPath: "/";
-			preLoaderRoute: typeof IndexRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/super-admin/": {
-			id: "/super-admin/";
-			path: "/";
-			fullPath: "/super-admin/";
-			preLoaderRoute: typeof SuperAdminIndexRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/doctor/": {
-			id: "/doctor/";
-			path: "/";
-			fullPath: "/doctor/";
-			preLoaderRoute: typeof DoctorIndexRouteImport;
-			parentRoute: typeof DoctorRoute;
-		};
-		"/admin/": {
-			id: "/admin/";
-			path: "/";
-			fullPath: "/admin/";
-			preLoaderRoute: typeof AdminIndexRouteImport;
-			parentRoute: typeof AdminRoute;
-		};
-		"/super-admin/specialties": {
-			id: "/super-admin/specialties";
-			path: "/specialties";
-			fullPath: "/super-admin/specialties";
-			preLoaderRoute: typeof SuperAdminSpecialtiesRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/super-admin/doctor-accounts": {
-			id: "/super-admin/doctor-accounts";
-			path: "/doctor-accounts";
-			fullPath: "/super-admin/doctor-accounts";
-			preLoaderRoute: typeof SuperAdminDoctorAccountsRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/super-admin/dashboard": {
-			id: "/super-admin/dashboard";
-			path: "/dashboard";
-			fullPath: "/super-admin/dashboard";
-			preLoaderRoute: typeof SuperAdminDashboardRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/super-admin/admin-accounts": {
-			id: "/super-admin/admin-accounts";
-			path: "/admin-accounts";
-			fullPath: "/super-admin/admin-accounts";
-			preLoaderRoute: typeof SuperAdminAdminAccountsRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/doctor/dashboard": {
-			id: "/doctor/dashboard";
-			path: "/dashboard";
-			fullPath: "/doctor/dashboard";
-			preLoaderRoute: typeof DoctorDashboardRouteImport;
-			parentRoute: typeof DoctorRoute;
-		};
-		"/admin/doctor-accounts": {
-			id: "/admin/doctor-accounts";
-			path: "/doctor-accounts";
-			fullPath: "/admin/doctor-accounts";
-			preLoaderRoute: typeof AdminDoctorAccountsRouteImport;
-			parentRoute: typeof AdminRoute;
-		};
-		"/admin/dashboard": {
-			id: "/admin/dashboard";
-			path: "/dashboard";
-			fullPath: "/admin/dashboard";
-			preLoaderRoute: typeof AdminDashboardRouteImport;
-			parentRoute: typeof AdminRoute;
-		};
-	}
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/super-admin': {
+      id: '/super-admin'
+      path: '/super-admin'
+      fullPath: '/super-admin'
+      preLoaderRoute: typeof SuperAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/doctor': {
+      id: '/doctor'
+      path: '/doctor'
+      fullPath: '/doctor'
+      preLoaderRoute: typeof DoctorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/super-admin/': {
+      id: '/super-admin/'
+      path: '/'
+      fullPath: '/super-admin/'
+      preLoaderRoute: typeof SuperAdminIndexRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/doctor/': {
+      id: '/doctor/'
+      path: '/'
+      fullPath: '/doctor/'
+      preLoaderRoute: typeof DoctorIndexRouteImport
+      parentRoute: typeof DoctorRoute
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/super-admin/work-locations': {
+      id: '/super-admin/work-locations'
+      path: '/work-locations'
+      fullPath: '/super-admin/work-locations'
+      preLoaderRoute: typeof SuperAdminWorkLocationsRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/super-admin/specialties': {
+      id: '/super-admin/specialties'
+      path: '/specialties'
+      fullPath: '/super-admin/specialties'
+      preLoaderRoute: typeof SuperAdminSpecialtiesRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/super-admin/schedules': {
+      id: '/super-admin/schedules'
+      path: '/schedules'
+      fullPath: '/super-admin/schedules'
+      preLoaderRoute: typeof SuperAdminSchedulesRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/super-admin/permissions': {
+      id: '/super-admin/permissions'
+      path: '/permissions'
+      fullPath: '/super-admin/permissions'
+      preLoaderRoute: typeof SuperAdminPermissionsRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/super-admin/doctor-accounts': {
+      id: '/super-admin/doctor-accounts'
+      path: '/doctor-accounts'
+      fullPath: '/super-admin/doctor-accounts'
+      preLoaderRoute: typeof SuperAdminDoctorAccountsRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/super-admin/dashboard': {
+      id: '/super-admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/super-admin/dashboard'
+      preLoaderRoute: typeof SuperAdminDashboardRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/super-admin/appointments': {
+      id: '/super-admin/appointments'
+      path: '/appointments'
+      fullPath: '/super-admin/appointments'
+      preLoaderRoute: typeof SuperAdminAppointmentsRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/super-admin/admin-accounts': {
+      id: '/super-admin/admin-accounts'
+      path: '/admin-accounts'
+      fullPath: '/super-admin/admin-accounts'
+      preLoaderRoute: typeof SuperAdminAdminAccountsRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/doctor/dashboard': {
+      id: '/doctor/dashboard'
+      path: '/dashboard'
+      fullPath: '/doctor/dashboard'
+      preLoaderRoute: typeof DoctorDashboardRouteImport
+      parentRoute: typeof DoctorRoute
+    }
+    '/admin/doctor-accounts': {
+      id: '/admin/doctor-accounts'
+      path: '/doctor-accounts'
+      fullPath: '/admin/doctor-accounts'
+      preLoaderRoute: typeof AdminDoctorAccountsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
+      parentRoute: typeof AdminRoute
+    }
+  }
 }
 
 interface AdminRouteChildren {
-	AdminDashboardRoute: typeof AdminDashboardRoute;
-	AdminDoctorAccountsRoute: typeof AdminDoctorAccountsRoute;
-	AdminIndexRoute: typeof AdminIndexRoute;
+  AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminDoctorAccountsRoute: typeof AdminDoctorAccountsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-	AdminDashboardRoute: AdminDashboardRoute,
-	AdminDoctorAccountsRoute: AdminDoctorAccountsRoute,
-	AdminIndexRoute: AdminIndexRoute,
-};
+  AdminDashboardRoute: AdminDashboardRoute,
+  AdminDoctorAccountsRoute: AdminDoctorAccountsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
 
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren);
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface DoctorRouteChildren {
-	DoctorDashboardRoute: typeof DoctorDashboardRoute;
-	DoctorIndexRoute: typeof DoctorIndexRoute;
+  DoctorDashboardRoute: typeof DoctorDashboardRoute
+  DoctorIndexRoute: typeof DoctorIndexRoute
 }
 
 const DoctorRouteChildren: DoctorRouteChildren = {
-	DoctorDashboardRoute: DoctorDashboardRoute,
-	DoctorIndexRoute: DoctorIndexRoute,
-};
+  DoctorDashboardRoute: DoctorDashboardRoute,
+  DoctorIndexRoute: DoctorIndexRoute,
+}
 
 const DoctorRouteWithChildren =
-	DoctorRoute._addFileChildren(DoctorRouteChildren);
+  DoctorRoute._addFileChildren(DoctorRouteChildren)
 
 interface SuperAdminRouteChildren {
-	SuperAdminAdminAccountsRoute: typeof SuperAdminAdminAccountsRoute;
-	SuperAdminDashboardRoute: typeof SuperAdminDashboardRoute;
-	SuperAdminDoctorAccountsRoute: typeof SuperAdminDoctorAccountsRoute;
-	SuperAdminSpecialtiesRoute: typeof SuperAdminSpecialtiesRoute;
-	SuperAdminIndexRoute: typeof SuperAdminIndexRoute;
+  SuperAdminAdminAccountsRoute: typeof SuperAdminAdminAccountsRoute
+  SuperAdminAppointmentsRoute: typeof SuperAdminAppointmentsRoute
+  SuperAdminDashboardRoute: typeof SuperAdminDashboardRoute
+  SuperAdminDoctorAccountsRoute: typeof SuperAdminDoctorAccountsRoute
+  SuperAdminPermissionsRoute: typeof SuperAdminPermissionsRoute
+  SuperAdminSchedulesRoute: typeof SuperAdminSchedulesRoute
+  SuperAdminSpecialtiesRoute: typeof SuperAdminSpecialtiesRoute
+  SuperAdminWorkLocationsRoute: typeof SuperAdminWorkLocationsRoute
+  SuperAdminIndexRoute: typeof SuperAdminIndexRoute
 }
 
 const SuperAdminRouteChildren: SuperAdminRouteChildren = {
-	SuperAdminAdminAccountsRoute: SuperAdminAdminAccountsRoute,
-	SuperAdminDashboardRoute: SuperAdminDashboardRoute,
-	SuperAdminDoctorAccountsRoute: SuperAdminDoctorAccountsRoute,
-	SuperAdminSpecialtiesRoute: SuperAdminSpecialtiesRoute,
-	SuperAdminIndexRoute: SuperAdminIndexRoute,
-};
+  SuperAdminAdminAccountsRoute: SuperAdminAdminAccountsRoute,
+  SuperAdminAppointmentsRoute: SuperAdminAppointmentsRoute,
+  SuperAdminDashboardRoute: SuperAdminDashboardRoute,
+  SuperAdminDoctorAccountsRoute: SuperAdminDoctorAccountsRoute,
+  SuperAdminPermissionsRoute: SuperAdminPermissionsRoute,
+  SuperAdminSchedulesRoute: SuperAdminSchedulesRoute,
+  SuperAdminSpecialtiesRoute: SuperAdminSpecialtiesRoute,
+  SuperAdminWorkLocationsRoute: SuperAdminWorkLocationsRoute,
+  SuperAdminIndexRoute: SuperAdminIndexRoute,
+}
 
 const SuperAdminRouteWithChildren = SuperAdminRoute._addFileChildren(
-	SuperAdminRouteChildren
-);
+  SuperAdminRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
-	IndexRoute: IndexRoute,
-	AdminRoute: AdminRouteWithChildren,
-	DoctorRoute: DoctorRouteWithChildren,
-	LoginRoute: LoginRoute,
-	SuperAdminRoute: SuperAdminRouteWithChildren,
-};
+  IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  DoctorRoute: DoctorRouteWithChildren,
+  LoginRoute: LoginRoute,
+  SuperAdminRoute: SuperAdminRouteWithChildren,
+}
 export const routeTree = rootRouteImport
-	._addFileChildren(rootRouteChildren)
-	._addFileTypes<FileRouteTypes>();
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()

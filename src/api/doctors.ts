@@ -15,6 +15,10 @@ export const getDoctors = (
 		locationId?: string;
 		isAvailable?: boolean;
 		search?: string;
+		email?: string;
+		isMale?: boolean;
+		createdFrom?: string;
+		createdTo?: string;
 	}
 ) =>
 	apiClient.get<ApiResponse<PaginatedResponse<Doctor>>>("/doctors", {
@@ -36,6 +40,12 @@ export const updateDoctor = (id: string, data: UpdateDoctorRequest) =>
 // Delete doctor (soft delete)
 export const deleteDoctor = (id: string) =>
 	apiClient.delete<ApiResponse<{ message: string }>>(`/doctors/${id}`);
+
+// Change doctor password (admin function)
+export const changeDoctorPassword = (id: string, newPassword: string) =>
+	apiClient.patch<ApiResponse<{ message: string }>>(`/doctors/${id}`, {
+		password: newPassword,
+	});
 
 // Toggle doctor availability
 export const toggleDoctorAvailability = (id: string, isAvailable: boolean) =>

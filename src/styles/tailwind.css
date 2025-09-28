@@ -207,4 +207,50 @@
 		@apply bg-background text-foreground;
 		letter-spacing: var(--tracking-normal);
 	}
+
+	/* Custom Scrollbar Styles */
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+	}
+
+	*::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+
+	*::-webkit-scrollbar-track {
+		background: transparent;
+		border-radius: 8px;
+	}
+
+	*::-webkit-scrollbar-thumb {
+		background: hsl(var(--muted-foreground) / 0.3);
+		border-radius: 8px;
+		border: 2px solid transparent;
+		background-clip: content-box;
+	}
+
+	*::-webkit-scrollbar-thumb:hover {
+		background: hsl(var(--muted-foreground) / 0.5);
+		background-clip: content-box;
+	}
+
+	*::-webkit-scrollbar-corner {
+		background: transparent;
+	}
+}
+
+@layer components {
+	/* Enhanced input styles with better borders */
+	.input-enhanced {
+		@apply border-border bg-background border-2;
+		@apply focus:border-primary focus:ring-primary/20 focus:ring-2;
+		@apply transition-colors duration-200;
+	}
+
+	/* Better sidebar alignment for collapsed state */
+	.sidebar-item-collapsed {
+		@apply flex h-8 w-8 items-center justify-center;
+	}
 }

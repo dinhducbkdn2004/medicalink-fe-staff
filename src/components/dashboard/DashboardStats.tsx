@@ -79,9 +79,6 @@ interface DashboardStatsProps {
 		totalDoctors: number;
 		totalLocations: number;
 		totalSpecialties: number;
-		totalBlogs: number;
-		totalQuestions: number;
-		systemHealth: number;
 	};
 	isLoading?: boolean;
 }
@@ -99,7 +96,7 @@ export const DashboardStats = ({ stats }: DashboardStatsProps) => {
 		{
 			title: "Active Staffs",
 			value: stats.activeStaffs,
-			description: "Currently online",
+			description: "Recently created",
 			icon: <UserCheck className="h-4 w-4" />,
 			trend: { value: 8, isPositive: true },
 			color: "green" as const,
@@ -128,18 +125,10 @@ export const DashboardStats = ({ stats }: DashboardStatsProps) => {
 			trend: { value: 5, isPositive: true },
 			color: "blue" as const,
 		},
-		{
-			title: "Blog Posts",
-			value: stats.totalBlogs,
-			description: "Published content",
-			icon: <FileText className="h-4 w-4" />,
-			trend: { value: 8, isPositive: true },
-			color: "green" as const,
-		},
 	];
 
 	return (
-		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 			{statCards.map((stat) => (
 				<StatCard key={stat.title} {...stat} />
 			))}

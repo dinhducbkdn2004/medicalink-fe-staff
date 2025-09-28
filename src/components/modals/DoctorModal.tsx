@@ -30,6 +30,8 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import { useCreateDoctor, useUpdateDoctor } from "@/hooks/api/useDoctors";
+import type { CreateDoctorRequest, UpdateDoctorRequest } from "@/types";
 
 const doctorFormSchema = z.object({
 	fullName: z
@@ -38,8 +40,10 @@ const doctorFormSchema = z.object({
 		.max(100, "Full name must not exceed 100 characters"),
 	email: z
 		.string()
-		.email("Please enter a valid email address")
-		.min(1, "Email is required"),
+		.min(1, "Email is required")
+		.refine((email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email), {
+			message: "Please enter a valid email address",
+		}),
 	password: z
 		.string()
 		.min(8, "Password must be at least 8 characters")
@@ -54,6 +58,7 @@ const doctorFormSchema = z.object({
 		.refine((val) => !val || /^[+]?[\d\s\-()]{10,15}$/.test(val), {
 			message: "Please enter a valid phone number",
 		}),
+	isMale: z.string().optional().or(z.literal("")),
 	specialty: z.string().min(1, "Please select a specialty"),
 	qualification: z.string().min(1, "Qualification is required"),
 	experience: z
@@ -64,7 +69,7 @@ const doctorFormSchema = z.object({
 		.number()
 		.min(0, "Consultation fee must be at least 0")
 		.max(10000000, "Consultation fee cannot exceed 10,000,000 VND"),
-	isAvailable: z.boolean().default(true),
+	isAvailable: z.boolean(),
 	dateOfBirth: z.string().optional().or(z.literal("")),
 });
 
@@ -79,9 +84,9 @@ interface DoctorModalProps {
 		email: string;
 		phone?: string;
 		specialty: string;
-		qualification: string;
+		qualification?: string;
 		experience: number;
-		consultationFee: number;
+		consultationFee?: number;
 		isAvailable: boolean;
 		dateOfBirth?: string;
 	} | null;
@@ -106,13 +111,20 @@ const specialties = [
 	"Urology",
 ];
 
-export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
+export function DoctorModal({
+	open,
+	onOpenChange,
+	doctor,
+}: Readonly<DoctorModalProps>) {
+	const createDoctorMutation = useCreateDoctor();
+	const updateDoctorMutation = useUpdateDoctor();
 	const [showPassword, setShowPassword] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const isEditing = !!doctor;
 
 	const form = useForm<DoctorFormValues>({
 		resolver: zodResolver(doctorFormSchema),
+		mode: "onChange",
 		defaultValues: {
 			fullName: doctor?.fullName || "",
 			email: doctor?.email || "",
@@ -127,7 +139,6 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 		},
 	});
 
-	// Reset form when doctor changes
 	useEffect(() => {
 		if (doctor) {
 			form.reset({
@@ -136,9 +147,9 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 				password: "",
 				phone: doctor.phone || "",
 				specialty: doctor.specialty,
-				qualification: doctor.qualification,
+				qualification: doctor.qualification || "",
 				experience: doctor.experience,
-				consultationFee: doctor.consultationFee,
+				consultationFee: doctor.consultationFee || 0,
 				isAvailable: doctor.isAvailable,
 				dateOfBirth: doctor.dateOfBirth || "",
 			});
@@ -149,7 +160,6 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 				password: "",
 				phone: "",
 				specialty: "",
-				qualification: "",
 				experience: 0,
 				consultationFee: 0,
 				isAvailable: true,
@@ -158,28 +168,73 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 		}
 	}, [doctor, form]);
 
+	// Helper functions to convert form values to API format
+	const convertDateValue = (dateString?: string): Date | null => {
+		if (!dateString || dateString === "") return null;
+		return new Date(dateString);
+	};
+
+	const createUpdateData = (values: DoctorFormValues): UpdateDoctorRequest => {
+		return {
+			fullName: values.fullName,
+			email: values.email,
+			specialty: values.specialty,
+			qualification: values.qualification,
+			experience: values.experience,
+			consultationFee: values.consultationFee,
+			isAvailable: values.isAvailable,
+			phone: values.phone && values.phone.trim() !== "" ? values.phone : null,
+			dateOfBirth: convertDateValue(values.dateOfBirth),
+		};
+	};
+
+	const createCreateData = (values: DoctorFormValues): CreateDoctorRequest => {
+		return {
+			fullName: values.fullName,
+			email: values.email,
+			password: values.password,
+			phone: values.phone && values.phone.trim() !== "" ? values.phone : null,
+			isMale: values.isMale === "" ? null : values.isMale === "true",
+			dateOfBirth: convertDateValue(values.dateOfBirth),
+		};
+	};
+
+	const handleUpdateDoctor = async (values: DoctorFormValues) => {
+		if (!doctor) return;
+
+		const updateData = createUpdateData(values);
+		await updateDoctorMutation.mutateAsync({
+			id: doctor.id,
+			data: updateData,
+		});
+
+		toast.success("Doctor updated successfully", {
+			description: `Dr. ${values.fullName} has been updated.`,
+		});
+	};
+
+	const handleCreateDoctor = async (values: DoctorFormValues) => {
+		const createData = createCreateData(values);
+		await createDoctorMutation.mutateAsync(createData);
+
+		toast.success("Doctor created successfully", {
+			description: `Dr. ${values.fullName} has been added to the system.`,
+		});
+	};
+
 	const onSubmit = async (values: DoctorFormValues) => {
 		setIsLoading(true);
 		try {
-			// TODO: Implement API call to create/update doctor
-			console.warn(isEditing ? "Update doctor:" : "Create doctor:", values);
-
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-
-			toast.success(
-				isEditing
-					? "Doctor updated successfully"
-					: "Doctor created successfully",
-				{
-					description: `Dr. ${values.fullName} has been ${isEditing ? "updated" : "added"} to the system.`,
-				}
-			);
-
+			if (isEditing) {
+				await handleUpdateDoctor(values);
+			} else {
+				await handleCreateDoctor(values);
+			}
 			handleClose();
 		} catch (error: unknown) {
 			console.error("Error managing doctor:", error);
-			toast.error(`Failed to ${isEditing ? "update" : "create"} doctor`, {
+			const action = isEditing ? "update" : "create";
+			toast.error(`Failed to ${action} doctor`, {
 				description: "Please try again.",
 			});
 		} finally {
@@ -197,19 +252,38 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 		onOpenChange(false);
 	};
 
+	const getPasswordLabel = () => {
+		return isEditing
+			? "New Password (leave blank to keep current)"
+			: "Password *";
+	};
+
+	const getSubmitButtonText = () => {
+		if (isLoading) {
+			return isEditing ? "Updating..." : "Creating...";
+		}
+		return isEditing ? "Update Doctor" : "Create Doctor";
+	};
+
+	const getDialogTitle = () => {
+		return isEditing ? "Edit Doctor Account" : "Create Doctor Account";
+	};
+
+	const getDialogDescription = () => {
+		return isEditing
+			? "Update the doctor account information below."
+			: "Fill in the information below to create a new doctor account.";
+	};
+
 	return (
 		<Dialog open={open} onOpenChange={handleClose}>
 			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
 				<DialogHeader>
 					<DialogTitle className="flex items-center gap-2">
 						<Stethoscope className="h-5 w-5" />
-						{isEditing ? "Edit Doctor Account" : "Create Doctor Account"}
+						{getDialogTitle()}
 					</DialogTitle>
-					<DialogDescription>
-						{isEditing
-							? "Update the doctor account information below."
-							: "Fill in the information below to create a new doctor account."}
-					</DialogDescription>
+					<DialogDescription>{getDialogDescription()}</DialogDescription>
 				</DialogHeader>
 
 				<Form {...form}>
@@ -258,11 +332,7 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 								name="password"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>
-											{isEditing
-												? "New Password (leave blank to keep current)"
-												: "Password *"}
-										</FormLabel>
+										<FormLabel>{getPasswordLabel()}</FormLabel>
 										<FormControl>
 											<div className="relative">
 												<Input
@@ -336,10 +406,7 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Specialty *</FormLabel>
-										<Select
-											onValueChange={field.onChange}
-											defaultValue={field.value}
-										>
+										<Select onValueChange={field.onChange} value={field.value}>
 											<FormControl>
 												<SelectTrigger>
 													<SelectValue placeholder="Select specialty" />
@@ -388,6 +455,9 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 													placeholder="10"
 													min="0"
 													max="50"
+													onChange={(e) =>
+														field.onChange(Number(e.target.value))
+													}
 												/>
 											</FormControl>
 											<FormMessage />
@@ -408,6 +478,9 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 													placeholder="500000"
 													min="0"
 													max="10000000"
+													onChange={(e) =>
+														field.onChange(Number(e.target.value))
+													}
 												/>
 											</FormControl>
 											<FormMessage />
@@ -451,13 +524,7 @@ export function DoctorModal({ open, onOpenChange, doctor }: DoctorModalProps) {
 								Cancel
 							</Button>
 							<Button type="submit" disabled={isLoading}>
-								{isLoading
-									? isEditing
-										? "Updating..."
-										: "Creating..."
-									: isEditing
-										? "Update Doctor"
-										: "Create Doctor"}
+								{getSubmitButtonText()}
 							</Button>
 						</div>
 					</form>

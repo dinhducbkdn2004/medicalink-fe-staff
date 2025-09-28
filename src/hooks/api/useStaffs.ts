@@ -5,6 +5,7 @@ import {
 	createStaff,
 	updateStaff,
 	deleteStaff,
+	changeStaffPassword,
 	getStaffStats,
 } from "@/api/staffs";
 import { extractApiData, extractPaginatedData } from "@/api/core/utils";
@@ -18,18 +19,37 @@ import type {
 export const staffKeys = {
 	all: ["staffs"] as const,
 	lists: () => [...staffKeys.all, "list"] as const,
-	list: (params?: PaginationParams) => [...staffKeys.lists(), params] as const,
+	list: (
+		params?: PaginationParams & {
+			search?: string;
+			email?: string;
+			isMale?: boolean;
+			createdFrom?: string;
+			createdTo?: string;
+			role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
+		}
+	) => [...staffKeys.lists(), params] as const,
 	details: () => [...staffKeys.all, "detail"] as const,
 	detail: (id: string) => [...staffKeys.details(), id] as const,
 	stats: () => [...staffKeys.all, "stats"] as const,
 };
 
-export const useStaffs = (params?: PaginationParams) =>
-	useQuery({
+export const useStaffs = (
+	params?: PaginationParams & {
+		search?: string;
+		email?: string;
+		isMale?: boolean;
+		createdFrom?: string;
+		createdTo?: string;
+		role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
+	}
+) => {
+	return useQuery({
 		queryKey: staffKeys.list(params),
 		queryFn: async () => extractPaginatedData(await getStaffs(params)),
 		staleTime: CACHE_TIME.MEDIUM,
 	});
+};
 
 export const useStaff = (id: string) =>
 	useQuery({
@@ -83,6 +103,23 @@ export const useDeleteStaff = () => {
 			queryClient.invalidateQueries({ queryKey: staffKeys.lists() });
 			queryClient.invalidateQueries({ queryKey: staffKeys.stats() });
 			queryClient.removeQueries({ queryKey: staffKeys.detail(id) });
+		},
+	});
+};
+
+// Change staff password (admin function)
+export const useChangeStaffPassword = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: async ({
+			userId,
+			newPassword,
+		}: {
+			userId: string;
+			newPassword: string;
+		}) => extractApiData(await changeStaffPassword(userId, newPassword)),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: staffKeys.lists() });
 		},
 	});
 };

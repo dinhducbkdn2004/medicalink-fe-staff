@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
+import debounce from "debounce";
 import {
 	Plus,
 	Search,
@@ -41,58 +42,15 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DoctorModal, DeleteConfirmationModal } from "@/components/modals";
-
-// Mock data for demonstration
-const mockDoctorAccounts = [
-	{
-		id: "1",
-		fullName: "Dr. Nguyễn Văn Minh",
-		email: "dr.minh@medicalink.com",
-		specialty: "Cardiology",
-		experience: 10,
-		status: "active",
-		isAvailable: true,
-		consultationFee: 500000,
-		qualification: "MD, PhD",
-		phone: "+84 901 234 567",
-		lastLogin: "2024-01-15 14:30:00",
-		createdAt: "2024-01-01 00:00:00",
-		avatar: null,
-	},
-	{
-		id: "2",
-		fullName: "Dr. Trần Thị Hoa",
-		email: "dr.hoa@medicalink.com",
-		specialty: "Pediatrics",
-		experience: 8,
-		status: "active",
-		isAvailable: true,
-		consultationFee: 400000,
-		qualification: "MD",
-		phone: "+84 901 234 568",
-		lastLogin: "2024-01-15 09:15:00",
-		createdAt: "2024-01-02 00:00:00",
-		avatar: null,
-	},
-	{
-		id: "3",
-		fullName: "Dr. Lê Văn Đức",
-		email: "dr.duc@medicalink.com",
-		specialty: "Neurology",
-		experience: 15,
-		status: "inactive",
-		isAvailable: false,
-		consultationFee: 600000,
-		qualification: "MD, PhD",
-		phone: "+84 901 234 569",
-		lastLogin: "2024-01-10 16:45:00",
-		createdAt: "2024-01-03 00:00:00",
-		avatar: null,
-	},
-];
+import { useDoctors, useDeleteDoctor } from "@/hooks/api/useDoctors";
+import { toast } from "sonner";
 
 export function DoctorAccountsPage() {
+	const { data: doctorsData, isLoading } = useDoctors();
+	const deleteDoctorMutation = useDeleteDoctor();
+
 	const [searchTerm, setSearchTerm] = useState("");
+	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 	const [statusFilter, setStatusFilter] = useState<
 		"all" | "active" | "inactive"
 	>("all");
@@ -101,45 +59,81 @@ export function DoctorAccountsPage() {
 	>("all");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage] = useState(10);
-	const [isLoading] = useState(false);
 	const [showDoctorModal, setShowDoctorModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const [selectedDoctor, setSelectedDoctor] = useState<
-		(typeof mockDoctorAccounts)[0] | null
-	>(null);
+	const [selectedDoctor, setSelectedDoctor] = useState<any | null>(null);
 	const [doctorToDelete, setDoctorToDelete] = useState<string | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
 
+	// Create debounced function for search
+	const debouncedSetSearch = useMemo(
+		() =>
+			debounce((value: string) => {
+				setDebouncedSearchTerm(value);
+				setCurrentPage(1); // Reset to first page when searching
+			}, 300),
+		[]
+	);
+
+	// Update debounced search when searchTerm changes
+	useEffect(() => {
+		debouncedSetSearch(searchTerm);
+		return () => {
+			debouncedSetSearch.clear();
+		};
+	}, [searchTerm, debouncedSetSearch]);
+
+	const mockDoctorAccounts = doctorsData?.data || [];
+
 	const doctorStats = {
 		total: mockDoctorAccounts.length,
-		active: mockDoctorAccounts.filter((d) => d.status === "active").length,
-		available: mockDoctorAccounts.filter(
-			(d) => d.status === "active" && d.isAvailable
+		active: mockDoctorAccounts.filter(
+			(d) => d.status === "active" || (!d.status && d.isAvailable)
 		).length,
-		specialties: new Set(mockDoctorAccounts.map((d) => d.specialty)).size,
+		available: mockDoctorAccounts.filter(
+			(d) => (d.status === "active" || !d.status) && d.isAvailable
+		).length,
+		specialties: new Set(
+			mockDoctorAccounts
+				.map((d) =>
+					typeof d.specialty === "string" ? d.specialty : d.specialty?.name
+				)
+				.filter(Boolean)
+		).size,
 	};
 
 	const filteredAccounts = mockDoctorAccounts.filter((doctor) => {
+		const getSpecialtyString = (specialty: any): string => {
+			if (!specialty) return "";
+			if (typeof specialty === "string") return specialty;
+			if (typeof specialty === "object" && specialty.name)
+				return specialty.name;
+			return "";
+		};
+
 		const matchesSearch =
-			doctor.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			doctor.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
+			doctor.fullName
+				.toLowerCase()
+				.includes(debouncedSearchTerm.toLowerCase()) ||
+			doctor.email.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+			getSpecialtyString(doctor.specialty)
+				.toLowerCase()
+				.includes(debouncedSearchTerm.toLowerCase());
 
 		const matchesStatus =
-			statusFilter === "all" || doctor.status === statusFilter;
+			statusFilter === "all" || (doctor.status ?? "active") === statusFilter;
 
 		const matchesAvailability =
 			availabilityFilter === "all" ||
 			(availabilityFilter === "available" &&
 				doctor.isAvailable &&
-				doctor.status === "active") ||
+				(doctor.status ?? "active") === "active") ||
 			(availabilityFilter === "busy" &&
-				(!doctor.isAvailable || doctor.status === "inactive"));
+				(!doctor.isAvailable || (doctor.status ?? "active") === "inactive"));
 
 		return matchesSearch && matchesStatus && matchesAvailability;
 	});
 
-	// Pagination logic
 	const totalPages = Math.ceil(filteredAccounts.length / itemsPerPage);
 	const startIndex = (currentPage - 1) * itemsPerPage;
 	const paginatedAccounts = filteredAccounts.slice(
@@ -169,7 +163,11 @@ export function DoctorAccountsPage() {
 	};
 
 	const getEmptyStateMessage = () => {
-		if (searchTerm || statusFilter !== "all" || availabilityFilter !== "all") {
+		if (
+			debouncedSearchTerm ||
+			statusFilter !== "all" ||
+			availabilityFilter !== "all"
+		) {
 			return "No doctors found matching your search criteria.";
 		}
 		return "No doctor accounts found.";
@@ -180,15 +178,19 @@ export function DoctorAccountsPage() {
 
 		try {
 			setIsDeleting(true);
-			// TODO: Implement actual API call
-			await new Promise((resolve) => setTimeout(resolve, 1500));
-			console.warn("Delete doctor:", doctorToDelete);
+			await deleteDoctorMutation.mutateAsync(doctorToDelete);
 
-			// Close modal and reset state
+			toast.success("Doctor deleted successfully", {
+				description: "The doctor account has been removed from the system.",
+			});
+
 			setShowDeleteModal(false);
 			setDoctorToDelete(null);
 		} catch (error) {
 			console.error("Failed to delete doctor:", error);
+			toast.error("Failed to delete doctor", {
+				description: "Please try again.",
+			});
 		} finally {
 			setIsDeleting(false);
 		}
@@ -407,7 +409,6 @@ export function DoctorAccountsPage() {
 							</TableHeader>
 							<TableBody>
 								{isLoading ? (
-									// Loading skeletons
 									Array.from({ length: 3 }, (_, index) => (
 										<TableRow key={`doctor-skeleton-${Date.now()}-${index}`}>
 											<TableCell>
@@ -474,16 +475,23 @@ export function DoctorAccountsPage() {
 												</div>
 											</TableCell>
 											<TableCell>
-												<Badge variant="outline">{doctor.specialty}</Badge>
+												<Badge variant="outline">
+													{typeof doctor.specialty === "string"
+														? doctor.specialty
+														: doctor.specialty?.name || "Not specified"}
+												</Badge>
 											</TableCell>
 											<TableCell className="text-sm">
-												{doctor.experience} years
+												{doctor.experience ?? doctor.yearsExperience ?? 0} years
 											</TableCell>
 											<TableCell className="text-sm font-medium">
-												{formatCurrency(doctor.consultationFee)}
+												{formatCurrency(doctor.consultationFee ?? 0)}
 											</TableCell>
 											<TableCell>
-												{getStatusBadge(doctor.status, doctor.isAvailable)}
+												{getStatusBadge(
+													doctor.status ?? "active",
+													doctor.isAvailable
+												)}
 											</TableCell>
 											<TableCell>
 												<DropdownMenu>

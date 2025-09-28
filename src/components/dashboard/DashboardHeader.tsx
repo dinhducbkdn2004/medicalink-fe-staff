@@ -1,14 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/components/mode-toggle";
 import {
@@ -19,17 +10,15 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { RefreshCw, Settings, Bell, Search } from "lucide-react";
+import { RefreshCw, Bell, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 interface DashboardHeaderProps {
-	title?: string;
 	showSearch?: boolean;
 	onRefresh?: () => void;
 }
 
 export const DashboardHeader = ({
-	title = "Dashboard",
 	showSearch = false,
 	onRefresh,
 }: DashboardHeaderProps) => {
@@ -37,24 +26,8 @@ export const DashboardHeader = ({
 		<header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 flex h-16 shrink-0 items-center gap-2 border-b backdrop-blur transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
 			<div className="flex items-center gap-2 px-4">
 				<SidebarTrigger className="-ml-1" />
-				<Separator
-					orientation="vertical"
-					className="mr-2 data-[orientation=vertical]:h-4"
-				/>
-				<Breadcrumb>
-					<BreadcrumbList>
-						<BreadcrumbItem className="hidden md:block">
-							<BreadcrumbLink href="/super-admin">Super Admin</BreadcrumbLink>
-						</BreadcrumbItem>
-						<BreadcrumbSeparator className="hidden md:block" />
-						<BreadcrumbItem>
-							<BreadcrumbPage>{title}</BreadcrumbPage>
-						</BreadcrumbItem>
-					</BreadcrumbList>
-				</Breadcrumb>
 			</div>
 
-			{/* Search Bar */}
 			{showSearch && (
 				<div className="mx-4 max-w-sm flex-1">
 					<div className="relative">
@@ -64,7 +37,6 @@ export const DashboardHeader = ({
 				</div>
 			)}
 
-			{/* Actions */}
 			<div className="ml-auto flex items-center gap-2 px-4">
 				{onRefresh && (
 					<Button variant="outline" size="sm" onClick={onRefresh}>
@@ -73,7 +45,6 @@ export const DashboardHeader = ({
 					</Button>
 				)}
 
-				{/* Notifications */}
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant="outline" size="sm" className="relative">
@@ -115,23 +86,6 @@ export const DashboardHeader = ({
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
-
-				{/* Settings */}
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button variant="outline" size="sm">
-							<Settings className="h-4 w-4" />
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end">
-						<DropdownMenuLabel>Settings</DropdownMenuLabel>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem>Notifications</DropdownMenuItem>
-						<DropdownMenuItem>Security</DropdownMenuItem>
-						<DropdownMenuItem>System</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
-
 				<ModeToggle />
 			</div>
 		</header>

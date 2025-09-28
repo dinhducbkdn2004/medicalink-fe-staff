@@ -85,7 +85,12 @@ export const EditUserDialog = ({
 				email: user.email,
 				role: user.role,
 				phone: user.phone || "",
-				isMale: user.isMale === null ? "" : user.isMale.toString(),
+				isMale:
+					user.isMale === null || user.isMale === undefined
+						? ""
+						: user.isMale
+							? "true"
+							: "false",
 				dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : undefined,
 			});
 		}
@@ -100,8 +105,12 @@ export const EditUserDialog = ({
 				email: data.email,
 				role: data.role,
 				phone: data.phone || undefined,
-				isMale: data.isMale ? data.isMale === "true" : undefined,
-				dateOfBirth: data.dateOfBirth,
+				isMale: data.isMale
+					? data.isMale === "true"
+						? true
+						: false
+					: undefined,
+				dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
 			};
 
 			await updateStaffMutation.mutateAsync({
@@ -124,7 +133,12 @@ export const EditUserDialog = ({
 				email: user.email,
 				role: user.role,
 				phone: user.phone || "",
-				isMale: user.isMale === null ? "" : user.isMale.toString(),
+				isMale:
+					user.isMale === null || user.isMale === undefined
+						? ""
+						: user.isMale
+							? "true"
+							: "false",
 				dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : undefined,
 			});
 		}
@@ -231,7 +245,10 @@ export const EditUserDialog = ({
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Gender</FormLabel>
-										<Select onValueChange={field.onChange} value={field.value}>
+										<Select
+											onValueChange={field.onChange}
+											value={field.value ?? ""}
+										>
 											<FormControl>
 												<SelectTrigger>
 													<SelectValue placeholder="Select gender" />

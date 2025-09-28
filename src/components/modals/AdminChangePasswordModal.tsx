@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff, Lock } from "lucide-react";
+import { Key, Eye, EyeOff, User } from "lucide-react";
 
 import {
 	Dialog,
@@ -22,12 +22,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useChangePassword } from "@/hooks/api/useAuth";
-import type { ChangePasswordRequest } from "@/types";
+import { useChangeStaffPassword } from "@/hooks/api/useStaffs";
+import { useChangeDoctorPassword } from "@/hooks/api/useDoctors";
 
 const changePasswordSchema = z
 	.object({
-		currentPassword: z.string().min(1, "Current password is required"),
 		newPassword: z
 			.string()
 			.min(8, "Password must be at least 8 characters")
@@ -42,61 +41,69 @@ const changePasswordSchema = z
 		path: ["confirmPassword"],
 	});
 
-type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
+type ChangeUserPasswordFormValues = z.infer<typeof changePasswordSchema>;
 
-interface ChangePasswordModalProps {
+interface AdminChangePasswordModalProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
+	user?: {
+		id: string;
+		fullName: string;
+		email: string;
+	} | null;
+	userType: "admin" | "doctor";
 }
 
-export function ChangePasswordModal({
+export function AdminChangePasswordModal({
 	open,
 	onOpenChange,
-}: Readonly<ChangePasswordModalProps>) {
-	const changePasswordMutation = useChangePassword();
-	const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+	user,
+	userType,
+}: Readonly<AdminChangePasswordModalProps>) {
+	const changeStaffPasswordMutation = useChangeStaffPassword();
+	const changeDoctorPasswordMutation = useChangeDoctorPassword();
 	const [showNewPassword, setShowNewPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
 
-	const form = useForm<ChangePasswordFormValues>({
+	const form = useForm<ChangeUserPasswordFormValues>({
 		resolver: zodResolver(changePasswordSchema),
 		defaultValues: {
-			currentPassword: "",
 			newPassword: "",
 			confirmPassword: "",
 		},
 	});
 
-	const onSubmit = async (values: ChangePasswordFormValues) => {
-		setIsLoading(true);
-		try {
-			const changePasswordData: ChangePasswordRequest = {
-				currentPassword: values.currentPassword,
-				newPassword: values.newPassword,
-			};
+	const onSubmit = async (values: ChangeUserPasswordFormValues) => {
+		if (!user) return;
 
-			await changePasswordMutation.mutateAsync(changePasswordData);
+		try {
+			const mutation =
+				userType === "admin"
+					? changeStaffPasswordMutation
+					: changeDoctorPasswordMutation;
+
+			await mutation.mutateAsync({
+				userId: user.id,
+				newPassword: values.newPassword,
+			});
 
 			toast.success("Password changed successfully", {
-				description: "Your password has been updated.",
+				description: `Password for ${user.fullName} has been updated.`,
 			});
 
 			form.reset();
 			onOpenChange(false);
 		} catch (error: unknown) {
-			console.error("Error changing password:", error);
+			console.error("Error changing user password:", error);
 			toast.error("Failed to change password", {
-				description: "Please check your current password and try again.",
+				description: "Please try again.",
 			});
-		} finally {
-			setIsLoading(false);
 		}
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		void form.handleSubmit(onSubmit)(e);
+		form.handleSubmit(onSubmit)(e);
 	};
 
 	const handleClose = () => {
@@ -104,61 +111,40 @@ export function ChangePasswordModal({
 		onOpenChange(false);
 	};
 
+	const isLoading =
+		changeStaffPasswordMutation.isPending ||
+		changeDoctorPasswordMutation.isPending;
+
+	if (!user) return null;
+
 	return (
 		<Dialog open={open} onOpenChange={handleClose}>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
 					<DialogTitle className="flex items-center gap-2">
-						<Lock className="h-5 w-5" />
+						<Key className="h-5 w-5" />
 						Change Password
 					</DialogTitle>
 					<DialogDescription>
-						Enter your current password and choose a new one. Your new password
-						must be at least 8 characters long and contain uppercase, lowercase,
-						and numeric characters.
+						Change password for{" "}
+						<span className="text-foreground font-medium">{user.fullName}</span>{" "}
+						({user.email})
 					</DialogDescription>
 				</DialogHeader>
 
 				<Form {...form}>
 					<form onSubmit={handleSubmit} className="space-y-4">
-						{/* Current Password */}
-						<FormField
-							control={form.control}
-							name="currentPassword"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Current Password</FormLabel>
-									<FormControl>
-										<div className="relative">
-											<Input
-												{...field}
-												type={showCurrentPassword ? "text" : "password"}
-												placeholder="Enter your current password"
-												className="pr-10"
-											/>
-											<Button
-												type="button"
-												variant="ghost"
-												size="sm"
-												className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
-												onClick={() =>
-													setShowCurrentPassword(!showCurrentPassword)
-												}
-											>
-												{showCurrentPassword ? (
-													<EyeOff className="h-4 w-4" />
-												) : (
-													<Eye className="h-4 w-4" />
-												)}
-											</Button>
-										</div>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+						<div className="bg-muted flex items-center gap-2 rounded-md p-3">
+							<User className="text-muted-foreground h-4 w-4" />
+							<div className="flex-1">
+								<p className="text-sm font-medium">{user.fullName}</p>
+								<p className="text-muted-foreground text-xs">{user.email}</p>
+							</div>
+							<span className="bg-primary/10 text-primary rounded px-2 py-1 text-xs capitalize">
+								{userType}
+							</span>
+						</div>
 
-						{/* New Password */}
 						<FormField
 							control={form.control}
 							name="newPassword"
@@ -168,10 +154,9 @@ export function ChangePasswordModal({
 									<FormControl>
 										<div className="relative">
 											<Input
-												{...field}
 												type={showNewPassword ? "text" : "password"}
-												placeholder="Enter your new password"
-												className="pr-10"
+												placeholder="Enter new password"
+												{...field}
 											/>
 											<Button
 												type="button"
@@ -193,20 +178,18 @@ export function ChangePasswordModal({
 							)}
 						/>
 
-						{/* Confirm Password */}
 						<FormField
 							control={form.control}
 							name="confirmPassword"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Confirm New Password</FormLabel>
+									<FormLabel>Confirm Password</FormLabel>
 									<FormControl>
 										<div className="relative">
 											<Input
-												{...field}
 												type={showConfirmPassword ? "text" : "password"}
-												placeholder="Confirm your new password"
-												className="pr-10"
+												placeholder="Confirm new password"
+												{...field}
 											/>
 											<Button
 												type="button"
@@ -230,8 +213,7 @@ export function ChangePasswordModal({
 							)}
 						/>
 
-						{/* Actions */}
-						<div className="flex justify-end space-x-2 pt-4">
+						<div className="flex justify-end gap-2 pt-4">
 							<Button
 								type="button"
 								variant="outline"

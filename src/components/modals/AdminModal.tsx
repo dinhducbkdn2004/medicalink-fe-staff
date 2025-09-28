@@ -29,6 +29,8 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useCreateStaff, useUpdateStaff } from "@/hooks/api/useStaffs";
+import type { CreateStaffRequest, UpdateStaffRequest } from "@/types";
 
 const adminFormSchema = z.object({
 	fullName: z
@@ -37,15 +39,9 @@ const adminFormSchema = z.object({
 		.max(100, "Full name must not exceed 100 characters"),
 	email: z
 		.string()
-		.email("Please enter a valid email address")
-		.min(1, "Email is required"),
-	password: z
-		.string()
-		.min(8, "Password must be at least 8 characters")
-		.regex(
-			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-			"Password must contain at least one uppercase letter, one lowercase letter, and one number"
-		),
+		.min(1, "Email is required")
+		.email("Please enter a valid email address"),
+	password: z.string().optional().or(z.literal("")),
 	phone: z
 		.string()
 		.optional()
@@ -56,6 +52,7 @@ const adminFormSchema = z.object({
 	role: z.enum(["ADMIN", "SUPER_ADMIN"], {
 		message: "Please select a role.",
 	}),
+	isMale: z.string().optional(),
 	dateOfBirth: z.string().optional().or(z.literal("")),
 });
 
@@ -74,7 +71,13 @@ interface AdminModalProps {
 	} | null;
 }
 
-export function AdminModal({ open, onOpenChange, admin }: AdminModalProps) {
+export function AdminModal({
+	open,
+	onOpenChange,
+	admin,
+}: Readonly<AdminModalProps>) {
+	const createStaffMutation = useCreateStaff();
+	const updateStaffMutation = useUpdateStaff();
 	const [showPassword, setShowPassword] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const isEditing = !!admin;
@@ -114,26 +117,76 @@ export function AdminModal({ open, onOpenChange, admin }: AdminModalProps) {
 		}
 	}, [admin, form]);
 
+	const convertGenderValue = (isMaleString?: string): boolean | undefined => {
+		if (isMaleString === "true") return true;
+		if (isMaleString === "false") return false;
+		return undefined;
+	};
+
+	const convertDateValue = (dateString?: string): Date | null => {
+		if (!dateString) return null;
+		return new Date(dateString);
+	};
+
+	const createUpdateData = (values: AdminFormValues): UpdateStaffRequest => {
+		return {
+			fullName: values.fullName,
+			email: values.email,
+			role: values.role as "ADMIN",
+			phone: values.phone || undefined,
+			isMale: convertGenderValue(values.isMale),
+			dateOfBirth: convertDateValue(values.dateOfBirth),
+		};
+	};
+
+	const createCreateData = (values: AdminFormValues): CreateStaffRequest => {
+		return {
+			fullName: values.fullName,
+			email: values.email,
+			password: values.password || "",
+			role: values.role as "ADMIN",
+			phone: values.phone || undefined,
+			isMale: convertGenderValue(values.isMale),
+			dateOfBirth: convertDateValue(values.dateOfBirth),
+		};
+	};
+
+	const handleUpdateAdmin = async (values: AdminFormValues) => {
+		if (!admin) return;
+
+		const updateData = createUpdateData(values);
+		await updateStaffMutation.mutateAsync({
+			id: admin.id,
+			data: updateData,
+		});
+
+		toast.success("Admin updated successfully", {
+			description: `${values.fullName} has been updated.`,
+		});
+	};
+
+	const handleCreateAdmin = async (values: AdminFormValues) => {
+		const createData = createCreateData(values);
+		await createStaffMutation.mutateAsync(createData);
+
+		toast.success("Admin created successfully", {
+			description: `${values.fullName} has been added to the system.`,
+		});
+	};
+
 	const onSubmit = async (values: AdminFormValues) => {
 		setIsLoading(true);
 		try {
-			// TODO: Implement API call to create/update admin
-			console.warn(isEditing ? "Update admin:" : "Create admin:", values);
-
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-
-			toast.success(
-				isEditing ? "Admin updated successfully" : "Admin created successfully",
-				{
-					description: `${values.fullName} has been ${isEditing ? "updated" : "added"} to the system.`,
-				}
-			);
-
+			if (isEditing) {
+				await handleUpdateAdmin(values);
+			} else {
+				await handleCreateAdmin(values);
+			}
 			handleClose();
 		} catch (error: unknown) {
 			console.error("Error managing admin:", error);
-			toast.error(`Failed to ${isEditing ? "update" : "create"} admin`, {
+			const action = isEditing ? "update" : "create";
+			toast.error(`Failed to ${action} admin`, {
 				description: "Please try again.",
 			});
 		} finally {
@@ -151,24 +204,42 @@ export function AdminModal({ open, onOpenChange, admin }: AdminModalProps) {
 		void form.handleSubmit(onSubmit)(e);
 	};
 
+	const getPasswordLabel = () => {
+		return isEditing
+			? "New Password (leave blank to keep current)"
+			: "Password *";
+	};
+
+	const getSubmitButtonText = () => {
+		if (isLoading) {
+			return isEditing ? "Updating..." : "Creating...";
+		}
+		return isEditing ? "Update Admin" : "Create Admin";
+	};
+
+	const getDialogTitle = () => {
+		return isEditing ? "Edit Admin Account" : "Create Admin Account";
+	};
+
+	const getDialogDescription = () => {
+		return isEditing
+			? "Update the admin account information below."
+			: "Fill in the information below to create a new admin account.";
+	};
+
 	return (
 		<Dialog open={open} onOpenChange={handleClose}>
 			<DialogContent className="sm:max-w-[500px]">
 				<DialogHeader>
 					<DialogTitle className="flex items-center gap-2">
 						<UserPlus className="h-5 w-5" />
-						{isEditing ? "Edit Admin Account" : "Create Admin Account"}
+						{getDialogTitle()}
 					</DialogTitle>
-					<DialogDescription>
-						{isEditing
-							? "Update the admin account information below."
-							: "Fill in the information below to create a new admin account."}
-					</DialogDescription>
+					<DialogDescription>{getDialogDescription()}</DialogDescription>
 				</DialogHeader>
 
 				<Form {...form}>
 					<form onSubmit={handleSubmit} className="space-y-4">
-						{/* Full Name */}
 						<FormField
 							control={form.control}
 							name="fullName"
@@ -183,7 +254,6 @@ export function AdminModal({ open, onOpenChange, admin }: AdminModalProps) {
 							)}
 						/>
 
-						{/* Email */}
 						<FormField
 							control={form.control}
 							name="email"
@@ -202,17 +272,12 @@ export function AdminModal({ open, onOpenChange, admin }: AdminModalProps) {
 							)}
 						/>
 
-						{/* Password */}
 						<FormField
 							control={form.control}
 							name="password"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>
-										{isEditing
-											? "New Password (leave blank to keep current)"
-											: "Password *"}
-									</FormLabel>
+									<FormLabel>{getPasswordLabel()}</FormLabel>
 									<FormControl>
 										<div className="relative">
 											<Input
@@ -241,7 +306,6 @@ export function AdminModal({ open, onOpenChange, admin }: AdminModalProps) {
 							)}
 						/>
 
-						{/* Phone */}
 						<FormField
 							control={form.control}
 							name="phone"
@@ -256,17 +320,13 @@ export function AdminModal({ open, onOpenChange, admin }: AdminModalProps) {
 							)}
 						/>
 
-						{/* Role */}
 						<FormField
 							control={form.control}
 							name="role"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Role *</FormLabel>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-									>
+									<Select onValueChange={field.onChange} value={field.value}>
 										<FormControl>
 											<SelectTrigger>
 												<SelectValue placeholder="Select a role" />
@@ -282,7 +342,31 @@ export function AdminModal({ open, onOpenChange, admin }: AdminModalProps) {
 							)}
 						/>
 
-						{/* Date of Birth */}
+						<FormField
+							control={form.control}
+							name="isMale"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Gender</FormLabel>
+									<Select
+										onValueChange={field.onChange}
+										value={field.value || ""}
+									>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder="Select gender" />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											<SelectItem value="true">Male</SelectItem>
+											<SelectItem value="false">Female</SelectItem>
+										</SelectContent>
+									</Select>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
 						<FormField
 							control={form.control}
 							name="dateOfBirth"
@@ -301,7 +385,6 @@ export function AdminModal({ open, onOpenChange, admin }: AdminModalProps) {
 							)}
 						/>
 
-						{/* Actions */}
 						<div className="flex justify-end space-x-2 pt-4">
 							<Button
 								type="button"
@@ -312,13 +395,7 @@ export function AdminModal({ open, onOpenChange, admin }: AdminModalProps) {
 								Cancel
 							</Button>
 							<Button type="submit" disabled={isLoading}>
-								{isLoading
-									? isEditing
-										? "Updating..."
-										: "Creating..."
-									: isEditing
-										? "Update Admin"
-										: "Create Admin"}
+								{getSubmitButtonText()}
 							</Button>
 						</div>
 					</form>

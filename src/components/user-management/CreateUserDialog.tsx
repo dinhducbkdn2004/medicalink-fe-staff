@@ -91,8 +91,12 @@ export const CreateUserDialog = ({
 				password: data.password,
 				role: data.role,
 				phone: data.phone || undefined,
-				isMale: data.isMale ? data.isMale === "true" : undefined,
-				dateOfBirth: data.dateOfBirth,
+				isMale: data.isMale
+					? data.isMale === "true"
+						? true
+						: false
+					: undefined,
+				dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
 			};
 
 			await createStaffMutation.mutateAsync(payload);
@@ -235,7 +239,7 @@ export const CreateUserDialog = ({
 										<FormLabel>Gender</FormLabel>
 										<Select
 											onValueChange={field.onChange}
-											defaultValue={field.value}
+											defaultValue={field.value ?? ""}
 										>
 											<FormControl>
 												<SelectTrigger>
