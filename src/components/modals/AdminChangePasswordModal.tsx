@@ -59,7 +59,7 @@ export function AdminChangePasswordModal({
 	onOpenChange,
 	user,
 	userType,
-}: AdminChangePasswordModalProps) {
+}: Readonly<AdminChangePasswordModalProps>) {
 	const changeStaffPasswordMutation = useChangeStaffPassword();
 	const changeDoctorPasswordMutation = useChangeDoctorPassword();
 	const [showNewPassword, setShowNewPassword] = useState(false);

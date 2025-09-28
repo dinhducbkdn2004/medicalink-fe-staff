@@ -44,22 +44,9 @@ export const useStaffs = (
 		role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
 	}
 ) => {
-	// Convert page to skip and remove page parameter
-	const apiParams = params?.page
-		? {
-				...params,
-				skip: (params.page - 1) * (params.limit || 10),
-				page: undefined, // Remove page parameter
-			}
-		: params;
-
-	// Remove page from the final params object
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const { page: _, ...finalParams } = apiParams || {};
-
 	return useQuery({
 		queryKey: staffKeys.list(params),
-		queryFn: async () => extractPaginatedData(await getStaffs(finalParams)),
+		queryFn: async () => extractPaginatedData(await getStaffs(params)),
 		staleTime: CACHE_TIME.MEDIUM,
 	});
 };

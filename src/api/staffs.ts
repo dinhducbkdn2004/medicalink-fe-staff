@@ -16,7 +16,6 @@ export const getStaffs = (
 		createdFrom?: string;
 		createdTo?: string;
 		role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
-		skip?: number; // API uses skip instead of page
 	}
 ) =>
 	apiClient.get<ApiResponse<PaginatedResponse<StaffAccount>>>("/staffs", {

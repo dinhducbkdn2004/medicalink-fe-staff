@@ -52,7 +52,7 @@ interface ChangePasswordModalProps {
 export function ChangePasswordModal({
 	open,
 	onOpenChange,
-}: ChangePasswordModalProps) {
+}: Readonly<ChangePasswordModalProps>) {
 	const changePasswordMutation = useChangePassword();
 	const [showCurrentPassword, setShowCurrentPassword] = useState(false);
 	const [showNewPassword, setShowNewPassword] = useState(false);

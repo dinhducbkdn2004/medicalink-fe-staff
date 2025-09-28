@@ -19,9 +19,11 @@ import { Route as DoctorIndexRouteImport } from './routes/doctor/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as SuperAdminWorkLocationsRouteImport } from './routes/super-admin/work-locations'
 import { Route as SuperAdminSpecialtiesRouteImport } from './routes/super-admin/specialties'
+import { Route as SuperAdminSchedulesRouteImport } from './routes/super-admin/schedules'
 import { Route as SuperAdminPermissionsRouteImport } from './routes/super-admin/permissions'
 import { Route as SuperAdminDoctorAccountsRouteImport } from './routes/super-admin/doctor-accounts'
 import { Route as SuperAdminDashboardRouteImport } from './routes/super-admin/dashboard'
+import { Route as SuperAdminAppointmentsRouteImport } from './routes/super-admin/appointments'
 import { Route as SuperAdminAdminAccountsRouteImport } from './routes/super-admin/admin-accounts'
 import { Route as DoctorDashboardRouteImport } from './routes/doctor/dashboard'
 import { Route as AdminDoctorAccountsRouteImport } from './routes/admin/doctor-accounts'
@@ -77,6 +79,11 @@ const SuperAdminSpecialtiesRoute = SuperAdminSpecialtiesRouteImport.update({
   path: '/specialties',
   getParentRoute: () => SuperAdminRoute,
 } as any)
+const SuperAdminSchedulesRoute = SuperAdminSchedulesRouteImport.update({
+  id: '/schedules',
+  path: '/schedules',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
 const SuperAdminPermissionsRoute = SuperAdminPermissionsRouteImport.update({
   id: '/permissions',
   path: '/permissions',
@@ -91,6 +98,11 @@ const SuperAdminDoctorAccountsRoute =
 const SuperAdminDashboardRoute = SuperAdminDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
+const SuperAdminAppointmentsRoute = SuperAdminAppointmentsRouteImport.update({
+  id: '/appointments',
+  path: '/appointments',
   getParentRoute: () => SuperAdminRoute,
 } as any)
 const SuperAdminAdminAccountsRoute = SuperAdminAdminAccountsRouteImport.update({
@@ -124,9 +136,11 @@ export interface FileRoutesByFullPath {
   '/admin/doctor-accounts': typeof AdminDoctorAccountsRoute
   '/doctor/dashboard': typeof DoctorDashboardRoute
   '/super-admin/admin-accounts': typeof SuperAdminAdminAccountsRoute
+  '/super-admin/appointments': typeof SuperAdminAppointmentsRoute
   '/super-admin/dashboard': typeof SuperAdminDashboardRoute
   '/super-admin/doctor-accounts': typeof SuperAdminDoctorAccountsRoute
   '/super-admin/permissions': typeof SuperAdminPermissionsRoute
+  '/super-admin/schedules': typeof SuperAdminSchedulesRoute
   '/super-admin/specialties': typeof SuperAdminSpecialtiesRoute
   '/super-admin/work-locations': typeof SuperAdminWorkLocationsRoute
   '/admin/': typeof AdminIndexRoute
@@ -140,9 +154,11 @@ export interface FileRoutesByTo {
   '/admin/doctor-accounts': typeof AdminDoctorAccountsRoute
   '/doctor/dashboard': typeof DoctorDashboardRoute
   '/super-admin/admin-accounts': typeof SuperAdminAdminAccountsRoute
+  '/super-admin/appointments': typeof SuperAdminAppointmentsRoute
   '/super-admin/dashboard': typeof SuperAdminDashboardRoute
   '/super-admin/doctor-accounts': typeof SuperAdminDoctorAccountsRoute
   '/super-admin/permissions': typeof SuperAdminPermissionsRoute
+  '/super-admin/schedules': typeof SuperAdminSchedulesRoute
   '/super-admin/specialties': typeof SuperAdminSpecialtiesRoute
   '/super-admin/work-locations': typeof SuperAdminWorkLocationsRoute
   '/admin': typeof AdminIndexRoute
@@ -160,9 +176,11 @@ export interface FileRoutesById {
   '/admin/doctor-accounts': typeof AdminDoctorAccountsRoute
   '/doctor/dashboard': typeof DoctorDashboardRoute
   '/super-admin/admin-accounts': typeof SuperAdminAdminAccountsRoute
+  '/super-admin/appointments': typeof SuperAdminAppointmentsRoute
   '/super-admin/dashboard': typeof SuperAdminDashboardRoute
   '/super-admin/doctor-accounts': typeof SuperAdminDoctorAccountsRoute
   '/super-admin/permissions': typeof SuperAdminPermissionsRoute
+  '/super-admin/schedules': typeof SuperAdminSchedulesRoute
   '/super-admin/specialties': typeof SuperAdminSpecialtiesRoute
   '/super-admin/work-locations': typeof SuperAdminWorkLocationsRoute
   '/admin/': typeof AdminIndexRoute
@@ -181,9 +199,11 @@ export interface FileRouteTypes {
     | '/admin/doctor-accounts'
     | '/doctor/dashboard'
     | '/super-admin/admin-accounts'
+    | '/super-admin/appointments'
     | '/super-admin/dashboard'
     | '/super-admin/doctor-accounts'
     | '/super-admin/permissions'
+    | '/super-admin/schedules'
     | '/super-admin/specialties'
     | '/super-admin/work-locations'
     | '/admin/'
@@ -197,9 +217,11 @@ export interface FileRouteTypes {
     | '/admin/doctor-accounts'
     | '/doctor/dashboard'
     | '/super-admin/admin-accounts'
+    | '/super-admin/appointments'
     | '/super-admin/dashboard'
     | '/super-admin/doctor-accounts'
     | '/super-admin/permissions'
+    | '/super-admin/schedules'
     | '/super-admin/specialties'
     | '/super-admin/work-locations'
     | '/admin'
@@ -216,9 +238,11 @@ export interface FileRouteTypes {
     | '/admin/doctor-accounts'
     | '/doctor/dashboard'
     | '/super-admin/admin-accounts'
+    | '/super-admin/appointments'
     | '/super-admin/dashboard'
     | '/super-admin/doctor-accounts'
     | '/super-admin/permissions'
+    | '/super-admin/schedules'
     | '/super-admin/specialties'
     | '/super-admin/work-locations'
     | '/admin/'
@@ -306,6 +330,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SuperAdminSpecialtiesRouteImport
       parentRoute: typeof SuperAdminRoute
     }
+    '/super-admin/schedules': {
+      id: '/super-admin/schedules'
+      path: '/schedules'
+      fullPath: '/super-admin/schedules'
+      preLoaderRoute: typeof SuperAdminSchedulesRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
     '/super-admin/permissions': {
       id: '/super-admin/permissions'
       path: '/permissions'
@@ -325,6 +356,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/super-admin/dashboard'
       preLoaderRoute: typeof SuperAdminDashboardRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/super-admin/appointments': {
+      id: '/super-admin/appointments'
+      path: '/appointments'
+      fullPath: '/super-admin/appointments'
+      preLoaderRoute: typeof SuperAdminAppointmentsRouteImport
       parentRoute: typeof SuperAdminRoute
     }
     '/super-admin/admin-accounts': {
@@ -387,9 +425,11 @@ const DoctorRouteWithChildren =
 
 interface SuperAdminRouteChildren {
   SuperAdminAdminAccountsRoute: typeof SuperAdminAdminAccountsRoute
+  SuperAdminAppointmentsRoute: typeof SuperAdminAppointmentsRoute
   SuperAdminDashboardRoute: typeof SuperAdminDashboardRoute
   SuperAdminDoctorAccountsRoute: typeof SuperAdminDoctorAccountsRoute
   SuperAdminPermissionsRoute: typeof SuperAdminPermissionsRoute
+  SuperAdminSchedulesRoute: typeof SuperAdminSchedulesRoute
   SuperAdminSpecialtiesRoute: typeof SuperAdminSpecialtiesRoute
   SuperAdminWorkLocationsRoute: typeof SuperAdminWorkLocationsRoute
   SuperAdminIndexRoute: typeof SuperAdminIndexRoute
@@ -397,9 +437,11 @@ interface SuperAdminRouteChildren {
 
 const SuperAdminRouteChildren: SuperAdminRouteChildren = {
   SuperAdminAdminAccountsRoute: SuperAdminAdminAccountsRoute,
+  SuperAdminAppointmentsRoute: SuperAdminAppointmentsRoute,
   SuperAdminDashboardRoute: SuperAdminDashboardRoute,
   SuperAdminDoctorAccountsRoute: SuperAdminDoctorAccountsRoute,
   SuperAdminPermissionsRoute: SuperAdminPermissionsRoute,
+  SuperAdminSchedulesRoute: SuperAdminSchedulesRoute,
   SuperAdminSpecialtiesRoute: SuperAdminSpecialtiesRoute,
   SuperAdminWorkLocationsRoute: SuperAdminWorkLocationsRoute,
   SuperAdminIndexRoute: SuperAdminIndexRoute,

@@ -37,12 +37,13 @@ export const useWorkLocations = (
 		isActive?: boolean;
 		includeMetadata?: boolean;
 	}
-) =>
-	useQuery({
+) => {
+	return useQuery({
 		queryKey: workLocationKeys.list(params),
 		queryFn: async () => extractPaginatedData(await getWorkLocations(params)),
 		staleTime: 1000 * 60 * 5,
 	});
+};
 
 export const useActiveWorkLocations = () =>
 	useQuery({

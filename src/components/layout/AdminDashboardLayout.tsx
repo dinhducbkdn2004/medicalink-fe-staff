@@ -155,14 +155,12 @@ export const AdminDashboardLayout = ({
 		// Handle quick actions - navigation logic will be implemented later
 	};
 
-	const getDashboardTitle = () => "Dashboard";
 
 	return (
 		<SidebarProvider>
 			<AppSidebar userRole={userRole} />
 			<SidebarInset>
 				<DashboardHeader
-					title={getDashboardTitle()}
 					showSearch={true}
 					onRefresh={handleRefresh}
 				/>

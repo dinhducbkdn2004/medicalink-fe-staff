@@ -4,9 +4,7 @@ import type { StaffRole } from "@/types/common";
 export enum Permission {
 	// Super Admin only permissions
 	MANAGE_ADMINS = "manage_admins",
-	SYSTEM_SETTINGS = "system_settings",
 	DATABASE_BACKUP = "database_backup",
-	VIEW_SYSTEM_LOGS = "view_system_logs",
 	SECURITY_AUDIT = "security_audit",
 
 	// Admin and Super Admin permissions
@@ -30,9 +28,7 @@ const ROLE_PERMISSIONS: Record<StaffRole, Permission[]> = {
 	SUPER_ADMIN: [
 		// All permissions
 		Permission.MANAGE_ADMINS,
-		Permission.SYSTEM_SETTINGS,
 		Permission.DATABASE_BACKUP,
-		Permission.VIEW_SYSTEM_LOGS,
 		Permission.SECURITY_AUDIT,
 		Permission.MANAGE_DOCTORS,
 		Permission.MANAGE_SPECIALTIES,
@@ -223,33 +219,6 @@ export const SUPER_ADMIN_NAVIGATION: NavigationItem[] = [
 				title: "Appointments",
 				url: "/super-admin/appointments",
 				requiredPermissions: [Permission.MANAGE_APPOINTMENTS],
-			},
-		],
-	},
-	{
-		title: "System Settings",
-		url: "/super-admin/settings",
-		requiredPermissions: [Permission.SYSTEM_SETTINGS],
-		items: [
-			{
-				title: "General",
-				url: "/super-admin/settings/general",
-				requiredPermissions: [Permission.SYSTEM_SETTINGS],
-			},
-			{
-				title: "Security",
-				url: "/super-admin/settings/security",
-				requiredPermissions: [Permission.SECURITY_AUDIT],
-			},
-			{
-				title: "Backup",
-				url: "/super-admin/settings/backup",
-				requiredPermissions: [Permission.DATABASE_BACKUP],
-			},
-			{
-				title: "Logs",
-				url: "/super-admin/settings/logs",
-				requiredPermissions: [Permission.VIEW_SYSTEM_LOGS],
 			},
 		],
 	},

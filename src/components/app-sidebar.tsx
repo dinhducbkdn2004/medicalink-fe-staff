@@ -8,7 +8,6 @@ import {
 	FileText,
 	GalleryVerticalEnd,
 	MessageCircleQuestion,
-	Settings2,
 	SquareTerminal,
 	Star,
 	Users,
@@ -34,7 +33,6 @@ const NAVIGATION_ICONS = {
 	Dashboard: SquareTerminal,
 	"User Management": Users,
 	"Hospital Setup": Building2,
-	"System Settings": Settings2,
 };
 
 // Icons mapping for project items
@@ -51,16 +49,13 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar({ userRole, ...props }: AppSidebarProps) {
 	const { user } = useAuthStatus();
 
-	// Use provided userRole or fallback to authenticated user's role
 	const effectiveRole = userRole || user?.role;
 
-	// Generate role-based navigation
 	const navigation = React.useMemo(() => {
 		if (!effectiveRole) return [];
 
 		const navItems = getNavigationForRole(effectiveRole);
 
-		// Add icons to navigation items
 		return navItems.map((item) => ({
 			...item,
 			icon:
@@ -69,20 +64,17 @@ export function AppSidebar({ userRole, ...props }: AppSidebarProps) {
 		}));
 	}, [effectiveRole]);
 
-	// Generate role-based projects
 	const projects = React.useMemo(() => {
 		if (!effectiveRole) return [];
 
 		const projectItems = getProjectsForRole(effectiveRole);
 
-		// Add icons to project items
 		return projectItems.map((item) => ({
 			...item,
 			icon: PROJECT_ICONS[item.name as keyof typeof PROJECT_ICONS] || FileText,
 		}));
 	}, [effectiveRole]);
 
-	// Generate team switcher data based on role
 	const teams = React.useMemo(() => {
 		const roleLabels = {
 			SUPER_ADMIN: "Super Admin",

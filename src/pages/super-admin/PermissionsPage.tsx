@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
+import debounce from "debounce";
 import { Shield, Users, Settings, Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -39,6 +40,24 @@ export function PermissionsPage() {
 	const { data: matrixData, isLoading } = useRolePermissionsMatrix();
 	const updateRolePermissionsMutation = useUpdateRolePermissions();
 	const [searchTerm, setSearchTerm] = useState("");
+	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+	// Create debounced function for search
+	const debouncedSetSearch = useMemo(
+		() =>
+			debounce((value: string) => {
+				setDebouncedSearchTerm(value);
+			}, 300),
+		[]
+	);
+
+	// Update debounced search when searchTerm changes
+	useEffect(() => {
+		debouncedSetSearch(searchTerm);
+		return () => {
+			debouncedSetSearch.clear();
+		};
+	}, [searchTerm, debouncedSetSearch]);
 	const [selectedRole, setSelectedRole] = useState<string>("all");
 	const [isUpdating, setIsUpdating] = useState(false);
 
@@ -59,9 +78,15 @@ export function PermissionsPage() {
 
 	const filteredPermissions = availablePermissions.filter(
 		(permission) =>
-			permission.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			permission.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			permission.module.toLowerCase().includes(searchTerm.toLowerCase())
+			permission.name
+				.toLowerCase()
+				.includes(debouncedSearchTerm.toLowerCase()) ||
+			permission.description
+				.toLowerCase()
+				.includes(debouncedSearchTerm.toLowerCase()) ||
+			permission.module
+				.toLowerCase()
+				.includes(debouncedSearchTerm.toLowerCase())
 	);
 
 	const filteredRoles = rolesWithUserCount.filter(

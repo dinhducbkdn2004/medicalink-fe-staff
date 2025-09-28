@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { UserPlus, User, Calendar, Phone, Mail, MapPin } from "lucide-react";
+import { UserPlus, User, Calendar, Phone, Mail } from "lucide-react";
 
 import {
 	Dialog,
@@ -30,10 +30,8 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useCreateStaff, useUpdateStaff } from "@/hooks/api/useStaffs";
-import { useActiveWorkLocations } from "@/hooks/api/useLocations";
 import type { CreateStaffRequest, UpdateStaffRequest } from "@/types";
 
-// Schema for profile update (no password)
 const profileFormSchema = z.object({
 	fullName: z
 		.string()
@@ -53,18 +51,16 @@ const profileFormSchema = z.object({
 	role: z.enum(["ADMIN", "SUPER_ADMIN"], {
 		message: "Please select a role.",
 	}),
-	locationId: z.string().optional().or(z.literal("")),
 	isMale: z.boolean().optional(),
 	dateOfBirth: z.string().optional().or(z.literal("")),
 });
 
-// Schema for create (includes password)
 const createFormSchema = profileFormSchema.extend({
 	password: z
 		.string()
 		.min(8, "Password must be at least 8 characters")
 		.regex(
-			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)/,
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
 			"Password must contain at least one uppercase letter, one lowercase letter, and one number"
 		),
 });
@@ -81,7 +77,6 @@ interface AdminProfileModalProps {
 		email: string;
 		phone?: string;
 		role: string;
-		locationId?: string;
 		isMale?: boolean;
 		dateOfBirth?: string;
 	} | null;
@@ -91,7 +86,7 @@ export function AdminProfileModal({
 	open,
 	onOpenChange,
 	admin,
-}: AdminProfileModalProps) {
+}: Readonly<AdminProfileModalProps>) {
 	const isEditing = Boolean(admin);
 	const isCreating = !isEditing;
 
@@ -102,7 +97,6 @@ export function AdminProfileModal({
 			email: "",
 			phone: "",
 			role: "ADMIN",
-			locationId: "none",
 			isMale: true,
 			dateOfBirth: "",
 			...(isCreating ? { password: "" } : {}),
@@ -111,9 +105,7 @@ export function AdminProfileModal({
 
 	const createStaffMutation = useCreateStaff();
 	const updateStaffMutation = useUpdateStaff();
-	const { data: workLocations } = useActiveWorkLocations();
 
-	// Reset form when admin changes or modal opens
 	useEffect(() => {
 		if (open) {
 			if (admin) {
@@ -122,17 +114,16 @@ export function AdminProfileModal({
 					email: admin.email,
 					phone: admin.phone || "",
 					role: admin.role as "ADMIN" | "SUPER_ADMIN",
-					locationId: admin.locationId || "none",
 					isMale: admin.isMale ?? true,
 					dateOfBirth: admin.dateOfBirth || "",
 				});
+				form.unregister("password");
 			} else {
 				form.reset({
 					fullName: "",
 					email: "",
 					phone: "",
 					role: "ADMIN",
-					locationId: "none",
 					isMale: true,
 					dateOfBirth: "",
 					...(isCreating ? { password: "" } : {}),
@@ -144,7 +135,6 @@ export function AdminProfileModal({
 	const onSubmit = async (values: ProfileFormValues | CreateFormValues) => {
 		try {
 			if (isEditing && admin) {
-				// Update profile (no password) - only send changed fields
 				const updateData: Partial<UpdateStaffRequest> = {};
 
 				if (values.fullName !== admin.fullName) {
@@ -154,11 +144,7 @@ export function AdminProfileModal({
 					updateData.email = values.email;
 				}
 				if (values.phone !== (admin.phone || "")) {
-					updateData.phone = values.phone || null;
-				}
-				if (values.locationId !== (admin.locationId || "none")) {
-					updateData.locationId =
-						values.locationId === "none" ? null : values.locationId || null;
+					updateData.phone = values.phone || undefined;
 				}
 				if (values.isMale !== admin.isMale) {
 					updateData.isMale = values.isMale;
@@ -169,7 +155,6 @@ export function AdminProfileModal({
 						: null;
 				}
 
-				// Only send request if there are changes
 				if (Object.keys(updateData).length > 0) {
 					await updateStaffMutation.mutateAsync({
 						id: admin.id,
@@ -181,18 +166,18 @@ export function AdminProfileModal({
 					toast.info("No changes detected");
 				}
 			} else {
-				// Create new admin (with password)
 				const createData: CreateStaffRequest = {
 					fullName: values.fullName,
 					email: values.email,
 					password: (values as CreateFormValues).password,
-					phone: values.phone || null,
 					role: "ADMIN",
-					locationId:
-						values.locationId === "none" ? null : values.locationId || null,
 					isMale: values.isMale,
 					dateOfBirth: values.dateOfBirth ? new Date(values.dateOfBirth) : null,
 				};
+
+				if (values.phone) {
+					createData.phone = values.phone;
+				}
 
 				await createStaffMutation.mutateAsync(createData);
 				toast.success("Admin created successfully");
@@ -241,7 +226,6 @@ export function AdminProfileModal({
 						}}
 						className="space-y-4"
 					>
-						{/* Full Name */}
 						<FormField
 							control={form.control}
 							name="fullName"
@@ -259,7 +243,6 @@ export function AdminProfileModal({
 							)}
 						/>
 
-						{/* Email */}
 						<FormField
 							control={form.control}
 							name="email"
@@ -281,7 +264,6 @@ export function AdminProfileModal({
 							)}
 						/>
 
-						{/* Password - Only for creation */}
 						{isCreating && (
 							<FormField
 								control={form.control}
@@ -303,7 +285,6 @@ export function AdminProfileModal({
 						)}
 
 						<div className="grid grid-cols-2 gap-4">
-							{/* Phone */}
 							<FormField
 								control={form.control}
 								name="phone"
@@ -321,7 +302,6 @@ export function AdminProfileModal({
 								)}
 							/>
 
-							{/* Gender */}
 							<FormField
 								control={form.control}
 								name="isMale"
@@ -353,7 +333,6 @@ export function AdminProfileModal({
 						</div>
 
 						<div className="grid grid-cols-2 gap-4">
-							{/* Role */}
 							<FormField
 								control={form.control}
 								name="role"
@@ -375,39 +354,8 @@ export function AdminProfileModal({
 									</FormItem>
 								)}
 							/>
-
-							{/* Work Location */}
-							<FormField
-								control={form.control}
-								name="locationId"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel className="flex items-center gap-2">
-											<MapPin className="h-4 w-4" />
-											Work Location
-										</FormLabel>
-										<Select onValueChange={field.onChange} value={field.value}>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="Select work location" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												<SelectItem value="none">No location</SelectItem>
-												{workLocations?.map((location) => (
-													<SelectItem key={location.id} value={location.id}>
-														{location.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
 						</div>
 
-						{/* Date of Birth */}
 						<FormField
 							control={form.control}
 							name="dateOfBirth"
@@ -435,13 +383,12 @@ export function AdminProfileModal({
 								Cancel
 							</Button>
 							<Button type="submit" disabled={isLoading}>
-								{isLoading
-									? isEditing
-										? "Updating..."
-										: "Creating..."
-									: isEditing
-										? "Update Profile"
-										: "Create Admin"}
+								{(() => {
+									if (isLoading) {
+										return isEditing ? "Updating..." : "Creating...";
+									}
+									return isEditing ? "Update Profile" : "Create Admin";
+								})()}
 							</Button>
 						</div>
 					</form>

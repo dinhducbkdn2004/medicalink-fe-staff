@@ -37,10 +37,6 @@ export interface UpdatePermissionRequest {
 	module?: string;
 }
 
-/**
- * Permission API endpoints
- */
-
 // Get all permissions
 export const getPermissions = (params?: PaginationParams) =>
 	apiClient.get<ApiResponse<Permission[]>>("/permissions", { params });
@@ -61,26 +57,23 @@ export const updatePermission = (id: string, data: UpdatePermissionRequest) =>
 export const deletePermission = (id: string) =>
 	apiClient.delete<ApiResponse<void>>(`/permissions/${id}`);
 
-/**
- * Role API endpoints
- */
 
-// Get all roles with their permissions
+// Get all roles with their permissions - using available permissions endpoint for now
 export const getRoles = (params?: PaginationParams) =>
-	apiClient.get<ApiResponse<Role[]>>("/roles", { params });
+	apiClient.get<ApiResponse<Role[]>>("/permissions", { params });
 
-// Get role by ID with permissions
+// Get role by ID with permissions - using permissions for now
 export const getRoleById = (id: string) =>
-	apiClient.get<ApiResponse<Role>>(`/roles/${id}`);
+	apiClient.get<ApiResponse<Role>>(`/permissions/${id}`);
 
-// Update role permissions
+// Update role permissions - using permissions for now
 export const updateRolePermissions = (
 	roleId: string,
 	data: UpdateRolePermissionsRequest
-) => apiClient.put<ApiResponse<Role>>(`/roles/${roleId}/permissions`, data);
+) => apiClient.put<ApiResponse<Role>>(`/permissions/${roleId}`, data);
 
-// Get role permissions matrix
+// Get role permissions matrix - using available permissions endpoint
 export const getRolePermissionsMatrix = () =>
 	apiClient.get<ApiResponse<{ roles: Role[]; permissions: Permission[] }>>(
-		"/roles/permissions-matrix"
+		"/permissions"
 	);

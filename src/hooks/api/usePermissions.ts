@@ -10,7 +10,7 @@ import {
 	updateRolePermissions,
 	getRolePermissionsMatrix,
 } from "@/api/permissions";
-import { extractApiData, extractPaginatedData } from "@/api/core/utils";
+import { extractApiData } from "@/api/core/utils";
 import { CACHE_TIME } from "@/constants/api";
 import type {
 	PaginationParams,
@@ -42,12 +42,13 @@ export const roleKeys = {
  * Permission Query Hooks
  */
 
-export const usePermissions = (params?: PaginationParams) =>
-	useQuery({
+export const usePermissions = (params?: PaginationParams) => {
+	return useQuery({
 		queryKey: permissionKeys.list(params),
-		queryFn: async () => extractPaginatedData(await getPermissions(params)),
+		queryFn: async () => extractApiData(await getPermissions(params)),
 		staleTime: CACHE_TIME.MEDIUM,
 	});
+};
 
 export const usePermission = (id: string) =>
 	useQuery({
@@ -63,7 +64,7 @@ export const usePermission = (id: string) =>
 export const useRoles = (params?: PaginationParams) =>
 	useQuery({
 		queryKey: roleKeys.list(params),
-		queryFn: async () => extractPaginatedData(await getRoles(params)),
+		queryFn: async () => extractApiData(await getRoles(params)),
 		staleTime: CACHE_TIME.MEDIUM,
 	});
 

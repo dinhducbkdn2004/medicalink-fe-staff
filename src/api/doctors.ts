@@ -19,7 +19,6 @@ export const getDoctors = (
 		isMale?: boolean;
 		createdFrom?: string;
 		createdTo?: string;
-		skip?: number; // API uses skip instead of page
 	}
 ) =>
 	apiClient.get<ApiResponse<PaginatedResponse<Doctor>>>("/doctors", {

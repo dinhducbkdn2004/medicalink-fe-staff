@@ -61,22 +61,9 @@ export const useDoctors = (
 		createdTo?: string;
 	}
 ) => {
-	// Convert page to skip and remove page parameter
-	const apiParams = params?.page
-		? {
-				...params,
-				skip: (params.page - 1) * (params.limit || 10),
-				page: undefined, // Remove page parameter
-			}
-		: params;
-
-	// Remove page from the final params object
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const { page: _, ...finalParams } = apiParams || {};
-
 	return useQuery({
 		queryKey: doctorKeys.list(params),
-		queryFn: async () => extractPaginatedData(await getDoctors(finalParams)),
+		queryFn: async () => extractPaginatedData(await getDoctors(params)),
 		staleTime: 1000 * 60 * 5, // 5 minutes
 	});
 };
@@ -93,25 +80,27 @@ export const useDoctor = (id: string) =>
 export const useDoctorsBySpecialty = (
 	specialtyId: string,
 	params?: PaginationParams
-) =>
-	useQuery({
+) => {
+	return useQuery({
 		queryKey: doctorKeys.bySpecialty(specialtyId, params),
 		queryFn: async () =>
 			extractApiData(await getDoctorsBySpecialty(specialtyId, params)),
 		enabled: !!specialtyId,
 	});
+};
 
 // Get doctors by location
 export const useDoctorsByLocation = (
 	locationId: string,
 	params?: PaginationParams
-) =>
-	useQuery({
+) => {
+	return useQuery({
 		queryKey: doctorKeys.byLocation(locationId, params),
 		queryFn: async () =>
 			extractApiData(await getDoctorsByLocation(locationId, params)),
 		enabled: !!locationId,
 	});
+};
 
 // Get doctor statistics
 export const useDoctorStats = () =>

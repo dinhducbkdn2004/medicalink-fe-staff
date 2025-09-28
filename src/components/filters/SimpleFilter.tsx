@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
+import debounce from "debounce";
 import { Search, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,8 +42,37 @@ export function SimpleFilter({
 	showGender = false,
 	showAvailability = false,
 	className = "",
-}: SimpleFilterProps) {
+}: Readonly<SimpleFilterProps>) {
 	const [isOpen, setIsOpen] = useState(false);
+	const [localSearchTerm, setLocalSearchTerm] = useState(filters.search || "");
+
+	// Create debounced function for search
+	const debouncedSearch = useMemo(
+		() =>
+			debounce((value: string) => {
+				const newFilters = { ...filters };
+				if (value.trim()) {
+					newFilters.search = value;
+				} else {
+					delete newFilters.search;
+				}
+				onFiltersChange(newFilters);
+			}, 300),
+		[filters, onFiltersChange]
+	);
+
+	// Update local search term when filters.search changes externally
+	useEffect(() => {
+		setLocalSearchTerm(filters.search || "");
+	}, [filters.search]);
+
+	// Debounce search input changes
+	useEffect(() => {
+		debouncedSearch(localSearchTerm);
+		return () => {
+			debouncedSearch.clear();
+		};
+	}, [localSearchTerm, debouncedSearch]);
 
 	const handleFilterChange = (key: keyof SimpleFilterParams, value: any) => {
 		onFiltersChange({
@@ -58,6 +88,7 @@ export function SimpleFilter({
 	};
 
 	const clearAllFilters = () => {
+		setLocalSearchTerm("");
 		onFiltersChange({});
 	};
 
@@ -65,22 +96,61 @@ export function SimpleFilter({
 		(key) => filters[key as keyof SimpleFilterParams] !== undefined
 	).length;
 
+	const getRoleSelectValue = () => {
+		return filters.role || "all";
+	};
+
+	const getGenderSelectValue = () => {
+		if (filters.isMale === undefined) {
+			return "all";
+		}
+		return filters.isMale ? "male" : "female";
+	};
+
+	const getAvailabilitySelectValue = () => {
+		if (filters.isAvailable === undefined) {
+			return "all";
+		}
+		return filters.isAvailable ? "available" : "unavailable";
+	};
+
+	const handleRoleChange = (value: string) => {
+		const roleValue = value === "all" ? undefined : value;
+		handleFilterChange("role", roleValue);
+	};
+
+	const handleGenderChange = (value: string) => {
+		let genderValue: boolean | undefined;
+		if (value === "all") {
+			genderValue = undefined;
+		} else {
+			genderValue = value === "male";
+		}
+		handleFilterChange("isMale", genderValue);
+	};
+
+	const handleAvailabilityChange = (value: string) => {
+		let availabilityValue: boolean | undefined;
+		if (value === "all") {
+			availabilityValue = undefined;
+		} else {
+			availabilityValue = value === "available";
+		}
+		handleFilterChange("isAvailable", availabilityValue);
+	};
+
 	return (
 		<div className={`flex items-center gap-4 ${className}`}>
-			{/* Search Input */}
 			<div className="relative flex-1">
 				<Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
 				<Input
 					placeholder="Search by name..."
-					value={filters.search || ""}
-					onChange={(e) =>
-						handleFilterChange("search", e.target.value || undefined)
-					}
+					value={localSearchTerm}
+					onChange={(e) => setLocalSearchTerm(e.target.value)}
 					className="border-border focus:border-primary focus:ring-primary/20 border-2 pl-10 focus:ring-2"
 				/>
 			</div>
 
-			{/* Filter Popover */}
 			<Popover open={isOpen} onOpenChange={setIsOpen}>
 				<PopoverTrigger asChild>
 					<Button variant="outline" size="sm">
@@ -106,18 +176,12 @@ export function SimpleFilter({
 
 						<Separator />
 
-						{/* Role Filter */}
 						{showRole && (
 							<div className="space-y-2">
 								<Label>Role</Label>
 								<Select
-									value={filters.role || "all"}
-									onValueChange={(value) =>
-										handleFilterChange(
-											"role",
-											value === "all" ? undefined : value
-										)
-									}
+									value={getRoleSelectValue()}
+									onValueChange={handleRoleChange}
 								>
 									<SelectTrigger>
 										<SelectValue placeholder="Select role" />
@@ -132,28 +196,12 @@ export function SimpleFilter({
 							</div>
 						)}
 
-						{/* Gender Filter */}
 						{showGender && (
 							<div className="space-y-2">
 								<Label>Gender</Label>
 								<Select
-									value={
-										filters.isMale === undefined
-											? "all"
-											: filters.isMale
-												? "male"
-												: "female"
-									}
-									onValueChange={(value) =>
-										handleFilterChange(
-											"isMale",
-											value === "all"
-												? undefined
-												: value === "male"
-													? true
-													: false
-										)
-									}
+									value={getGenderSelectValue()}
+									onValueChange={handleGenderChange}
 								>
 									<SelectTrigger>
 										<SelectValue placeholder="Select gender" />
@@ -167,28 +215,12 @@ export function SimpleFilter({
 							</div>
 						)}
 
-						{/* Availability Filter */}
 						{showAvailability && (
 							<div className="space-y-2">
 								<Label>Availability</Label>
 								<Select
-									value={
-										filters.isAvailable === undefined
-											? "all"
-											: filters.isAvailable
-												? "available"
-												: "unavailable"
-									}
-									onValueChange={(value) =>
-										handleFilterChange(
-											"isAvailable",
-											value === "all"
-												? undefined
-												: value === "available"
-													? true
-													: false
-										)
-									}
+									value={getAvailabilitySelectValue()}
+									onValueChange={handleAvailabilityChange}
 								>
 									<SelectTrigger>
 										<SelectValue placeholder="Select availability" />
@@ -205,7 +237,6 @@ export function SimpleFilter({
 				</PopoverContent>
 			</Popover>
 
-			{/* Active Filters Display */}
 			{activeFiltersCount > 0 && (
 				<div className="flex flex-wrap items-center gap-1">
 					{filters.search && (

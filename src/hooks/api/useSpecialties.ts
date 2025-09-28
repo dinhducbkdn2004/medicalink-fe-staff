@@ -42,12 +42,13 @@ export const useSpecialties = (
 		search?: string;
 		isActive?: boolean;
 	}
-) =>
-	useQuery({
+) => {
+	return useQuery({
 		queryKey: specialtyKeys.list(params),
 		queryFn: async () => extractPaginatedData(await getSpecialties(params)),
 		staleTime: 1000 * 60 * 5, // 5 minutes
 	});
+};
 
 // Get active specialties (for dropdowns)
 export const useActiveSpecialties = () =>

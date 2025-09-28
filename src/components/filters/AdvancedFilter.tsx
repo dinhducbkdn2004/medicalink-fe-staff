@@ -40,7 +40,6 @@ interface AdvancedFilterProps {
 	onFiltersChange: (filters: FilterParams) => void;
 	showRole?: boolean;
 	showSpecialty?: boolean;
-	showLocation?: boolean;
 	showAvailability?: boolean;
 	className?: string;
 }
@@ -50,10 +49,9 @@ export function AdvancedFilter({
 	onFiltersChange,
 	showRole = false,
 	showSpecialty = false,
-	// showLocation = false, // Currently unused
 	showAvailability = false,
 	className,
-}: AdvancedFilterProps) {
+}: Readonly<AdvancedFilterProps>) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [createdFromDate, setCreatedFromDate] = useState<Date>();
 	const [createdToDate, setCreatedToDate] = useState<Date>();
@@ -122,7 +120,6 @@ export function AdvancedFilter({
 
 							<Separator />
 
-							{/* Search */}
 							<div className="space-y-2">
 								<Label htmlFor="search">Search by Name</Label>
 								<Input
@@ -135,7 +132,6 @@ export function AdvancedFilter({
 								/>
 							</div>
 
-							{/* Email */}
 							<div className="space-y-2">
 								<Label htmlFor="email">Search by Email</Label>
 								<Input
@@ -149,31 +145,24 @@ export function AdvancedFilter({
 								/>
 							</div>
 
-							{/* Gender */}
 							<div className="space-y-2">
 								<Label>Gender</Label>
 								<Select
-									value={
-										filters.isMale === undefined
-											? "all"
-											: filters.isMale
-												? "male"
-												: "female"
-									}
-									onValueChange={(value) =>
-										handleFilterChange(
-											"isMale",
-											value === "all"
-												? undefined
-												: value === "male"
-													? true
-													: false
-										)
-									}
+									value={(() => {
+										if (filters.isMale === undefined) return "all";
+										return filters.isMale ? "male" : "female";
+									})()}
+									onValueChange={(value) => {
+										let isMaleValue: boolean | undefined;
+										if (value === "all") {
+											isMaleValue = undefined;
+										} else {
+											isMaleValue = value === "male";
+										}
+										handleFilterChange("isMale", isMaleValue);
+									}}
 								>
-									<SelectTrigger>
-										<SelectValue placeholder="Select gender" />
-									</SelectTrigger>
+									<SelectValue placeholder="Select gender" />
 									<SelectContent>
 										<SelectItem value="all">All Genders</SelectItem>
 										<SelectItem value="male">Male</SelectItem>
@@ -182,7 +171,6 @@ export function AdvancedFilter({
 								</Select>
 							</div>
 
-							{/* Role Filter (for staff) */}
 							{showRole && (
 								<div className="space-y-2">
 									<Label>Role</Label>
@@ -208,28 +196,23 @@ export function AdvancedFilter({
 								</div>
 							)}
 
-							{/* Availability Filter (for doctors) */}
 							{showAvailability && (
 								<div className="space-y-2">
 									<Label>Availability</Label>
 									<Select
-										value={
-											filters.isAvailable === undefined
-												? "all"
-												: filters.isAvailable
-													? "available"
-													: "unavailable"
-										}
-										onValueChange={(value) =>
-											handleFilterChange(
-												"isAvailable",
-												value === "all"
-													? undefined
-													: value === "available"
-														? true
-														: false
-											)
-										}
+										value={(() => {
+											if (filters.isAvailable === undefined) return "all";
+											return filters.isAvailable ? "available" : "unavailable";
+										})()}
+										onValueChange={(value) => {
+											let availabilityValue: boolean | undefined;
+											if (value === "all") {
+												availabilityValue = undefined;
+											} else {
+												availabilityValue = value === "available";
+											}
+											handleFilterChange("isAvailable", availabilityValue);
+										}}
 									>
 										<SelectTrigger>
 											<SelectValue placeholder="Select availability" />
@@ -243,7 +226,6 @@ export function AdvancedFilter({
 								</div>
 							)}
 
-							{/* Date Range */}
 							<div className="space-y-2">
 								<Label>Created Date Range</Label>
 								<div className="flex gap-2">
@@ -269,7 +251,7 @@ export function AdvancedFilter({
 												mode="single"
 												selected={createdFromDate}
 												onSelect={(date) => handleDateChange("from", date)}
-												initialFocus
+												autoFocus
 											/>
 										</PopoverContent>
 									</Popover>
@@ -295,14 +277,13 @@ export function AdvancedFilter({
 												mode="single"
 												selected={createdToDate}
 												onSelect={(date) => handleDateChange("to", date)}
-												initialFocus
+												autoFocus
 											/>
 										</PopoverContent>
 									</Popover>
 								</div>
 							</div>
 
-							{/* Sort Options */}
 							<div className="space-y-2">
 								<Label>Sort By</Label>
 								<div className="flex gap-2">
@@ -344,7 +325,6 @@ export function AdvancedFilter({
 					</PopoverContent>
 				</Popover>
 
-				{/* Active Filters Display */}
 				{activeFiltersCount > 0 && (
 					<div className="flex flex-wrap items-center gap-1">
 						{filters.search && (

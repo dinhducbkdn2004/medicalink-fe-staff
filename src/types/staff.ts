@@ -5,9 +5,8 @@ export interface CreateStaffRequest {
 	email: string;
 	password: string;
 	role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
-	phone?: string | null;
-	locationId?: string | null;
-	isMale?: boolean | null;
+	phone?: string | undefined;
+	isMale?: boolean | undefined;
 	dateOfBirth?: Date | null;
 }
 
@@ -16,9 +15,8 @@ export interface UpdateStaffRequest {
 	email?: string;
 	password?: string;
 	role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
-	phone?: string | null;
-	locationId?: string | null;
-	isMale?: boolean | null;
+	phone?: string | undefined;
+	isMale?: boolean | undefined;
 	dateOfBirth?: Date | null;
 }
 
@@ -27,36 +25,34 @@ export interface Doctor extends StaffAccount {
 	specialty?: Specialty;
 	locationId?: string;
 	location?: Location;
-	experience?: number;
-	qualification?: string;
-	consultationFee?: number;
+	yearsExperience?: number;
+	experience?: number; // Added for DoctorAccountsPage compatibility
 	isAvailable: boolean;
+	qualification?: string;
+	status?: "active" | "inactive"; // Added for status filtering
+	avatar?: string; // Added for avatar display
+	consultationFee?: number; // Added for fee display
 }
 
 export interface CreateDoctorRequest {
 	fullName: string;
 	email: string;
 	password: string;
-	phone?: string;
-	specialtyId?: string;
-	locationId?: string;
-	experience?: number;
-	qualification?: string;
-	consultationFee?: number;
-	isMale?: boolean;
+	phone?: string | null;
+	isMale?: boolean | null;
 	dateOfBirth?: Date | null;
 }
 
 export interface UpdateDoctorRequest {
 	fullName?: string;
 	email?: string;
-	phone?: string;
-	specialtyId?: string;
-	locationId?: string;
-	experience?: number;
+	specialty?: string;
 	qualification?: string;
+	experience?: number;
 	consultationFee?: number;
-	isMale?: boolean;
+	workLocation?: string;
+	phone?: string | null;
+	isMale?: boolean | null;
 	dateOfBirth?: Date | null;
 	isActive?: boolean;
 	isAvailable?: boolean;
@@ -68,6 +64,17 @@ export interface Specialty {
 	description?: string;
 	icon?: string;
 	isActive: boolean;
+	createdAt: string;
+	updatedAt: string;
+	infoSections?: InfoSection[];
+}
+
+export interface InfoSection {
+	id: string;
+	specialtyId: string;
+	name: string;
+	content: string;
+	order?: number;
 	createdAt: string;
 	updatedAt: string;
 }

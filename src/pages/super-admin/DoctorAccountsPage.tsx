@@ -54,11 +54,11 @@ export function DoctorAccountsPage() {
 	const [selectedDoctorForPassword, setSelectedDoctorForPassword] = useState<
 		any | null
 	>(null);
+
 	const [doctorToDelete, setDoctorToDelete] = useState<string | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [filters, setFilters] = useState<SimpleFilterParams>({});
 
-	// Fetch doctors with advanced filters
 	const { data: doctorsData, isLoading } = useDoctors({
 		page: currentPage,
 		limit: itemsPerPage,
@@ -67,19 +67,17 @@ export function DoctorAccountsPage() {
 
 	const deleteDoctorMutation = useDeleteDoctor();
 
-	// Use real API data - extractPaginatedData returns { data: [...], meta: {...} }
 	const doctorAccounts = doctorsData?.data || [];
 	const totalCount = doctorsData?.meta?.total || 0;
 	const totalPages = Math.ceil(totalCount / itemsPerPage);
 
 	const doctorStats = {
 		total: totalCount,
-		active: doctorAccounts.length, // All fetched doctors are considered active
+		active: doctorAccounts.length,
 		male: doctorAccounts.filter((d) => d.isMale).length,
 		female: doctorAccounts.filter((d) => !d.isMale).length,
 	};
 
-	// Reset page when filters change
 	const handleFiltersChange = (newFilters: SimpleFilterParams) => {
 		setFilters(newFilters);
 		setCurrentPage(1);
@@ -125,7 +123,6 @@ export function DoctorAccountsPage() {
 				description: "The doctor account has been removed from the system.",
 			});
 
-			// Close modal and reset state
 			setShowDeleteModal(false);
 			setDoctorToDelete(null);
 		} catch (error) {
@@ -153,7 +150,6 @@ export function DoctorAccountsPage() {
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			{/* Stats Cards */}
 			<div className="grid gap-4 md:grid-cols-4">
 				<Card>
 					<CardContent className="flex items-center justify-between p-6">
@@ -234,7 +230,6 @@ export function DoctorAccountsPage() {
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					{/* Simple Filters */}
 					<SimpleFilter
 						filters={filters}
 						onFiltersChange={handleFiltersChange}
@@ -243,7 +238,6 @@ export function DoctorAccountsPage() {
 						className="mb-6"
 					/>
 
-					{/* Table */}
 					<div className="rounded-md border">
 						<Table>
 							<TableHeader>
@@ -257,9 +251,8 @@ export function DoctorAccountsPage() {
 							</TableHeader>
 							<TableBody>
 								{isLoading ? (
-									// Loading skeletons
 									Array.from({ length: 3 }, (_, index) => (
-										<TableRow key={`doctor-skeleton-${Date.now()}-${index}`}>
+										<TableRow key={`doctor-skeleton-${index}`}>
 											<TableCell>
 												<div className="flex items-center space-x-3">
 													<Skeleton className="h-10 w-10 rounded-full" />
@@ -396,14 +389,12 @@ export function DoctorAccountsPage() {
 				</CardContent>
 			</Card>
 
-			{/* Doctor Profile Modal */}
 			<DoctorProfileModal
 				open={showDoctorModal}
 				onOpenChange={setShowDoctorModal}
 				doctor={selectedDoctor}
 			/>
 
-			{/* Change Password Modal */}
 			<AdminChangePasswordModal
 				open={showPasswordModal}
 				onOpenChange={setShowPasswordModal}
@@ -411,7 +402,6 @@ export function DoctorAccountsPage() {
 				userType="doctor"
 			/>
 
-			{/* Delete Confirmation Modal */}
 			<DeleteConfirmationModal
 				open={showDeleteModal}
 				onOpenChange={setShowDeleteModal}

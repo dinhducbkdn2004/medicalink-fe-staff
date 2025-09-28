@@ -2,15 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {
-	UserPlus,
-	User,
-	Calendar,
-	Phone,
-	Mail,
-	MapPin,
-	Stethoscope,
-} from "lucide-react";
+import { UserPlus, User, Calendar, Phone, Mail } from "lucide-react";
 
 import {
 	Dialog,
@@ -38,8 +30,6 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useCreateDoctor, useUpdateDoctor } from "@/hooks/api/useDoctors";
-import { useActiveSpecialties } from "@/hooks/api/useSpecialties";
-import { useActiveWorkLocations } from "@/hooks/api/useLocations";
 import type { CreateDoctorRequest, UpdateDoctorRequest } from "@/types";
 
 // Schema for profile update (no password)
@@ -59,11 +49,6 @@ const profileFormSchema = z.object({
 		.refine((val) => !val || /^[+]?[\d\s\-()]{10,15}$/.test(val), {
 			message: "Please enter a valid phone number",
 		}),
-	specialtyId: z.string().optional().or(z.literal("")),
-	locationId: z.string().optional().or(z.literal("")),
-	experience: z.number().optional(),
-	qualification: z.string().optional().or(z.literal("")),
-	consultationFee: z.number().optional(),
 	isMale: z.boolean().optional(),
 	dateOfBirth: z.string().optional().or(z.literal("")),
 });
@@ -74,7 +59,7 @@ const createFormSchema = profileFormSchema.extend({
 		.string()
 		.min(8, "Password must be at least 8 characters")
 		.regex(
-			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)/,
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
 			"Password must contain at least one uppercase letter, one lowercase letter, and one number"
 		),
 });
@@ -90,11 +75,6 @@ interface DoctorProfileModalProps {
 		fullName: string;
 		email: string;
 		phone?: string;
-		specialtyId?: string;
-		locationId?: string;
-		experience?: number;
-		qualification?: string;
-		consultationFee?: number;
 		isMale?: boolean;
 		dateOfBirth?: string;
 	} | null;
@@ -104,7 +84,7 @@ export function DoctorProfileModal({
 	open,
 	onOpenChange,
 	doctor,
-}: DoctorProfileModalProps) {
+}: Readonly<DoctorProfileModalProps>) {
 	const isEditing = Boolean(doctor);
 	const isCreating = !isEditing;
 
@@ -114,11 +94,6 @@ export function DoctorProfileModal({
 			fullName: "",
 			email: "",
 			phone: "",
-			specialtyId: "none",
-			locationId: "none",
-			experience: undefined,
-			qualification: "",
-			consultationFee: undefined,
 			isMale: true,
 			dateOfBirth: "",
 			...(isCreating ? { password: "" } : {}),
@@ -127,37 +102,29 @@ export function DoctorProfileModal({
 
 	const createDoctorMutation = useCreateDoctor();
 	const updateDoctorMutation = useUpdateDoctor();
-	const { data: specialties } = useActiveSpecialties();
-	const { data: workLocations } = useActiveWorkLocations();
 
 	// Reset form when doctor changes or modal opens
 	useEffect(() => {
 		if (open) {
 			if (doctor) {
+				// Edit mode - explicitly reset form with profile schema
 				form.reset({
 					fullName: doctor.fullName,
 					email: doctor.email,
 					phone: doctor.phone || "",
 					isMale: doctor.isMale ?? true,
 					dateOfBirth: doctor.dateOfBirth || "",
-					specialtyId: doctor.specialtyId || "none",
-					locationId: doctor.locationId || "none",
-					experience: doctor.experience,
-					qualification: doctor.qualification || "",
-					consultationFee: doctor.consultationFee,
 				});
+				// Clear any password field that might exist
+				form.unregister("password");
 			} else {
+				// Create mode - reset form with create schema
 				form.reset({
 					fullName: "",
 					email: "",
 					phone: "",
 					isMale: true,
 					dateOfBirth: "",
-					specialtyId: "none",
-					locationId: "none",
-					experience: undefined,
-					qualification: "",
-					consultationFee: undefined,
 					...(isCreating ? { password: "" } : {}),
 				});
 			}
@@ -177,32 +144,16 @@ export function DoctorProfileModal({
 					updateData.email = values.email;
 				}
 				if (values.phone !== (doctor.phone || "")) {
-					updateData.phone = values.phone || null;
+					updateData.phone =
+						values.phone && values.phone.trim() !== "" ? values.phone : null;
 				}
 				if (values.isMale !== doctor.isMale) {
-					updateData.isMale = values.isMale;
+					updateData.isMale = values.isMale ?? null;
 				}
 				if (values.dateOfBirth !== (doctor.dateOfBirth || "")) {
 					updateData.dateOfBirth = values.dateOfBirth
 						? new Date(values.dateOfBirth)
 						: null;
-				}
-				if (values.specialtyId !== (doctor.specialtyId || "none")) {
-					updateData.specialtyId =
-						values.specialtyId === "none" ? null : values.specialtyId || null;
-				}
-				if (values.locationId !== (doctor.locationId || "none")) {
-					updateData.locationId =
-						values.locationId === "none" ? null : values.locationId || null;
-				}
-				if (values.experience !== doctor.experience) {
-					updateData.experience = values.experience;
-				}
-				if (values.qualification !== (doctor.qualification || "")) {
-					updateData.qualification = values.qualification || null;
-				}
-				if (values.consultationFee !== doctor.consultationFee) {
-					updateData.consultationFee = values.consultationFee;
 				}
 
 				// Only send request if there are changes
@@ -222,18 +173,11 @@ export function DoctorProfileModal({
 					fullName: values.fullName,
 					email: values.email,
 					password: (values as CreateFormValues).password,
-					phone: values.phone || null,
-					isMale: values.isMale,
+					phone:
+						values.phone && values.phone.trim() !== "" ? values.phone : null,
+					isMale: values.isMale ?? null,
 					dateOfBirth: values.dateOfBirth ? new Date(values.dateOfBirth) : null,
-					specialtyId:
-						values.specialtyId === "none" ? null : values.specialtyId || null,
-					locationId:
-						values.locationId === "none" ? null : values.locationId || null,
-					experience: values.experience,
-					qualification: values.qualification || null,
-					consultationFee: values.consultationFee,
 				};
-
 				await createDoctorMutation.mutateAsync(createData);
 				toast.success("Doctor created successfully");
 			}
@@ -391,145 +335,6 @@ export function DoctorProfileModal({
 								)}
 							/>
 						</div>
-
-						{/* Specialty and Location */}
-						<div className="grid grid-cols-2 gap-4">
-							{/* Specialty */}
-							<FormField
-								control={form.control}
-								name="specialtyId"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel className="flex items-center gap-2">
-											<Stethoscope className="h-4 w-4" />
-											Specialty
-										</FormLabel>
-										<Select onValueChange={field.onChange} value={field.value}>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="Select specialty" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												<SelectItem value="none">No specialty</SelectItem>
-												{specialties?.map((specialty) => (
-													<SelectItem key={specialty.id} value={specialty.id}>
-														{specialty.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							{/* Location */}
-							<FormField
-								control={form.control}
-								name="locationId"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel className="flex items-center gap-2">
-											<MapPin className="h-4 w-4" />
-											Work Location
-										</FormLabel>
-										<Select onValueChange={field.onChange} value={field.value}>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="Select location" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												<SelectItem value="none">No location</SelectItem>
-												{workLocations?.map((location) => (
-													<SelectItem key={location.id} value={location.id}>
-														{location.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						</div>
-
-						{/* Experience and Qualification */}
-						<div className="grid grid-cols-2 gap-4">
-							{/* Experience */}
-							<FormField
-								control={form.control}
-								name="experience"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Years of Experience</FormLabel>
-										<FormControl>
-											<Input
-												type="number"
-												placeholder="Years of experience"
-												min="0"
-												{...field}
-												onChange={(e) =>
-													field.onChange(
-														e.target.value
-															? parseInt(e.target.value)
-															: undefined
-													)
-												}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							{/* Consultation Fee */}
-							<FormField
-								control={form.control}
-								name="consultationFee"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Consultation Fee</FormLabel>
-										<FormControl>
-											<Input
-												type="number"
-												placeholder="Consultation fee"
-												min="0"
-												step="0.01"
-												{...field}
-												onChange={(e) =>
-													field.onChange(
-														e.target.value
-															? parseFloat(e.target.value)
-															: undefined
-													)
-												}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						</div>
-
-						{/* Qualification */}
-						<FormField
-							control={form.control}
-							name="qualification"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Qualification</FormLabel>
-									<FormControl>
-										<Input
-											placeholder="Medical qualification/degrees"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
 
 						{/* Date of Birth */}
 						<FormField

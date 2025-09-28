@@ -6,6 +6,7 @@ import {
 	Trash2,
 	Users,
 	Lock,
+	Eye,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { DeleteConfirmationModal } from "@/components/modals";
 import { AdminProfileModal } from "@/components/modals/AdminProfileModal";
 import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
+import { StaffViewModal } from "@/components/modals/StaffViewModal";
 import { useStaffs, useDeleteStaff } from "@/hooks/api/useStaffs";
 import { toast } from "sonner";
 import {
@@ -49,6 +51,7 @@ export function AdminAccountsPage() {
 	const [showAdminModal, setShowAdminModal] = useState(false);
 	const [showPasswordModal, setShowPasswordModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
+	const [showViewModal, setShowViewModal] = useState(false);
 	const [selectedAdmin, setSelectedAdmin] = useState<any | null>(null);
 	const [selectedAdminForPassword, setSelectedAdminForPassword] = useState<
 		any | null
@@ -81,8 +84,9 @@ export function AdminAccountsPage() {
 
 	// Reset page when filters change - always maintain ADMIN role for this page
 	const handleFiltersChange = (newFilters: SimpleFilterParams) => {
-		// Force role to ADMIN since this page only manages admins
-		setFilters({ ...newFilters, role: "ADMIN" });
+		// Force role to ADMIN since this page only manages admins, but don't show it in UI
+		const { role, ...filtersForUI } = newFilters;
+		setFilters({ ...filtersForUI, role: "ADMIN" });
 		setCurrentPage(1);
 	};
 
@@ -104,6 +108,14 @@ export function AdminAccountsPage() {
 		if (admin) {
 			setSelectedAdminForPassword(admin);
 			setShowPasswordModal(true);
+		}
+	};
+
+	const handleViewAdmin = (adminId: string) => {
+		const admin = adminAccounts.find((a) => a.id === adminId);
+		if (admin) {
+			setSelectedAdmin(admin);
+			setShowViewModal(true);
 		}
 	};
 
@@ -222,7 +234,10 @@ export function AdminAccountsPage() {
 				<CardContent>
 					{/* Simple Filters - No role filter needed for admin-specific page */}
 					<SimpleFilter
-						filters={filters}
+						filters={(() => {
+							const { role, ...filtersWithoutRole } = filters;
+							return filtersWithoutRole;
+						})()}
 						onFiltersChange={handleFiltersChange}
 						showGender={true}
 						className="mb-6"
@@ -317,6 +332,13 @@ export function AdminAccountsPage() {
 													</DropdownMenuTrigger>
 													<DropdownMenuContent align="end">
 														<DropdownMenuItem
+															onClick={() => handleViewAdmin(admin.id)}
+														>
+															<Eye className="mr-2 h-4 w-4" />
+															View Details
+														</DropdownMenuItem>
+														<DropdownMenuSeparator />
+														<DropdownMenuItem
 															onClick={() => handleEditAdmin(admin.id)}
 														>
 															<Pencil className="mr-2 h-4 w-4" />
@@ -407,6 +429,17 @@ export function AdminAccountsPage() {
 						: ""
 				}
 				isLoading={isDeleting}
+			/>
+
+			{/* Staff View Modal */}
+			<StaffViewModal
+				open={showViewModal}
+				onClose={() => setShowViewModal(false)}
+				staff={selectedAdmin}
+				onEdit={() => {
+					setShowViewModal(false);
+					setShowAdminModal(true);
+				}}
 			/>
 		</div>
 	);
