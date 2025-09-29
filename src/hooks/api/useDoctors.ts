@@ -6,41 +6,27 @@ import {
 	updateDoctor,
 	deleteDoctor,
 	changeDoctorPassword,
-	toggleDoctorAvailability,
-	toggleDoctorStatus,
-	getDoctorsBySpecialty,
-	getDoctorsByLocation,
 	getDoctorStats,
 } from "@/api/doctors";
-import { extractApiData, extractPaginatedData } from "@/api/core/utils";
-import type {
-	PaginationParams,
-	CreateDoctorRequest,
-	UpdateDoctorRequest,
-} from "@/types";
+import type { CreateDoctorRequest, UpdateDoctorRequest } from "@/types";
 
 // Query keys
 export const doctorKeys = {
 	all: ["doctors"] as const,
 	lists: () => [...doctorKeys.all, "list"] as const,
-	list: (
-		params?: PaginationParams & {
-			specialtyId?: string;
-			locationId?: string;
-			isAvailable?: boolean;
-			search?: string;
-			email?: string;
-			isMale?: boolean;
-			createdFrom?: string;
-			createdTo?: string;
-		}
-	) => [...doctorKeys.lists(), params] as const,
+	list: (params?: {
+		page?: number;
+		limit?: number;
+		search?: string;
+		email?: string;
+		isMale?: boolean;
+		createdFrom?: string;
+		createdTo?: string;
+		sortBy?: "createdAt" | "fullName" | "email";
+		sortOrder?: "asc" | "desc";
+	}) => [...doctorKeys.lists(), params] as const,
 	details: () => [...doctorKeys.all, "detail"] as const,
 	detail: (id: string) => [...doctorKeys.details(), id] as const,
-	bySpecialty: (specialtyId: string, params?: PaginationParams) =>
-		[...doctorKeys.all, "specialty", specialtyId, params] as const,
-	byLocation: (locationId: string, params?: PaginationParams) =>
-		[...doctorKeys.all, "location", locationId, params] as const,
 	stats: () => [...doctorKeys.all, "stats"] as const,
 };
 
@@ -49,21 +35,23 @@ export const doctorKeys = {
  */
 
 // Get doctors with pagination and filters
-export const useDoctors = (
-	params?: PaginationParams & {
-		specialtyId?: string;
-		locationId?: string;
-		isAvailable?: boolean;
-		search?: string;
-		email?: string;
-		isMale?: boolean;
-		createdFrom?: string;
-		createdTo?: string;
-	}
-) => {
+export const useDoctors = (params?: {
+	page?: number;
+	limit?: number;
+	search?: string;
+	email?: string;
+	isMale?: boolean;
+	createdFrom?: string;
+	createdTo?: string;
+	sortBy?: "createdAt" | "fullName" | "email";
+	sortOrder?: "asc" | "desc";
+}) => {
 	return useQuery({
 		queryKey: doctorKeys.list(params),
-		queryFn: async () => extractPaginatedData(await getDoctors(params)),
+		queryFn: async () => {
+			const response = await getDoctors(params);
+			return response.data;
+		},
 		staleTime: 1000 * 60 * 5, // 5 minutes
 	});
 };
@@ -72,41 +60,21 @@ export const useDoctors = (
 export const useDoctor = (id: string) =>
 	useQuery({
 		queryKey: doctorKeys.detail(id),
-		queryFn: async () => extractApiData(await getDoctorById(id)),
+		queryFn: async () => {
+			const response = await getDoctorById(id);
+			return response.data;
+		},
 		enabled: !!id,
 	});
-
-// Get doctors by specialty
-export const useDoctorsBySpecialty = (
-	specialtyId: string,
-	params?: PaginationParams
-) => {
-	return useQuery({
-		queryKey: doctorKeys.bySpecialty(specialtyId, params),
-		queryFn: async () =>
-			extractApiData(await getDoctorsBySpecialty(specialtyId, params)),
-		enabled: !!specialtyId,
-	});
-};
-
-// Get doctors by location
-export const useDoctorsByLocation = (
-	locationId: string,
-	params?: PaginationParams
-) => {
-	return useQuery({
-		queryKey: doctorKeys.byLocation(locationId, params),
-		queryFn: async () =>
-			extractApiData(await getDoctorsByLocation(locationId, params)),
-		enabled: !!locationId,
-	});
-};
 
 // Get doctor statistics
 export const useDoctorStats = () =>
 	useQuery({
 		queryKey: doctorKeys.stats(),
-		queryFn: async () => extractApiData(await getDoctorStats()),
+		queryFn: async () => {
+			const response = await getDoctorStats();
+			return response.data;
+		},
 		staleTime: 1000 * 60 * 5, // 5 minutes
 	});
 
@@ -119,8 +87,10 @@ export const useCreateDoctor = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: async (data: CreateDoctorRequest) =>
-			extractApiData(await createDoctor(data)),
+		mutationFn: async (data: CreateDoctorRequest) => {
+			const response = await createDoctor(data);
+			return response.data;
+		},
 		onSuccess: () => {
 			// Invalidate doctor lists and stats
 			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
@@ -140,7 +110,10 @@ export const useUpdateDoctor = () => {
 		}: {
 			id: string;
 			data: UpdateDoctorRequest;
-		}) => extractApiData(await updateDoctor(id, data)),
+		}) => {
+			const response = await updateDoctor(id, data);
+			return response.data;
+		},
 		onSuccess: (_, { id }) => {
 			// Invalidate doctor lists, detail, and stats
 			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
@@ -155,50 +128,16 @@ export const useDeleteDoctor = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: async (id: string) => extractApiData(await deleteDoctor(id)),
+		mutationFn: async (id: string) => {
+			const response = await deleteDoctor(id);
+			return response.data;
+		},
 		onSuccess: (_, id) => {
 			// Invalidate doctor lists and stats
 			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
 			queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
 			// Remove detail from cache
 			queryClient.removeQueries({ queryKey: doctorKeys.detail(id) });
-		},
-	});
-};
-
-// Toggle doctor availability mutation
-export const useToggleDoctorAvailability = () => {
-	const queryClient = useQueryClient();
-
-	return useMutation({
-		mutationFn: async ({
-			id,
-			isAvailable,
-		}: {
-			id: string;
-			isAvailable: boolean;
-		}) => extractApiData(await toggleDoctorAvailability(id, isAvailable)),
-		onSuccess: (_, { id }) => {
-			// Invalidate doctor lists, detail, and stats
-			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
-			queryClient.invalidateQueries({ queryKey: doctorKeys.detail(id) });
-			queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
-		},
-	});
-};
-
-// Toggle doctor status mutation
-export const useToggleDoctorStatus = () => {
-	const queryClient = useQueryClient();
-
-	return useMutation({
-		mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) =>
-			extractApiData(await toggleDoctorStatus(id, isActive)),
-		onSuccess: (_, { id }) => {
-			// Invalidate doctor lists, detail, and stats
-			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
-			queryClient.invalidateQueries({ queryKey: doctorKeys.detail(id) });
-			queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
 		},
 	});
 };
@@ -213,7 +152,10 @@ export const useChangeDoctorPassword = () => {
 		}: {
 			userId: string;
 			newPassword: string;
-		}) => extractApiData(await changeDoctorPassword(userId, newPassword)),
+		}) => {
+			const response = await changeDoctorPassword(userId, newPassword);
+			return response.data;
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
 		},

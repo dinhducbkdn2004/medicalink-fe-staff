@@ -8,45 +8,47 @@ import {
 	changeStaffPassword,
 	getStaffStats,
 } from "@/api/staffs";
-import { extractApiData, extractPaginatedData } from "@/api/core/utils";
 import { CACHE_TIME } from "@/constants/api";
-import type {
-	PaginationParams,
-	CreateStaffRequest,
-	UpdateStaffRequest,
-} from "@/types";
+import type { CreateStaffRequest, UpdateStaffRequest } from "@/types";
 
 export const staffKeys = {
 	all: ["staffs"] as const,
 	lists: () => [...staffKeys.all, "list"] as const,
-	list: (
-		params?: PaginationParams & {
-			search?: string;
-			email?: string;
-			isMale?: boolean;
-			createdFrom?: string;
-			createdTo?: string;
-			role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
-		}
-	) => [...staffKeys.lists(), params] as const,
-	details: () => [...staffKeys.all, "detail"] as const,
-	detail: (id: string) => [...staffKeys.details(), id] as const,
-	stats: () => [...staffKeys.all, "stats"] as const,
-};
-
-export const useStaffs = (
-	params?: PaginationParams & {
+	list: (params?: {
+		page?: number;
+		limit?: number;
 		search?: string;
 		email?: string;
 		isMale?: boolean;
 		createdFrom?: string;
 		createdTo?: string;
 		role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
-	}
-) => {
+		sortBy?: "createdAt" | "fullName" | "email";
+		sortOrder?: "asc" | "desc";
+	}) => [...staffKeys.lists(), params] as const,
+	details: () => [...staffKeys.all, "detail"] as const,
+	detail: (id: string) => [...staffKeys.details(), id] as const,
+	stats: () => [...staffKeys.all, "stats"] as const,
+};
+
+export const useStaffs = (params?: {
+	page?: number;
+	limit?: number;
+	search?: string;
+	email?: string;
+	isMale?: boolean;
+	createdFrom?: string;
+	createdTo?: string;
+	role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
+	sortBy?: "createdAt" | "fullName" | "email";
+	sortOrder?: "asc" | "desc";
+}) => {
 	return useQuery({
 		queryKey: staffKeys.list(params),
-		queryFn: async () => extractPaginatedData(await getStaffs(params)),
+		queryFn: async () => {
+			const response = await getStaffs(params);
+			return response.data;
+		},
 		staleTime: CACHE_TIME.MEDIUM,
 	});
 };
@@ -54,22 +56,31 @@ export const useStaffs = (
 export const useStaff = (id: string) =>
 	useQuery({
 		queryKey: staffKeys.detail(id),
-		queryFn: async () => extractApiData(await getStaffById(id)),
+		queryFn: async () => {
+			const response = await getStaffById(id);
+			return response.data;
+		},
 		enabled: !!id,
 	});
 
 export const useStaffStats = () =>
 	useQuery({
 		queryKey: staffKeys.stats(),
-		queryFn: async () => extractApiData(await getStaffStats()),
-		staleTime: 1000 * 60 * 5,
+		queryFn: async () => {
+			const response = await getStaffStats();
+			return response.data;
+		},
+		staleTime: CACHE_TIME.MEDIUM,
 	});
 
 export const useCreateStaff = () => {
 	const queryClient = useQueryClient();
+
 	return useMutation({
-		mutationFn: async (data: CreateStaffRequest) =>
-			extractApiData(await createStaff(data)),
+		mutationFn: async (data: CreateStaffRequest) => {
+			const response = await createStaff(data);
+			return response.data;
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: staffKeys.lists() });
 			queryClient.invalidateQueries({ queryKey: staffKeys.stats() });
@@ -79,6 +90,7 @@ export const useCreateStaff = () => {
 
 export const useUpdateStaff = () => {
 	const queryClient = useQueryClient();
+
 	return useMutation({
 		mutationFn: async ({
 			id,
@@ -86,7 +98,10 @@ export const useUpdateStaff = () => {
 		}: {
 			id: string;
 			data: UpdateStaffRequest;
-		}) => extractApiData(await updateStaff(id, data)),
+		}) => {
+			const response = await updateStaff(id, data);
+			return response.data;
+		},
 		onSuccess: (_, { id }) => {
 			queryClient.invalidateQueries({ queryKey: staffKeys.lists() });
 			queryClient.invalidateQueries({ queryKey: staffKeys.detail(id) });
@@ -97,8 +112,12 @@ export const useUpdateStaff = () => {
 
 export const useDeleteStaff = () => {
 	const queryClient = useQueryClient();
+
 	return useMutation({
-		mutationFn: async (id: string) => extractApiData(await deleteStaff(id)),
+		mutationFn: async (id: string) => {
+			const response = await deleteStaff(id);
+			return response.data;
+		},
 		onSuccess: (_, id) => {
 			queryClient.invalidateQueries({ queryKey: staffKeys.lists() });
 			queryClient.invalidateQueries({ queryKey: staffKeys.stats() });
@@ -107,7 +126,6 @@ export const useDeleteStaff = () => {
 	});
 };
 
-// Change staff password (admin function)
 export const useChangeStaffPassword = () => {
 	const queryClient = useQueryClient();
 	return useMutation({
@@ -117,7 +135,10 @@ export const useChangeStaffPassword = () => {
 		}: {
 			userId: string;
 			newPassword: string;
-		}) => extractApiData(await changeStaffPassword(userId, newPassword)),
+		}) => {
+			const response = await changeStaffPassword(userId, newPassword);
+			return response.data;
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: staffKeys.lists() });
 		},

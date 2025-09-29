@@ -20,19 +20,8 @@ export interface UpdateStaffRequest {
 	dateOfBirth?: Date | null;
 }
 
-export interface Doctor extends StaffAccount {
-	specialtyId?: string;
-	specialty?: Specialty;
-	locationId?: string;
-	location?: Location;
-	yearsExperience?: number;
-	experience?: number; // Added for DoctorAccountsPage compatibility
-	isAvailable: boolean;
-	qualification?: string;
-	status?: "active" | "inactive"; // Added for status filtering
-	avatar?: string; // Added for avatar display
-	consultationFee?: number; // Added for fee display
-}
+export type Doctor = StaffAccount;
+// Doctor type is the same as StaffAccount according to API spec
 
 export interface CreateDoctorRequest {
 	fullName: string;

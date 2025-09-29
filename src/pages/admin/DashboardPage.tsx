@@ -1,4 +1,6 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { PageTransition } from "@/components/ui/page-transition";
+import { EnhancedSkeleton } from "@/components/ui/enhanced-skeleton";
 import {
 	DashboardStats,
 	RecentActivities,
@@ -8,7 +10,6 @@ import { useStaffStats } from "@/hooks/api/useStaffs";
 import { useDoctorStats } from "@/hooks/api/useDoctors";
 import { useSpecialtyStats } from "@/hooks/api/useSpecialties";
 import { useLocationStats } from "@/hooks/api/useLocations";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export const AdminDashboard = () => {
 	const { data: staffStats, isLoading: isLoadingStaffStats } = useStaffStats();
@@ -96,24 +97,15 @@ export const AdminDashboard = () => {
 	};
 
 	return (
-		<>
+		<PageTransition>
 			{/* Statistics Cards */}
-			<div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
+			<div className="mb-8">
 				{isLoading ? (
-					<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+					<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 						{Array.from({ length: 5 }, (_, i) => `skeleton-ADMIN-${i}`).map(
 							(key) => (
-								<Card key={key}>
-									<CardHeader className="pb-2">
-										<Skeleton className="h-4 w-[150px]" />
-									</CardHeader>
-									<CardContent className="pt-0">
-										<div className="mb-2 flex items-baseline justify-between">
-											<Skeleton className="h-8 w-[80px]" />{" "}
-											<Skeleton className="h-4 w-[40px]" />
-										</div>
-										<Skeleton className="h-3 w-[140px]" />
-									</CardContent>
+								<Card key={key} className="overflow-hidden">
+									<EnhancedSkeleton variant="stats" shimmer={true} />
 								</Card>
 							)
 						)}
@@ -124,8 +116,8 @@ export const AdminDashboard = () => {
 			</div>
 
 			{/* Main Content */}
-			<div className="grid gap-4 lg:grid-cols-12">
-				<div className="animate-in fade-in-0 slide-in-from-left-4 delay-200 duration-700 lg:col-span-7">
+			<div className="grid gap-6 lg:grid-cols-12">
+				<div className="lg:col-span-7">
 					<RecentActivities
 						activities={activities}
 						onViewAll={handleViewAllActivities}
@@ -133,10 +125,10 @@ export const AdminDashboard = () => {
 				</div>
 
 				{/* Quick Actions */}
-				<div className="animate-in fade-in-0 slide-in-from-right-4 delay-400 duration-700 lg:col-span-5">
+				<div className="lg:col-span-5">
 					<QuickActions onActionClick={handleQuickAction} />
 				</div>
 			</div>
-		</>
+		</PageTransition>
 	);
 };

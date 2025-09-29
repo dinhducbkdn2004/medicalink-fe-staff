@@ -31,7 +31,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DeleteConfirmationModal } from "@/components/modals";
@@ -234,7 +234,6 @@ export function DoctorAccountsPage() {
 						filters={filters}
 						onFiltersChange={handleFiltersChange}
 						showGender={true}
-						showAvailability={true}
 						className="mb-6"
 					/>
 
@@ -245,7 +244,6 @@ export function DoctorAccountsPage() {
 									<TableHead>Doctor</TableHead>
 									<TableHead>Contact Info</TableHead>
 									<TableHead>Gender</TableHead>
-									<TableHead>Availability</TableHead>
 									<TableHead className="w-[70px]">Actions</TableHead>
 								</TableRow>
 							</TableHeader>
@@ -296,7 +294,7 @@ export function DoctorAccountsPage() {
 													<div>
 														<div className="font-medium">{doctor.fullName}</div>
 														<div className="text-muted-foreground text-sm">
-															{doctor.qualification || "N/A"}
+															{doctor.email}
 														</div>
 													</div>
 												</div>
@@ -311,13 +309,6 @@ export function DoctorAccountsPage() {
 											</TableCell>
 											<TableCell className="text-sm font-medium">
 												{doctor.isMale ? "Male" : "Female"}
-											</TableCell>
-											<TableCell>
-												<Badge
-													variant={doctor.isAvailable ? "default" : "secondary"}
-												>
-													{doctor.isAvailable ? "Available" : "Unavailable"}
-												</Badge>
 											</TableCell>
 											<TableCell>
 												<DropdownMenu>

@@ -1,4 +1,8 @@
+"use client";
+
 import * as React from "react";
+import * as LabelPrimitive from "@radix-ui/react-label";
+import { Slot } from "@radix-ui/react-slot";
 import {
 	Controller,
 	FormProvider,
@@ -83,8 +87,8 @@ const FormItem = React.forwardRef<
 FormItem.displayName = "FormItem";
 
 const FormLabel = React.forwardRef<
-	React.ElementRef<typeof Label>,
-	React.ComponentPropsWithoutRef<typeof Label>
+	React.ElementRef<typeof LabelPrimitive.Root>,
+	React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
 >(({ className, ...props }, ref) => {
 	const { error, formItemId } = useFormField();
 
@@ -100,14 +104,14 @@ const FormLabel = React.forwardRef<
 FormLabel.displayName = "FormLabel";
 
 const FormControl = React.forwardRef<
-	React.ElementRef<"div">,
-	React.ComponentPropsWithoutRef<"div">
+	React.ElementRef<typeof Slot>,
+	React.ComponentPropsWithoutRef<typeof Slot>
 >(({ ...props }, ref) => {
 	const { error, formItemId, formDescriptionId, formMessageId } =
 		useFormField();
 
 	return (
-		<div
+		<Slot
 			ref={ref}
 			id={formItemId}
 			aria-describedby={
@@ -144,7 +148,7 @@ const FormMessage = React.forwardRef<
 	React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
 	const { error, formMessageId } = useFormField();
-	const body = error ? String(error?.message) : children;
+	const body = error ? String(error?.message ?? "") : children;
 
 	if (!body) {
 		return null;

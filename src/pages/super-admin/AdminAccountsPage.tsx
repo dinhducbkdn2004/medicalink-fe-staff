@@ -85,7 +85,8 @@ export function AdminAccountsPage() {
 	// Reset page when filters change - always maintain ADMIN role for this page
 	const handleFiltersChange = (newFilters: SimpleFilterParams) => {
 		// Force role to ADMIN since this page only manages admins, but don't show it in UI
-		const { role, ...filtersForUI } = newFilters;
+		const filtersForUI = { ...newFilters };
+		delete filtersForUI.role; // Remove role from filters
 		setFilters({ ...filtersForUI, role: "ADMIN" });
 		setCurrentPage(1);
 	};
@@ -235,7 +236,8 @@ export function AdminAccountsPage() {
 					{/* Simple Filters - No role filter needed for admin-specific page */}
 					<SimpleFilter
 						filters={(() => {
-							const { role, ...filtersWithoutRole } = filters;
+							const filtersWithoutRole = { ...filters };
+							delete filtersWithoutRole.role;
 							return filtersWithoutRole;
 						})()}
 						onFiltersChange={handleFiltersChange}

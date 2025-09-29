@@ -17,31 +17,18 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-	MoreHorizontal,
-	Edit,
-	Trash2,
-	UserCheck,
-	UserX,
-	Mail,
-	Phone,
-} from "lucide-react";
+import { MoreHorizontal, Edit, Trash2, UserX, Mail, Phone } from "lucide-react";
 import { format } from "date-fns";
-import type { StaffAccount } from "@/types";
+import type { StaffAccount, PaginatedResponse } from "@/types";
 
 interface UserManagementTableProps {
-	data: StaffAccount[];
+	data: PaginatedResponse<StaffAccount> | null;
 	isLoading: boolean;
 	error: Error | null;
-	pagination: {
-		pageIndex: number;
-		pageSize: number;
-		pageCount: number;
-	};
-	onPageChange: (pageIndex: number) => void;
-	onPageSizeChange: (pageSize: number) => void;
 	onEditUser: (user: StaffAccount) => void;
 	onDeleteUser: (user: StaffAccount) => void;
+	onPageChange: (page: number) => void;
+	onPageSizeChange: (pageSize: number) => void;
 }
 
 const getRoleBadgeColor = (role: string) => {
@@ -77,12 +64,14 @@ export const UserManagementTable = ({
 	data,
 	isLoading,
 	error,
-	pagination,
-	onPageChange,
-	onPageSizeChange,
 	onEditUser,
 	onDeleteUser,
+	onPageChange,
+	onPageSizeChange,
 }: UserManagementTableProps) => {
+	const staffData = data?.data || [];
+	const meta = data?.meta;
+
 	if (error) {
 		return (
 			<Card>
@@ -104,7 +93,7 @@ export const UserManagementTable = ({
 				<CardTitle className="flex items-center justify-between">
 					<span>System Users</span>
 					<span className="text-muted-foreground text-sm font-normal">
-						{data.length} users
+						{meta?.total || 0} users
 					</span>
 				</CardTitle>
 			</CardHeader>
@@ -121,14 +110,13 @@ export const UserManagementTable = ({
 										<TableHead>Role</TableHead>
 										<TableHead>Contact</TableHead>
 										<TableHead>Created</TableHead>
-										<TableHead>Status</TableHead>
 										<TableHead className="w-[50px]"></TableHead>
 									</TableRow>
 								</TableHeader>
 								<TableBody>
-									{data.length === 0 ? (
+									{staffData.length === 0 ? (
 										<TableRow>
-											<TableCell colSpan={6} className="py-8 text-center">
+											<TableCell colSpan={5} className="py-8 text-center">
 												<div className="text-muted-foreground">
 													<UserX className="mx-auto mb-2 h-8 w-8" />
 													<p>No users found</p>
@@ -139,7 +127,7 @@ export const UserManagementTable = ({
 											</TableCell>
 										</TableRow>
 									) : (
-										data.map((user) => (
+										staffData.map((user: StaffAccount) => (
 											<TableRow key={user.id}>
 												<TableCell>
 													<div className="flex items-center space-x-3">
@@ -147,7 +135,7 @@ export const UserManagementTable = ({
 															<AvatarFallback className="text-xs">
 																{user.fullName
 																	.split(" ")
-																	.map((n) => n[0])
+																	.map((n: string) => n[0])
 																	.join("")
 																	.toUpperCase()}
 															</AvatarFallback>
@@ -188,14 +176,6 @@ export const UserManagementTable = ({
 													{format(new Date(user.createdAt), "MMM dd, yyyy")}
 												</TableCell>
 												<TableCell>
-													<div className="flex items-center space-x-1">
-														<UserCheck className="h-4 w-4 text-green-600" />
-														<span className="text-sm text-green-600">
-															Active
-														</span>
-													</div>
-												</TableCell>
-												<TableCell>
 													<DropdownMenu>
 														<DropdownMenuTrigger asChild>
 															<Button variant="ghost" className="h-8 w-8 p-0">
@@ -227,44 +207,46 @@ export const UserManagementTable = ({
 						</div>
 
 						{/* Pagination */}
-						<div className="flex items-center justify-between pt-4">
-							<div className="flex items-center space-x-2">
-								<span className="text-muted-foreground text-sm">
-									Rows per page:
-								</span>
-								<select
-									value={pagination.pageSize}
-									onChange={(e) => onPageSizeChange(Number(e.target.value))}
-									className="rounded border px-2 py-1 text-sm"
-								>
-									<option value={10}>10</option>
-									<option value={20}>20</option>
-									<option value={50}>50</option>
-								</select>
-							</div>
+						{meta && (
+							<div className="flex items-center justify-between pt-4">
+								<div className="flex items-center space-x-2">
+									<span className="text-muted-foreground text-sm">
+										Rows per page:
+									</span>
+									<select
+										value={meta.limit}
+										onChange={(e) => onPageSizeChange(Number(e.target.value))}
+										className="rounded border px-2 py-1 text-sm"
+									>
+										<option value={10}>10</option>
+										<option value={20}>20</option>
+										<option value={50}>50</option>
+									</select>
+								</div>
 
-							<div className="flex items-center space-x-2">
-								<Button
-									variant="outline"
-									size="sm"
-									onClick={() => onPageChange(pagination.pageIndex - 1)}
-									disabled={pagination.pageIndex === 0}
-								>
-									Previous
-								</Button>
-								<span className="text-sm">
-									Page {pagination.pageIndex + 1} of {pagination.pageCount}
-								</span>
-								<Button
-									variant="outline"
-									size="sm"
-									onClick={() => onPageChange(pagination.pageIndex + 1)}
-									disabled={pagination.pageIndex >= pagination.pageCount - 1}
-								>
-									Next
-								</Button>
+								<div className="flex items-center space-x-2">
+									<Button
+										variant="outline"
+										size="sm"
+										onClick={() => onPageChange((meta.page || 1) - 1)}
+										disabled={!meta.hasPrev}
+									>
+										Previous
+									</Button>
+									<span className="text-sm">
+										Page {meta.page || 1} of {meta.totalPages || 1}
+									</span>
+									<Button
+										variant="outline"
+										size="sm"
+										onClick={() => onPageChange((meta.page || 1) + 1)}
+										disabled={!meta.hasNext}
+									>
+										Next
+									</Button>
+								</div>
 							</div>
-						</div>
+						)}
 					</>
 				)}
 			</CardContent>
