@@ -251,7 +251,13 @@ export function AdminAccountEditPage() {
 				</div>
 
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							void form.handleSubmit(onSubmit)(e);
+						}}
+						className="space-y-4"
+					>
 						{/* Account & Role Information */}
 						<Card>
 							<CardHeader>

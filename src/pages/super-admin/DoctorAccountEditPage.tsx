@@ -129,10 +129,10 @@ export function DoctorAccountEditPage() {
 				updateData.email = values.email;
 			}
 			if (values.phone !== (doctor.phone || "")) {
-				updateData.phone = values.phone || undefined;
+				updateData.phone = values.phone || null;
 			}
 			if (values.isMale !== doctor.isMale) {
-				updateData.isMale = values.isMale;
+				updateData.isMale = values.isMale || false;
 			}
 			const doctorDob = doctor.dateOfBirth
 				? new Date(doctor.dateOfBirth).toISOString().split("T")[0]
@@ -248,7 +248,13 @@ export function DoctorAccountEditPage() {
 				</div>
 
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							void form.handleSubmit(onSubmit)(e);
+						}}
+						className="space-y-4"
+					>
 						{/* Account Information */}
 						<Card>
 							<CardHeader>

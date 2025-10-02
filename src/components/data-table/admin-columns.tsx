@@ -98,13 +98,19 @@ export const createAdminColumns = (
 			<DataTableColumnHeader column={column} title="Date of Birth" />
 		),
 		cell: ({ row }) => {
-			const dob = row.getValue("dateOfBirth");
-			if (!dob) {
-				return <span className="text-muted-foreground text-sm">N/A</span>;
+			const dateOfBirth = row.getValue("dateOfBirth") as string | null;
+			if (!dateOfBirth) {
+				return (
+					<span className="text-muted-foreground italic">Not provided</span>
+				);
 			}
 			return (
 				<div className="text-sm">
-					{new Date(dob as string).toLocaleDateString()}
+					{new Date(dateOfBirth).toLocaleDateString("en-US", {
+						year: "numeric",
+						month: "short",
+						day: "numeric",
+					})}
 				</div>
 			);
 		},
@@ -125,12 +131,22 @@ export const createAdminColumns = (
 	{
 		accessorKey: "createdAt",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Created" />
+			<DataTableColumnHeader column={column} title="Created At" />
 		),
 		cell: ({ row }) => {
+			const createdAt = row.getValue("createdAt") as string | null;
+			if (!createdAt) {
+				return (
+					<span className="text-muted-foreground italic">Not provided</span>
+				);
+			}
 			return (
 				<div className="text-sm">
-					{new Date(row.getValue("createdAt")).toLocaleDateString()}
+					{new Date(createdAt).toLocaleDateString("en-US", {
+						year: "numeric",
+						month: "short",
+						day: "numeric",
+					})}
 				</div>
 			);
 		},

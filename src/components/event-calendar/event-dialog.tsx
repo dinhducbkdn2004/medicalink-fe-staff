@@ -5,7 +5,7 @@ import { Calendar as CalendarIcon, Trash2 } from "lucide-react";
 import { format, isBefore } from "date-fns";
 
 import type { CalendarEvent, EventColor } from "@/components/event-calendar";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";

@@ -9,19 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-	Calendar,
-	User,
-	MapPin,
-	Stethoscope,
-	GraduationCap,
-	Award,
-	Activity,
-	Star,
-	Edit,
-	Mail,
-	Calendar as CalendarDays,
-} from "lucide-react";
+import { User, Stethoscope, Edit, Mail } from "lucide-react";
 import { format } from "date-fns";
 
 interface Staff {
@@ -66,28 +54,6 @@ export function StaffViewModal({
 	if (!staff) return null;
 
 	const isDoctor = staff.role === "DOCTOR";
-	const isAdmin = staff.role === "ADMIN" || staff.role === "SUPER_ADMIN";
-
-	// Mock statistics
-	const mockStats = isDoctor
-		? {
-				totalAppointments: 1247,
-				completedAppointments: 1198,
-				cancelledAppointments: 49,
-				averageRating: 4.8,
-				totalPatients: 890,
-				monthlyAppointments: 87,
-				nextAppointment: "2024-09-28T10:30:00Z",
-				workLocations: ["Main Hospital", "Branch A"],
-			}
-		: {
-				tasksCompleted: 342,
-				pendingTasks: 12,
-				staffManaged: 25,
-				systemUptime: 99.8,
-				reportsGenerated: 156,
-				lastLogin: "2024-09-27T08:30:00Z",
-			};
 
 	const getInitials = (name: string) => {
 		return name
@@ -151,7 +117,12 @@ export function StaffViewModal({
 							</div>
 						</div>
 						{onEdit && (
-							<Button className="ml-auto" variant="outline" size="sm" onClick={onEdit}>
+							<Button
+								className="ml-auto"
+								variant="outline"
+								size="sm"
+								onClick={onEdit}
+							>
 								<Edit className="mr-2 h-4 w-4" />
 								Edit
 							</Button>
@@ -160,8 +131,6 @@ export function StaffViewModal({
 				</DialogHeader>
 
 				<div className="space-y-6">
-
-
 					{/* Personal Information */}
 					<Card>
 						<CardHeader>
@@ -228,10 +197,6 @@ export function StaffViewModal({
 							</div>
 						</CardContent>
 					</Card>
-
-
-
-
 				</div>
 			</DialogContent>
 		</Dialog>

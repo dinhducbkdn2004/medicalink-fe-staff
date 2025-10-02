@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Plus, Users } from "lucide-react";
 import { toast } from "sonner";
+import { DateRange } from "react-day-picker";
 
-import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -12,6 +11,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { DataTable } from "@/components/data-table/data-table";
+import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import {
 	createDoctorColumns,
 	type DoctorAccount,
@@ -24,9 +24,8 @@ import type { Doctor } from "@/types";
 
 export function DoctorAccountsPage() {
 	const navigate = useNavigate();
-	const [search, setSearch] = useState("");
-
-	// Modal states
+	const [currentPage] = useState(1);
+	const [itemsPerPage] = useState(10);
 	const [showDoctorModal, setShowDoctorModal] = useState(false);
 	const [showPasswordModal, setShowPasswordModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -34,12 +33,27 @@ export function DoctorAccountsPage() {
 	const [selectedDoctorForPassword, setSelectedDoctorForPassword] =
 		useState<Doctor | null>(null);
 	const [doctorToDelete, setDoctorToDelete] = useState<string | null>(null);
+	const [isDeleting, setIsDeleting] = useState(false);
 
-	// Fetch doctors data
-	const { data: doctorsData } = useDoctors({
-		page: 1,
-		limit: 100,
-		...(search ? { search } : {}),
+	// Data table filters
+	const [searchValue, setSearchValue] = useState("");
+	const [dateRange, setDateRange] = useState<DateRange | undefined>();
+	const sortBy = "createdAt";
+	const sortOrder = "desc" as const;
+
+	// Build filters for API
+	const filters = {
+		...(searchValue && { search: searchValue }),
+		sortBy: sortBy as "createdAt" | "fullName" | "email",
+		sortOrder,
+		...(dateRange?.from && { createdFrom: dateRange.from.toISOString() }),
+		...(dateRange?.to && { createdTo: dateRange.to.toISOString() }),
+	};
+
+	const { data: doctorsData, isLoading } = useDoctors({
+		page: currentPage,
+		limit: itemsPerPage,
+		...filters,
 	});
 
 	const deleteDoctorMutation = useDeleteDoctor();
@@ -59,14 +73,6 @@ export function DoctorAccountsPage() {
 		updatedAt: String(doctor.updatedAt),
 	}));
 
-	const doctorStats = {
-		total: totalCount,
-		active: doctors.length,
-		male: doctors.filter((d) => d.isMale).length,
-		female: doctors.filter((d) => !d.isMale).length,
-	};
-
-	// Action handlers
 	const handleView = (doctorId: string) => {
 		void navigate({
 			to: "/super-admin/doctor-accounts/$id/view",
@@ -98,6 +104,7 @@ export function DoctorAccountsPage() {
 		if (!doctorToDelete) return;
 
 		try {
+			setIsDeleting(true);
 			await deleteDoctorMutation.mutateAsync(doctorToDelete);
 
 			toast.success("Doctor deleted successfully", {
@@ -111,7 +118,13 @@ export function DoctorAccountsPage() {
 			toast.error("Failed to delete doctor", {
 				description: "Please try again.",
 			});
+		} finally {
+			setIsDeleting(false);
 		}
+	};
+
+	const handleConfirmDelete = () => {
+		void confirmDelete();
 	};
 
 	const handleCreateDoctor = () => {
@@ -119,7 +132,6 @@ export function DoctorAccountsPage() {
 		setShowDoctorModal(true);
 	};
 
-	// Create columns with action handlers
 	const columns = createDoctorColumns({
 		onView: handleView,
 		onEdit: handleEdit,
@@ -129,93 +141,53 @@ export function DoctorAccountsPage() {
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			<div className="grid gap-4 md:grid-cols-4">
-				<Card>
-					<CardContent className="flex items-center justify-between p-6">
-						<div>
-							<p className="text-muted-foreground text-sm font-medium">
-								Total Doctors
-							</p>
-							<p className="text-2xl font-bold">{doctorStats.total}</p>
-						</div>
-						<Users className="text-muted-foreground h-8 w-8" />
-					</CardContent>
-				</Card>
-				<Card>
-					<CardContent className="flex items-center justify-between p-6">
-						<div>
-							<p className="text-muted-foreground text-sm font-medium">
-								Active
-							</p>
-							<p className="text-2xl font-bold text-green-600">
-								{doctorStats.active}
-							</p>
-						</div>
-						<div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
-							<div className="h-3 w-3 rounded-full bg-green-600"></div>
-						</div>
-					</CardContent>
-				</Card>
-				<Card>
-					<CardContent className="flex items-center justify-between p-6">
-						<div>
-							<p className="text-muted-foreground text-sm font-medium">
-								Male Doctors
-							</p>
-							<p className="text-2xl font-bold text-blue-600">
-								{doctorStats.male}
-							</p>
-						</div>
-						<Users className="h-8 w-8 text-blue-600" />
-					</CardContent>
-				</Card>
-				<Card>
-					<CardContent className="flex items-center justify-between p-6">
-						<div>
-							<p className="text-muted-foreground text-sm font-medium">
-								Female Doctors
-							</p>
-							<p className="text-2xl font-bold text-purple-600">
-								{doctorStats.female}
-							</p>
-						</div>
-						<Users className="h-8 w-8 text-purple-600" />
-					</CardContent>
-				</Card>
-			</div>
-
-			<div className="flex items-center justify-between">
-				<div>
-					<h1 className="text-xl font-semibold">Doctor Accounts</h1>
-					<p className="text-muted-foreground text-sm">
-						Manage doctor accounts, specialties, and availability
-					</p>
-				</div>
-				<Button onClick={handleCreateDoctor}>
-					<Plus className="mr-2 h-4 w-4" />
-					Add Doctor
-				</Button>
-			</div>
-
 			<Card>
 				<CardHeader>
-					<CardTitle className="flex items-center gap-2 text-base">
-						<Users className="h-4 w-4" />
-						Doctor Management
-					</CardTitle>
-					<CardDescription className="text-xs">
-						A list of all doctors in the system with their contact information
-						and status
-					</CardDescription>
+					<div className="flex flex-1 items-center justify-between space-y-0">
+						<div className="space-y-1">
+							<CardTitle>Doctor Management</CardTitle>
+							<CardDescription>
+								A list of all doctor accounts in the system.
+							</CardDescription>
+						</div>
+					</div>
 				</CardHeader>
-				<CardContent className="p-4 pt-0">
+
+				<CardContent className="space-y-4">
 					<DataTable
-						data={doctorAccounts}
 						columns={columns}
+						data={doctorAccounts}
 						searchKey="fullName"
-						searchValue={search}
-						onSearchChange={setSearch}
+						searchValue={searchValue}
+						onSearchChange={setSearchValue}
+						toolbar={
+							<DataTableToolbar
+								searchKey="fullName"
+								searchPlaceholder="Search doctors..."
+								searchValue={searchValue}
+								onSearchChange={setSearchValue}
+								onCreateNew={handleCreateDoctor}
+								createButtonText="Add Doctor"
+								{...(dateRange ? { dateRange } : {})}
+								onDateRangeChange={setDateRange}
+							/>
+						}
 					/>
+
+					{!isLoading && (
+						<div className="flex items-center justify-between space-x-2 py-4">
+							<div className="text-muted-foreground text-sm">
+								Showing {Math.min(doctorAccounts.length, itemsPerPage)} of{" "}
+								{totalCount} doctor(s)
+							</div>
+							<div className="flex items-center space-x-2">
+								<span className="text-sm">
+									Page {currentPage} of{" "}
+									{Math.max(1, Math.ceil(totalCount / itemsPerPage))}
+								</span>
+							</div>
+						</div>
+					)}
 				</CardContent>
 			</Card>
 
@@ -261,7 +233,7 @@ export function DoctorAccountsPage() {
 			<DeleteConfirmationModal
 				open={showDeleteModal}
 				onOpenChange={setShowDeleteModal}
-				onConfirm={confirmDelete}
+				onConfirm={handleConfirmDelete}
 				title="Delete Doctor Account"
 				description="Are you sure you want to delete this doctor account? This will also remove their appointment history."
 				itemName={
@@ -270,7 +242,7 @@ export function DoctorAccountsPage() {
 							"Unknown Doctor"
 						: ""
 				}
-				isLoading={deleteDoctorMutation.isPending}
+				isLoading={isDeleting}
 			/>
 		</div>
 	);

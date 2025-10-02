@@ -39,9 +39,7 @@ import {
 	CheckCircle,
 	Calendar,
 	User,
-	Users,
 	Clock,
-	TrendingUp,
 	MapPin,
 	Phone,
 	Plus,
@@ -161,7 +159,6 @@ export function AppointmentsPage() {
 			debouncedSetSearch.clear();
 		};
 	}, [search, debouncedSetSearch]);
-	const [statusFilter, setStatusFilter] = useState<string>("all");
 	const [selectedAppointment, setSelectedAppointment] = useState<any | null>(
 		null
 	);
@@ -172,13 +169,6 @@ export function AppointmentsPage() {
 		null
 	);
 
-	// const { currentPage, itemsPerPage, setCurrentPage } = usePagination({
-	//	initialPage: 1,
-	//	initialLimit: 10,
-	//	totalItems: 0
-	// });
-
-	// Mock loading and data - replace with actual API calls
 	const isLoading = false;
 	const error = null;
 
@@ -192,9 +182,8 @@ export function AppointmentsPage() {
 				.includes(debouncedSearch.toLowerCase()) ||
 			appointment.patient.phone.includes(debouncedSearch);
 
-		const matchesStatus =
-			statusFilter === "all" || appointment.status === statusFilter;
-
+		// Add status filter if needed - for now always return true
+		const matchesStatus = true;
 		return matchesSearch && matchesStatus;
 	});
 
@@ -247,7 +236,6 @@ export function AppointmentsPage() {
 		}
 	};
 
-	// Stats calculations
 	const totalAppointments = filteredAppointments.length;
 	const completedCount = filteredAppointments.filter(
 		(a) => a.status === "COMPLETED"
@@ -255,9 +243,6 @@ export function AppointmentsPage() {
 	const pendingCount = filteredAppointments.filter((a) =>
 		["BOOKED", "CONFIRMED"].includes(a.status)
 	).length;
-	const totalRevenue = filteredAppointments
-		.filter((a) => a.status === "COMPLETED")
-		.reduce((sum, a) => sum + a.priceAmount, 0);
 
 	const formatCurrency = (amount: number) => {
 		return new Intl.NumberFormat("vi-VN", {
@@ -283,7 +268,7 @@ export function AppointmentsPage() {
 			</div>
 
 			{/* Stats Cards */}
-			<div className="grid gap-4 md:grid-cols-4">
+			<div className="grid gap-4 md:grid-cols-3">
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 						<CardTitle className="text-sm font-medium">
@@ -336,34 +321,11 @@ export function AppointmentsPage() {
 						<p className="text-muted-foreground text-xs">Awaiting service</p>
 					</CardContent>
 				</Card>
-
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Revenue</CardTitle>
-						<TrendingUp className="h-4 w-4 text-emerald-600" />
-					</CardHeader>
-					<CardContent>
-						{isLoading ? (
-							<Skeleton className="h-8 w-24" />
-						) : (
-							<div className="text-2xl font-bold text-emerald-600">
-								{formatCurrency(totalRevenue)}
-							</div>
-						)}
-						<p className="text-muted-foreground text-xs">
-							From completed appointments
-						</p>
-					</CardContent>
-				</Card>
 			</div>
 
 			{/* Appointments Table */}
 			<Card>
 				<CardHeader>
-					<CardTitle className="flex items-center gap-2">
-						<Users className="h-5 w-5" />
-						Appointment Management
-					</CardTitle>
 					<div className="flex items-center gap-4">
 						<div className="relative max-w-sm flex-1">
 							<Search className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
@@ -373,40 +335,6 @@ export function AppointmentsPage() {
 								onChange={(e) => setSearch(e.target.value)}
 								className="pl-10"
 							/>
-						</div>
-						<div className="flex gap-2">
-							<Button
-								variant={statusFilter === "all" ? "default" : "outline"}
-								size="sm"
-								onClick={() => setStatusFilter("all")}
-							>
-								All
-							</Button>
-							<Button
-								variant={statusFilter === "CONFIRMED" ? "default" : "outline"}
-								size="sm"
-								onClick={() => setStatusFilter("CONFIRMED")}
-							>
-								Confirmed
-							</Button>
-							<Button
-								variant={statusFilter === "COMPLETED" ? "default" : "outline"}
-								size="sm"
-								onClick={() => setStatusFilter("COMPLETED")}
-							>
-								Completed
-							</Button>
-							<Button
-								variant={
-									statusFilter === "CANCELLED_BY_PATIENT"
-										? "default"
-										: "outline"
-								}
-								size="sm"
-								onClick={() => setStatusFilter("CANCELLED_BY_PATIENT")}
-							>
-								Cancelled
-							</Button>
 						</div>
 					</div>
 				</CardHeader>

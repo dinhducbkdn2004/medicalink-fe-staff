@@ -107,7 +107,6 @@ export function SchedulesPage() {
 			debouncedSetSearch.clear();
 		};
 	}, [search, debouncedSetSearch]);
-	const [isActive, setIsActive] = useState<boolean | undefined>(undefined);
 	const [selectedSchedule, setSelectedSchedule] = useState<any | null>(null);
 	const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -161,7 +160,6 @@ export function SchedulesPage() {
 
 	const handleToggleStatus = (schedule: any) => {
 		try {
-			// Mock toggle - replace with actual API call
 			toast.success(
 				`Schedule ${!schedule.isActive ? "activated" : "deactivated"} successfully`
 			);
@@ -170,19 +168,10 @@ export function SchedulesPage() {
 		}
 	};
 
-	const handleFilterChange = (filter: "all" | "active" | "inactive") => {
-		setIsActive(filter === "all" ? undefined : filter === "active");
-		// setPage(1); // TODO: Implement pagination
-	};
-
 	const totalSchedules = filteredSchedules.length;
 	const activeSchedules = filteredSchedules.filter((s) => s.isActive).length;
 	const totalCapacity = filteredSchedules.reduce(
 		(sum, s) => sum + s.capacity,
-		0
-	);
-	const totalBooked = filteredSchedules.reduce(
-		(sum, s) => sum + s.bookedSlots,
 		0
 	);
 
@@ -205,7 +194,7 @@ export function SchedulesPage() {
 			</div>
 
 			{/* Stats Cards */}
-			<div className="grid gap-4 md:grid-cols-4">
+			<div className="grid gap-4 md:grid-cols-3">
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 						<CardTitle className="text-sm font-medium">
@@ -262,37 +251,11 @@ export function SchedulesPage() {
 						<p className="text-muted-foreground text-xs">Available slots</p>
 					</CardContent>
 				</Card>
-
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Booking Rate</CardTitle>
-						<Calendar className="text-muted-foreground h-4 w-4" />
-					</CardHeader>
-					<CardContent>
-						{isLoading ? (
-							<Skeleton className="h-8 w-16" />
-						) : (
-							<div className="text-2xl font-bold text-purple-600">
-								{totalCapacity > 0
-									? Math.round((totalBooked / totalCapacity) * 100)
-									: 0}
-								%
-							</div>
-						)}
-						<p className="text-muted-foreground text-xs">
-							{totalBooked} / {totalCapacity} booked
-						</p>
-					</CardContent>
-				</Card>
 			</div>
 
 			{/* Schedules Table */}
 			<Card>
 				<CardHeader>
-					<CardTitle className="flex items-center gap-2">
-						<Calendar className="h-5 w-5" />
-						Schedule Management
-					</CardTitle>
 					<div className="flex items-center gap-4">
 						<div className="relative max-w-sm flex-1">
 							<Search className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
@@ -302,29 +265,6 @@ export function SchedulesPage() {
 								onChange={(e) => setSearch(e.target.value)}
 								className="pl-10"
 							/>
-						</div>
-						<div className="flex gap-2">
-							<Button
-								variant={isActive === undefined ? "default" : "outline"}
-								size="sm"
-								onClick={() => handleFilterChange("all")}
-							>
-								All
-							</Button>
-							<Button
-								variant={isActive === true ? "default" : "outline"}
-								size="sm"
-								onClick={() => handleFilterChange("active")}
-							>
-								Active
-							</Button>
-							<Button
-								variant={isActive === false ? "default" : "outline"}
-								size="sm"
-								onClick={() => handleFilterChange("inactive")}
-							>
-								Inactive
-							</Button>
 						</div>
 					</div>
 				</CardHeader>

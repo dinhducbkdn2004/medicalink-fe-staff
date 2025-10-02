@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import debounce from "debounce";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-	Plus,
 	Stethoscope,
 	Search,
 	MoreHorizontal,
@@ -40,8 +39,6 @@ import {
 	Trash2,
 	ToggleLeft,
 	ToggleRight,
-	Activity,
-	Users,
 	X,
 	Loader2,
 } from "lucide-react";
@@ -51,13 +48,11 @@ import {
 	useSpecialties,
 	useDeleteSpecialty,
 	useToggleSpecialtyStatus,
-	useSpecialtyStats,
 } from "@/hooks/api/useSpecialties";
 import { SpecialtyModal } from "@/components/modals/SpecialtyModal";
 import { SpecialtyViewModal } from "@/components/modals/SpecialtyViewModal";
 
 export function SpecialtiesPage() {
-	const [isActive, setIsActive] = useState<boolean | undefined>(undefined);
 	const [selectedSpecialty, setSelectedSpecialty] = useState<any>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -108,18 +103,10 @@ export function SpecialtiesPage() {
 		page: currentPage,
 		limit: itemsPerPage,
 		search: debouncedSearchTerm || "",
-		...(isActive !== undefined && { isActive }),
 	});
-
-	const { data: stats, isLoading: statsLoading } = useSpecialtyStats();
 
 	const deleteSpecialtyMutation = useDeleteSpecialty();
 	const toggleStatusMutation = useToggleSpecialtyStatus();
-
-	const handleCreateSpecialty = () => {
-		setSelectedSpecialty(null);
-		setIsModalOpen(true);
-	};
 
 	const handleEditSpecialty = (specialty: any) => {
 		setSelectedSpecialty(specialty);
@@ -163,13 +150,7 @@ export function SpecialtiesPage() {
 		}
 	};
 
-	const handleFilterChange = (filter: "all" | "active" | "inactive") => {
-		setIsActive(filter === "all" ? undefined : filter === "active");
-		setPage(1);
-	};
-
 	const filteredSpecialties = specialties?.data || [];
-	const isLoading = specialtiesLoading || statsLoading;
 
 	const renderTableContent = () => {
 		if (specialtiesLoading) {
@@ -303,89 +284,8 @@ export function SpecialtiesPage() {
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			{/* Header */}
-			<div className="flex items-center justify-between">
-				<div>
-					<h1 className="text-2xl font-bold tracking-tight">
-						Medical Specialties
-					</h1>
-					<p className="text-muted-foreground">
-						Manage medical specialties and their configurations
-					</p>
-				</div>
-				<Button onClick={handleCreateSpecialty} className="gap-2">
-					<Plus className="h-4 w-4" />
-					Add Specialty
-				</Button>
-			</div>
-
-			{/* Stats Cards */}
-			<div className="grid gap-4 md:grid-cols-3">
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">
-							Total Specialties
-						</CardTitle>
-						<Stethoscope className="text-muted-foreground h-4 w-4" />
-					</CardHeader>
-					<CardContent>
-						{isLoading ? (
-							<Skeleton className="h-8 w-16" />
-						) : (
-							<div className="text-2xl font-bold">{stats?.total || 0}</div>
-						)}
-						<p className="text-muted-foreground text-xs">
-							All medical specialties
-						</p>
-					</CardContent>
-				</Card>
-
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">
-							Active Specialties
-						</CardTitle>
-						<Activity className="text-muted-foreground h-4 w-4" />
-					</CardHeader>
-					<CardContent>
-						{isLoading ? (
-							<Skeleton className="h-8 w-16" />
-						) : (
-							<div className="text-2xl font-bold text-green-600">
-								{stats?.active || 0}
-							</div>
-						)}
-						<p className="text-muted-foreground text-xs">Currently available</p>
-					</CardContent>
-				</Card>
-
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Total Doctors</CardTitle>
-						<Users className="text-muted-foreground h-4 w-4" />
-					</CardHeader>
-					<CardContent>
-						{isLoading ? (
-							<Skeleton className="h-8 w-16" />
-						) : (
-							<div className="text-2xl font-bold">
-								{stats?.withDoctors || 0}
-							</div>
-						)}
-						<p className="text-muted-foreground text-xs">
-							Across all specialties
-						</p>
-					</CardContent>
-				</Card>
-			</div>
-
-			{/* Filters and Search */}
 			<Card>
 				<CardHeader>
-					<CardTitle className="flex items-center gap-2">
-						<Stethoscope className="h-5 w-5" />
-						Specialties Management
-					</CardTitle>
 					<div className="flex items-center gap-4">
 						<div className="relative max-w-sm flex-1">
 							<Search className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
@@ -408,29 +308,6 @@ export function SpecialtiesPage() {
 									<X className="h-4 w-4" />
 								</Button>
 							)}
-						</div>
-						<div className="flex gap-2">
-							<Button
-								variant={isActive === undefined ? "default" : "outline"}
-								size="sm"
-								onClick={() => handleFilterChange("all")}
-							>
-								All
-							</Button>
-							<Button
-								variant={isActive === true ? "default" : "outline"}
-								size="sm"
-								onClick={() => handleFilterChange("active")}
-							>
-								Active
-							</Button>
-							<Button
-								variant={isActive === false ? "default" : "outline"}
-								size="sm"
-								onClick={() => handleFilterChange("inactive")}
-							>
-								Inactive
-							</Button>
 						</div>
 					</div>
 				</CardHeader>

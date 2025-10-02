@@ -1,16 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
 import debounce from "debounce";
 import {
-	Plus,
 	Search,
 	MoreHorizontal,
 	Pencil,
 	Trash2,
-	MapPin,
 	Building2,
 	Eye,
-	ToggleLeft,
-	ToggleRight,
 	Phone,
 	Clock,
 	X,
@@ -27,7 +23,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -57,7 +53,6 @@ import { WorkLocationModal } from "@/components/modals/WorkLocationModal";
 import { WorkLocationViewModal } from "@/components/modals/WorkLocationViewModal";
 
 export function WorkLocationsPage() {
-	const [isActive, setIsActive] = useState<boolean | undefined>(undefined);
 	const [selectedLocation, setSelectedLocation] = useState<any | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -115,11 +110,6 @@ export function WorkLocationsPage() {
 	const locations = locationsData?.data || [];
 	const meta = locationsData?.meta;
 
-	const handleCreateLocation = () => {
-		setSelectedLocation(null);
-		setIsModalOpen(true);
-	};
-
 	const handleEditLocation = (location: any) => {
 		setSelectedLocation(location);
 		setIsModalOpen(true);
@@ -148,122 +138,10 @@ export function WorkLocationsPage() {
 		}
 	};
 
-	const handleToggleStatus = (location: any) => {
-		// TODO: Implement toggle status functionality when backend API is ready
-		toast.success(
-			`Location ${!location.isActive ? "activated" : "deactivated"} successfully`
-		);
-	};
-
-	const handleFilterChange = (filter: "all" | "active" | "inactive") => {
-		setIsActive(filter === "all" ? undefined : filter === "active");
-		setPage(1);
-	};
-
-	const activeLocations = locations.filter((l: any) => l.isActive !== false);
-	const uniqueCities = new Set(
-		locations.map((l: any) => l.address?.city || l.city).filter(Boolean)
-	);
-
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			{/* Header */}
-			<div className="flex items-center justify-between">
-				<div>
-					<h1 className="text-2xl font-bold tracking-tight">Work Locations</h1>
-					<p className="text-muted-foreground">
-						Manage hospital work locations and branches
-					</p>
-				</div>
-				<Button onClick={handleCreateLocation} className="gap-2">
-					<Plus className="h-4 w-4" />
-					Add Location
-				</Button>
-			</div>
-
-			{/* Stats Cards */}
-			<div className="grid gap-4 md:grid-cols-4">
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">
-							Total Locations
-						</CardTitle>
-						<Building2 className="text-muted-foreground h-4 w-4" />
-					</CardHeader>
-					<CardContent>
-						{isLoading ? (
-							<Skeleton className="h-8 w-16" />
-						) : (
-							<div className="text-2xl font-bold">
-								{meta?.total || locations.length}
-							</div>
-						)}
-						<p className="text-muted-foreground text-xs">All work locations</p>
-					</CardContent>
-				</Card>
-
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">
-							Active Locations
-						</CardTitle>
-						<div className="h-4 w-4 rounded-full bg-green-500" />
-					</CardHeader>
-					<CardContent>
-						{isLoading ? (
-							<Skeleton className="h-8 w-16" />
-						) : (
-							<div className="text-2xl font-bold text-green-600">
-								{activeLocations.length}
-							</div>
-						)}
-						<p className="text-muted-foreground text-xs">Currently available</p>
-					</CardContent>
-				</Card>
-
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Cities</CardTitle>
-						<MapPin className="text-muted-foreground h-4 w-4" />
-					</CardHeader>
-					<CardContent>
-						{isLoading ? (
-							<Skeleton className="h-8 w-16" />
-						) : (
-							<div className="text-2xl font-bold text-blue-600">
-								{uniqueCities.size}
-							</div>
-						)}
-						<p className="text-muted-foreground text-xs">Different cities</p>
-					</CardContent>
-				</Card>
-
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Timezones</CardTitle>
-						<Clock className="text-muted-foreground h-4 w-4" />
-					</CardHeader>
-					<CardContent>
-						{isLoading ? (
-							<Skeleton className="h-8 w-16" />
-						) : (
-							<div className="text-2xl font-bold text-purple-600">
-								{new Set(locations.map((l: any) => l.timezone).filter(Boolean))
-									.size || 1}
-							</div>
-						)}
-						<p className="text-muted-foreground text-xs">Different timezones</p>
-					</CardContent>
-				</Card>
-			</div>
-
-			{/* Locations Table */}
 			<Card>
 				<CardHeader>
-					<CardTitle className="flex items-center gap-2">
-						<Building2 className="h-5 w-5" />
-						Location Management
-					</CardTitle>
 					<div className="flex items-center gap-4">
 						<div className="relative max-w-sm flex-1">
 							<Search className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
@@ -286,29 +164,6 @@ export function WorkLocationsPage() {
 									<X className="h-4 w-4" />
 								</Button>
 							)}
-						</div>
-						<div className="flex gap-2">
-							<Button
-								variant={isActive === undefined ? "default" : "outline"}
-								size="sm"
-								onClick={() => handleFilterChange("all")}
-							>
-								All
-							</Button>
-							<Button
-								variant={isActive === true ? "default" : "outline"}
-								size="sm"
-								onClick={() => handleFilterChange("active")}
-							>
-								Active
-							</Button>
-							<Button
-								variant={isActive === false ? "default" : "outline"}
-								size="sm"
-								onClick={() => handleFilterChange("inactive")}
-							>
-								Inactive
-							</Button>
 						</div>
 					</div>
 				</CardHeader>
@@ -422,16 +277,7 @@ export function WorkLocationsPage() {
 															<Pencil className="mr-2 h-4 w-4" />
 															Edit
 														</DropdownMenuItem>
-														<DropdownMenuItem
-															onClick={() => handleToggleStatus(location)}
-														>
-															{location.isActive ? (
-																<ToggleLeft className="mr-2 h-4 w-4" />
-															) : (
-																<ToggleRight className="mr-2 h-4 w-4" />
-															)}
-															{location.isActive ? "Deactivate" : "Activate"}
-														</DropdownMenuItem>
+
 														<DropdownMenuSeparator />
 														<DropdownMenuItem
 															className="text-red-600"

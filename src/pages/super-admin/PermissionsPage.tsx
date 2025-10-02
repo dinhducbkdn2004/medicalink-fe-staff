@@ -6,9 +6,6 @@ import { Input } from "@/components/ui/input";
 import {
 	Card,
 	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
 } from "@/components/ui/card";
 import {
 	Table,
@@ -42,7 +39,6 @@ export function PermissionsPage() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-	// Create debounced function for search
 	const debouncedSetSearch = useMemo(
 		() =>
 			debounce((value: string) => {
@@ -51,7 +47,6 @@ export function PermissionsPage() {
 		[]
 	);
 
-	// Update debounced search when searchTerm changes
 	useEffect(() => {
 		debouncedSetSearch(searchTerm);
 		return () => {
@@ -61,11 +56,9 @@ export function PermissionsPage() {
 	const [selectedRole, setSelectedRole] = useState<string>("all");
 	const [isUpdating, setIsUpdating] = useState(false);
 
-	// Extract data from API response
 	const availablePermissions: Permission[] = matrixData?.permissions || [];
 	const rolePermissions: Role[] = matrixData?.roles || [];
 
-	// Add user count to roles from staff data
 	const rolesWithUserCount = rolePermissions.map((role) => {
 		let userCount = 0;
 		if (staffsData?.data && role.name) {
@@ -107,10 +100,8 @@ export function PermissionsPage() {
 			let newPermissionIds: string[];
 
 			if (checked) {
-				// Add permission
 				newPermissionIds = [...currentPermissionIds, permissionId];
 			} else {
-				// Remove permission
 				newPermissionIds = currentPermissionIds.filter(
 					(id) => id !== permissionId
 				);
@@ -216,20 +207,7 @@ export function PermissionsPage() {
 
 			{/* Permissions Matrix */}
 			<Card>
-				<CardHeader>
-					<div className="flex items-center justify-between">
-						<div>
-							<CardTitle className="flex items-center gap-2 text-base">
-								<Shield className="h-4 w-4" />
-								Role Permissions Matrix
-							</CardTitle>
-							<CardDescription className="text-xs">
-								Configure permissions for each role in the system
-							</CardDescription>
-						</div>
-					</div>
-				</CardHeader>
-				<CardContent className="p-4 pt-0">
+				<CardContent className="mt-4 gap-4 p-4 pt-0">
 					{/* Filters */}
 					<div className="mb-4 flex items-center gap-4">
 						<div className="relative flex-1">

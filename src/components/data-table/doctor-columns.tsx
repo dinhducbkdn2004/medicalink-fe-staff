@@ -10,7 +10,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "./data-table-column-header";
 
 export type DoctorAccount = {
@@ -63,9 +62,7 @@ export function createDoctorColumns({
 						</Avatar>
 						<div>
 							<div className="font-medium">{doctor.fullName}</div>
-							<div className="text-muted-foreground text-sm">
-								{doctor.email}
-							</div>
+							<div className="text-muted-foreground text-sm">Doctor</div>
 						</div>
 					</div>
 				);
@@ -87,7 +84,9 @@ export function createDoctorColumns({
 				const phone = row.getValue("phone") as string | null;
 				return (
 					<div className="text-sm">
-						{phone || (
+						{phone ? (
+							phone
+						) : (
 							<span className="text-muted-foreground italic">Not provided</span>
 						)}
 					</div>
@@ -100,7 +99,7 @@ export function createDoctorColumns({
 				<DataTableColumnHeader column={column} title="Date of Birth" />
 			),
 			cell: ({ row }) => {
-				const dateOfBirth = row.getValue("dateOfBirth") as string | null;
+				const dateOfBirth = row.getValue("dateOfBirth") ?? null;
 				if (!dateOfBirth) {
 					return (
 						<span className="text-muted-foreground italic">Not provided</span>
@@ -108,7 +107,7 @@ export function createDoctorColumns({
 				}
 				return (
 					<div className="text-sm">
-						{new Date(dateOfBirth).toLocaleDateString("en-US", {
+						{new Date(dateOfBirth as string).toLocaleDateString("en-US", {
 							year: "numeric",
 							month: "short",
 							day: "numeric",
@@ -121,23 +120,28 @@ export function createDoctorColumns({
 			accessorKey: "isMale",
 			header: "Gender",
 			cell: ({ row }) => {
-				const isMale = row.getValue("isMale") as boolean;
+				const isMale = row.getValue("isMale");
 				return <div className="text-sm">{isMale ? "Male" : "Female"}</div>;
 			},
 		},
 		{
 			accessorKey: "createdAt",
 			header: ({ column }) => (
-				<DataTableColumnHeader column={column} title="Created" />
+				<DataTableColumnHeader column={column} title="CreatedAt" />
 			),
 			cell: ({ row }) => {
-				const date = new Date(row.getValue("createdAt"));
+				const createdAt = row.getValue("createdAt") ?? null;
+				if (!createdAt) {
+					return (
+						<span className="text-muted-foreground italic">Not provided</span>
+					);
+				}
 				return (
 					<div className="text-sm">
-						{date.toLocaleDateString("en-US", {
+						{new Date(createdAt as string).toLocaleDateString("en-US", {
 							year: "numeric",
-							month: "2-digit",
-							day: "2-digit",
+							month: "short",
+							day: "numeric",
 						})}
 					</div>
 				);
@@ -145,6 +149,7 @@ export function createDoctorColumns({
 		},
 		{
 			id: "actions",
+			header: "Actions",
 			cell: ({ row }) => {
 				const doctor = row.original;
 
