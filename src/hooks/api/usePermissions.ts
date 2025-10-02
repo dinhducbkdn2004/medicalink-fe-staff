@@ -19,7 +19,6 @@ import type {
 	UpdateRolePermissionsRequest,
 } from "@/types";
 
-// Query keys
 export const permissionKeys = {
 	all: ["permissions"] as const,
 	lists: () => [...permissionKeys.all, "list"] as const,

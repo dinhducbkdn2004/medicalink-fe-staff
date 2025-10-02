@@ -1,8 +1,6 @@
-// Environment checks
 export const isProduction = import.meta.env.MODE === "production";
 export const isDevelopment = import.meta.env.MODE === "development";
 
-// Format helpers
 export const formatCurrency = (amount: number, currency = "VND"): string => {
 	return new Intl.NumberFormat("vi-VN", {
 		style: "currency",
@@ -33,7 +31,6 @@ export const formatDateTime = (date: string | Date): string => {
 	});
 };
 
-// Validation helpers
 export const isValidEmail = (email: string): boolean => {
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	return emailRegex.test(email);
@@ -44,7 +41,6 @@ export const isValidPhone = (phone: string): boolean => {
 	return phoneRegex.test(phone);
 };
 
-// String helpers
 export const capitalize = (str: string): string => {
 	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
@@ -54,7 +50,6 @@ export const truncateText = (text: string, maxLength: number): string => {
 	return text.slice(0, maxLength) + "...";
 };
 
-// Array helpers
 export const groupBy = <T, K extends keyof T>(
 	array: T[],
 	key: K
@@ -70,12 +65,10 @@ export const groupBy = <T, K extends keyof T>(
 	);
 };
 
-// Delay helper for development
 export const delay = (ms: number): Promise<void> => {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-// Safe JSON parse
 export const safeJsonParse = <T>(str: string, fallback: T): T => {
 	try {
 		return JSON.parse(str) as T;

@@ -69,7 +69,6 @@ export const useLogin = () => {
 	});
 };
 
-// Logout mutation
 export const useLogout = () => {
 	const queryClient = useQueryClient();
 

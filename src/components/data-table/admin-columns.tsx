@@ -98,7 +98,7 @@ export const createAdminColumns = (
 			<DataTableColumnHeader column={column} title="Date of Birth" />
 		),
 		cell: ({ row }) => {
-			const dateOfBirth = row.getValue("dateOfBirth") as string | null;
+			const dateOfBirth = row.getValue("dateOfBirth");
 			if (!dateOfBirth) {
 				return (
 					<span className="text-muted-foreground italic">Not provided</span>
@@ -106,7 +106,7 @@ export const createAdminColumns = (
 			}
 			return (
 				<div className="text-sm">
-					{new Date(dateOfBirth).toLocaleDateString("en-US", {
+					{new Date(dateOfBirth as string).toLocaleDateString("en-US", {
 						year: "numeric",
 						month: "short",
 						day: "numeric",
@@ -134,7 +134,7 @@ export const createAdminColumns = (
 			<DataTableColumnHeader column={column} title="Created At" />
 		),
 		cell: ({ row }) => {
-			const createdAt = row.getValue("createdAt") as string | null;
+			const createdAt = row.getValue("createdAt");
 			if (!createdAt) {
 				return (
 					<span className="text-muted-foreground italic">Not provided</span>
@@ -142,7 +142,7 @@ export const createAdminColumns = (
 			}
 			return (
 				<div className="text-sm">
-					{new Date(createdAt).toLocaleDateString("en-US", {
+					{new Date(createdAt as string).toLocaleDateString("en-US", {
 						year: "numeric",
 						month: "short",
 						day: "numeric",

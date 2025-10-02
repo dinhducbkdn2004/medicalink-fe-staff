@@ -94,7 +94,6 @@ export function AdminModal({
 		},
 	});
 
-	// Reset form when admin changes
 	useEffect(() => {
 		if (admin) {
 			form.reset({

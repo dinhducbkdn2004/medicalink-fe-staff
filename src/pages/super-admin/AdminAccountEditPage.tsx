@@ -71,7 +71,6 @@ export function AdminAccountEditPage() {
 	const navigate = useNavigate();
 	const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
-	// Fetch admin data
 	const { data: staffsData, isLoading } = useStaffs({
 		page: 1,
 		limit: 100,
@@ -92,7 +91,6 @@ export function AdminAccountEditPage() {
 		},
 	});
 
-	// Populate form when admin data is loaded
 	useEffect(() => {
 		if (admin) {
 			form.reset({
@@ -156,7 +154,6 @@ export function AdminAccountEditPage() {
 					description: "The changes have been saved.",
 				});
 
-				// Navigate to view page after successful update
 				void navigate({
 					to: "/super-admin/admin-accounts/$id/view",
 					params: { id },

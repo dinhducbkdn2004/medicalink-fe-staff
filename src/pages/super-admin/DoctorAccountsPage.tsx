@@ -35,13 +35,11 @@ export function DoctorAccountsPage() {
 	const [doctorToDelete, setDoctorToDelete] = useState<string | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
 
-	// Data table filters
 	const [searchValue, setSearchValue] = useState("");
 	const [dateRange, setDateRange] = useState<DateRange | undefined>();
 	const sortBy = "createdAt";
 	const sortOrder = "desc" as const;
 
-	// Build filters for API
 	const filters = {
 		...(searchValue && { search: searchValue }),
 		sortBy: sortBy as "createdAt" | "fullName" | "email",
@@ -61,7 +59,6 @@ export function DoctorAccountsPage() {
 	const doctors = doctorsData?.data || [];
 	const totalCount = doctorsData?.meta?.total || 0;
 
-	// Transform Doctor[] to DoctorAccount[] for DataTable
 	const doctorAccounts: DoctorAccount[] = doctors.map((doctor) => ({
 		id: doctor.id,
 		fullName: doctor.fullName,

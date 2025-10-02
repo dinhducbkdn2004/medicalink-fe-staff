@@ -91,7 +91,6 @@ export function SchedulesPage() {
 	const [search, setSearch] = useState("");
 	const [debouncedSearch, setDebouncedSearch] = useState("");
 
-	// Create debounced function for search
 	const debouncedSetSearch = useMemo(
 		() =>
 			debounce((value: string) => {
@@ -100,7 +99,6 @@ export function SchedulesPage() {
 		[]
 	);
 
-	// Update debounced search when search changes
 	useEffect(() => {
 		debouncedSetSearch(search);
 		return () => {
@@ -136,7 +134,6 @@ export function SchedulesPage() {
 	};
 
 	const handleScheduleSuccess = () => {
-		// Refresh data here if needed
 		toast.success("Schedule saved successfully");
 	};
 
@@ -149,7 +146,6 @@ export function SchedulesPage() {
 		if (!scheduleToDelete) return;
 
 		try {
-			// Mock delete - replace with actual API call
 			toast.success("Schedule deleted successfully");
 			setDeleteDialogOpen(false);
 			setScheduleToDelete(null);

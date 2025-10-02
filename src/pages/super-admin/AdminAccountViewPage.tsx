@@ -28,7 +28,6 @@ export function AdminAccountViewPage() {
 	const id = params.id;
 	const navigate = useNavigate();
 
-	// Fetch admin data
 	const { data: staffsData, isLoading } = useStaffs({
 		page: 1,
 		limit: 100,

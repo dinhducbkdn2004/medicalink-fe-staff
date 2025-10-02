@@ -35,14 +35,12 @@ export function AdminAccountsPage() {
 	const [adminToDelete, setAdminToDelete] = useState<string | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
 
-	// Data table filters
 	const [searchValue, setSearchValue] = useState("");
 	const [dateRange, setDateRange] = useState<DateRange | undefined>();
 	const sortBy = "createdAt";
 	const sortOrder = "desc" as const;
 	const [roleFilter, setRoleFilter] = useState<string>("all");
 
-	// Build filters for API
 	const filters = {
 		...(roleFilter !== "all" && {
 			role: roleFilter as "ADMIN" | "SUPER_ADMIN",
@@ -164,7 +162,6 @@ export function AdminAccountsPage() {
 		void confirmDeleteAdmin();
 	};
 
-	// Create columns with action handlers
 	const columns = createAdminColumns({
 		onView: handleViewAdmin,
 		onEdit: handleEditAdmin,

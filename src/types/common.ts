@@ -25,7 +25,7 @@ export interface ApiError {
 export interface PaginationParams {
 	page?: number;
 	limit?: number;
-	skip?: number; // Alternative to page-based pagination
+	skip?: number;
 	sortBy?: string;
 	sortOrder?: "asc" | "desc";
 }

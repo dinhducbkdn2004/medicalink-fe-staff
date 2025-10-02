@@ -34,7 +34,6 @@ export const updateStaff = (id: string, data: UpdateStaffRequest) =>
 export const deleteStaff = (id: string) =>
 	apiClient.delete<StaffAccount>(`/staffs/${id}`);
 
-// Change user password (admin function)
 export const changeStaffPassword = (id: string, newPassword: string) =>
 	apiClient.patch<{ message: string; success: boolean }>(`/staffs/${id}`, {
 		password: newPassword,

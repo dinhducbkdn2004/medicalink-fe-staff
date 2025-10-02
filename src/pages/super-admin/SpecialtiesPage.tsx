@@ -61,7 +61,7 @@ export function SpecialtiesPage() {
 
 	const itemsPerPage = 10;
 	const { currentPage, setPage } = usePagination({
-		totalItems: 0, // Will be updated from API response
+		totalItems: 0,
 		itemsPerPage,
 		initialPage: 1,
 	});
@@ -70,7 +70,6 @@ export function SpecialtiesPage() {
 	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 	const [isSearching, setIsSearching] = useState(false);
 
-	// Create debounced function for search
 	const debouncedSetSearch = useMemo(
 		() =>
 			debounce((value: string) => {
@@ -80,7 +79,6 @@ export function SpecialtiesPage() {
 		[]
 	);
 
-	// Update debounced search when searchTerm changes
 	useEffect(() => {
 		if (searchTerm !== debouncedSearchTerm) {
 			setIsSearching(true);

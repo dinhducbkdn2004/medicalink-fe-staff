@@ -10,7 +10,6 @@ import {
 } from "@/api/doctors";
 import type { CreateDoctorRequest, UpdateDoctorRequest } from "@/types";
 
-// Query keys
 export const doctorKeys = {
 	all: ["doctors"] as const,
 	lists: () => [...doctorKeys.all, "list"] as const,
@@ -30,9 +29,6 @@ export const doctorKeys = {
 	stats: () => [...doctorKeys.all, "stats"] as const,
 };
 
-/**
- * Doctor Query Hooks
- */
 
 // Get doctors with pagination and filters
 export const useDoctors = (params?: {
@@ -52,7 +48,7 @@ export const useDoctors = (params?: {
 			const response = await getDoctors(params);
 			return response.data;
 		},
-		staleTime: 1000 * 60 * 5, // 5 minutes
+		staleTime: 1000 * 60 * 5,
 	});
 };
 
@@ -75,12 +71,9 @@ export const useDoctorStats = () =>
 			const response = await getDoctorStats();
 			return response.data;
 		},
-		staleTime: 1000 * 60 * 5, // 5 minutes
+		staleTime: 1000 * 60 * 5,
 	});
 
-/**
- * Doctor Mutation Hooks
- */
 
 // Create doctor mutation
 export const useCreateDoctor = () => {
@@ -92,7 +85,6 @@ export const useCreateDoctor = () => {
 			return response.data;
 		},
 		onSuccess: () => {
-			// Invalidate doctor lists and stats
 			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
 			queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
 		},
@@ -133,10 +125,8 @@ export const useDeleteDoctor = () => {
 			return response.data;
 		},
 		onSuccess: (_, id) => {
-			// Invalidate doctor lists and stats
 			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
 			queryClient.invalidateQueries({ queryKey: doctorKeys.stats() });
-			// Remove detail from cache
 			queryClient.removeQueries({ queryKey: doctorKeys.detail(id) });
 		},
 	});

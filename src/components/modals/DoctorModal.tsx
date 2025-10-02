@@ -124,7 +124,6 @@ export function DoctorModal({
 		}
 	}, [doctor, form]);
 
-	// Helper functions to convert form values to API format
 	const convertDateValue = (dateString?: string): Date | null => {
 		if (!dateString || dateString === "") return null;
 		return new Date(dateString);

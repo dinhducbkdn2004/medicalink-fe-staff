@@ -24,7 +24,6 @@ interface Staff {
 	isActive: boolean;
 	createdAt: string;
 	updatedAt: string;
-	// Doctor specific fields
 	specialtyId?: string;
 	specialty?: {
 		name: string;
@@ -33,7 +32,6 @@ interface Staff {
 	licenseNumber?: string;
 	experience?: number;
 	education?: string;
-	// Admin specific fields
 	department?: string;
 	position?: string;
 }

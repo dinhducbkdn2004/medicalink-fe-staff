@@ -182,7 +182,6 @@ export function AppointmentsPage() {
 				.includes(debouncedSearch.toLowerCase()) ||
 			appointment.patient.phone.includes(debouncedSearch);
 
-		// Add status filter if needed - for now always return true
 		const matchesStatus = true;
 		return matchesSearch && matchesStatus;
 	});

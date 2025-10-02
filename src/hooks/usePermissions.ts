@@ -33,7 +33,6 @@ export const usePermissions = () => {
 	}, [user]);
 };
 
-// Higher-order component for permission-based rendering
 interface WithPermissionProps {
 	permission?: Permission;
 	permissions?: Permission[];
@@ -52,12 +51,10 @@ export const WithPermission: React.FC<WithPermissionProps> = ({
 	const { hasPermission, hasAnyPermission, hasAllPermissions } =
 		usePermissions();
 
-	// Check single permission
 	if (permission && !hasPermission(permission)) {
 		return fallback as React.ReactElement;
 	}
 
-	// Check multiple permissions
 	if (permissions) {
 		const hasRequired = requireAll
 			? hasAllPermissions(permissions)

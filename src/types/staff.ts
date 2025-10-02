@@ -21,7 +21,6 @@ export interface UpdateStaffRequest {
 }
 
 export type Doctor = StaffAccount;
-// Doctor type is the same as StaffAccount according to API spec
 
 export interface CreateDoctorRequest {
 	fullName: string;

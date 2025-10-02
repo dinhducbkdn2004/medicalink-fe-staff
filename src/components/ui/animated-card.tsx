@@ -60,7 +60,6 @@ export const AnimatedCard = ({
 	);
 };
 
-// Staggered container for multiple cards
 const containerVariants = {
 	hidden: { opacity: 0 },
 	visible: {

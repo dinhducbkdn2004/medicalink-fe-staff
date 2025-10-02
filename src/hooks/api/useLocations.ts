@@ -66,7 +66,6 @@ export const useWorkLocationStats = () =>
 		staleTime: 1000 * 60 * 5,
 	});
 
-// Alias for consistency
 export const useLocationStats = useWorkLocationStats;
 
 export const useCreateWorkLocation = () => {

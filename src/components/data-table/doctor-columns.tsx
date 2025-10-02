@@ -79,20 +79,41 @@ export function createDoctorColumns({
 		},
 		{
 			accessorKey: "phone",
-			header: "Phone",
+			header: ({ column }) => (
+				<DataTableColumnHeader column={column} title="Phone" />
+			),
 			cell: ({ row }) => {
-				const phone = row.getValue("phone") as string | null;
+				const phone = row.getValue("phone");
 				return (
 					<div className="text-sm">
-						{phone ? (
-							phone
-						) : (
-							<span className="text-muted-foreground italic">Not provided</span>
-						)}
+						{(phone as string) ?? <span className="text-muted-foreground italic">Not provided</span>}
 					</div>
 				);
 			},
 		},
+		{
+			accessorKey: "dateOfBirth",
+			header: ({ column }) => (
+				<DataTableColumnHeader column={column} title="Date of Birth" />
+			),
+			cell: ({ row }) => {
+				const dateOfBirth = row.getValue("dateOfBirth");
+				if (!dateOfBirth) {
+					return (
+						<span className="text-muted-foreground italic">Not provided</span>
+					);
+				}
+			return (
+				<div className="text-sm">
+					{new Date(dateOfBirth as string).toLocaleDateString("en-US", {
+						year: "numeric",
+						month: "short",
+						day: "numeric",
+					})}
+				</div>
+			);
+		},
+	},
 		{
 			accessorKey: "dateOfBirth",
 			header: ({ column }) => (

@@ -46,7 +46,6 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
 	const searchInputRef = useRef<HTMLInputElement>(null);
 
-	// Create debounced search handler
 	const debouncedSearch = useRef(
 		debounce((value: string) => {
 			if (onSearchChange) {
@@ -58,7 +57,6 @@ export function DataTableToolbar<TData>({
 		}, 500)
 	).current;
 
-	// Cleanup debounce on unmount
 	useEffect(() => {
 		return () => {
 			debouncedSearch.clear?.();

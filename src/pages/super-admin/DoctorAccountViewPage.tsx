@@ -28,7 +28,6 @@ export function DoctorAccountViewPage() {
 	const id = params.id;
 	const navigate = useNavigate();
 
-	// Fetch doctor data
 	const { data: doctorsData, isLoading } = useDoctors({
 		page: 1,
 		limit: 100,

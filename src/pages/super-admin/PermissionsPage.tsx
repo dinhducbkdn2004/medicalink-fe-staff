@@ -253,7 +253,6 @@ export function PermissionsPage() {
 							</TableHeader>
 							<TableBody>
 								{isLoading ? (
-									// Loading rows
 									Array.from({ length: 5 }, (_, index) => (
 										<TableRow key={`loading-${index}`}>
 											<TableCell>
@@ -301,7 +300,7 @@ export function PermissionsPage() {
 														checked={role.permissions.some(
 															(p) => p.id === permission.id
 														)}
-														disabled={isUpdating || role.name === "SUPER_ADMIN"} // Super admin always has all permissions
+														disabled={isUpdating || role.name === "SUPER_ADMIN"}
 														onCheckedChange={(checked) => {
 															void handlePermissionToggle(
 																role.id,

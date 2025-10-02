@@ -92,7 +92,6 @@ export function WorkLocationModal({
 	const createLocationMutation = useCreateWorkLocation();
 	const updateLocationMutation = useUpdateWorkLocation();
 
-	// Reset form when location changes or modal opens
 	useEffect(() => {
 		if (open) {
 			if (location) {

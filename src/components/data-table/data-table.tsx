@@ -41,7 +41,7 @@ export function DataTable<TData, TValue>({
 	toolbar,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([
-		{ id: "createdAt", desc: true }, // Default sort by created date descending
+		{ id: "createdAt", desc: true },
 	]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[]
@@ -69,7 +69,6 @@ export function DataTable<TData, TValue>({
 		},
 	});
 
-	// Handle search from parent component
 	React.useEffect(() => {
 		if (searchKey && onSearchChange) {
 			const column = table.getColumn(searchKey);
@@ -79,11 +78,9 @@ export function DataTable<TData, TValue>({
 		}
 	}, [searchKey, searchValue, table, onSearchChange]);
 
-	// Enhanced toolbar that gets the table instance
 	const enhancedToolbar = React.useMemo(() => {
 		if (!toolbar) return null;
 
-		// Clone the toolbar and pass the table instance
 		if (React.isValidElement(toolbar)) {
 			return React.cloneElement(toolbar as React.ReactElement<any>, { table });
 		}

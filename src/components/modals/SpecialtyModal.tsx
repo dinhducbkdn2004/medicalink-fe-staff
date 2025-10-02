@@ -73,7 +73,6 @@ export function SpecialtyModal({
 	const createSpecialtyMutation = useCreateSpecialty();
 	const updateSpecialtyMutation = useUpdateSpecialty();
 
-	// Reset form when specialty changes or modal opens
 	useEffect(() => {
 		if (open) {
 			if (specialty) {

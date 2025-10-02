@@ -123,7 +123,6 @@ export const RecentActivities = ({
 	activities,
 	onViewAll,
 }: RecentActivitiesProps) => {
-	// Limit to display only 5 most recent activities
 	const displayActivities = activities.slice(0, 5);
 
 	return (

@@ -1,7 +1,6 @@
 import type { AxiosError } from "axios";
 import type { ApiError } from "@/types";
 
-// Custom error classes
 export class ApiErrorException extends Error {
 	constructor(
 		public statusCode: number,
@@ -14,7 +13,6 @@ export class ApiErrorException extends Error {
 	}
 }
 
-// Network error
 export class NetworkErrorException extends Error {
 	constructor(message = "Network connection failed") {
 		super(message);
@@ -22,7 +20,6 @@ export class NetworkErrorException extends Error {
 	}
 }
 
-// Timeout error
 export class TimeoutErrorException extends Error {
 	constructor(message = "Request timeout") {
 		super(message);
@@ -30,7 +27,6 @@ export class TimeoutErrorException extends Error {
 	}
 }
 
-// Error type guards
 export const isApiError = (error: unknown): error is AxiosError<ApiError> => {
 	return (
 		typeof error === "object" &&
@@ -40,7 +36,6 @@ export const isApiError = (error: unknown): error is AxiosError<ApiError> => {
 	);
 };
 
-// Network error type guard
 export const isNetworkError = (error: unknown): boolean => {
 	return (
 		typeof error === "object" &&
@@ -50,7 +45,6 @@ export const isNetworkError = (error: unknown): boolean => {
 	);
 };
 
-// Timeout error type guard
 export const isTimeoutError = (error: unknown): boolean => {
 	return (
 		typeof error === "object" &&
@@ -60,7 +54,6 @@ export const isTimeoutError = (error: unknown): boolean => {
 	);
 };
 
-// Error parser utility
 export const parseApiError = (
 	error: unknown
 ): {

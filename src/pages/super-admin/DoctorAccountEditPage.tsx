@@ -70,7 +70,6 @@ export function DoctorAccountEditPage() {
 	const navigate = useNavigate();
 	const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
-	// Fetch doctor data
 	const { data: doctorsData, isLoading } = useDoctors({
 		page: 1,
 		limit: 100,
@@ -90,7 +89,6 @@ export function DoctorAccountEditPage() {
 		},
 	});
 
-	// Populate form when doctor data is loaded
 	useEffect(() => {
 		if (doctor) {
 			form.reset({
@@ -153,7 +151,6 @@ export function DoctorAccountEditPage() {
 					description: "The changes have been saved.",
 				});
 
-				// Navigate to view page after successful update
 				void navigate({
 					to: "/super-admin/doctor-accounts/$id/view",
 					params: { id },

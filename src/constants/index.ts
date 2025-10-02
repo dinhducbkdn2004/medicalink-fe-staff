@@ -1,10 +1,8 @@
 export * from "./api";
 
-// App metadata
 export const APP_NAME = "Medical Link Staff Portal";
 export const APP_VERSION = "1.0.0";
 
-// UI Constants
 export const BREAKPOINTS = {
 	sm: 640,
 	md: 768,
@@ -13,7 +11,6 @@ export const BREAKPOINTS = {
 	"2xl": 1536,
 } as const;
 
-// Role permissions
 export const ROLE_PERMISSIONS = {
 	SUPER_ADMIN: ["*"],
 	ADMIN: [
@@ -46,7 +43,6 @@ export const ROLE_PERMISSIONS = {
 	],
 } as const;
 
-// Form validation constants
 export const VALIDATION = {
 	PASSWORD_MIN_LENGTH: 8,
 	NAME_MIN_LENGTH: 3,
