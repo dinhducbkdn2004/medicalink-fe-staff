@@ -1,23 +1,7 @@
 import { useState } from "react";
-import {
-	Plus,
-	MoreHorizontal,
-	Pencil,
-	Trash2,
-	Users,
-	Lock,
-	Eye,
-} from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { DateRange } from "react-day-picker";
 
-import { Button } from "@/components/ui/button";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
 import {
 	Card,
 	CardContent,
@@ -25,44 +9,51 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
 import { DeleteConfirmationModal } from "@/components/modals";
 import { AdminProfileModal } from "@/components/modals/AdminProfileModal";
 import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
-import { StaffViewModal } from "@/components/modals/StaffViewModal";
 import { useStaffs, useDeleteStaff } from "@/hooks/api/useStaffs";
 import { toast } from "sonner";
+import { DataTable } from "@/components/data-table/data-table";
+import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import {
-	SimpleFilter,
-	type SimpleFilterParams,
-} from "@/components/filters/SimpleFilter";
+	createAdminColumns,
+	type AdminAccount,
+} from "@/components/data-table/admin-columns";
+import type { StaffAccount } from "@/types/common";
 
 export function AdminAccountsPage() {
-	const [currentPage, setCurrentPage] = useState(1);
+	const navigate = useNavigate();
+	const [currentPage] = useState(1);
 	const [itemsPerPage] = useState(10);
 	const [showAdminModal, setShowAdminModal] = useState(false);
 	const [showPasswordModal, setShowPasswordModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const [showViewModal, setShowViewModal] = useState(false);
-	const [selectedAdmin, setSelectedAdmin] = useState<any | null>(null);
-	const [selectedAdminForPassword, setSelectedAdminForPassword] = useState<
-		any | null
-	>(null);
+	const [selectedAdmin, setSelectedAdmin] = useState<AdminAccount | null>(null);
+	const [selectedAdminForPassword, setSelectedAdminForPassword] =
+		useState<AdminAccount | null>(null);
 	const [adminToDelete, setAdminToDelete] = useState<string | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
-	const [filters, setFilters] = useState<SimpleFilterParams>({
-		// No default role filter needed - this page is specifically for admins
-	});
 
-	// Fetch staff with advanced filters
+	// Data table filters
+	const [searchValue, setSearchValue] = useState("");
+	const [dateRange, setDateRange] = useState<DateRange | undefined>();
+	const sortBy = "createdAt";
+	const sortOrder = "desc" as const;
+	const [roleFilter, setRoleFilter] = useState<string>("all");
+
+	// Build filters for API
+	const filters = {
+		...(roleFilter !== "all" && {
+			role: roleFilter as "ADMIN" | "SUPER_ADMIN",
+		}),
+		...(searchValue && { search: searchValue }),
+		sortBy: sortBy as "createdAt" | "fullName" | "email",
+		sortOrder,
+		...(dateRange?.from && { createdFrom: dateRange.from.toISOString() }),
+		...(dateRange?.to && { createdTo: dateRange.to.toISOString() }),
+	};
+
 	const { data: staffsData, isLoading } = useStaffs({
 		page: currentPage,
 		limit: itemsPerPage,
@@ -71,25 +62,45 @@ export function AdminAccountsPage() {
 
 	const deleteStaffMutation = useDeleteStaff();
 
-	// Use real API data - API trả về { data: [...admins], meta: {...} }
-	const adminAccounts = staffsData?.data || [];
+	const adminAccounts: AdminAccount[] = (staffsData?.data || []).map(
+		(staff: StaffAccount) => {
+			let dateOfBirth: string | null = null;
+			if (staff.dateOfBirth) {
+				dateOfBirth =
+					typeof staff.dateOfBirth === "string"
+						? staff.dateOfBirth
+						: staff.dateOfBirth.toISOString();
+			}
+
+			return {
+				id: staff.id,
+				fullName: staff.fullName,
+				email: staff.email,
+				phone: staff.phone || null,
+				dateOfBirth,
+				role: staff.role as "ADMIN" | "SUPER_ADMIN",
+				isMale: staff.isMale || false,
+				createdAt:
+					typeof staff.createdAt === "string"
+						? staff.createdAt
+						: staff.createdAt.toISOString(),
+				updatedAt:
+					typeof staff.updatedAt === "string"
+						? staff.updatedAt
+						: staff.updatedAt.toISOString(),
+			};
+		}
+	);
+
 	const totalCount = staffsData?.meta?.total || 0;
-	const totalPages = Math.ceil(totalCount / itemsPerPage);
-
-	const adminStats = {
-		total: totalCount,
-		active: adminAccounts.filter((a) => a.role === "ADMIN").length,
-		superAdmins: adminAccounts.filter((a) => a.role === "SUPER_ADMIN").length,
-	};
-
-	// Reset page when filters change - always maintain ADMIN role for this page
-	const handleFiltersChange = (newFilters: SimpleFilterParams) => {
-		// Force role to ADMIN since this page only manages admins, but don't show it in UI
-		const filtersForUI = { ...newFilters };
-		delete filtersForUI.role; // Remove role from filters
-		setFilters({ ...filtersForUI, role: "ADMIN" });
-		setCurrentPage(1);
-	};
+	const convertToModalProps = (admin: AdminAccount) => ({
+		id: admin.id,
+		fullName: admin.fullName,
+		email: admin.email,
+		...(admin.phone && { phone: admin.phone }),
+		role: admin.role,
+		isMale: admin.isMale,
+	});
 
 	const handleCreateAdmin = () => {
 		setSelectedAdmin(null);
@@ -97,11 +108,10 @@ export function AdminAccountsPage() {
 	};
 
 	const handleEditAdmin = (adminId: string) => {
-		const admin = adminAccounts.find((a) => a.id === adminId);
-		if (admin) {
-			setSelectedAdmin(admin);
-			setShowAdminModal(true);
-		}
+		void navigate({
+			to: "/super-admin/admin-accounts/$id/edit",
+			params: { id: adminId },
+		});
 	};
 
 	const handleChangePassword = (adminId: string) => {
@@ -113,11 +123,10 @@ export function AdminAccountsPage() {
 	};
 
 	const handleViewAdmin = (adminId: string) => {
-		const admin = adminAccounts.find((a) => a.id === adminId);
-		if (admin) {
-			setSelectedAdmin(admin);
-			setShowViewModal(true);
-		}
+		void navigate({
+			to: "/super-admin/admin-accounts/$id/view",
+			params: { id: adminId },
+		});
 	};
 
 	const handleDeleteAdmin = (adminId: string) => {
@@ -139,7 +148,6 @@ export function AdminAccountsPage() {
 				description: "The admin account has been removed from the system.",
 			});
 
-			// Close modal and reset state
 			setShowDeleteModal(false);
 			setAdminToDelete(null);
 		} catch (error) {
@@ -156,249 +164,65 @@ export function AdminAccountsPage() {
 		void confirmDeleteAdmin();
 	};
 
-	const getInitials = (name: string) => {
-		return name
-			.split(" ")
-			.map((n) => n[0])
-			.join("")
-			.toUpperCase()
-			.slice(0, 2);
-	};
+	// Create columns with action handlers
+	const columns = createAdminColumns({
+		onView: handleViewAdmin,
+		onEdit: handleEditAdmin,
+		onChangePassword: handleChangePassword,
+		onDelete: handleDeleteAdmin,
+	});
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			{/* Stats Cards */}
-			<div className="grid gap-4 md:grid-cols-3">
-				<Card>
-					<CardContent className="flex items-center justify-between p-6">
-						<div>
-							<p className="text-muted-foreground text-sm font-medium">
-								Total Admins
-							</p>
-							<p className="text-2xl font-bold">{adminStats.total}</p>
-						</div>
-						<Users className="text-muted-foreground h-8 w-8" />
-					</CardContent>
-				</Card>
-				<Card>
-					<CardContent className="flex items-center justify-between p-6">
-						<div>
-							<p className="text-muted-foreground text-sm font-medium">
-								Active
-							</p>
-							<p className="text-2xl font-bold text-green-600">
-								{adminStats.active}
-							</p>
-						</div>
-						<div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
-							<div className="h-3 w-3 rounded-full bg-green-600"></div>
-						</div>
-					</CardContent>
-				</Card>
-				<Card>
-					<CardContent className="flex items-center justify-between p-6">
-						<div>
-							<p className="text-muted-foreground text-sm font-medium">
-								Super Admins
-							</p>
-							<p className="text-2xl font-bold text-purple-600">
-								{adminStats.superAdmins}
-							</p>
-						</div>
-						<div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100">
-							<div className="h-3 w-3 rounded-full bg-purple-600"></div>
-						</div>
-					</CardContent>
-				</Card>
-			</div>
-
-			<div className="flex items-center justify-between">
-				<div>
-					<h1 className="text-2xl font-bold tracking-tight">Admin Accounts</h1>
-					<p className="text-muted-foreground">
-						Manage administrator accounts and permissions
-					</p>
-				</div>
-				<Button onClick={handleCreateAdmin} className="gap-2">
-					<Plus className="h-4 w-4" />
-					Add Admin
-				</Button>
-			</div>
-
 			<Card>
 				<CardHeader>
-					<CardTitle>Admin Management</CardTitle>
-					<CardDescription>
-						A list of all administrator accounts in the system.
-					</CardDescription>
+					<div className="flex flex-1 items-center justify-between space-y-0">
+						<div className="space-y-1">
+							<CardTitle>Admin Management</CardTitle>
+							<CardDescription>
+								A list of all administrator accounts in the system.
+							</CardDescription>
+						</div>
+					</div>
 				</CardHeader>
-				<CardContent>
-					{/* Simple Filters - No role filter needed for admin-specific page */}
-					<SimpleFilter
-						filters={(() => {
-							const filtersWithoutRole = { ...filters };
-							delete filtersWithoutRole.role;
-							return filtersWithoutRole;
-						})()}
-						onFiltersChange={handleFiltersChange}
-						showGender={true}
-						className="mb-6"
+
+				<CardContent className="space-y-4">
+					<DataTable
+						columns={columns}
+						data={adminAccounts}
+						searchKey="fullName"
+						searchValue={searchValue}
+						onSearchChange={setSearchValue}
+						toolbar={
+							<DataTableToolbar
+								searchKey="fullName"
+								searchPlaceholder="Search admins..."
+								searchValue={searchValue}
+								onSearchChange={setSearchValue}
+								onCreateNew={handleCreateAdmin}
+								createButtonText="Add Admin"
+								{...(dateRange ? { dateRange } : {})}
+								onDateRangeChange={setDateRange}
+								roleFilter={roleFilter}
+								onRoleFilterChange={setRoleFilter}
+							/>
+						}
 					/>
 
-					{/* Table */}
-					<div className="rounded-md border">
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Admin</TableHead>
-									<TableHead>Contact Info</TableHead>
-									<TableHead>Gender</TableHead>
-									<TableHead>Created</TableHead>
-									<TableHead className="w-[70px]">Actions</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{isLoading ? (
-									// Loading skeletons
-									Array.from({ length: 3 }, (_, index) => (
-										<TableRow key={`admin-skeleton-${Date.now()}-${index}`}>
-											<TableCell>
-												<div className="flex items-center space-x-3">
-													<Skeleton className="h-10 w-10 rounded-full" />
-													<div>
-														<Skeleton className="mb-1 h-4 w-[120px]" />
-														<Skeleton className="h-3 w-[80px]" />
-													</div>
-												</div>
-											</TableCell>
-											<TableCell>
-												<Skeleton className="h-4 w-[200px]" />
-											</TableCell>
-											<TableCell>
-												<Skeleton className="h-6 w-[60px]" />
-											</TableCell>
-											<TableCell>
-												<Skeleton className="h-4 w-[100px]" />
-											</TableCell>
-											<TableCell>
-												<Skeleton className="h-8 w-8" />
-											</TableCell>
-										</TableRow>
-									))
-								) : adminAccounts.length === 0 ? (
-									<TableRow>
-										<TableCell colSpan={5} className="h-24 text-center">
-											No admin accounts found
-										</TableCell>
-									</TableRow>
-								) : (
-									adminAccounts.map((admin) => (
-										<TableRow key={admin.id}>
-											<TableCell>
-												<div className="flex items-center space-x-3">
-													<Avatar className="h-10 w-10">
-														<AvatarFallback>
-															{getInitials(admin.fullName)}
-														</AvatarFallback>
-													</Avatar>
-													<div>
-														<div className="font-medium">{admin.fullName}</div>
-														<div className="text-muted-foreground text-sm">
-															ID: {admin.id.slice(0, 8)}...
-														</div>
-													</div>
-												</div>
-											</TableCell>
-											<TableCell>
-												<div>
-													<div className="font-medium">{admin.email}</div>
-													<div className="text-muted-foreground text-sm">
-														{admin.phone || "No phone"}
-													</div>
-												</div>
-											</TableCell>
-											<TableCell>
-												<span className="text-sm font-medium">
-													{admin.isMale ? "Male" : "Female"}
-												</span>
-											</TableCell>
-											<TableCell className="text-sm">
-												{new Date(admin.createdAt).toLocaleDateString()}
-											</TableCell>
-											<TableCell>
-												<DropdownMenu>
-													<DropdownMenuTrigger asChild>
-														<Button variant="ghost" className="h-8 w-8 p-0">
-															<MoreHorizontal className="h-4 w-4" />
-														</Button>
-													</DropdownMenuTrigger>
-													<DropdownMenuContent align="end">
-														<DropdownMenuItem
-															onClick={() => handleViewAdmin(admin.id)}
-														>
-															<Eye className="mr-2 h-4 w-4" />
-															View Details
-														</DropdownMenuItem>
-														<DropdownMenuSeparator />
-														<DropdownMenuItem
-															onClick={() => handleEditAdmin(admin.id)}
-														>
-															<Pencil className="mr-2 h-4 w-4" />
-															Edit Profile
-														</DropdownMenuItem>
-														<DropdownMenuItem
-															onClick={() => handleChangePassword(admin.id)}
-														>
-															<Lock className="mr-2 h-4 w-4" />
-															Change Password
-														</DropdownMenuItem>
-														<DropdownMenuSeparator />
-														<DropdownMenuItem
-															onClick={() => handleDeleteAdmin(admin.id)}
-															className="text-red-600"
-														>
-															<Trash2 className="mr-2 h-4 w-4" />
-															Delete
-														</DropdownMenuItem>
-													</DropdownMenuContent>
-												</DropdownMenu>
-											</TableCell>
-										</TableRow>
-									))
-								)}
-							</TableBody>
-						</Table>
-					</div>
-
-					{/* Pagination */}
-					<div className="flex items-center justify-between space-x-2 py-4">
-						<div className="text-muted-foreground text-sm">
-							Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-							{Math.min(currentPage * itemsPerPage, totalCount)} of {totalCount}{" "}
-							admin(s)
+					{!isLoading && (
+						<div className="flex items-center justify-between space-x-2 py-4">
+							<div className="text-muted-foreground text-sm">
+								Showing {Math.min(adminAccounts.length, itemsPerPage)} of{" "}
+								{totalCount} admin(s)
+							</div>
+							<div className="flex items-center space-x-2">
+								<span className="text-sm">
+									Page {currentPage} of{" "}
+									{Math.max(1, Math.ceil(totalCount / itemsPerPage))}
+								</span>
+							</div>
 						</div>
-						<div className="flex items-center space-x-2">
-							<Button
-								variant="outline"
-								size="sm"
-								disabled={currentPage <= 1}
-								onClick={() => setCurrentPage(currentPage - 1)}
-							>
-								Previous
-							</Button>
-							<span className="text-sm">
-								Page {currentPage} of {Math.max(1, totalPages)}
-							</span>
-							<Button
-								variant="outline"
-								size="sm"
-								disabled={currentPage >= totalPages}
-								onClick={() => setCurrentPage(currentPage + 1)}
-							>
-								Next
-							</Button>
-						</div>
-					</div>
+					)}
 				</CardContent>
 			</Card>
 
@@ -406,14 +230,18 @@ export function AdminAccountsPage() {
 			<AdminProfileModal
 				open={showAdminModal}
 				onOpenChange={setShowAdminModal}
-				admin={selectedAdmin}
+				admin={selectedAdmin ? convertToModalProps(selectedAdmin) : null}
 			/>
 
 			{/* Change Password Modal */}
 			<AdminChangePasswordModal
 				open={showPasswordModal}
 				onOpenChange={setShowPasswordModal}
-				user={selectedAdminForPassword}
+				user={
+					selectedAdminForPassword
+						? convertToModalProps(selectedAdminForPassword)
+						: null
+				}
 				userType="admin"
 			/>
 
@@ -431,17 +259,6 @@ export function AdminAccountsPage() {
 						: ""
 				}
 				isLoading={isDeleting}
-			/>
-
-			{/* Staff View Modal */}
-			<StaffViewModal
-				open={showViewModal}
-				onClose={() => setShowViewModal(false)}
-				staff={selectedAdmin}
-				onEdit={() => {
-					setShowViewModal(false);
-					setShowAdminModal(true);
-				}}
 			/>
 		</div>
 	);

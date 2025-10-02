@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/popover";
 
 interface DateRangePickerProps {
-	className?: string;
-	date?: DateRange | undefined;
-	onDateChange: (date: DateRange | undefined) => void;
-	placeholder?: string;
+	readonly className?: string;
+	readonly date?: DateRange | undefined;
+	readonly onDateChange: (date: DateRange | undefined) => void;
+	readonly placeholder?: string;
 }
 
 export function DateRangePicker({
@@ -33,8 +33,9 @@ export function DateRangePicker({
 					<Button
 						id="date"
 						variant={"outline"}
+						size="sm"
 						className={cn(
-							"w-[300px] justify-start text-left font-normal",
+							"h-8 w-[200px] justify-start text-left text-xs font-normal",
 							!date && "text-muted-foreground"
 						)}
 					>
@@ -42,11 +43,10 @@ export function DateRangePicker({
 						{date?.from ? (
 							date.to ? (
 								<>
-									{format(date.from, "LLL dd, y")} -{" "}
-									{format(date.to, "LLL dd, y")}
+									{format(date.from, "MMM dd")} - {format(date.to, "MMM dd")}
 								</>
 							) : (
-								format(date.from, "LLL dd, y")
+								format(date.from, "MMM dd, y")
 							)
 						) : (
 							<span>{placeholder}</span>
@@ -55,9 +55,8 @@ export function DateRangePicker({
 				</PopoverTrigger>
 				<PopoverContent className="w-auto p-0" align="start">
 					<Calendar
-						initialFocus
 						mode="range"
-						defaultMonth={date?.from || new Date()}
+						{...(date?.from && { defaultMonth: date.from })}
 						selected={date}
 						onSelect={onDateChange}
 						numberOfMonths={2}

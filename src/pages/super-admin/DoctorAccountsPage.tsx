@@ -1,22 +1,9 @@
 import { useState } from "react";
-import {
-	Plus,
-	MoreHorizontal,
-	Pencil,
-	Trash2,
-	Users,
-	Lock,
-} from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { Plus, Users } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
 import {
 	Card,
 	CardContent,
@@ -24,99 +11,93 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { DataTable } from "@/components/data-table/data-table";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
+	createDoctorColumns,
+	type DoctorAccount,
+} from "@/components/data-table/doctor-columns";
 import { DeleteConfirmationModal } from "@/components/modals";
 import { DoctorProfileModal } from "@/components/modals/DoctorProfileModal";
 import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
 import { useDoctors, useDeleteDoctor } from "@/hooks/api/useDoctors";
-import { toast } from "sonner";
-import {
-	SimpleFilter,
-	type SimpleFilterParams,
-} from "@/components/filters/SimpleFilter";
+import type { Doctor } from "@/types";
 
 export function DoctorAccountsPage() {
-	const [currentPage, setCurrentPage] = useState(1);
-	const [itemsPerPage] = useState(10);
+	const navigate = useNavigate();
+	const [search, setSearch] = useState("");
+
+	// Modal states
 	const [showDoctorModal, setShowDoctorModal] = useState(false);
 	const [showPasswordModal, setShowPasswordModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const [selectedDoctor, setSelectedDoctor] = useState<any | null>(null);
-	const [selectedDoctorForPassword, setSelectedDoctorForPassword] = useState<
-		any | null
-	>(null);
-
+	const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+	const [selectedDoctorForPassword, setSelectedDoctorForPassword] =
+		useState<Doctor | null>(null);
 	const [doctorToDelete, setDoctorToDelete] = useState<string | null>(null);
-	const [isDeleting, setIsDeleting] = useState(false);
-	const [filters, setFilters] = useState<SimpleFilterParams>({});
 
-	const { data: doctorsData, isLoading } = useDoctors({
-		page: currentPage,
-		limit: itemsPerPage,
-		...filters,
+	// Fetch doctors data
+	const { data: doctorsData } = useDoctors({
+		page: 1,
+		limit: 100,
+		...(search ? { search } : {}),
 	});
 
 	const deleteDoctorMutation = useDeleteDoctor();
 
-	const doctorAccounts = doctorsData?.data || [];
+	const doctors = doctorsData?.data || [];
 	const totalCount = doctorsData?.meta?.total || 0;
-	const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+	// Transform Doctor[] to DoctorAccount[] for DataTable
+	const doctorAccounts: DoctorAccount[] = doctors.map((doctor) => ({
+		id: doctor.id,
+		fullName: doctor.fullName,
+		email: doctor.email,
+		phone: doctor.phone ?? null,
+		dateOfBirth: doctor.dateOfBirth ? String(doctor.dateOfBirth) : null,
+		isMale: doctor.isMale ?? true,
+		createdAt: String(doctor.createdAt),
+		updatedAt: String(doctor.updatedAt),
+	}));
 
 	const doctorStats = {
 		total: totalCount,
-		active: doctorAccounts.length,
-		male: doctorAccounts.filter((d) => d.isMale).length,
-		female: doctorAccounts.filter((d) => !d.isMale).length,
+		active: doctors.length,
+		male: doctors.filter((d) => d.isMale).length,
+		female: doctors.filter((d) => !d.isMale).length,
 	};
 
-	const handleFiltersChange = (newFilters: SimpleFilterParams) => {
-		setFilters(newFilters);
-		setCurrentPage(1);
+	// Action handlers
+	const handleView = (doctorId: string) => {
+		void navigate({
+			to: "/super-admin/doctor-accounts/$id/view",
+			params: { id: doctorId },
+		});
 	};
 
-	const handleCreateDoctor = () => {
-		setSelectedDoctor(null);
-		setShowDoctorModal(true);
-	};
-
-	const handleEditDoctor = (doctorId: string) => {
-		const doctor = doctorAccounts.find((d) => d.id === doctorId);
-		if (doctor) {
-			setSelectedDoctor(doctor);
-			setShowDoctorModal(true);
-		}
+	const handleEdit = (doctorId: string) => {
+		void navigate({
+			to: "/super-admin/doctor-accounts/$id/edit",
+			params: { id: doctorId },
+		});
 	};
 
 	const handleChangePassword = (doctorId: string) => {
-		const doctor = doctorAccounts.find((d) => d.id === doctorId);
+		const doctor = doctors.find((d) => d.id === doctorId);
 		if (doctor) {
 			setSelectedDoctorForPassword(doctor);
 			setShowPasswordModal(true);
 		}
 	};
 
-	const handleDeleteDoctor = (doctorId: string) => {
-		const doctor = doctorAccounts.find((d) => d.id === doctorId);
-		if (doctor) {
-			setDoctorToDelete(doctorId);
-			setShowDeleteModal(true);
-		}
+	const handleDelete = (doctorId: string) => {
+		setDoctorToDelete(doctorId);
+		setShowDeleteModal(true);
 	};
 
-	const confirmDeleteDoctor = async () => {
+	const confirmDelete = async () => {
 		if (!doctorToDelete) return;
 
 		try {
-			setIsDeleting(true);
 			await deleteDoctorMutation.mutateAsync(doctorToDelete);
 
 			toast.success("Doctor deleted successfully", {
@@ -130,23 +111,21 @@ export function DoctorAccountsPage() {
 			toast.error("Failed to delete doctor", {
 				description: "Please try again.",
 			});
-		} finally {
-			setIsDeleting(false);
 		}
 	};
 
-	const handleConfirmDelete = () => {
-		void confirmDeleteDoctor();
+	const handleCreateDoctor = () => {
+		setSelectedDoctor(null);
+		setShowDoctorModal(true);
 	};
 
-	const getInitials = (name: string) => {
-		return name
-			.split(" ")
-			.map((n) => n[0])
-			.join("")
-			.toUpperCase()
-			.slice(0, 2);
-	};
+	// Create columns with action handlers
+	const columns = createDoctorColumns({
+		onView: handleView,
+		onEdit: handleEdit,
+		onChangePassword: handleChangePassword,
+		onDelete: handleDelete,
+	});
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
@@ -207,205 +186,91 @@ export function DoctorAccountsPage() {
 
 			<div className="flex items-center justify-between">
 				<div>
-					<h1 className="text-2xl font-bold tracking-tight">Doctor Accounts</h1>
-					<p className="text-muted-foreground">
+					<h1 className="text-xl font-semibold">Doctor Accounts</h1>
+					<p className="text-muted-foreground text-sm">
 						Manage doctor accounts, specialties, and availability
 					</p>
 				</div>
-				<Button onClick={handleCreateDoctor} className="gap-2">
-					<Plus className="h-4 w-4" />
+				<Button onClick={handleCreateDoctor}>
+					<Plus className="mr-2 h-4 w-4" />
 					Add Doctor
 				</Button>
 			</div>
 
 			<Card>
 				<CardHeader>
-					<CardTitle className="flex items-center gap-2">
-						<Users className="h-5 w-5" />
+					<CardTitle className="flex items-center gap-2 text-base">
+						<Users className="h-4 w-4" />
 						Doctor Management
 					</CardTitle>
-					<CardDescription>
-						A list of all doctors in the system with their specialties and
-						status.
+					<CardDescription className="text-xs">
+						A list of all doctors in the system with their contact information
+						and status
 					</CardDescription>
 				</CardHeader>
-				<CardContent>
-					<SimpleFilter
-						filters={filters}
-						onFiltersChange={handleFiltersChange}
-						showGender={true}
-						className="mb-6"
+				<CardContent className="p-4 pt-0">
+					<DataTable
+						data={doctorAccounts}
+						columns={columns}
+						searchKey="fullName"
+						searchValue={search}
+						onSearchChange={setSearch}
 					/>
-
-					<div className="rounded-md border">
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Doctor</TableHead>
-									<TableHead>Contact Info</TableHead>
-									<TableHead>Gender</TableHead>
-									<TableHead className="w-[70px]">Actions</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{isLoading ? (
-									Array.from({ length: 3 }, (_, index) => (
-										<TableRow key={`doctor-skeleton-${index}`}>
-											<TableCell>
-												<div className="flex items-center space-x-3">
-													<Skeleton className="h-10 w-10 rounded-full" />
-													<div>
-														<Skeleton className="mb-1 h-4 w-[120px]" />
-														<Skeleton className="h-3 w-[80px]" />
-													</div>
-												</div>
-											</TableCell>
-											<TableCell>
-												<Skeleton className="mb-1 h-4 w-[200px]" />
-												<Skeleton className="h-3 w-[120px]" />
-											</TableCell>
-											<TableCell>
-												<Skeleton className="h-4 w-[80px]" />
-											</TableCell>
-											<TableCell>
-												<Skeleton className="h-6 w-[80px]" />
-											</TableCell>
-											<TableCell>
-												<Skeleton className="h-8 w-8" />
-											</TableCell>
-										</TableRow>
-									))
-								) : doctorAccounts.length === 0 ? (
-									<TableRow>
-										<TableCell colSpan={5} className="h-24 text-center">
-											No doctors found
-										</TableCell>
-									</TableRow>
-								) : (
-									doctorAccounts.map((doctor) => (
-										<TableRow key={doctor.id}>
-											<TableCell>
-												<div className="flex items-center space-x-3">
-													<Avatar className="h-10 w-10">
-														<AvatarFallback>
-															{getInitials(doctor.fullName)}
-														</AvatarFallback>
-													</Avatar>
-													<div>
-														<div className="font-medium">{doctor.fullName}</div>
-														<div className="text-muted-foreground text-sm">
-															{doctor.email}
-														</div>
-													</div>
-												</div>
-											</TableCell>
-											<TableCell>
-												<div>
-													<div className="font-medium">{doctor.email}</div>
-													<div className="text-muted-foreground text-sm">
-														{doctor.phone || "No phone"}
-													</div>
-												</div>
-											</TableCell>
-											<TableCell className="text-sm font-medium">
-												{doctor.isMale ? "Male" : "Female"}
-											</TableCell>
-											<TableCell>
-												<DropdownMenu>
-													<DropdownMenuTrigger asChild>
-														<Button variant="ghost" className="h-8 w-8 p-0">
-															<MoreHorizontal className="h-4 w-4" />
-														</Button>
-													</DropdownMenuTrigger>
-													<DropdownMenuContent align="end">
-														<DropdownMenuItem
-															onClick={() => handleEditDoctor(doctor.id)}
-														>
-															<Pencil className="mr-2 h-4 w-4" />
-															Edit Profile
-														</DropdownMenuItem>
-														<DropdownMenuItem
-															onClick={() => handleChangePassword(doctor.id)}
-														>
-															<Lock className="mr-2 h-4 w-4" />
-															Change Password
-														</DropdownMenuItem>
-														<DropdownMenuSeparator />
-														<DropdownMenuItem
-															onClick={() => handleDeleteDoctor(doctor.id)}
-															className="text-red-600"
-														>
-															<Trash2 className="mr-2 h-4 w-4" />
-															Delete
-														</DropdownMenuItem>
-													</DropdownMenuContent>
-												</DropdownMenu>
-											</TableCell>
-										</TableRow>
-									))
-								)}
-							</TableBody>
-						</Table>
-					</div>
-
-					{/* Pagination */}
-					<div className="flex items-center justify-between space-x-2 py-4">
-						<div className="text-muted-foreground text-sm">
-							Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-							{Math.min(currentPage * itemsPerPage, totalCount)} of {totalCount}{" "}
-							doctor(s)
-						</div>
-						<div className="flex items-center space-x-2">
-							<Button
-								variant="outline"
-								size="sm"
-								disabled={currentPage <= 1}
-								onClick={() => setCurrentPage(currentPage - 1)}
-							>
-								Previous
-							</Button>
-							<span className="text-sm">
-								Page {currentPage} of {Math.max(1, totalPages)}
-							</span>
-							<Button
-								variant="outline"
-								size="sm"
-								disabled={currentPage >= totalPages}
-								onClick={() => setCurrentPage(currentPage + 1)}
-							>
-								Next
-							</Button>
-						</div>
-					</div>
 				</CardContent>
 			</Card>
 
 			<DoctorProfileModal
 				open={showDoctorModal}
 				onOpenChange={setShowDoctorModal}
-				doctor={selectedDoctor}
+				doctor={
+					selectedDoctor
+						? {
+								id: selectedDoctor.id,
+								fullName: selectedDoctor.fullName,
+								email: selectedDoctor.email,
+								...(selectedDoctor.phone
+									? { phone: selectedDoctor.phone }
+									: {}),
+								...(selectedDoctor.isMale !== null &&
+								selectedDoctor.isMale !== undefined
+									? { isMale: selectedDoctor.isMale }
+									: {}),
+								...(selectedDoctor.dateOfBirth
+									? { dateOfBirth: String(selectedDoctor.dateOfBirth) }
+									: {}),
+							}
+						: null
+				}
 			/>
 
 			<AdminChangePasswordModal
 				open={showPasswordModal}
 				onOpenChange={setShowPasswordModal}
-				user={selectedDoctorForPassword}
+				user={
+					selectedDoctorForPassword
+						? {
+								id: selectedDoctorForPassword.id,
+								fullName: selectedDoctorForPassword.fullName,
+								email: selectedDoctorForPassword.email,
+							}
+						: null
+				}
 				userType="doctor"
 			/>
 
 			<DeleteConfirmationModal
 				open={showDeleteModal}
 				onOpenChange={setShowDeleteModal}
-				onConfirm={handleConfirmDelete}
+				onConfirm={confirmDelete}
 				title="Delete Doctor Account"
 				description="Are you sure you want to delete this doctor account? This will also remove their appointment history."
 				itemName={
 					doctorToDelete
-						? doctorAccounts.find((d) => d.id === doctorToDelete)?.fullName ||
+						? doctors.find((d) => d.id === doctorToDelete)?.fullName ||
 							"Unknown Doctor"
 						: ""
 				}
-				isLoading={isDeleting}
+				isLoading={deleteDoctorMutation.isPending}
 			/>
 		</div>
 	);

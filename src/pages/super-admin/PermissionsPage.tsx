@@ -152,10 +152,8 @@ export function PermissionsPage() {
 			{/* Header */}
 			<div className="flex items-center justify-between">
 				<div>
-					<h1 className="text-2xl font-bold tracking-tight">
-						Permissions Management
-					</h1>
-					<p className="text-muted-foreground">
+					<h1 className="text-xl font-semibold">Permissions Management</h1>
+					<p className="text-muted-foreground text-sm">
 						Manage role-based permissions and access control
 					</p>
 				</div>
@@ -221,19 +219,19 @@ export function PermissionsPage() {
 				<CardHeader>
 					<div className="flex items-center justify-between">
 						<div>
-							<CardTitle className="flex items-center gap-2">
-								<Shield className="h-5 w-5" />
+							<CardTitle className="flex items-center gap-2 text-base">
+								<Shield className="h-4 w-4" />
 								Role Permissions Matrix
 							</CardTitle>
-							<CardDescription>
+							<CardDescription className="text-xs">
 								Configure permissions for each role in the system
 							</CardDescription>
 						</div>
 					</div>
 				</CardHeader>
-				<CardContent>
+				<CardContent className="p-4 pt-0">
 					{/* Filters */}
-					<div className="mb-6 flex items-center gap-4">
+					<div className="mb-4 flex items-center gap-4">
 						<div className="relative flex-1">
 							<Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
 							<Input

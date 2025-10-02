@@ -118,9 +118,9 @@ export function StaffViewModal({
 
 	return (
 		<Dialog open={open} onOpenChange={onClose}>
-			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[900px]">
+			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[500px]">
 				<DialogHeader>
-					<div className="flex items-start justify-between">
+					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-4">
 							<Avatar className="h-16 w-16">
 								<AvatarImage src={staff.avatar} alt={staff.fullName} />
@@ -151,7 +151,7 @@ export function StaffViewModal({
 							</div>
 						</div>
 						{onEdit && (
-							<Button variant="outline" size="sm" onClick={onEdit}>
+							<Button className="ml-auto" variant="outline" size="sm" onClick={onEdit}>
 								<Edit className="mr-2 h-4 w-4" />
 								Edit
 							</Button>
@@ -160,83 +160,7 @@ export function StaffViewModal({
 				</DialogHeader>
 
 				<div className="space-y-6">
-					{/* Quick Stats */}
-					<div className="grid grid-cols-4 gap-4">
-						{isDoctor ? (
-							<>
-								<Card>
-									<CardContent className="p-4 text-center">
-										<div className="text-2xl font-bold text-blue-600">
-											{mockStats.totalAppointments}
-										</div>
-										<p className="text-muted-foreground text-sm">Total Apps</p>
-									</CardContent>
-								</Card>
-								<Card>
-									<CardContent className="p-4 text-center">
-										<div className="text-2xl font-bold text-green-600">
-											{mockStats.totalPatients}
-										</div>
-										<p className="text-muted-foreground text-sm">Patients</p>
-									</CardContent>
-								</Card>
-								<Card>
-									<CardContent className="p-4 text-center">
-										<div className="flex items-center justify-center gap-1 text-2xl font-bold text-yellow-600">
-											{mockStats.averageRating}
-											<Star className="h-5 w-5 fill-current" />
-										</div>
-										<p className="text-muted-foreground text-sm">Rating</p>
-									</CardContent>
-								</Card>
-								<Card>
-									<CardContent className="p-4 text-center">
-										<div className="text-2xl font-bold text-purple-600">
-											{staff.experience || "N/A"}
-										</div>
-										<p className="text-muted-foreground text-sm">Years Exp</p>
-									</CardContent>
-								</Card>
-							</>
-						) : (
-							<>
-								<Card>
-									<CardContent className="p-4 text-center">
-										<div className="text-2xl font-bold text-blue-600">
-											{mockStats.tasksCompleted}
-										</div>
-										<p className="text-muted-foreground text-sm">Tasks Done</p>
-									</CardContent>
-								</Card>
-								<Card>
-									<CardContent className="p-4 text-center">
-										<div className="text-2xl font-bold text-orange-600">
-											{mockStats.pendingTasks}
-										</div>
-										<p className="text-muted-foreground text-sm">Pending</p>
-									</CardContent>
-								</Card>
-								<Card>
-									<CardContent className="p-4 text-center">
-										<div className="text-2xl font-bold text-green-600">
-											{mockStats.staffManaged}
-										</div>
-										<p className="text-muted-foreground text-sm">
-											Staff Managed
-										</p>
-									</CardContent>
-								</Card>
-								<Card>
-									<CardContent className="p-4 text-center">
-										<div className="text-2xl font-bold text-purple-600">
-											{mockStats.systemUptime}%
-										</div>
-										<p className="text-muted-foreground text-sm">Uptime</p>
-									</CardContent>
-								</Card>
-							</>
-						)}
-					</div>
+
 
 					{/* Personal Information */}
 					<Card>
@@ -305,248 +229,9 @@ export function StaffViewModal({
 						</CardContent>
 					</Card>
 
-					{/* Professional Information */}
-					{isDoctor && (
-						<Card>
-							<CardHeader>
-								<CardTitle className="flex items-center gap-2 text-base">
-									<Stethoscope className="h-4 w-4" />
-									Professional Information
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="grid grid-cols-2 gap-6">
-									<div className="space-y-4">
-										{staff.specialty && (
-											<div>
-												<p className="text-muted-foreground text-sm font-medium">
-													Specialty
-												</p>
-												<div className="mt-1">
-													<Badge
-														variant="outline"
-														className="flex w-fit items-center gap-1"
-													>
-														<Stethoscope className="h-3 w-3" />
-														{staff.specialty.name}
-													</Badge>
-													<p className="text-muted-foreground mt-1 text-xs">
-														{staff.specialty.description}
-													</p>
-												</div>
-											</div>
-										)}
-										{staff.licenseNumber && (
-											<div>
-												<p className="text-muted-foreground text-sm font-medium">
-													License Number
-												</p>
-												<p className="bg-muted mt-1 rounded px-2 py-1 font-mono text-sm">
-													{staff.licenseNumber}
-												</p>
-											</div>
-										)}
-									</div>
-									<div className="space-y-4">
-										{staff.experience && (
-											<div>
-												<p className="text-muted-foreground text-sm font-medium">
-													Experience
-												</p>
-												<div className="mt-1 flex items-center gap-2">
-													<Award className="h-4 w-4" />
-													<span className="text-sm">
-														{staff.experience} years
-													</span>
-												</div>
-											</div>
-										)}
-										{staff.education && (
-											<div>
-												<p className="text-muted-foreground text-sm font-medium">
-													Education
-												</p>
-												<div className="mt-1 flex items-center gap-2">
-													<GraduationCap className="h-4 w-4" />
-													<span className="text-sm">{staff.education}</span>
-												</div>
-											</div>
-										)}
-									</div>
-								</div>
-							</CardContent>
-						</Card>
-					)}
 
-					{/* Admin Information */}
-					{isAdmin && (
-						<Card>
-							<CardHeader>
-								<CardTitle className="flex items-center gap-2 text-base">
-									<User className="h-4 w-4" />
-									Administrative Information
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="grid grid-cols-2 gap-6">
-									<div className="space-y-4">
-										{staff.department && (
-											<div>
-												<p className="text-muted-foreground text-sm font-medium">
-													Department
-												</p>
-												<p className="mt-1 text-sm">{staff.department}</p>
-											</div>
-										)}
-										{staff.position && (
-											<div>
-												<p className="text-muted-foreground text-sm font-medium">
-													Position
-												</p>
-												<p className="mt-1 text-sm">{staff.position}</p>
-											</div>
-										)}
-									</div>
-									<div className="space-y-4">
-										<div>
-											<p className="text-muted-foreground text-sm font-medium">
-												Last Login
-											</p>
-											<p className="mt-1 text-sm">
-												{mockStats.lastLogin
-													? format(new Date(mockStats.lastLogin), "PPP 'at' p")
-													: "Never"}
-											</p>
-										</div>
-									</div>
-								</div>
-							</CardContent>
-						</Card>
-					)}
 
-					{/* Work Locations */}
-					{isDoctor && (
-						<Card>
-							<CardHeader>
-								<CardTitle className="flex items-center gap-2 text-base">
-									<MapPin className="h-4 w-4" />
-									Work Locations
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="flex flex-wrap gap-2">
-									{mockStats.workLocations?.map((location) => (
-										<Badge
-											key={location}
-											variant="outline"
-											className="flex items-center gap-1"
-										>
-											<MapPin className="h-3 w-3" />
-											{location}
-										</Badge>
-									))}
-								</div>
-							</CardContent>
-						</Card>
-					)}
 
-					{/* Recent Activity */}
-					<Card>
-						<CardHeader>
-							<CardTitle className="flex items-center gap-2 text-base">
-								<Activity className="h-4 w-4" />
-								Recent Activity
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							{isDoctor && mockStats.nextAppointment && (
-								<div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3">
-									<div className="mb-1 flex items-center gap-2 text-blue-800">
-										<CalendarDays className="h-4 w-4" />
-										<span className="text-sm font-medium">
-											Next Appointment
-										</span>
-									</div>
-									<p className="text-sm text-blue-600">
-										{format(new Date(mockStats.nextAppointment), "PPP 'at' p")}
-									</p>
-								</div>
-							)}
-							<div className="space-y-3">
-								<div className="flex items-center justify-between">
-									<div className="flex items-center gap-3">
-										<div className="h-2 w-2 rounded-full bg-green-500" />
-										<span className="text-sm">
-											{isDoctor
-												? "Last patient consultation"
-												: "System configuration updated"}
-										</span>
-									</div>
-									<span className="text-muted-foreground text-sm">
-										2 hours ago
-									</span>
-								</div>
-								<div className="flex items-center justify-between">
-									<div className="flex items-center gap-3">
-										<div className="h-2 w-2 rounded-full bg-blue-500" />
-										<span className="text-sm">
-											{isDoctor
-												? "Appointment scheduled"
-												: "Staff training completed"}
-										</span>
-									</div>
-									<span className="text-muted-foreground text-sm">
-										5 hours ago
-									</span>
-								</div>
-								<div className="flex items-center justify-between">
-									<div className="flex items-center gap-3">
-										<div className="h-2 w-2 rounded-full bg-purple-500" />
-										<span className="text-sm">
-											{isDoctor
-												? "Medical records updated"
-												: "Report generated"}
-										</span>
-									</div>
-									<span className="text-muted-foreground text-sm">
-										1 day ago
-									</span>
-								</div>
-							</div>
-						</CardContent>
-					</Card>
-
-					{/* Timeline */}
-					<Card>
-						<CardHeader>
-							<CardTitle className="flex items-center gap-2 text-base">
-								<Calendar className="h-4 w-4" />
-								Account Timeline
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div className="space-y-3">
-								<div className="flex items-center justify-between">
-									<div className="flex items-center gap-3">
-										<div className="h-2 w-2 rounded-full bg-green-500" />
-										<span className="text-sm">Account Created</span>
-									</div>
-									<span className="text-muted-foreground text-sm">
-										{format(new Date(staff.createdAt), "PPP 'at' p")}
-									</span>
-								</div>
-								<div className="flex items-center justify-between">
-									<div className="flex items-center gap-3">
-										<div className="h-2 w-2 rounded-full bg-blue-500" />
-										<span className="text-sm">Last Profile Update</span>
-									</div>
-									<span className="text-muted-foreground text-sm">
-										{format(new Date(staff.updatedAt), "PPP 'at' p")}
-									</span>
-								</div>
-							</div>
-						</CardContent>
-					</Card>
 				</div>
 			</DialogContent>
 		</Dialog>
