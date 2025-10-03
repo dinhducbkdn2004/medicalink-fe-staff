@@ -1,45 +1,20 @@
+/**
+ * Specialty API Service
+ * Handles all specialty-related API calls including info sections
+ */
+
 import { apiClient } from "./core/client";
+import type { PaginatedResponse, ApiResponse } from "@/types";
 import type {
 	Specialty,
+	InfoSection,
 	CreateSpecialtyRequest,
 	UpdateSpecialtyRequest,
-	PaginationParams,
-	PaginatedResponse,
-	ApiResponse,
-} from "@/types";
-
-// Re-export Specialty type for convenience
-export type { Specialty };
-
-export interface InfoSection {
-	id: string;
-	specialtyId: string;
-	name: string;
-	content: string;
-	order?: number;
-	createdAt: string;
-	updatedAt: string;
-}
-
-export interface CreateInfoSectionRequest {
-	specialtyId: string;
-	name: string;
-	content: string;
-	order?: number;
-}
-
-export interface UpdateInfoSectionRequest {
-	name?: string;
-	content?: string;
-	order?: number;
-}
-
-export interface SpecialtyQueryParams extends PaginationParams {
-	search?: string;
-	sortBy?: string;
-	sortOrder?: "asc" | "desc";
-	isActive?: boolean;
-}
+	CreateInfoSectionRequest,
+	UpdateInfoSectionRequest,
+	SpecialtyQueryParams,
+	SpecialtyStats,
+} from "@/types/api/specialties.types";
 
 // Get all specialties with enhanced filtering and sorting
 export const getSpecialties = (params?: SpecialtyQueryParams) =>
@@ -75,14 +50,7 @@ export const toggleSpecialtyStatus = (id: string, isActive: boolean) =>
 
 // Get specialty statistics
 export const getSpecialtyStats = () =>
-	apiClient.get<
-		ApiResponse<{
-			total: number;
-			active: number;
-			inactive: number;
-			withDoctors: number;
-		}>
-	>("/specialties/stats");
+	apiClient.get<ApiResponse<SpecialtyStats>>("/specialties/stats");
 
 // Get all info sections for a specialty
 export const getInfoSections = (specialtyId: string) =>

@@ -32,7 +32,6 @@ import { toast } from "sonner";
 import { useCreateDoctor, useUpdateDoctor } from "@/hooks/api/useDoctors";
 import type { CreateDoctorRequest, UpdateDoctorRequest } from "@/types";
 
-// Schema for profile update (no password)
 const profileFormSchema = z.object({
 	fullName: z
 		.string()
@@ -53,7 +52,6 @@ const profileFormSchema = z.object({
 	dateOfBirth: z.string().optional().or(z.literal("")),
 });
 
-// Schema for create (includes password)
 const createFormSchema = profileFormSchema.extend({
 	password: z
 		.string()
@@ -103,11 +101,9 @@ export function DoctorProfileModal({
 	const createDoctorMutation = useCreateDoctor();
 	const updateDoctorMutation = useUpdateDoctor();
 
-	// Reset form when doctor changes or modal opens
 	useEffect(() => {
 		if (open) {
 			if (doctor) {
-				// Edit mode - explicitly reset form with profile schema
 				form.reset({
 					fullName: doctor.fullName,
 					email: doctor.email,
@@ -115,10 +111,8 @@ export function DoctorProfileModal({
 					isMale: doctor.isMale ?? true,
 					dateOfBirth: doctor.dateOfBirth || "",
 				});
-				// Clear any password field that might exist
 				form.unregister("password");
 			} else {
-				// Create mode - reset form with create schema
 				form.reset({
 					fullName: "",
 					email: "",
@@ -134,7 +128,6 @@ export function DoctorProfileModal({
 	const onSubmit = async (values: ProfileFormValues | CreateFormValues) => {
 		try {
 			if (isEditing && doctor) {
-				// Update profile (no password) - only send changed fields
 				const updateData: Partial<UpdateDoctorRequest> = {};
 
 				if (values.fullName !== doctor.fullName) {
@@ -156,7 +149,6 @@ export function DoctorProfileModal({
 						: null;
 				}
 
-				// Only send request if there are changes
 				if (Object.keys(updateData).length > 0) {
 					await updateDoctorMutation.mutateAsync({
 						id: doctor.id,
@@ -168,9 +160,8 @@ export function DoctorProfileModal({
 					toast.info("No changes detected");
 				}
 			} else {
-				// Create new doctor (with password)
 				const createData: CreateDoctorRequest = {
-					fullName: values.fullName,
+					name: values.fullName, // Map fullName to name for API
 					email: values.email,
 					password: (values as CreateFormValues).password,
 					phone:
@@ -213,7 +204,7 @@ export function DoctorProfileModal({
 					<DialogDescription>
 						{isEditing
 							? "Update doctor profile information (use 'Change Password' for password changes)"
-							: "Create a new doctor account with medical permissions"}
+							: "Create a new doctor account. Only name, email, and password are required. Additional details can be added now or later when editing the profile."}
 					</DialogDescription>
 				</DialogHeader>
 
@@ -286,73 +277,82 @@ export function DoctorProfileModal({
 							/>
 						)}
 
-						<div className="grid grid-cols-2 gap-4">
-							{/* Phone */}
-							<FormField
-								control={form.control}
-								name="phone"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel className="flex items-center gap-2">
-											<Phone className="h-4 w-4" />
-											Phone
-										</FormLabel>
-										<FormControl>
-											<Input placeholder="Phone number" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+						{/* Optional fields section */}
+						<div className="space-y-4">
+							<div className="border-t pt-4">
+								<h4 className="text-muted-foreground mb-3 text-sm font-medium">
+									Additional Information (Optional)
+								</h4>
 
-							{/* Gender */}
-							<FormField
-								control={form.control}
-								name="isMale"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Gender</FormLabel>
-										<Select
-											onValueChange={(value) =>
-												field.onChange(value === "true")
-											}
-											value={
-												field.value === undefined ? "" : String(field.value)
-											}
-										>
+								<div className="grid grid-cols-2 gap-4">
+									{/* Phone */}
+									<FormField
+										control={form.control}
+										name="phone"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="flex items-center gap-2">
+													<Phone className="h-4 w-4" />
+													Phone
+												</FormLabel>
+												<FormControl>
+													<Input placeholder="Phone number" {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									{/* Gender */}
+									<FormField
+										control={form.control}
+										name="isMale"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Gender</FormLabel>
+												<Select
+													onValueChange={(value) =>
+														field.onChange(value === "true")
+													}
+													value={
+														field.value === undefined ? "" : String(field.value)
+													}
+												>
+													<FormControl>
+														<SelectTrigger>
+															<SelectValue placeholder="Select gender" />
+														</SelectTrigger>
+													</FormControl>
+													<SelectContent>
+														<SelectItem value="true">Male</SelectItem>
+														<SelectItem value="false">Female</SelectItem>
+													</SelectContent>
+												</Select>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								{/* Date of Birth */}
+								<FormField
+									control={form.control}
+									name="dateOfBirth"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel className="flex items-center gap-2">
+												<Calendar className="h-4 w-4" />
+												Date of Birth
+											</FormLabel>
 											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="Select gender" />
-												</SelectTrigger>
+												<Input type="date" {...field} />
 											</FormControl>
-											<SelectContent>
-												<SelectItem value="true">Male</SelectItem>
-												<SelectItem value="false">Female</SelectItem>
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
 						</div>
-
-						{/* Date of Birth */}
-						<FormField
-							control={form.control}
-							name="dateOfBirth"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel className="flex items-center gap-2">
-										<Calendar className="h-4 w-4" />
-										Date of Birth
-									</FormLabel>
-									<FormControl>
-										<Input type="date" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
 
 						<div className="flex justify-end gap-2 pt-4">
 							<Button

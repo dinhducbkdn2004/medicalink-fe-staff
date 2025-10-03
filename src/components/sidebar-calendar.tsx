@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useCalendarContext } from "@/components/event-calendar/calendar-context";
 import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 
 interface SidebarCalendarProps {
 	className?: string;

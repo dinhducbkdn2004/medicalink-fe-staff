@@ -73,7 +73,6 @@ export function SpecialtyModal({
 	const createSpecialtyMutation = useCreateSpecialty();
 	const updateSpecialtyMutation = useUpdateSpecialty();
 
-	// Reset form when specialty changes or modal opens
 	useEffect(() => {
 		if (open) {
 			if (specialty) {
@@ -106,8 +105,16 @@ export function SpecialtyModal({
 				});
 				toast.success("Specialty updated successfully");
 			} else {
+				// Generate slug from name (lowercase, replace spaces with hyphens)
+				const slug = values.name
+					.toLowerCase()
+					.trim()
+					.replace(/\s+/g, "-")
+					.replace(/[^a-z0-9-]/g, "");
+
 				await createSpecialtyMutation.mutateAsync({
 					name: values.name,
+					slug,
 					description: values.description || "",
 				});
 				toast.success("Specialty created successfully");

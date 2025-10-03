@@ -28,7 +28,7 @@ import {
 	type CalendarEvent,
 } from "@/components/event-calendar";
 import { StartHour, EndHour } from "@/components/event-calendar/constants";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 
 interface WeekViewProps {
 	currentDate: Date;

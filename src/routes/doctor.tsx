@@ -3,6 +3,7 @@ import { RequireRole } from "@/components/guards/RequireRole";
 import { AppSidebarDoctor } from "@/components/app-sidebar-doctor";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { CalendarProvider } from "@/components/event-calendar/calendar-context";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 
 export const Route = createFileRoute("/doctor")({
 	component: () => (
@@ -11,7 +12,10 @@ export const Route = createFileRoute("/doctor")({
 				<SidebarProvider>
 					<AppSidebarDoctor />
 					<SidebarInset>
-						<Outlet />
+						<DashboardHeader showSearch={true} />
+						<div className="flex flex-1 flex-col gap-4 p-4 pt-6">
+							<Outlet />
+						</div>
 					</SidebarInset>
 				</SidebarProvider>
 			</CalendarProvider>

@@ -213,8 +213,8 @@ export function AdminProfileModal({
 					</DialogTitle>
 					<DialogDescription>
 						{isEditing
-							? "Update admin profile information (use 'Change Password' for password changes)"
-							: "Create a new admin account with full access permissions"}
+							? "Update admin profile information. Additional details like phone and date of birth can be edited here."
+							: "Create a new admin account. Only name, email, password, and role are required. Additional details can be added now or later when editing the profile."}
 					</DialogDescription>
 				</DialogHeader>
 
@@ -284,94 +284,101 @@ export function AdminProfileModal({
 							/>
 						)}
 
-						<div className="grid grid-cols-2 gap-4">
-							<FormField
-								control={form.control}
-								name="phone"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel className="flex items-center gap-2">
-											<Phone className="h-4 w-4" />
-											Phone
-										</FormLabel>
-										<FormControl>
-											<Input placeholder="Phone number" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="isMale"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Gender</FormLabel>
-										<Select
-											onValueChange={(value) =>
-												field.onChange(value === "true")
-											}
-											value={
-												field.value === undefined ? "" : String(field.value)
-											}
-										>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="Select gender" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												<SelectItem value="true">Male</SelectItem>
-												<SelectItem value="false">Female</SelectItem>
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						</div>
-
-						<div className="grid grid-cols-2 gap-4">
-							<FormField
-								control={form.control}
-								name="role"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Role *</FormLabel>
-										<Select onValueChange={field.onChange} value={field.value}>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="Select role" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												<SelectItem value="ADMIN">Admin</SelectItem>
-												<SelectItem value="SUPER_ADMIN">Super Admin</SelectItem>
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						</div>
-
 						<FormField
 							control={form.control}
-							name="dateOfBirth"
+							name="role"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel className="flex items-center gap-2">
-										<Calendar className="h-4 w-4" />
-										Date of Birth
-									</FormLabel>
-									<FormControl>
-										<Input type="date" {...field} />
-									</FormControl>
+									<FormLabel>Role *</FormLabel>
+									<Select onValueChange={field.onChange} value={field.value}>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder="Select role" />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											<SelectItem value="ADMIN">Admin</SelectItem>
+											<SelectItem value="SUPER_ADMIN">Super Admin</SelectItem>
+										</SelectContent>
+									</Select>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
+
+						{/* Optional fields section */}
+						<div className="space-y-4">
+							<div className="border-t pt-4">
+								<h4 className="text-muted-foreground mb-3 text-sm font-medium">
+									Additional Information (Optional)
+								</h4>
+
+								<div className="grid grid-cols-2 gap-4">
+									<FormField
+										control={form.control}
+										name="phone"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="flex items-center gap-2">
+													<Phone className="h-4 w-4" />
+													Phone
+												</FormLabel>
+												<FormControl>
+													<Input placeholder="Phone number" {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="isMale"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Gender</FormLabel>
+												<Select
+													onValueChange={(value) =>
+														field.onChange(value === "true")
+													}
+													value={
+														field.value === undefined ? "" : String(field.value)
+													}
+												>
+													<FormControl>
+														<SelectTrigger>
+															<SelectValue placeholder="Select gender" />
+														</SelectTrigger>
+													</FormControl>
+													<SelectContent>
+														<SelectItem value="true">Male</SelectItem>
+														<SelectItem value="false">Female</SelectItem>
+													</SelectContent>
+												</Select>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<FormField
+									control={form.control}
+									name="dateOfBirth"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel className="flex items-center gap-2">
+												<Calendar className="h-4 w-4" />
+												Date of Birth
+											</FormLabel>
+											<FormControl>
+												<Input type="date" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+						</div>
 
 						<div className="flex justify-end gap-2 pt-4">
 							<Button

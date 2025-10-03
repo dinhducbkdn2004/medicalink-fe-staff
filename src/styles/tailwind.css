@@ -132,6 +132,7 @@
 		0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0);
 	--shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0);
 	--tracking-normal: 0em;
+	--cell-size: 40px;
 }
 
 .dark {
@@ -197,6 +198,7 @@
 		0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0),
 		0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0);
 	--shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0);
+	--cell-size: 40px;
 }
 
 @layer base {

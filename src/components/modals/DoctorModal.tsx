@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { format } from "date-fns";
 import { Stethoscope, Eye, EyeOff } from "lucide-react";
 
 import {
@@ -21,17 +22,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import { toast } from "sonner";
-import { useCreateDoctor, useUpdateDoctor } from "@/hooks/api/useDoctors";
-import type { CreateDoctorRequest, UpdateDoctorRequest } from "@/types";
+import { useCreateStaff, useUpdateStaff } from "@/hooks/api/useStaffs";
+import type { CreateStaffRequest, UpdateStaffRequest } from "@/types";
 
 const doctorFormSchema = z.object({
 	fullName: z
@@ -59,17 +53,6 @@ const doctorFormSchema = z.object({
 			message: "Please enter a valid phone number",
 		}),
 	isMale: z.string().optional().or(z.literal("")),
-	specialty: z.string().min(1, "Please select a specialty"),
-	qualification: z.string().min(1, "Qualification is required"),
-	experience: z
-		.number()
-		.min(0, "Experience must be at least 0 years")
-		.max(50, "Experience cannot exceed 50 years"),
-	consultationFee: z
-		.number()
-		.min(0, "Consultation fee must be at least 0")
-		.max(10000000, "Consultation fee cannot exceed 10,000,000 VND"),
-	isAvailable: z.boolean(),
 	dateOfBirth: z.string().optional().or(z.literal("")),
 });
 
@@ -82,42 +65,22 @@ interface DoctorModalProps {
 		id: string;
 		fullName: string;
 		email: string;
-		phone?: string;
-		specialty: string;
-		qualification?: string;
-		experience: number;
-		consultationFee?: number;
-		isAvailable: boolean;
-		dateOfBirth?: string;
+		phone?: string | null;
+		role: string;
+		isMale?: boolean | null;
+		dateOfBirth?: Date | null;
+		createdAt: Date;
+		updatedAt: Date;
 	} | null;
 }
-
-// Mock specialties data
-const specialties = [
-	"Cardiology",
-	"Dermatology",
-	"Emergency Medicine",
-	"Endocrinology",
-	"Gastroenterology",
-	"General Medicine",
-	"Neurology",
-	"Obstetrics & Gynecology",
-	"Orthopedics",
-	"Pediatrics",
-	"Psychiatry",
-	"Pulmonology",
-	"Radiology",
-	"Surgery",
-	"Urology",
-];
 
 export function DoctorModal({
 	open,
 	onOpenChange,
 	doctor,
 }: Readonly<DoctorModalProps>) {
-	const createDoctorMutation = useCreateDoctor();
-	const updateDoctorMutation = useUpdateDoctor();
+	const createStaffMutation = useCreateStaff();
+	const updateStaffMutation = useUpdateStaff();
 	const [showPassword, setShowPassword] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const isEditing = !!doctor;
@@ -130,12 +93,10 @@ export function DoctorModal({
 			email: doctor?.email || "",
 			password: "",
 			phone: doctor?.phone || "",
-			specialty: doctor?.specialty || "",
-			qualification: doctor?.qualification || "",
-			experience: doctor?.experience || 0,
-			consultationFee: doctor?.consultationFee || 0,
-			isAvailable: doctor?.isAvailable ?? true,
-			dateOfBirth: doctor?.dateOfBirth || "",
+			isMale: doctor?.isMale ? "true" : "false",
+			dateOfBirth: doctor?.dateOfBirth
+				? format(new Date(doctor.dateOfBirth), "yyyy-MM-dd")
+				: "",
 		},
 	});
 
@@ -146,12 +107,10 @@ export function DoctorModal({
 				email: doctor.email,
 				password: "",
 				phone: doctor.phone || "",
-				specialty: doctor.specialty,
-				qualification: doctor.qualification || "",
-				experience: doctor.experience,
-				consultationFee: doctor.consultationFee || 0,
-				isAvailable: doctor.isAvailable,
-				dateOfBirth: doctor.dateOfBirth || "",
+				isMale: doctor.isMale ? "true" : "false",
+				dateOfBirth: doctor.dateOfBirth
+					? format(new Date(doctor.dateOfBirth), "yyyy-MM-dd")
+					: "",
 			});
 		} else {
 			form.reset({
@@ -159,42 +118,47 @@ export function DoctorModal({
 				email: "",
 				password: "",
 				phone: "",
-				specialty: "",
-				experience: 0,
-				consultationFee: 0,
-				isAvailable: true,
+				isMale: "",
 				dateOfBirth: "",
 			});
 		}
 	}, [doctor, form]);
 
-	// Helper functions to convert form values to API format
 	const convertDateValue = (dateString?: string): Date | null => {
 		if (!dateString || dateString === "") return null;
 		return new Date(dateString);
 	};
 
-	const createUpdateData = (values: DoctorFormValues): UpdateDoctorRequest => {
+	const createUpdateData = (values: DoctorFormValues): UpdateStaffRequest => {
 		return {
 			fullName: values.fullName,
 			email: values.email,
-			specialty: values.specialty,
-			qualification: values.qualification,
-			experience: values.experience,
-			consultationFee: values.consultationFee,
-			isAvailable: values.isAvailable,
-			phone: values.phone && values.phone.trim() !== "" ? values.phone : null,
+			phone:
+				values.phone && values.phone.trim() !== "" ? values.phone : undefined,
+			isMale:
+				values.isMale === "true"
+					? true
+					: values.isMale === "false"
+						? false
+						: undefined,
 			dateOfBirth: convertDateValue(values.dateOfBirth),
 		};
 	};
 
-	const createCreateData = (values: DoctorFormValues): CreateDoctorRequest => {
+	const createCreateData = (values: DoctorFormValues): CreateStaffRequest => {
 		return {
 			fullName: values.fullName,
 			email: values.email,
 			password: values.password,
-			phone: values.phone && values.phone.trim() !== "" ? values.phone : null,
-			isMale: values.isMale === "" ? null : values.isMale === "true",
+			role: "DOCTOR",
+			phone:
+				values.phone && values.phone.trim() !== "" ? values.phone : undefined,
+			isMale:
+				values.isMale === "true"
+					? true
+					: values.isMale === "false"
+						? false
+						: undefined,
 			dateOfBirth: convertDateValue(values.dateOfBirth),
 		};
 	};
@@ -203,7 +167,7 @@ export function DoctorModal({
 		if (!doctor) return;
 
 		const updateData = createUpdateData(values);
-		await updateDoctorMutation.mutateAsync({
+		await updateStaffMutation.mutateAsync({
 			id: doctor.id,
 			data: updateData,
 		});
@@ -215,7 +179,7 @@ export function DoctorModal({
 
 	const handleCreateDoctor = async (values: DoctorFormValues) => {
 		const createData = createCreateData(values);
-		await createDoctorMutation.mutateAsync(createData);
+		await createStaffMutation.mutateAsync(createData);
 
 		toast.success("Doctor created successfully", {
 			description: `Dr. ${values.fullName} has been added to the system.`,
@@ -398,119 +362,6 @@ export function DoctorModal({
 							<h3 className="text-lg font-semibold">
 								Professional Information
 							</h3>
-
-							{/* Specialty */}
-							<FormField
-								control={form.control}
-								name="specialty"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Specialty *</FormLabel>
-										<Select onValueChange={field.onChange} value={field.value}>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="Select specialty" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												{specialties.map((specialty) => (
-													<SelectItem key={specialty} value={specialty}>
-														{specialty}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							{/* Qualification */}
-							<FormField
-								control={form.control}
-								name="qualification"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Qualification *</FormLabel>
-										<FormControl>
-											<Input {...field} placeholder="MD, PhD" />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							{/* Experience & Consultation Fee */}
-							<div className="grid grid-cols-2 gap-4">
-								<FormField
-									control={form.control}
-									name="experience"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Experience (years) *</FormLabel>
-											<FormControl>
-												<Input
-													{...field}
-													type="number"
-													placeholder="10"
-													min="0"
-													max="50"
-													onChange={(e) =>
-														field.onChange(Number(e.target.value))
-													}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
-									name="consultationFee"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Consultation Fee (VND) *</FormLabel>
-											<FormControl>
-												<Input
-													{...field}
-													type="number"
-													placeholder="500000"
-													min="0"
-													max="10000000"
-													onChange={(e) =>
-														field.onChange(Number(e.target.value))
-													}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							{/* Availability */}
-							<FormField
-								control={form.control}
-								name="isAvailable"
-								render={({ field }) => (
-									<FormItem className="flex flex-row items-start space-y-0 space-x-3">
-										<FormControl>
-											<Checkbox
-												checked={field.value}
-												onCheckedChange={field.onChange}
-											/>
-										</FormControl>
-										<div className="space-y-1 leading-none">
-											<FormLabel>Available for consultations</FormLabel>
-											<p className="text-muted-foreground text-sm">
-												Check this if the doctor is currently available for
-												appointments.
-											</p>
-										</div>
-									</FormItem>
-								)}
-							/>
 						</div>
 
 						{/* Actions */}

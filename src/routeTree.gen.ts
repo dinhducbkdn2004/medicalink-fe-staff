@@ -28,6 +28,15 @@ import { Route as SuperAdminAdminAccountsRouteImport } from './routes/super-admi
 import { Route as DoctorDashboardRouteImport } from './routes/doctor/dashboard'
 import { Route as AdminDoctorAccountsRouteImport } from './routes/admin/doctor-accounts'
 import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
+import { Route as SuperAdminDoctorAccountsIndexRouteImport } from './routes/super-admin/doctor-accounts.index'
+import { Route as SuperAdminAdminAccountsIndexRouteImport } from './routes/super-admin/admin-accounts.index'
+import { Route as SuperAdminDoctorAccountsCreateRouteImport } from './routes/super-admin/doctor-accounts.create'
+import { Route as SuperAdminAdminAccountsCreateRouteImport } from './routes/super-admin/admin-accounts.create'
+import { Route as AdminDoctorAccountsCreateRouteImport } from './routes/admin/doctor-accounts.create'
+import { Route as SuperAdminDoctorAccountsIdViewRouteImport } from './routes/super-admin/doctor-accounts.$id.view'
+import { Route as SuperAdminDoctorAccountsIdEditRouteImport } from './routes/super-admin/doctor-accounts.$id.edit'
+import { Route as SuperAdminAdminAccountsIdViewRouteImport } from './routes/super-admin/admin-accounts.$id.view'
+import { Route as SuperAdminAdminAccountsIdEditRouteImport } from './routes/super-admin/admin-accounts.$id.edit'
 
 const SuperAdminRoute = SuperAdminRouteImport.update({
   id: '/super-admin',
@@ -125,6 +134,60 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRoute,
 } as any)
+const SuperAdminDoctorAccountsIndexRoute =
+  SuperAdminDoctorAccountsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => SuperAdminDoctorAccountsRoute,
+  } as any)
+const SuperAdminAdminAccountsIndexRoute =
+  SuperAdminAdminAccountsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => SuperAdminAdminAccountsRoute,
+  } as any)
+const SuperAdminDoctorAccountsCreateRoute =
+  SuperAdminDoctorAccountsCreateRouteImport.update({
+    id: '/create',
+    path: '/create',
+    getParentRoute: () => SuperAdminDoctorAccountsRoute,
+  } as any)
+const SuperAdminAdminAccountsCreateRoute =
+  SuperAdminAdminAccountsCreateRouteImport.update({
+    id: '/create',
+    path: '/create',
+    getParentRoute: () => SuperAdminAdminAccountsRoute,
+  } as any)
+const AdminDoctorAccountsCreateRoute =
+  AdminDoctorAccountsCreateRouteImport.update({
+    id: '/create',
+    path: '/create',
+    getParentRoute: () => AdminDoctorAccountsRoute,
+  } as any)
+const SuperAdminDoctorAccountsIdViewRoute =
+  SuperAdminDoctorAccountsIdViewRouteImport.update({
+    id: '/$id/view',
+    path: '/$id/view',
+    getParentRoute: () => SuperAdminDoctorAccountsRoute,
+  } as any)
+const SuperAdminDoctorAccountsIdEditRoute =
+  SuperAdminDoctorAccountsIdEditRouteImport.update({
+    id: '/$id/edit',
+    path: '/$id/edit',
+    getParentRoute: () => SuperAdminDoctorAccountsRoute,
+  } as any)
+const SuperAdminAdminAccountsIdViewRoute =
+  SuperAdminAdminAccountsIdViewRouteImport.update({
+    id: '/$id/view',
+    path: '/$id/view',
+    getParentRoute: () => SuperAdminAdminAccountsRoute,
+  } as any)
+const SuperAdminAdminAccountsIdEditRoute =
+  SuperAdminAdminAccountsIdEditRouteImport.update({
+    id: '/$id/edit',
+    path: '/$id/edit',
+    getParentRoute: () => SuperAdminAdminAccountsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -133,12 +196,12 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/super-admin': typeof SuperAdminRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/doctor-accounts': typeof AdminDoctorAccountsRoute
+  '/admin/doctor-accounts': typeof AdminDoctorAccountsRouteWithChildren
   '/doctor/dashboard': typeof DoctorDashboardRoute
-  '/super-admin/admin-accounts': typeof SuperAdminAdminAccountsRoute
+  '/super-admin/admin-accounts': typeof SuperAdminAdminAccountsRouteWithChildren
   '/super-admin/appointments': typeof SuperAdminAppointmentsRoute
   '/super-admin/dashboard': typeof SuperAdminDashboardRoute
-  '/super-admin/doctor-accounts': typeof SuperAdminDoctorAccountsRoute
+  '/super-admin/doctor-accounts': typeof SuperAdminDoctorAccountsRouteWithChildren
   '/super-admin/permissions': typeof SuperAdminPermissionsRoute
   '/super-admin/schedules': typeof SuperAdminSchedulesRoute
   '/super-admin/specialties': typeof SuperAdminSpecialtiesRoute
@@ -146,17 +209,24 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/doctor/': typeof DoctorIndexRoute
   '/super-admin/': typeof SuperAdminIndexRoute
+  '/admin/doctor-accounts/create': typeof AdminDoctorAccountsCreateRoute
+  '/super-admin/admin-accounts/create': typeof SuperAdminAdminAccountsCreateRoute
+  '/super-admin/doctor-accounts/create': typeof SuperAdminDoctorAccountsCreateRoute
+  '/super-admin/admin-accounts/': typeof SuperAdminAdminAccountsIndexRoute
+  '/super-admin/doctor-accounts/': typeof SuperAdminDoctorAccountsIndexRoute
+  '/super-admin/admin-accounts/$id/edit': typeof SuperAdminAdminAccountsIdEditRoute
+  '/super-admin/admin-accounts/$id/view': typeof SuperAdminAdminAccountsIdViewRoute
+  '/super-admin/doctor-accounts/$id/edit': typeof SuperAdminDoctorAccountsIdEditRoute
+  '/super-admin/doctor-accounts/$id/view': typeof SuperAdminDoctorAccountsIdViewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/doctor-accounts': typeof AdminDoctorAccountsRoute
+  '/admin/doctor-accounts': typeof AdminDoctorAccountsRouteWithChildren
   '/doctor/dashboard': typeof DoctorDashboardRoute
-  '/super-admin/admin-accounts': typeof SuperAdminAdminAccountsRoute
   '/super-admin/appointments': typeof SuperAdminAppointmentsRoute
   '/super-admin/dashboard': typeof SuperAdminDashboardRoute
-  '/super-admin/doctor-accounts': typeof SuperAdminDoctorAccountsRoute
   '/super-admin/permissions': typeof SuperAdminPermissionsRoute
   '/super-admin/schedules': typeof SuperAdminSchedulesRoute
   '/super-admin/specialties': typeof SuperAdminSpecialtiesRoute
@@ -164,6 +234,15 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/doctor': typeof DoctorIndexRoute
   '/super-admin': typeof SuperAdminIndexRoute
+  '/admin/doctor-accounts/create': typeof AdminDoctorAccountsCreateRoute
+  '/super-admin/admin-accounts/create': typeof SuperAdminAdminAccountsCreateRoute
+  '/super-admin/doctor-accounts/create': typeof SuperAdminDoctorAccountsCreateRoute
+  '/super-admin/admin-accounts': typeof SuperAdminAdminAccountsIndexRoute
+  '/super-admin/doctor-accounts': typeof SuperAdminDoctorAccountsIndexRoute
+  '/super-admin/admin-accounts/$id/edit': typeof SuperAdminAdminAccountsIdEditRoute
+  '/super-admin/admin-accounts/$id/view': typeof SuperAdminAdminAccountsIdViewRoute
+  '/super-admin/doctor-accounts/$id/edit': typeof SuperAdminDoctorAccountsIdEditRoute
+  '/super-admin/doctor-accounts/$id/view': typeof SuperAdminDoctorAccountsIdViewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -173,12 +252,12 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/super-admin': typeof SuperAdminRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/doctor-accounts': typeof AdminDoctorAccountsRoute
+  '/admin/doctor-accounts': typeof AdminDoctorAccountsRouteWithChildren
   '/doctor/dashboard': typeof DoctorDashboardRoute
-  '/super-admin/admin-accounts': typeof SuperAdminAdminAccountsRoute
+  '/super-admin/admin-accounts': typeof SuperAdminAdminAccountsRouteWithChildren
   '/super-admin/appointments': typeof SuperAdminAppointmentsRoute
   '/super-admin/dashboard': typeof SuperAdminDashboardRoute
-  '/super-admin/doctor-accounts': typeof SuperAdminDoctorAccountsRoute
+  '/super-admin/doctor-accounts': typeof SuperAdminDoctorAccountsRouteWithChildren
   '/super-admin/permissions': typeof SuperAdminPermissionsRoute
   '/super-admin/schedules': typeof SuperAdminSchedulesRoute
   '/super-admin/specialties': typeof SuperAdminSpecialtiesRoute
@@ -186,6 +265,15 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/doctor/': typeof DoctorIndexRoute
   '/super-admin/': typeof SuperAdminIndexRoute
+  '/admin/doctor-accounts/create': typeof AdminDoctorAccountsCreateRoute
+  '/super-admin/admin-accounts/create': typeof SuperAdminAdminAccountsCreateRoute
+  '/super-admin/doctor-accounts/create': typeof SuperAdminDoctorAccountsCreateRoute
+  '/super-admin/admin-accounts/': typeof SuperAdminAdminAccountsIndexRoute
+  '/super-admin/doctor-accounts/': typeof SuperAdminDoctorAccountsIndexRoute
+  '/super-admin/admin-accounts/$id/edit': typeof SuperAdminAdminAccountsIdEditRoute
+  '/super-admin/admin-accounts/$id/view': typeof SuperAdminAdminAccountsIdViewRoute
+  '/super-admin/doctor-accounts/$id/edit': typeof SuperAdminDoctorAccountsIdEditRoute
+  '/super-admin/doctor-accounts/$id/view': typeof SuperAdminDoctorAccountsIdViewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -209,6 +297,15 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/doctor/'
     | '/super-admin/'
+    | '/admin/doctor-accounts/create'
+    | '/super-admin/admin-accounts/create'
+    | '/super-admin/doctor-accounts/create'
+    | '/super-admin/admin-accounts/'
+    | '/super-admin/doctor-accounts/'
+    | '/super-admin/admin-accounts/$id/edit'
+    | '/super-admin/admin-accounts/$id/view'
+    | '/super-admin/doctor-accounts/$id/edit'
+    | '/super-admin/doctor-accounts/$id/view'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -216,10 +313,8 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/doctor-accounts'
     | '/doctor/dashboard'
-    | '/super-admin/admin-accounts'
     | '/super-admin/appointments'
     | '/super-admin/dashboard'
-    | '/super-admin/doctor-accounts'
     | '/super-admin/permissions'
     | '/super-admin/schedules'
     | '/super-admin/specialties'
@@ -227,6 +322,15 @@ export interface FileRouteTypes {
     | '/admin'
     | '/doctor'
     | '/super-admin'
+    | '/admin/doctor-accounts/create'
+    | '/super-admin/admin-accounts/create'
+    | '/super-admin/doctor-accounts/create'
+    | '/super-admin/admin-accounts'
+    | '/super-admin/doctor-accounts'
+    | '/super-admin/admin-accounts/$id/edit'
+    | '/super-admin/admin-accounts/$id/view'
+    | '/super-admin/doctor-accounts/$id/edit'
+    | '/super-admin/doctor-accounts/$id/view'
   id:
     | '__root__'
     | '/'
@@ -248,6 +352,15 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/doctor/'
     | '/super-admin/'
+    | '/admin/doctor-accounts/create'
+    | '/super-admin/admin-accounts/create'
+    | '/super-admin/doctor-accounts/create'
+    | '/super-admin/admin-accounts/'
+    | '/super-admin/doctor-accounts/'
+    | '/super-admin/admin-accounts/$id/edit'
+    | '/super-admin/admin-accounts/$id/view'
+    | '/super-admin/doctor-accounts/$id/edit'
+    | '/super-admin/doctor-accounts/$id/view'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -393,18 +506,92 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/super-admin/doctor-accounts/': {
+      id: '/super-admin/doctor-accounts/'
+      path: '/'
+      fullPath: '/super-admin/doctor-accounts/'
+      preLoaderRoute: typeof SuperAdminDoctorAccountsIndexRouteImport
+      parentRoute: typeof SuperAdminDoctorAccountsRoute
+    }
+    '/super-admin/admin-accounts/': {
+      id: '/super-admin/admin-accounts/'
+      path: '/'
+      fullPath: '/super-admin/admin-accounts/'
+      preLoaderRoute: typeof SuperAdminAdminAccountsIndexRouteImport
+      parentRoute: typeof SuperAdminAdminAccountsRoute
+    }
+    '/super-admin/doctor-accounts/create': {
+      id: '/super-admin/doctor-accounts/create'
+      path: '/create'
+      fullPath: '/super-admin/doctor-accounts/create'
+      preLoaderRoute: typeof SuperAdminDoctorAccountsCreateRouteImport
+      parentRoute: typeof SuperAdminDoctorAccountsRoute
+    }
+    '/super-admin/admin-accounts/create': {
+      id: '/super-admin/admin-accounts/create'
+      path: '/create'
+      fullPath: '/super-admin/admin-accounts/create'
+      preLoaderRoute: typeof SuperAdminAdminAccountsCreateRouteImport
+      parentRoute: typeof SuperAdminAdminAccountsRoute
+    }
+    '/admin/doctor-accounts/create': {
+      id: '/admin/doctor-accounts/create'
+      path: '/create'
+      fullPath: '/admin/doctor-accounts/create'
+      preLoaderRoute: typeof AdminDoctorAccountsCreateRouteImport
+      parentRoute: typeof AdminDoctorAccountsRoute
+    }
+    '/super-admin/doctor-accounts/$id/view': {
+      id: '/super-admin/doctor-accounts/$id/view'
+      path: '/$id/view'
+      fullPath: '/super-admin/doctor-accounts/$id/view'
+      preLoaderRoute: typeof SuperAdminDoctorAccountsIdViewRouteImport
+      parentRoute: typeof SuperAdminDoctorAccountsRoute
+    }
+    '/super-admin/doctor-accounts/$id/edit': {
+      id: '/super-admin/doctor-accounts/$id/edit'
+      path: '/$id/edit'
+      fullPath: '/super-admin/doctor-accounts/$id/edit'
+      preLoaderRoute: typeof SuperAdminDoctorAccountsIdEditRouteImport
+      parentRoute: typeof SuperAdminDoctorAccountsRoute
+    }
+    '/super-admin/admin-accounts/$id/view': {
+      id: '/super-admin/admin-accounts/$id/view'
+      path: '/$id/view'
+      fullPath: '/super-admin/admin-accounts/$id/view'
+      preLoaderRoute: typeof SuperAdminAdminAccountsIdViewRouteImport
+      parentRoute: typeof SuperAdminAdminAccountsRoute
+    }
+    '/super-admin/admin-accounts/$id/edit': {
+      id: '/super-admin/admin-accounts/$id/edit'
+      path: '/$id/edit'
+      fullPath: '/super-admin/admin-accounts/$id/edit'
+      preLoaderRoute: typeof SuperAdminAdminAccountsIdEditRouteImport
+      parentRoute: typeof SuperAdminAdminAccountsRoute
+    }
   }
 }
 
+interface AdminDoctorAccountsRouteChildren {
+  AdminDoctorAccountsCreateRoute: typeof AdminDoctorAccountsCreateRoute
+}
+
+const AdminDoctorAccountsRouteChildren: AdminDoctorAccountsRouteChildren = {
+  AdminDoctorAccountsCreateRoute: AdminDoctorAccountsCreateRoute,
+}
+
+const AdminDoctorAccountsRouteWithChildren =
+  AdminDoctorAccountsRoute._addFileChildren(AdminDoctorAccountsRouteChildren)
+
 interface AdminRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
-  AdminDoctorAccountsRoute: typeof AdminDoctorAccountsRoute
+  AdminDoctorAccountsRoute: typeof AdminDoctorAccountsRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminDashboardRoute: AdminDashboardRoute,
-  AdminDoctorAccountsRoute: AdminDoctorAccountsRoute,
+  AdminDoctorAccountsRoute: AdminDoctorAccountsRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
 }
 
@@ -423,11 +610,51 @@ const DoctorRouteChildren: DoctorRouteChildren = {
 const DoctorRouteWithChildren =
   DoctorRoute._addFileChildren(DoctorRouteChildren)
 
+interface SuperAdminAdminAccountsRouteChildren {
+  SuperAdminAdminAccountsCreateRoute: typeof SuperAdminAdminAccountsCreateRoute
+  SuperAdminAdminAccountsIndexRoute: typeof SuperAdminAdminAccountsIndexRoute
+  SuperAdminAdminAccountsIdEditRoute: typeof SuperAdminAdminAccountsIdEditRoute
+  SuperAdminAdminAccountsIdViewRoute: typeof SuperAdminAdminAccountsIdViewRoute
+}
+
+const SuperAdminAdminAccountsRouteChildren: SuperAdminAdminAccountsRouteChildren =
+  {
+    SuperAdminAdminAccountsCreateRoute: SuperAdminAdminAccountsCreateRoute,
+    SuperAdminAdminAccountsIndexRoute: SuperAdminAdminAccountsIndexRoute,
+    SuperAdminAdminAccountsIdEditRoute: SuperAdminAdminAccountsIdEditRoute,
+    SuperAdminAdminAccountsIdViewRoute: SuperAdminAdminAccountsIdViewRoute,
+  }
+
+const SuperAdminAdminAccountsRouteWithChildren =
+  SuperAdminAdminAccountsRoute._addFileChildren(
+    SuperAdminAdminAccountsRouteChildren,
+  )
+
+interface SuperAdminDoctorAccountsRouteChildren {
+  SuperAdminDoctorAccountsCreateRoute: typeof SuperAdminDoctorAccountsCreateRoute
+  SuperAdminDoctorAccountsIndexRoute: typeof SuperAdminDoctorAccountsIndexRoute
+  SuperAdminDoctorAccountsIdEditRoute: typeof SuperAdminDoctorAccountsIdEditRoute
+  SuperAdminDoctorAccountsIdViewRoute: typeof SuperAdminDoctorAccountsIdViewRoute
+}
+
+const SuperAdminDoctorAccountsRouteChildren: SuperAdminDoctorAccountsRouteChildren =
+  {
+    SuperAdminDoctorAccountsCreateRoute: SuperAdminDoctorAccountsCreateRoute,
+    SuperAdminDoctorAccountsIndexRoute: SuperAdminDoctorAccountsIndexRoute,
+    SuperAdminDoctorAccountsIdEditRoute: SuperAdminDoctorAccountsIdEditRoute,
+    SuperAdminDoctorAccountsIdViewRoute: SuperAdminDoctorAccountsIdViewRoute,
+  }
+
+const SuperAdminDoctorAccountsRouteWithChildren =
+  SuperAdminDoctorAccountsRoute._addFileChildren(
+    SuperAdminDoctorAccountsRouteChildren,
+  )
+
 interface SuperAdminRouteChildren {
-  SuperAdminAdminAccountsRoute: typeof SuperAdminAdminAccountsRoute
+  SuperAdminAdminAccountsRoute: typeof SuperAdminAdminAccountsRouteWithChildren
   SuperAdminAppointmentsRoute: typeof SuperAdminAppointmentsRoute
   SuperAdminDashboardRoute: typeof SuperAdminDashboardRoute
-  SuperAdminDoctorAccountsRoute: typeof SuperAdminDoctorAccountsRoute
+  SuperAdminDoctorAccountsRoute: typeof SuperAdminDoctorAccountsRouteWithChildren
   SuperAdminPermissionsRoute: typeof SuperAdminPermissionsRoute
   SuperAdminSchedulesRoute: typeof SuperAdminSchedulesRoute
   SuperAdminSpecialtiesRoute: typeof SuperAdminSpecialtiesRoute
@@ -436,10 +663,10 @@ interface SuperAdminRouteChildren {
 }
 
 const SuperAdminRouteChildren: SuperAdminRouteChildren = {
-  SuperAdminAdminAccountsRoute: SuperAdminAdminAccountsRoute,
+  SuperAdminAdminAccountsRoute: SuperAdminAdminAccountsRouteWithChildren,
   SuperAdminAppointmentsRoute: SuperAdminAppointmentsRoute,
   SuperAdminDashboardRoute: SuperAdminDashboardRoute,
-  SuperAdminDoctorAccountsRoute: SuperAdminDoctorAccountsRoute,
+  SuperAdminDoctorAccountsRoute: SuperAdminDoctorAccountsRouteWithChildren,
   SuperAdminPermissionsRoute: SuperAdminPermissionsRoute,
   SuperAdminSchedulesRoute: SuperAdminSchedulesRoute,
   SuperAdminSpecialtiesRoute: SuperAdminSpecialtiesRoute,

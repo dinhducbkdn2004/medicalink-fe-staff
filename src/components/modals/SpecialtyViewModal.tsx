@@ -19,7 +19,7 @@ import {
 	Edit,
 } from "lucide-react";
 import { format } from "date-fns";
-import type { Specialty, InfoSection } from "@/api/specialties";
+import type { Specialty, InfoSection } from "@/types";
 
 interface SpecialtyViewModalProps {
 	open: boolean;
@@ -119,7 +119,7 @@ export function SpecialtyViewModal({
 											{index > 0 && <Separator className="my-4" />}
 											<div className="space-y-2">
 												<div className="flex items-center justify-between">
-													<h4 className="font-medium">{section.name}</h4>
+													<h4 className="font-medium">{section.title}</h4>
 													<Badge variant="outline" className="text-xs">
 														Order: {section.order || index + 1}
 													</Badge>

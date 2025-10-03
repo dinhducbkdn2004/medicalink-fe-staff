@@ -11,13 +11,7 @@
     "prefix": ""
   },
   "aliases": {
-    "components": "src/components",
-    "utils": "src/lib/utilities"
-  },
-  "registries": {
-    "@originui": "https://originui.com/r/{name}.json",
-    "@magicui": "https://magicui.design/r/{name}.json",
-    "@aceternity": "https://ui.aceternity.com/r/{name}.json",
-    "@kokonut": "https://kokonutui.com/r/{name}.json"
+    "components": "@/components",
+    "utils": "@/lib"
   }
 }

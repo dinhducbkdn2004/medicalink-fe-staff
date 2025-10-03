@@ -1,21 +1,20 @@
+/**
+ * Work Location API Service
+ * Handles all work location-related API calls
+ */
+
 import { apiClient } from "./core/client";
+import type { PaginatedResponse, ApiResponse } from "@/types";
 import type {
 	WorkLocation,
 	CreateWorkLocationRequest,
 	UpdateWorkLocationRequest,
-	PaginationParams,
-	PaginatedResponse,
-	ApiResponse,
-} from "@/types";
+	WorkLocationQueryParams,
+	WorkLocationStats,
+} from "@/types/api/locations.types";
 
 // Get all work locations with pagination
-export const getWorkLocations = (
-	params?: PaginationParams & {
-		search?: string;
-		isActive?: boolean;
-		includeMetadata?: boolean;
-	}
-) =>
+export const getWorkLocations = (params?: WorkLocationQueryParams) =>
 	apiClient.get<ApiResponse<PaginatedResponse<WorkLocation>>>(
 		"/work-locations",
 		{
@@ -47,9 +46,4 @@ export const deleteWorkLocation = (id: string) =>
 
 // Get work location statistics
 export const getWorkLocationStats = () =>
-	apiClient.get<
-		ApiResponse<{
-			total: number;
-			recentlyCreated: number;
-		}>
-	>("/work-locations/stats");
+	apiClient.get<ApiResponse<WorkLocationStats>>("/work-locations/stats");

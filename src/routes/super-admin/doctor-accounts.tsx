@@ -1,11 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { DoctorAccountsPage } from "@/pages/super-admin/DoctorAccountsPage";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { RequireRole } from "@/components/guards/RequireRole";
 
 export const Route = createFileRoute("/super-admin/doctor-accounts")({
-	component: () => (
-		<RequireRole roles={["SUPER_ADMIN"]}>
-			<DoctorAccountsPage />
-		</RequireRole>
-	),
+	component: DoctorAccountsLayout,
 });
+
+function DoctorAccountsLayout() {
+	return (
+		<RequireRole roles={["SUPER_ADMIN"]}>
+			<Outlet />
+		</RequireRole>
+	);
+}

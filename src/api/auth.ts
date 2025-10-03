@@ -34,6 +34,13 @@ export const getCurrentUser = () =>
 export const updateProfile = (data: Partial<StaffAccount>) =>
 	apiClient.patch<ApiResponse<StaffAccount>>("/auth/profile", data);
 
+// Verify password
+export const verifyPassword = (password: string) =>
+	apiClient.post<ApiResponse<{ valid: boolean; message: string }>>(
+		"/auth/verify-password",
+		{ password }
+	);
+
 // Forgot password
 export const forgotPassword = (email: string) =>
 	apiClient.post<ApiResponse<{ message: string }>>("/auth/forgot-password", {
