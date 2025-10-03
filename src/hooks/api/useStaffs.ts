@@ -1,3 +1,8 @@
+/**
+ * Staff Hooks
+ * React Query hooks for staff-related API calls
+ */
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
 	getStaffs,
@@ -9,40 +14,22 @@ import {
 	getStaffStats,
 } from "@/api/staffs";
 import { CACHE_TIME } from "@/constants/api";
-import type { CreateStaffRequest, UpdateStaffRequest } from "@/types";
+import type {
+	CreateStaffRequest,
+	UpdateStaffRequest,
+	StaffQueryParams,
+} from "@/types/api/staffs.types";
 
 export const staffKeys = {
 	all: ["staffs"] as const,
 	lists: () => [...staffKeys.all, "list"] as const,
-	list: (params?: {
-		page?: number;
-		limit?: number;
-		search?: string;
-		email?: string;
-		isMale?: boolean;
-		createdFrom?: string;
-		createdTo?: string;
-		role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
-		sortBy?: "createdAt" | "fullName" | "email";
-		sortOrder?: "asc" | "desc";
-	}) => [...staffKeys.lists(), params] as const,
+	list: (params?: StaffQueryParams) => [...staffKeys.lists(), params] as const,
 	details: () => [...staffKeys.all, "detail"] as const,
 	detail: (id: string) => [...staffKeys.details(), id] as const,
 	stats: () => [...staffKeys.all, "stats"] as const,
 };
 
-export const useStaffs = (params?: {
-	page?: number;
-	limit?: number;
-	search?: string;
-	email?: string;
-	isMale?: boolean;
-	createdFrom?: string;
-	createdTo?: string;
-	role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
-	sortBy?: "createdAt" | "fullName" | "email";
-	sortOrder?: "asc" | "desc";
-}) => {
+export const useStaffs = (params?: StaffQueryParams) => {
 	return useQuery({
 		queryKey: staffKeys.list(params),
 		queryFn: async () => {

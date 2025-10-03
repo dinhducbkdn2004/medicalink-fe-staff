@@ -14,6 +14,7 @@ import type {
 	PaginationParams,
 	CreateSpecialtyRequest,
 	UpdateSpecialtyRequest,
+	SpecialtyQueryParams,
 } from "@/types";
 
 export const specialtyKeys = {
@@ -32,12 +33,7 @@ export const specialtyKeys = {
 };
 
 // Get specialties with pagination and filters
-export const useSpecialties = (
-	params?: PaginationParams & {
-		search?: string;
-		isActive?: boolean;
-	}
-) => {
+export const useSpecialties = (params?: SpecialtyQueryParams) => {
 	return useQuery({
 		queryKey: specialtyKeys.list(params),
 		queryFn: async () => extractPaginatedData(await getSpecialties(params)),
@@ -68,7 +64,6 @@ export const useSpecialtyStats = () =>
 		queryFn: async () => extractApiData(await getSpecialtyStats()),
 		staleTime: 1000 * 60 * 5,
 	});
-
 
 // Create specialty mutation
 export const useCreateSpecialty = () => {

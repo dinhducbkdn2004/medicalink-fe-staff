@@ -13,6 +13,7 @@ import type {
 	PaginationParams,
 	CreateWorkLocationRequest,
 	UpdateWorkLocationRequest,
+	WorkLocationQueryParams,
 } from "@/types";
 
 export const workLocationKeys = {
@@ -31,13 +32,7 @@ export const workLocationKeys = {
 	stats: () => [...workLocationKeys.all, "stats"] as const,
 };
 
-export const useWorkLocations = (
-	params?: PaginationParams & {
-		search?: string;
-		isActive?: boolean;
-		includeMetadata?: boolean;
-	}
-) => {
+export const useWorkLocations = (params?: WorkLocationQueryParams) => {
 	return useQuery({
 		queryKey: workLocationKeys.list(params),
 		queryFn: async () => extractPaginatedData(await getWorkLocations(params)),

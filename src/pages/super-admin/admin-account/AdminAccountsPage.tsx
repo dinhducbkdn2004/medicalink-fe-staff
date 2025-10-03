@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
-import { DateRange } from "react-day-picker";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 
 import {
 	Card,
@@ -13,6 +12,7 @@ import { DeleteConfirmationModal } from "@/components/modals";
 import { AdminProfileModal } from "@/components/modals/AdminProfileModal";
 import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
 import { useStaffs, useDeleteStaff } from "@/hooks/api/useStaffs";
+import { usePaginationParams } from "@/hooks/usePaginationParams";
 import { toast } from "sonner";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
@@ -24,8 +24,15 @@ import type { StaffAccount } from "@/types/common";
 
 export function AdminAccountsPage() {
 	const navigate = useNavigate();
-	const [currentPage] = useState(1);
-	const [itemsPerPage] = useState(10);
+	const searchParams = useSearch({ strict: false }) as any;
+
+	const { params, setSearch, updateParams } = usePaginationParams({
+		defaultPage: 1,
+		defaultLimit: 10,
+		defaultSortBy: "createdAt",
+		defaultSortOrder: "DESC",
+	});
+
 	const [showAdminModal, setShowAdminModal] = useState(false);
 	const [showPasswordModal, setShowPasswordModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -35,30 +42,28 @@ export function AdminAccountsPage() {
 	const [adminToDelete, setAdminToDelete] = useState<string | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
 
-	const [searchValue, setSearchValue] = useState("");
-	const [dateRange, setDateRange] = useState<DateRange | undefined>();
-	const sortBy = "createdAt";
-	const sortOrder = "desc" as const;
-	const [roleFilter, setRoleFilter] = useState<string>("all");
+	// Role filter from URL
+	const roleFilter = searchParams.role || "all";
+	const setRoleFilter = (role: string) => {
+		updateParams({ role: role === "all" ? undefined : role, page: 1 });
+	};
 
-	const filters = {
+	// Build API params
+	const apiParams = {
+		...params,
+		sortBy:
+			(params.sortBy as "createdAt" | "fullName" | "email") || "createdAt",
 		...(roleFilter !== "all" && {
 			role: roleFilter as "ADMIN" | "SUPER_ADMIN",
 		}),
-		...(searchValue && { search: searchValue }),
-		sortBy: sortBy as "createdAt" | "fullName" | "email",
-		sortOrder,
-		...(dateRange?.from && { createdFrom: dateRange.from.toISOString() }),
-		...(dateRange?.to && { createdTo: dateRange.to.toISOString() }),
 	};
 
-	const { data: staffsData, isLoading } = useStaffs({
-		page: currentPage,
-		limit: itemsPerPage,
-		...filters,
-	});
+	const { data: staffsData, isLoading } = useStaffs(apiParams);
 
 	const deleteStaffMutation = useDeleteStaff();
+
+	const totalCount = staffsData?.meta?.total || 0;
+	const totalPages = Math.max(1, Math.ceil(totalCount / params.limit));
 
 	const adminAccounts: AdminAccount[] = (staffsData?.data || []).map(
 		(staff: StaffAccount) => {
@@ -90,7 +95,6 @@ export function AdminAccountsPage() {
 		}
 	);
 
-	const totalCount = staffsData?.meta?.total || 0;
 	const convertToModalProps = (admin: AdminAccount) => ({
 		id: admin.id,
 		fullName: admin.fullName,
@@ -188,34 +192,30 @@ export function AdminAccountsPage() {
 						columns={columns}
 						data={adminAccounts}
 						searchKey="fullName"
-						searchValue={searchValue}
-						onSearchChange={setSearchValue}
+						searchValue={params.search || ""}
+						onSearchChange={setSearch}
 						toolbar={
 							<DataTableToolbar
 								searchKey="fullName"
 								searchPlaceholder="Search admins..."
-								searchValue={searchValue}
-								onSearchChange={setSearchValue}
+								searchValue={params.search || ""}
+								onSearchChange={setSearch}
 								onCreateNew={handleCreateAdmin}
 								createButtonText="Add Admin"
-								{...(dateRange ? { dateRange } : {})}
-								onDateRangeChange={setDateRange}
 								roleFilter={roleFilter}
 								onRoleFilterChange={setRoleFilter}
 							/>
 						}
-					/>
-
+					/>{" "}
 					{!isLoading && (
 						<div className="flex items-center justify-between space-x-2 py-4">
 							<div className="text-muted-foreground text-sm">
-								Showing {Math.min(adminAccounts.length, itemsPerPage)} of{" "}
+								Showing {Math.min(adminAccounts.length, params.limit)} of{" "}
 								{totalCount} admin(s)
 							</div>
 							<div className="flex items-center space-x-2">
 								<span className="text-sm">
-									Page {currentPage} of{" "}
-									{Math.max(1, Math.ceil(totalCount / itemsPerPage))}
+									Page {params.page} of {totalPages}
 								</span>
 							</div>
 						</div>

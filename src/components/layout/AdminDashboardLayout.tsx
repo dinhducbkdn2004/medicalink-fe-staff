@@ -155,15 +155,11 @@ export const AdminDashboardLayout = ({
 		// Handle quick actions - navigation logic will be implemented later
 	};
 
-
 	return (
 		<SidebarProvider>
 			<AppSidebar userRole={userRole} />
 			<SidebarInset>
-				<DashboardHeader
-					showSearch={true}
-					onRefresh={handleRefresh}
-				/>
+				<DashboardHeader showSearch={true} onRefresh={handleRefresh} />
 
 				<div className="flex flex-1 flex-col gap-4 p-4 pt-6">
 					{children || (

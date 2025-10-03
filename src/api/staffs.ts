@@ -1,23 +1,18 @@
+/**
+ * Staff API Service
+ * Handles all staff-related API calls (admin and super admin accounts)
+ */
+
 import { apiClient } from "./core/client";
+import type { StaffAccount, PaginatedResponse } from "@/types";
 import type {
-	StaffAccount,
 	CreateStaffRequest,
 	UpdateStaffRequest,
-	PaginatedResponse,
-} from "@/types";
+	StaffQueryParams,
+	StaffStats,
+} from "@/types/api/staffs.types";
 
-export const getStaffs = (params?: {
-	page?: number;
-	limit?: number;
-	search?: string;
-	email?: string;
-	isMale?: boolean;
-	createdFrom?: string;
-	createdTo?: string;
-	role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
-	sortBy?: "createdAt" | "fullName" | "email";
-	sortOrder?: "asc" | "desc";
-}) =>
+export const getStaffs = (params?: StaffQueryParams) =>
 	apiClient.get<PaginatedResponse<StaffAccount>>("/staffs", {
 		params,
 	});
@@ -39,8 +34,4 @@ export const changeStaffPassword = (id: string, newPassword: string) =>
 		password: newPassword,
 	});
 
-export const getStaffStats = () =>
-	apiClient.get<{
-		total: number;
-		recentlyCreated: number;
-	}>("/staffs/stats");
+export const getStaffStats = () => apiClient.get<StaffStats>("/staffs/stats");

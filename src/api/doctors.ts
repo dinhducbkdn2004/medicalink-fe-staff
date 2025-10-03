@@ -1,30 +1,34 @@
+/**
+ * Doctor API Service
+ * Handles all doctor-related API calls including accounts and profiles
+ */
+
 import { apiClient } from "./core/client";
+import type { PaginatedResponse } from "@/types";
 import type {
 	Doctor,
 	CreateDoctorRequest,
 	UpdateDoctorRequest,
-	PaginatedResponse,
-} from "@/types";
+	DoctorQueryParams,
+	DoctorProfile,
+	UpdateDoctorProfileRequest,
+	DoctorProfileQueryParams,
+	DoctorStats,
+} from "@/types/api/doctors.types";
 
 // Get all doctors with pagination and filters
-export const getDoctors = (params?: {
-	page?: number;
-	limit?: number;
-	search?: string;
-	email?: string;
-	isMale?: boolean;
-	createdFrom?: string;
-	createdTo?: string;
-	sortBy?: "createdAt" | "fullName" | "email";
-	sortOrder?: "asc" | "desc";
-}) =>
+export const getDoctors = (params?: DoctorQueryParams) =>
 	apiClient.get<PaginatedResponse<Doctor>>("/doctors", {
 		params,
 	});
 
-// Get doctor by ID
+// Get doctor by ID (account only)
 export const getDoctorById = (id: string) =>
 	apiClient.get<Doctor>(`/doctors/${id}`);
+
+// Get doctor with complete profile information
+export const getDoctorComplete = (id: string) =>
+	apiClient.get<Doctor>(`/doctors/${id}/complete`);
 
 // Create new doctor
 export const createDoctor = (data: CreateDoctorRequest) =>
@@ -46,7 +50,22 @@ export const changeDoctorPassword = (id: string, newPassword: string) =>
 
 // Get doctor statistics
 export const getDoctorStats = () =>
-	apiClient.get<{
-		total: number;
-		recentlyCreated: number;
-	}>("/doctors/stats");
+	apiClient.get<DoctorStats>("/doctors/stats");
+
+// ==================== Doctor Profile Management ====================
+
+// Get public doctor profiles with pagination
+export const getPublicDoctorProfiles = (params?: DoctorProfileQueryParams) =>
+	apiClient.get<PaginatedResponse<DoctorProfile>>("/doctors/profile/public", {
+		params,
+	});
+
+// Update doctor profile
+export const updateDoctorProfile = (
+	profileId: string,
+	data: UpdateDoctorProfileRequest
+) => apiClient.patch<DoctorProfile>(`/doctors/profile/${profileId}`, data);
+
+// Toggle doctor profile active status
+export const toggleDoctorProfileActive = (profileId: string) =>
+	apiClient.patch<DoctorProfile>(`/doctors/profile/${profileId}/toggle-active`);

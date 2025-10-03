@@ -38,7 +38,7 @@ export function DoctorAccountsPage() {
 	const [searchValue, setSearchValue] = useState("");
 	const [dateRange, setDateRange] = useState<DateRange | undefined>();
 	const sortBy = "createdAt";
-	const sortOrder = "desc" as const;
+	const sortOrder = "DESC" as const; // Changed to uppercase to match API
 
 	const filters = {
 		...(searchValue && { search: searchValue }),

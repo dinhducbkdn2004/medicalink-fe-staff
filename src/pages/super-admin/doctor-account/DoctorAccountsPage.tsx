@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { DateRange } from "react-day-picker";
 
 import {
 	Card,
@@ -20,12 +19,20 @@ import { DeleteConfirmationModal } from "@/components/modals";
 import { DoctorProfileModal } from "@/components/modals/DoctorProfileModal";
 import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
 import { useDoctors, useDeleteDoctor } from "@/hooks/api/useDoctors";
+import { usePaginationParams } from "@/hooks/usePaginationParams";
 import type { Doctor } from "@/types";
 
 export function DoctorAccountsPage() {
 	const navigate = useNavigate();
-	const [currentPage] = useState(1);
-	const [itemsPerPage] = useState(10);
+
+	// Use URL-synced pagination params
+	const { params, setSearch } = usePaginationParams({
+		defaultPage: 1,
+		defaultLimit: 10,
+		defaultSortBy: "createdAt",
+		defaultSortOrder: "DESC",
+	});
+
 	const [showDoctorModal, setShowDoctorModal] = useState(false);
 	const [showPasswordModal, setShowPasswordModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -35,29 +42,19 @@ export function DoctorAccountsPage() {
 	const [doctorToDelete, setDoctorToDelete] = useState<string | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
 
-	const [searchValue, setSearchValue] = useState("");
-	const [dateRange, setDateRange] = useState<DateRange | undefined>();
-	const sortBy = "createdAt";
-	const sortOrder = "desc" as const;
-
-	const filters = {
-		...(searchValue && { search: searchValue }),
-		sortBy: sortBy as "createdAt" | "fullName" | "email",
-		sortOrder,
-		...(dateRange?.from && { createdFrom: dateRange.from.toISOString() }),
-		...(dateRange?.to && { createdTo: dateRange.to.toISOString() }),
+	// API call with URL params (cast sortBy to proper type)
+	const apiParams = {
+		...params,
+		sortBy:
+			(params.sortBy as "createdAt" | "fullName" | "email") || "createdAt",
 	};
-
-	const { data: doctorsData, isLoading } = useDoctors({
-		page: currentPage,
-		limit: itemsPerPage,
-		...filters,
-	});
+	const { data: doctorsData, isLoading } = useDoctors(apiParams);
 
 	const deleteDoctorMutation = useDeleteDoctor();
 
 	const doctors = doctorsData?.data || [];
 	const totalCount = doctorsData?.meta?.total || 0;
+	const totalPages = Math.max(1, Math.ceil(totalCount / params.limit));
 
 	const doctorAccounts: DoctorAccount[] = doctors.map((doctor) => ({
 		id: doctor.id,
@@ -155,18 +152,16 @@ export function DoctorAccountsPage() {
 						columns={columns}
 						data={doctorAccounts}
 						searchKey="fullName"
-						searchValue={searchValue}
-						onSearchChange={setSearchValue}
+						searchValue={params.search || ""}
+						onSearchChange={setSearch}
 						toolbar={
 							<DataTableToolbar
 								searchKey="fullName"
 								searchPlaceholder="Search doctors..."
-								searchValue={searchValue}
-								onSearchChange={setSearchValue}
+								searchValue={params.search || ""}
+								onSearchChange={setSearch}
 								onCreateNew={handleCreateDoctor}
 								createButtonText="Add Doctor"
-								{...(dateRange ? { dateRange } : {})}
-								onDateRangeChange={setDateRange}
 							/>
 						}
 					/>
@@ -174,13 +169,12 @@ export function DoctorAccountsPage() {
 					{!isLoading && (
 						<div className="flex items-center justify-between space-x-2 py-4">
 							<div className="text-muted-foreground text-sm">
-								Showing {Math.min(doctorAccounts.length, itemsPerPage)} of{" "}
+								Showing {Math.min(doctorAccounts.length, params.limit)} of{" "}
 								{totalCount} doctor(s)
 							</div>
 							<div className="flex items-center space-x-2">
 								<span className="text-sm">
-									Page {currentPage} of{" "}
-									{Math.max(1, Math.ceil(totalCount / itemsPerPage))}
+									Page {params.page} of {totalPages}
 								</span>
 							</div>
 						</div>

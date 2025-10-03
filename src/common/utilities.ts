@@ -7,4 +7,3 @@ export const formatCurrency = (amount: number, currency = "VND"): string => {
 		currency,
 	}).format(amount);
 };
-

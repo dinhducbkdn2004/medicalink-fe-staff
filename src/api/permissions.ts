@@ -1,79 +1,127 @@
+/**
+ * Permission API Service
+ * Handles all permission-related API calls
+ */
+
 import { apiClient } from "./core/client";
 import type { ApiResponse, PaginationParams } from "@/types";
+import type {
+	Permission,
+	PermissionGroup,
+	GroupPermission,
+	CreateGroupRequest,
+	UpdateGroupRequest,
+	AssignGroupPermissionRequest,
+	AssignUserPermissionRequest,
+	RevokeUserPermissionRequest,
+	AddUserToGroupRequest,
+} from "@/types/api/permissions.types";
 
-// Types for permissions
-export interface Permission {
-	id: string;
-	name: string;
-	description: string;
-	module: string;
-	createdAt: string;
-	updatedAt: string;
-}
-
-export interface Role {
-	id: string;
-	name: string;
-	description: string;
-	permissions: Permission[];
-	userCount: number;
-	createdAt: string;
-	updatedAt: string;
-}
-
-export interface UpdateRolePermissionsRequest {
-	permissionIds: string[];
-}
-
-export interface CreatePermissionRequest {
-	name: string;
-	description: string;
-	module: string;
-}
-
-export interface UpdatePermissionRequest {
-	name?: string;
-	description?: string;
-	module?: string;
-}
+// ==================== Core Permission Endpoints ====================
 
 // Get all permissions
 export const getPermissions = (params?: PaginationParams) =>
 	apiClient.get<ApiResponse<Permission[]>>("/permissions", { params });
 
-// Get permission by ID
-export const getPermissionById = (id: string) =>
-	apiClient.get<ApiResponse<Permission>>(`/permissions/${id}`);
+// Get permission statistics
+export const getPermissionStats = () =>
+	apiClient.get<ApiResponse<any>>("/permissions/stats");
 
-// Create permission
-export const createPermission = (data: CreatePermissionRequest) =>
-	apiClient.post<ApiResponse<Permission>>("/permissions", data);
+// Get current user's permissions
+export const getMyPermissions = () =>
+	apiClient.get<ApiResponse<Permission[]>>("/permissions/me");
 
-// Update permission
-export const updatePermission = (id: string, data: UpdatePermissionRequest) =>
-	apiClient.put<ApiResponse<Permission>>(`/permissions/${id}`, data);
+// ==================== Permission Group Management ====================
 
-// Delete permission
-export const deletePermission = (id: string) =>
-	apiClient.delete<ApiResponse<void>>(`/permissions/${id}`);
+// Get all permission groups
+export const getPermissionGroups = () =>
+	apiClient.get<ApiResponse<PermissionGroup[]>>("/permissions/groups");
 
+// Create permission group
+export const createPermissionGroup = (data: CreateGroupRequest) =>
+	apiClient.post<ApiResponse<PermissionGroup>>("/permissions/groups", data);
 
-// Get all roles with their permissions - using available permissions endpoint for now
-export const getRoles = (params?: PaginationParams) =>
-	apiClient.get<ApiResponse<Role[]>>("/permissions", { params });
+// Update permission group
+export const updatePermissionGroup = (
+	groupId: string,
+	data: UpdateGroupRequest
+) =>
+	apiClient.put<ApiResponse<PermissionGroup>>(
+		`/permissions/groups/${groupId}`,
+		data
+	);
 
-// Get role by ID with permissions - using permissions for now
-export const getRoleById = (id: string) =>
-	apiClient.get<ApiResponse<Role>>(`/permissions/${id}`);
+// Delete permission group
+export const deletePermissionGroup = (groupId: string) =>
+	apiClient.delete<ApiResponse<void>>(`/permissions/groups/${groupId}`);
 
-// Update role permissions - using permissions for now
-export const updateRolePermissions = (
-	roleId: string,
-	data: UpdateRolePermissionsRequest
-) => apiClient.put<ApiResponse<Role>>(`/permissions/${roleId}`, data);
+// Get group permissions
+export const getGroupPermissions = (groupId: string) =>
+	apiClient.get<ApiResponse<GroupPermission[]>>(
+		`/permissions/groups/${groupId}/permissions`
+	);
 
-// Get role permissions matrix - using available permissions endpoint
-export const getRolePermissionsMatrix = () =>
-	apiClient.get<ApiResponse<{ roles: Role[]; permissions: Permission[] }>>(
-		"/permissions"
+// Assign permission to group
+export const assignGroupPermission = (
+	groupId: string,
+	data: AssignGroupPermissionRequest
+) =>
+	apiClient.post<ApiResponse<void>>(
+		`/permissions/groups/${groupId}/permissions`,
+		data
+	);
+
+// Revoke permission from group
+export const revokeGroupPermission = (
+	groupId: string,
+	data: { permissionId: string }
+) =>
+	apiClient.delete<ApiResponse<void>>(
+		`/permissions/groups/${groupId}/permissions`,
+		{ data }
+	);
+
+// ==================== User Permission Management ====================
+
+// Get user permissions
+export const getUserPermissions = (userId: string) =>
+	apiClient.get<ApiResponse<Permission[]>>(`/permissions/users/${userId}`);
+
+// Assign permission to user
+export const assignUserPermission = (data: AssignUserPermissionRequest) =>
+	apiClient.post<ApiResponse<void>>("/permissions/users/assign", data);
+
+// Revoke permission from user
+export const revokeUserPermission = (data: RevokeUserPermissionRequest) =>
+	apiClient.delete<ApiResponse<void>>("/permissions/users/revoke", { data });
+
+// Invalidate user permission cache
+export const invalidateUserPermissionCache = (userId: string) =>
+	apiClient.delete<ApiResponse<void>>(`/permissions/users/${userId}/cache`);
+
+// Refresh user permission cache
+export const refreshUserPermissionCache = (userId: string) =>
+	apiClient.post<ApiResponse<void>>(
+		`/permissions/users/${userId}/refresh-cache`
+	);
+
+// ==================== User Group Management ====================
+
+// Get user groups
+export const getUserGroups = (userId: string) =>
+	apiClient.get<ApiResponse<PermissionGroup[]>>(
+		`/permissions/users/${userId}/groups`
+	);
+
+// Add user to group
+export const addUserToGroup = (userId: string, data: AddUserToGroupRequest) =>
+	apiClient.post<ApiResponse<void>>(
+		`/permissions/users/${userId}/groups`,
+		data
+	);
+
+// Remove user from group
+export const removeUserFromGroup = (userId: string, groupId: string) =>
+	apiClient.delete<ApiResponse<void>>(
+		`/permissions/users/${userId}/groups/${groupId}`
 	);

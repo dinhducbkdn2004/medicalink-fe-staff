@@ -86,7 +86,9 @@ export function createDoctorColumns({
 				const phone = row.getValue("phone");
 				return (
 					<div className="text-sm">
-						{(phone as string) ?? <span className="text-muted-foreground italic">Not provided</span>}
+						{(phone as string) ?? (
+							<span className="text-muted-foreground italic">Not provided</span>
+						)}
 					</div>
 				);
 			},
@@ -103,17 +105,17 @@ export function createDoctorColumns({
 						<span className="text-muted-foreground italic">Not provided</span>
 					);
 				}
-			return (
-				<div className="text-sm">
-					{new Date(dateOfBirth as string).toLocaleDateString("en-US", {
-						year: "numeric",
-						month: "short",
-						day: "numeric",
-					})}
-				</div>
-			);
+				return (
+					<div className="text-sm">
+						{new Date(dateOfBirth as string).toLocaleDateString("en-US", {
+							year: "numeric",
+							month: "short",
+							day: "numeric",
+						})}
+					</div>
+				);
+			},
 		},
-	},
 		{
 			accessorKey: "dateOfBirth",
 			header: ({ column }) => (

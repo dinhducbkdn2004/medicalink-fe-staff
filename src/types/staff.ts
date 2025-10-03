@@ -1,106 +1,43 @@
-import type { StaffAccount } from "./common";
+/**
+ * Staff Module Types
+ * @deprecated This file is being phased out. Import from @/types/api instead
+ *
+ * Re-exporting from new organized structure for backward compatibility
+ */
 
-export interface CreateStaffRequest {
-	fullName: string;
-	email: string;
-	password: string;
-	role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
-	phone?: string | undefined;
-	isMale?: boolean | undefined;
-	dateOfBirth?: Date | null;
-}
+// Re-export from api types
+export type {
+	CreateStaffRequest,
+	UpdateStaffRequest,
+	StaffQueryParams,
+	StaffStats,
+} from "./api/staffs.types";
 
-export interface UpdateStaffRequest {
-	fullName?: string;
-	email?: string;
-	password?: string;
-	role?: "SUPER_ADMIN" | "ADMIN" | "DOCTOR";
-	phone?: string | undefined;
-	isMale?: boolean | undefined;
-	dateOfBirth?: Date | null;
-}
+export type {
+	Doctor,
+	CreateDoctorRequest,
+	UpdateDoctorRequest,
+	DoctorProfile,
+	UpdateDoctorProfileRequest,
+	DoctorQueryParams,
+	DoctorStats,
+} from "./api/doctors.types";
 
-export type Doctor = StaffAccount;
+export type {
+	Specialty,
+	InfoSection,
+	CreateSpecialtyRequest,
+	UpdateSpecialtyRequest,
+	CreateInfoSectionRequest,
+	UpdateInfoSectionRequest,
+	SpecialtyQueryParams,
+	SpecialtyStats,
+} from "./api/specialties.types";
 
-export interface CreateDoctorRequest {
-	fullName: string;
-	email: string;
-	password: string;
-	phone?: string | null;
-	isMale?: boolean | null;
-	dateOfBirth?: Date | null;
-}
-
-export interface UpdateDoctorRequest {
-	fullName?: string;
-	email?: string;
-	specialty?: string;
-	qualification?: string;
-	experience?: number;
-	consultationFee?: number;
-	workLocation?: string;
-	phone?: string | null;
-	isMale?: boolean | null;
-	dateOfBirth?: Date | null;
-	isActive?: boolean;
-	isAvailable?: boolean;
-}
-
-export interface Specialty {
-	id: string;
-	name: string;
-	description?: string;
-	icon?: string;
-	isActive: boolean;
-	createdAt: string;
-	updatedAt: string;
-	infoSections?: InfoSection[];
-}
-
-export interface InfoSection {
-	id: string;
-	specialtyId: string;
-	name: string;
-	content: string;
-	order?: number;
-	createdAt: string;
-	updatedAt: string;
-}
-
-export interface CreateSpecialtyRequest {
-	name: string;
-	description?: string;
-	icon?: string;
-}
-
-export interface UpdateSpecialtyRequest {
-	name?: string;
-	description?: string;
-	icon?: string;
-	isActive?: boolean;
-}
-export interface WorkLocation {
-	id: string;
-	name: string;
-	address?: string;
-	phone?: string;
-	timezone: string;
-	isActive?: boolean;
-	createdAt?: string;
-	updatedAt?: string;
-}
-
-export interface CreateWorkLocationRequest {
-	name: string;
-	address?: string;
-	phone?: string;
-	timezone: string;
-}
-
-export interface UpdateWorkLocationRequest {
-	name?: string;
-	address?: string;
-	phone?: string;
-	timezone?: string;
-	isActive?: boolean;
-}
+export type {
+	WorkLocation,
+	CreateWorkLocationRequest,
+	UpdateWorkLocationRequest,
+	WorkLocationQueryParams,
+	WorkLocationStats,
+} from "./api/locations.types";

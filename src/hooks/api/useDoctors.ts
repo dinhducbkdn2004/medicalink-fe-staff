@@ -1,3 +1,8 @@
+/**
+ * Doctor Hooks
+ * React Query hooks for doctor-related API calls
+ */
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
 	getDoctors,
@@ -8,40 +13,24 @@ import {
 	changeDoctorPassword,
 	getDoctorStats,
 } from "@/api/doctors";
-import type { CreateDoctorRequest, UpdateDoctorRequest } from "@/types";
+import type {
+	CreateDoctorRequest,
+	UpdateDoctorRequest,
+	DoctorQueryParams,
+} from "@/types/api/doctors.types";
 
 export const doctorKeys = {
 	all: ["doctors"] as const,
 	lists: () => [...doctorKeys.all, "list"] as const,
-	list: (params?: {
-		page?: number;
-		limit?: number;
-		search?: string;
-		email?: string;
-		isMale?: boolean;
-		createdFrom?: string;
-		createdTo?: string;
-		sortBy?: "createdAt" | "fullName" | "email";
-		sortOrder?: "asc" | "desc";
-	}) => [...doctorKeys.lists(), params] as const,
+	list: (params?: DoctorQueryParams) =>
+		[...doctorKeys.lists(), params] as const,
 	details: () => [...doctorKeys.all, "detail"] as const,
 	detail: (id: string) => [...doctorKeys.details(), id] as const,
 	stats: () => [...doctorKeys.all, "stats"] as const,
 };
 
-
 // Get doctors with pagination and filters
-export const useDoctors = (params?: {
-	page?: number;
-	limit?: number;
-	search?: string;
-	email?: string;
-	isMale?: boolean;
-	createdFrom?: string;
-	createdTo?: string;
-	sortBy?: "createdAt" | "fullName" | "email";
-	sortOrder?: "asc" | "desc";
-}) => {
+export const useDoctors = (params?: DoctorQueryParams) => {
 	return useQuery({
 		queryKey: doctorKeys.list(params),
 		queryFn: async () => {
@@ -73,7 +62,6 @@ export const useDoctorStats = () =>
 		},
 		staleTime: 1000 * 60 * 5,
 	});
-
 
 // Create doctor mutation
 export const useCreateDoctor = () => {
