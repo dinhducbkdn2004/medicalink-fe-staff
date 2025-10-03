@@ -17,28 +17,64 @@ import {
 
 interface DataTablePaginationProps<TData> {
 	readonly table: Table<TData>;
+	readonly isServerSide?: boolean;
+	readonly onPageChange?: (page: number) => void;
+	readonly onPageSizeChange?: (pageSize: number) => void;
+	readonly totalCount?: number;
+	readonly showRowSelection?: boolean;
 }
 
 export function DataTablePagination<TData>({
 	table,
+	isServerSide = false,
+	onPageChange,
+	onPageSizeChange,
+	totalCount,
+	showRowSelection = false,
 }: DataTablePaginationProps<TData>) {
+	// Custom handlers for server-side pagination
+	const handlePageChange = (newPage: number) => {
+		if (isServerSide && onPageChange) {
+			onPageChange(newPage + 1); // Convert 0-based to 1-based
+		} else {
+			table.setPageIndex(newPage);
+		}
+	};
+
+	const handlePageSizeChange = (newPageSize: number) => {
+		if (isServerSide && onPageSizeChange) {
+			onPageSizeChange(newPageSize);
+		} else {
+			table.setPageSize(newPageSize);
+		}
+	};
+
+	const currentPage = table.getState().pagination.pageIndex;
+	const currentPageSize = table.getState().pagination.pageSize;
+	const totalPages = isServerSide ? table.getPageCount() : table.getPageCount();
+	const totalRows = isServerSide
+		? totalCount || 0
+		: table.getFilteredRowModel().rows.length;
 	return (
 		<div className="flex items-center justify-between px-2">
-			<div className="text-muted-foreground flex-1 text-sm">
-				{table.getFilteredSelectedRowModel().rows.length} of{" "}
-				{table.getFilteredRowModel().rows.length} row(s) selected.
-			</div>
+			{showRowSelection && (
+				<div className="text-muted-foreground flex-1 text-sm">
+					{table.getFilteredSelectedRowModel().rows.length} of {totalRows}{" "}
+					row(s) selected.
+				</div>
+			)}
+			{!showRowSelection && <div />}
 			<div className="flex items-center space-x-6 lg:space-x-8">
 				<div className="flex items-center space-x-2">
 					<p className="text-sm font-medium">Rows per page</p>
 					<Select
-						value={`${table.getState().pagination.pageSize}`}
+						value={`${currentPageSize}`}
 						onValueChange={(value) => {
-							table.setPageSize(Number(value));
+							handlePageSizeChange(Number(value));
 						}}
 					>
 						<SelectTrigger className="h-8 w-[70px]">
-							<SelectValue placeholder={table.getState().pagination.pageSize} />
+							<SelectValue placeholder={currentPageSize} />
 						</SelectTrigger>
 						<SelectContent side="top">
 							{[10, 20, 30, 40, 50].map((pageSize) => (
@@ -50,14 +86,13 @@ export function DataTablePagination<TData>({
 					</Select>
 				</div>
 				<div className="flex w-[100px] items-center justify-center text-sm font-medium">
-					Page {table.getState().pagination.pageIndex + 1} of{" "}
-					{table.getPageCount()}
+					Page {currentPage + 1} of {totalPages}
 				</div>
 				<div className="flex items-center space-x-2">
 					<Button
 						variant="outline"
 						className="hidden h-8 w-8 p-0 lg:flex"
-						onClick={() => table.setPageIndex(0)}
+						onClick={() => handlePageChange(0)}
 						disabled={!table.getCanPreviousPage()}
 					>
 						<span className="sr-only">Go to first page</span>
@@ -66,7 +101,7 @@ export function DataTablePagination<TData>({
 					<Button
 						variant="outline"
 						className="h-8 w-8 p-0"
-						onClick={() => table.previousPage()}
+						onClick={() => handlePageChange(currentPage - 1)}
 						disabled={!table.getCanPreviousPage()}
 					>
 						<span className="sr-only">Go to previous page</span>
@@ -75,7 +110,7 @@ export function DataTablePagination<TData>({
 					<Button
 						variant="outline"
 						className="h-8 w-8 p-0"
-						onClick={() => table.nextPage()}
+						onClick={() => handlePageChange(currentPage + 1)}
 						disabled={!table.getCanNextPage()}
 					>
 						<span className="sr-only">Go to next page</span>
@@ -84,7 +119,7 @@ export function DataTablePagination<TData>({
 					<Button
 						variant="outline"
 						className="hidden h-8 w-8 p-0 lg:flex"
-						onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+						onClick={() => handlePageChange(totalPages - 1)}
 						disabled={!table.getCanNextPage()}
 					>
 						<span className="sr-only">Go to last page</span>

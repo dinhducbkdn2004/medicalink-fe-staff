@@ -214,7 +214,7 @@ export function AdminProfileModal({
 					<DialogDescription>
 						{isEditing
 							? "Update admin profile information. Additional details like phone and date of birth can be edited here."
-							: "Create a new admin account. Only basic information is required - other details can be added later when editing the profile."}
+							: "Create a new admin account. Only name, email, password, and role are required. Additional details can be added now or later when editing the profile."}
 					</DialogDescription>
 				</DialogHeader>
 
@@ -306,8 +306,13 @@ export function AdminProfileModal({
 							)}
 						/>
 
-						{isEditing && (
-							<>
+						{/* Optional fields section */}
+						<div className="space-y-4">
+							<div className="border-t pt-4">
+								<h4 className="text-muted-foreground mb-3 text-sm font-medium">
+									Additional Information (Optional)
+								</h4>
+
 								<div className="grid grid-cols-2 gap-4">
 									<FormField
 										control={form.control}
@@ -372,8 +377,8 @@ export function AdminProfileModal({
 										</FormItem>
 									)}
 								/>
-							</>
-						)}
+							</div>
+						</div>
 
 						<div className="flex justify-end gap-2 pt-4">
 							<Button

@@ -59,9 +59,6 @@ export const createAdminColumns = (
 					</Avatar>
 					<div>
 						<div className="font-medium">{admin.fullName}</div>
-						<div className="text-muted-foreground text-sm">
-							{admin.role === "SUPER_ADMIN" ? "Super Admin" : "Admin"}
-						</div>
 					</div>
 				</div>
 			);
@@ -86,7 +83,7 @@ export const createAdminColumns = (
 			return (
 				<div className="text-sm">
 					{(phone as string) ?? (
-						<span className="text-muted-foreground">N/A</span>
+						<span className="text-muted-foreground italic">N/A</span>
 					)}
 				</div>
 			);
@@ -100,9 +97,7 @@ export const createAdminColumns = (
 		cell: ({ row }) => {
 			const dateOfBirth = row.getValue("dateOfBirth");
 			if (!dateOfBirth) {
-				return (
-					<span className="text-muted-foreground italic">Not provided</span>
-				);
+				return <span className="text-muted-foreground block italic">N/A</span>;
 			}
 			return (
 				<div className="text-sm">
@@ -122,7 +117,7 @@ export const createAdminColumns = (
 		),
 		cell: ({ row }) => {
 			return (
-				<span className="text-sm font-medium">
+				<span className="block text-sm font-medium">
 					{row.getValue("isMale") ? "Male" : "Female"}
 				</span>
 			);
@@ -136,9 +131,7 @@ export const createAdminColumns = (
 		cell: ({ row }) => {
 			const createdAt = row.getValue("createdAt");
 			if (!createdAt) {
-				return (
-					<span className="text-muted-foreground italic">Not provided</span>
-				);
+				return <span className="text-muted-foreground block italic">N/A</span>;
 			}
 			return (
 				<div className="text-sm">

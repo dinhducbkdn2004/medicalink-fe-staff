@@ -62,7 +62,6 @@ export function createDoctorColumns({
 						</Avatar>
 						<div>
 							<div className="font-medium">{doctor.fullName}</div>
-							<div className="text-muted-foreground text-sm">Doctor</div>
 						</div>
 					</div>
 				);
@@ -87,7 +86,7 @@ export function createDoctorColumns({
 				return (
 					<div className="text-sm">
 						{(phone as string) ?? (
-							<span className="text-muted-foreground italic">Not provided</span>
+							<span className="text-muted-foreground italic">N/A</span>
 						)}
 					</div>
 				);
@@ -102,30 +101,7 @@ export function createDoctorColumns({
 				const dateOfBirth = row.getValue("dateOfBirth");
 				if (!dateOfBirth) {
 					return (
-						<span className="text-muted-foreground italic">Not provided</span>
-					);
-				}
-				return (
-					<div className="text-sm">
-						{new Date(dateOfBirth as string).toLocaleDateString("en-US", {
-							year: "numeric",
-							month: "short",
-							day: "numeric",
-						})}
-					</div>
-				);
-			},
-		},
-		{
-			accessorKey: "dateOfBirth",
-			header: ({ column }) => (
-				<DataTableColumnHeader column={column} title="Date of Birth" />
-			),
-			cell: ({ row }) => {
-				const dateOfBirth = row.getValue("dateOfBirth") ?? null;
-				if (!dateOfBirth) {
-					return (
-						<span className="text-muted-foreground italic">Not provided</span>
+						<span className="text-muted-foreground block italic">N/A</span>
 					);
 				}
 				return (
@@ -150,13 +126,13 @@ export function createDoctorColumns({
 		{
 			accessorKey: "createdAt",
 			header: ({ column }) => (
-				<DataTableColumnHeader column={column} title="CreatedAt" />
+				<DataTableColumnHeader column={column} title="Created At" />
 			),
 			cell: ({ row }) => {
 				const createdAt = row.getValue("createdAt") ?? null;
 				if (!createdAt) {
 					return (
-						<span className="text-muted-foreground italic">Not provided</span>
+						<span className="text-muted-foreground block italic">N/A</span>
 					);
 				}
 				return (

@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { FormSkeleton } from "@/components/ui/data-table-skeleton";
 import { useStaffs } from "@/hooks/api/useStaffs";
 
 export function AdminAccountViewPage() {
@@ -58,12 +59,13 @@ export function AdminAccountViewPage() {
 	if (isLoading) {
 		return (
 			<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-				<div className="flex items-center gap-2">
+				<div className="mb-6 flex items-center gap-2">
 					<Button variant="ghost" size="icon" onClick={handleBack}>
 						<ArrowLeft className="h-4 w-4" />
 					</Button>
-					<h1 className="text-2xl font-bold">Loading...</h1>
+					<h1 className="text-2xl font-bold">Admin Details</h1>
 				</div>
+				<FormSkeleton />
 			</div>
 		);
 	}
@@ -197,9 +199,7 @@ export function AdminAccountViewPage() {
 									</div>
 									<p className="text-sm">
 										{admin.phone || (
-											<span className="text-muted-foreground italic">
-												Not provided
-											</span>
+											<span className="text-muted-foreground italic">N/A</span>
 										)}
 									</p>
 								</div>
@@ -235,9 +235,7 @@ export function AdminAccountViewPage() {
 												day: "numeric",
 											})
 										) : (
-											<span className="text-muted-foreground italic">
-												Not provided
-											</span>
+											<span className="text-muted-foreground italic">N/A</span>
 										)}
 									</p>
 								</div>

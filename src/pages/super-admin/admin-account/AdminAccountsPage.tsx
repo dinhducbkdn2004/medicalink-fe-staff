@@ -9,13 +9,13 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { DeleteConfirmationModal } from "@/components/modals";
-import { AdminProfileModal } from "@/components/modals/AdminProfileModal";
 import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
 import { useStaffs, useDeleteStaff } from "@/hooks/api/useStaffs";
 import { usePaginationParams } from "@/hooks/usePaginationParams";
 import { toast } from "sonner";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
+import { DataTableSkeleton } from "@/components/ui/data-table-skeleton";
 import {
 	createAdminColumns,
 	type AdminAccount,
@@ -33,10 +33,8 @@ export function AdminAccountsPage() {
 		defaultSortOrder: "DESC",
 	});
 
-	const [showAdminModal, setShowAdminModal] = useState(false);
 	const [showPasswordModal, setShowPasswordModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const [selectedAdmin, setSelectedAdmin] = useState<AdminAccount | null>(null);
 	const [selectedAdminForPassword, setSelectedAdminForPassword] =
 		useState<AdminAccount | null>(null);
 	const [adminToDelete, setAdminToDelete] = useState<string | null>(null);
@@ -95,18 +93,8 @@ export function AdminAccountsPage() {
 		}
 	);
 
-	const convertToModalProps = (admin: AdminAccount) => ({
-		id: admin.id,
-		fullName: admin.fullName,
-		email: admin.email,
-		...(admin.phone && { phone: admin.phone }),
-		role: admin.role,
-		isMale: admin.isMale,
-	});
-
 	const handleCreateAdmin = () => {
-		setSelectedAdmin(null);
-		setShowAdminModal(true);
+		void navigate({ to: "/super-admin/admin-accounts/create" });
 	};
 
 	const handleEditAdmin = (adminId: string) => {
@@ -166,6 +154,14 @@ export function AdminAccountsPage() {
 		void confirmDeleteAdmin();
 	};
 
+	const handlePageChange = (page: number) => {
+		updateParams({ page });
+	};
+
+	const handlePageSizeChange = (limit: number) => {
+		updateParams({ limit, page: 1 });
+	};
+
 	const columns = createAdminColumns({
 		onView: handleViewAdmin,
 		onEdit: handleEditAdmin,
@@ -175,60 +171,55 @@ export function AdminAccountsPage() {
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			<Card>
-				<CardHeader>
-					<div className="flex flex-1 items-center justify-between space-y-0">
-						<div className="space-y-1">
-							<CardTitle>Admin Management</CardTitle>
-							<CardDescription>
-								A list of all administrator accounts in the system.
-							</CardDescription>
-						</div>
-					</div>
-				</CardHeader>
-
-				<CardContent className="space-y-4">
-					<DataTable
-						columns={columns}
-						data={adminAccounts}
-						searchKey="fullName"
-						searchValue={params.search || ""}
-						onSearchChange={setSearch}
-						toolbar={
-							<DataTableToolbar
-								searchKey="fullName"
-								searchPlaceholder="Search admins..."
-								searchValue={params.search || ""}
-								onSearchChange={setSearch}
-								onCreateNew={handleCreateAdmin}
-								createButtonText="Add Admin"
-								roleFilter={roleFilter}
-								onRoleFilterChange={setRoleFilter}
-							/>
-						}
-					/>{" "}
-					{!isLoading && (
-						<div className="flex items-center justify-between space-x-2 py-4">
-							<div className="text-muted-foreground text-sm">
-								Showing {Math.min(adminAccounts.length, params.limit)} of{" "}
-								{totalCount} admin(s)
-							</div>
-							<div className="flex items-center space-x-2">
-								<span className="text-sm">
-									Page {params.page} of {totalPages}
-								</span>
+			{isLoading ? (
+				<DataTableSkeleton
+					columns={6}
+					rows={10}
+					showHeader={true}
+					showToolbar={true}
+				/>
+			) : (
+				<Card>
+					<CardHeader>
+						<div className="flex flex-1 items-center justify-between space-y-0">
+							<div className="space-y-1">
+								<CardTitle>Admin Management</CardTitle>
+								<CardDescription>
+									A list of all administrator accounts in the system.
+								</CardDescription>
 							</div>
 						</div>
-					)}
-				</CardContent>
-			</Card>
+					</CardHeader>
 
-			{/* Admin Profile Modal */}
-			<AdminProfileModal
-				open={showAdminModal}
-				onOpenChange={setShowAdminModal}
-				admin={selectedAdmin ? convertToModalProps(selectedAdmin) : null}
-			/>
+					<CardContent className="space-y-4">
+						<DataTable
+							columns={columns}
+							data={adminAccounts}
+							searchKey="fullName"
+							searchValue={params.search || ""}
+							onSearchChange={setSearch}
+							toolbar={
+								<DataTableToolbar
+									searchKey="fullName"
+									searchPlaceholder="Search admins..."
+									searchValue={params.search || ""}
+									onSearchChange={setSearch}
+									onCreateNew={handleCreateAdmin}
+									createButtonText="Add Admin"
+									roleFilter={roleFilter}
+									onRoleFilterChange={setRoleFilter}
+								/>
+							}
+							pageCount={totalPages}
+							pageIndex={params.page}
+							pageSize={params.limit}
+							onPageChange={handlePageChange}
+							onPageSizeChange={handlePageSizeChange}
+							totalCount={totalCount}
+						/>
+					</CardContent>
+				</Card>
+			)}
 
 			{/* Change Password Modal */}
 			<AdminChangePasswordModal
@@ -236,7 +227,11 @@ export function AdminAccountsPage() {
 				onOpenChange={setShowPasswordModal}
 				user={
 					selectedAdminForPassword
-						? convertToModalProps(selectedAdminForPassword)
+						? {
+								id: selectedAdminForPassword.id,
+								fullName: selectedAdminForPassword.fullName,
+								email: selectedAdminForPassword.email,
+							}
 						: null
 				}
 				userType="admin"

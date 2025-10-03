@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { FormSkeleton } from "@/components/ui/data-table-skeleton";
 import { useDoctors } from "@/hooks/api/useDoctors";
 
 export function DoctorAccountViewPage() {
@@ -58,12 +59,13 @@ export function DoctorAccountViewPage() {
 	if (isLoading) {
 		return (
 			<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-				<div className="flex items-center gap-2">
+				<div className="mb-6 flex items-center gap-2">
 					<Button variant="ghost" size="icon" onClick={handleBack}>
 						<ArrowLeft className="h-4 w-4" />
 					</Button>
-					<h1 className="text-2xl font-bold">Loading...</h1>
+					<h1 className="text-2xl font-bold">Doctor Details</h1>
 				</div>
+				<FormSkeleton />
 			</div>
 		);
 	}
@@ -190,9 +192,7 @@ export function DoctorAccountViewPage() {
 									</div>
 									<p className="text-sm">
 										{doctor.phone || (
-											<span className="text-muted-foreground italic">
-												Not provided
-											</span>
+											<span className="text-muted-foreground italic">N/A</span>
 										)}
 									</p>
 								</div>
@@ -228,9 +228,7 @@ export function DoctorAccountViewPage() {
 												day: "numeric",
 											})
 										) : (
-											<span className="text-muted-foreground italic">
-												Not provided
-											</span>
+											<span className="text-muted-foreground italic">N/A</span>
 										)}
 									</p>
 								</div>

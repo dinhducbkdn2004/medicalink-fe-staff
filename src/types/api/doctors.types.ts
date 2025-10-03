@@ -21,12 +21,14 @@ export interface DoctorComplete extends Doctor {
 }
 
 export interface CreateDoctorRequest {
-	fullName: string;
+	name: string; // Changed from fullName to match API docs
 	email: string;
 	password: string;
 	phone?: string | null;
 	isMale?: boolean | null;
 	dateOfBirth?: Date | null;
+	specialtyId?: string;
+	workLocationId?: string;
 }
 
 export interface UpdateDoctorRequest {

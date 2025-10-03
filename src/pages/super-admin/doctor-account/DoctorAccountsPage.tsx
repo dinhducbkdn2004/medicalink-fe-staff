@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/card";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
+import { DataTableSkeleton } from "@/components/ui/data-table-skeleton";
 import {
 	createDoctorColumns,
 	type DoctorAccount,
 } from "@/components/data-table/doctor-columns";
 import { DeleteConfirmationModal } from "@/components/modals";
-import { DoctorProfileModal } from "@/components/modals/DoctorProfileModal";
 import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
 import { useDoctors, useDeleteDoctor } from "@/hooks/api/useDoctors";
 import { usePaginationParams } from "@/hooks/usePaginationParams";
@@ -26,17 +26,15 @@ export function DoctorAccountsPage() {
 	const navigate = useNavigate();
 
 	// Use URL-synced pagination params
-	const { params, setSearch } = usePaginationParams({
+	const { params, setSearch, updateParams } = usePaginationParams({
 		defaultPage: 1,
 		defaultLimit: 10,
 		defaultSortBy: "createdAt",
 		defaultSortOrder: "DESC",
 	});
 
-	const [showDoctorModal, setShowDoctorModal] = useState(false);
 	const [showPasswordModal, setShowPasswordModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
 	const [selectedDoctorForPassword, setSelectedDoctorForPassword] =
 		useState<Doctor | null>(null);
 	const [doctorToDelete, setDoctorToDelete] = useState<string | null>(null);
@@ -121,9 +119,16 @@ export function DoctorAccountsPage() {
 		void confirmDelete();
 	};
 
+	const handlePageChange = (page: number) => {
+		updateParams({ page });
+	};
+
+	const handlePageSizeChange = (limit: number) => {
+		updateParams({ limit, page: 1 });
+	};
+
 	const handleCreateDoctor = () => {
-		setSelectedDoctor(null);
-		setShowDoctorModal(true);
+		void navigate({ to: "/super-admin/doctor-accounts/create" });
 	};
 
 	const columns = createDoctorColumns({
@@ -135,76 +140,53 @@ export function DoctorAccountsPage() {
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			<Card>
-				<CardHeader>
-					<div className="flex flex-1 items-center justify-between space-y-0">
-						<div className="space-y-1">
-							<CardTitle>Doctor Management</CardTitle>
-							<CardDescription>
-								A list of all doctor accounts in the system.
-							</CardDescription>
-						</div>
-					</div>
-				</CardHeader>
-
-				<CardContent className="space-y-4">
-					<DataTable
-						columns={columns}
-						data={doctorAccounts}
-						searchKey="fullName"
-						searchValue={params.search || ""}
-						onSearchChange={setSearch}
-						toolbar={
-							<DataTableToolbar
-								searchKey="fullName"
-								searchPlaceholder="Search doctors..."
-								searchValue={params.search || ""}
-								onSearchChange={setSearch}
-								onCreateNew={handleCreateDoctor}
-								createButtonText="Add Doctor"
-							/>
-						}
-					/>
-
-					{!isLoading && (
-						<div className="flex items-center justify-between space-x-2 py-4">
-							<div className="text-muted-foreground text-sm">
-								Showing {Math.min(doctorAccounts.length, params.limit)} of{" "}
-								{totalCount} doctor(s)
-							</div>
-							<div className="flex items-center space-x-2">
-								<span className="text-sm">
-									Page {params.page} of {totalPages}
-								</span>
+			{isLoading ? (
+				<DataTableSkeleton
+					columns={6}
+					rows={10}
+					showHeader={true}
+					showToolbar={true}
+				/>
+			) : (
+				<Card>
+					<CardHeader>
+						<div className="flex flex-1 items-center justify-between space-y-0">
+							<div className="space-y-1">
+								<CardTitle>Doctor Management</CardTitle>
+								<CardDescription>
+									A list of all doctor accounts in the system.
+								</CardDescription>
 							</div>
 						</div>
-					)}
-				</CardContent>
-			</Card>
+					</CardHeader>
 
-			<DoctorProfileModal
-				open={showDoctorModal}
-				onOpenChange={setShowDoctorModal}
-				doctor={
-					selectedDoctor
-						? {
-								id: selectedDoctor.id,
-								fullName: selectedDoctor.fullName,
-								email: selectedDoctor.email,
-								...(selectedDoctor.phone
-									? { phone: selectedDoctor.phone }
-									: {}),
-								...(selectedDoctor.isMale !== null &&
-								selectedDoctor.isMale !== undefined
-									? { isMale: selectedDoctor.isMale }
-									: {}),
-								...(selectedDoctor.dateOfBirth
-									? { dateOfBirth: String(selectedDoctor.dateOfBirth) }
-									: {}),
+					<CardContent className="space-y-4">
+						<DataTable
+							columns={columns}
+							data={doctorAccounts}
+							searchKey="fullName"
+							searchValue={params.search || ""}
+							onSearchChange={setSearch}
+							toolbar={
+								<DataTableToolbar
+									searchKey="fullName"
+									searchPlaceholder="Search doctors..."
+									searchValue={params.search || ""}
+									onSearchChange={setSearch}
+									onCreateNew={handleCreateDoctor}
+									createButtonText="Add Doctor"
+								/>
 							}
-						: null
-				}
-			/>
+							pageCount={totalPages}
+							pageIndex={params.page}
+							pageSize={params.limit}
+							onPageChange={handlePageChange}
+							onPageSizeChange={handlePageSizeChange}
+							totalCount={totalCount}
+						/>
+					</CardContent>
+				</Card>
+			)}
 
 			<AdminChangePasswordModal
 				open={showPasswordModal}

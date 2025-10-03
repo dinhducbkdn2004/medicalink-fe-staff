@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Table } from "@tanstack/react-table";
-import { Plus, Search, X } from "lucide-react";
+import { Plus, Search, X, Settings2 } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import debounce from "debounce";
 
@@ -15,6 +15,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 
 interface DataTableToolbarProps<TData> {
@@ -93,7 +101,7 @@ export function DataTableToolbar<TData>({
 						placeholder={searchPlaceholder}
 						defaultValue={searchValue ?? ""}
 						onChange={(event) => handleSearchChange(event.target.value)}
-						className="h-8 w-[250px] pl-8"
+						className="h-8 w-[350px] pl-8"
 					/>
 				</div>
 
@@ -137,6 +145,45 @@ export function DataTableToolbar<TData>({
 			</div>
 
 			<div className="flex items-center gap-2">
+				{/* Column Visibility Toggle */}
+				{table && (
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button
+								variant="outline"
+								size="sm"
+								className="ml-auto hidden h-8 lg:flex"
+							>
+								<Settings2 className="mr-2 h-4 w-4" />
+								View
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end" className="w-[150px]">
+							<DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+							<DropdownMenuSeparator />
+							{table
+								.getAllColumns()
+								.filter((column) => column.getCanHide())
+								.map((column) => {
+									const isVisible = column.getIsVisible();
+									return (
+										<DropdownMenuCheckboxItem
+											key={column.id}
+											className="capitalize"
+											checked={isVisible}
+											onCheckedChange={(checked) => {
+												// Use only toggleVisibility
+												column.toggleVisibility(checked);
+											}}
+										>
+											{column.id}
+										</DropdownMenuCheckboxItem>
+									);
+								})}
+						</DropdownMenuContent>
+					</DropdownMenu>
+				)}
+
 				{/* Create New Button */}
 				{onCreateNew && (
 					<Button onClick={onCreateNew} size="sm" className="h-8">
