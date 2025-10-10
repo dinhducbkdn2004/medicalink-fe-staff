@@ -23,6 +23,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { FormSkeleton } from "@/components/ui/data-table-skeleton";
 import { useDoctors } from "@/hooks/api/useDoctors";
+import { Spinner } from "@/components/ui/spinner";
 
 export function DoctorAccountViewPage() {
 	const params = useParams({ from: "/super-admin/doctor-accounts/$id/view" });
@@ -58,14 +59,8 @@ export function DoctorAccountViewPage() {
 
 	if (isLoading) {
 		return (
-			<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-				<div className="mb-6 flex items-center gap-2">
-					<Button variant="ghost" size="icon" onClick={handleBack}>
-						<ArrowLeft className="h-4 w-4" />
-					</Button>
-					<h1 className="text-2xl font-bold">Doctor Details</h1>
-				</div>
-				<FormSkeleton />
+			<div className="flex min-h-screen items-center justify-center">
+				<Spinner size={40} className="text-primary" />
 			</div>
 		);
 	}
@@ -93,18 +88,11 @@ export function DoctorAccountViewPage() {
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			{/* Header */}
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
 					<Button variant="ghost" size="icon" onClick={handleBack}>
 						<ArrowLeft className="h-4 w-4" />
 					</Button>
-					<div>
-						<h1 className="text-xl font-semibold">Doctor Profile</h1>
-						<p className="text-muted-foreground text-sm">
-							View and manage doctor account details
-						</p>
-					</div>
 				</div>
 				<Button onClick={handleEdit}>
 					<Edit className="mr-2 h-4 w-4" />

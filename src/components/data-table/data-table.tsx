@@ -22,7 +22,26 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 import { DataTablePagination } from "./data-table-pagination";
+
+// Skeleton row component
+const SkeletonRow = ({ columns }: { columns: number }) => (
+	<TableRow>
+		{Array.from({ length: columns }, (_, index) => (
+			<TableCell key={index} className="h-12">
+				{index === 0 ? (
+					<div className="flex items-center space-x-3">
+						<Skeleton className="h-8 w-8 rounded-full" />
+						<Skeleton className="h-4 w-32" />
+					</div>
+				) : (
+					<Skeleton className="h-4 w-20" />
+				)}
+			</TableCell>
+		))}
+	</TableRow>
+);
 
 interface DataTableProps<TData, TValue> {
 	readonly columns: ColumnDef<TData, TValue>[];
@@ -32,6 +51,8 @@ interface DataTableProps<TData, TValue> {
 	readonly onSearchChange?: (value: string) => void;
 	readonly toolbar?: React.ReactNode;
 	readonly showPagination?: boolean;
+	readonly isLoading?: boolean;
+	readonly loadingRows?: number;
 	// Server-side pagination props
 	readonly pageCount?: number;
 	readonly pageIndex?: number;
@@ -49,6 +70,8 @@ export function DataTable<TData, TValue>({
 	onSearchChange,
 	toolbar,
 	showPagination = true,
+	isLoading = false,
+	loadingRows = 10,
 	pageCount,
 	pageIndex,
 	pageSize,
@@ -148,7 +171,14 @@ export function DataTable<TData, TValue>({
 						))}
 					</TableHeader>
 					<TableBody>
-						{table.getRowModel().rows?.length ? (
+						{isLoading &&
+							// Show skeleton rows when loading
+							Array.from({ length: loadingRows }, (_, index) => (
+								<SkeletonRow key={index} columns={columns.length} />
+							))}
+
+						{!isLoading &&
+							table.getRowModel().rows?.length > 0 &&
 							table.getRowModel().rows.map((row) => (
 								<TableRow
 									key={row.id}
@@ -163,8 +193,9 @@ export function DataTable<TData, TValue>({
 										</TableCell>
 									))}
 								</TableRow>
-							))
-						) : (
+							))}
+
+						{!isLoading && table.getRowModel().rows?.length === 0 && (
 							<TableRow>
 								<TableCell
 									colSpan={columns.length}

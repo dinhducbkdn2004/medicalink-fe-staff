@@ -11,7 +11,6 @@ import {
 	Mail,
 	Save,
 	Stethoscope,
-	MapPin,
 } from "lucide-react";
 
 import {
@@ -40,8 +39,6 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useCreateDoctor } from "@/hooks/api/useDoctors";
-import { useActiveSpecialties } from "@/hooks/api/useSpecialties";
-import { useActiveWorkLocations } from "@/hooks/api/useWorkLocations";
 import type { CreateDoctorRequest } from "@/types";
 
 const createFormSchema = z.object({
@@ -60,8 +57,6 @@ const createFormSchema = z.object({
 			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
 			"Password must contain at least one uppercase letter, one lowercase letter, and one number"
 		),
-	specialtyId: z.string().optional(),
-	workLocationId: z.string().optional(),
 	phone: z
 		.string()
 		.optional()
@@ -85,8 +80,6 @@ export function DoctorCreatePage() {
 			fullName: "",
 			email: "",
 			password: "",
-			specialtyId: "",
-			workLocationId: "",
 			phone: "",
 			isMale: true,
 			dateOfBirth: "",
@@ -95,34 +88,18 @@ export function DoctorCreatePage() {
 
 	const createDoctorMutation = useCreateDoctor();
 
-	// Fetch specialties for the dropdown
-	const { data: specialties } = useActiveSpecialties();
-
-	// Fetch work locations for the dropdown
-	const { data: workLocations } = useActiveWorkLocations();
-
 	const onSubmit = async (values: CreateFormValues) => {
 		try {
 			setIsSubmitting(true);
 
 			const createData: CreateDoctorRequest = {
-				name: values.fullName, // Map fullName to name for API
 				email: values.email,
 				password: values.password,
-				phone: values.phone && values.phone.trim() !== "" ? values.phone : null,
-				isMale: values.isMale ?? null,
+				fullName: values.fullName,
 				dateOfBirth: values.dateOfBirth ? new Date(values.dateOfBirth) : null,
+				isMale: values.isMale ?? null,
+				phone: values.phone && values.phone.trim() !== "" ? values.phone : null,
 			};
-
-			// Add specialty if selected
-			if (values.specialtyId) {
-				createData.specialtyId = values.specialtyId;
-			}
-
-			// Add work location if selected
-			if (values.workLocationId) {
-				createData.workLocationId = values.workLocationId;
-			}
 
 			await createDoctorMutation.mutateAsync(createData);
 			toast.success("Doctor created successfully");
@@ -240,85 +217,6 @@ export function DoctorCreatePage() {
 										</FormItem>
 									)}
 								/>
-							</div>
-
-							{/* Professional Information */}
-							<div className="space-y-4">
-								<div className="border-t pt-4">
-									<h3 className="mb-4 text-lg font-medium">
-										Professional Information (Optional)
-									</h3>
-
-									<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-										<FormField
-											control={form.control}
-											name="specialtyId"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel className="flex items-center gap-2">
-														<Stethoscope className="h-4 w-4" />
-														Medical Specialty
-													</FormLabel>
-													<Select
-														onValueChange={field.onChange}
-														value={field.value || ""}
-													>
-														<FormControl>
-															<SelectTrigger>
-																<SelectValue placeholder="Select a specialty (optional)" />
-															</SelectTrigger>
-														</FormControl>
-														<SelectContent>
-															{(specialties || []).map((specialty) => (
-																<SelectItem
-																	key={specialty.id}
-																	value={specialty.id}
-																>
-																	{specialty.name}
-																</SelectItem>
-															))}
-														</SelectContent>
-													</Select>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-
-										<FormField
-											control={form.control}
-											name="workLocationId"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel className="flex items-center gap-2">
-														<MapPin className="h-4 w-4" />
-														Work Location
-													</FormLabel>
-													<Select
-														onValueChange={field.onChange}
-														value={field.value || ""}
-													>
-														<FormControl>
-															<SelectTrigger>
-																<SelectValue placeholder="Select a work location (optional)" />
-															</SelectTrigger>
-														</FormControl>
-														<SelectContent>
-															{(workLocations || []).map((location) => (
-																<SelectItem
-																	key={location.id}
-																	value={location.id}
-																>
-																	{location.name}
-																</SelectItem>
-															))}
-														</SelectContent>
-													</Select>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-									</div>
-								</div>
 							</div>
 
 							{/* Personal Information */}

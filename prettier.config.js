@@ -1,24 +1,30 @@
+/** @type {import("prettier").Config} */
 const prettierConfig = {
+	// Basic formatting
 	printWidth: 80,
 	tabWidth: 2,
 	useTabs: true,
 	semi: true,
 	singleQuote: false,
 	quoteProps: "as-needed",
+
+	// JSX formatting
 	jsxSingleQuote: false,
-	trailingComma: "es5",
-	bracketSpacing: true,
 	bracketSameLine: false,
+
+	// Trailing commas
+	trailingComma: "es5",
+
+	// Spacing
+	bracketSpacing: true,
 	arrowParens: "always",
-	requirePragma: false,
-	insertPragma: false,
-	proseWrap: "preserve",
-	htmlWhitespaceSensitivity: "css",
+
+	// Line endings
 	endOfLine: "lf",
-	embeddedLanguageFormatting: "auto",
-	singleAttributePerLine: false,
-	tailwindFunctions: ["cn"],
-	plugins: [("prettier-plugin-tailwindcss")],
+
+	// Tailwind plugin
+	plugins: ["prettier-plugin-tailwindcss"],
+	tailwindFunctions: ["cn", "clsx"],
 };
 
 export default prettierConfig;

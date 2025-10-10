@@ -21,8 +21,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { FormSkeleton } from "@/components/ui/data-table-skeleton";
 import { useStaffs } from "@/hooks/api/useStaffs";
+import { Spinner } from "@/components/ui/spinner";
 
 export function AdminAccountViewPage() {
 	const params = useParams({ from: "/super-admin/admin-accounts/$id/view" });
@@ -58,14 +58,8 @@ export function AdminAccountViewPage() {
 
 	if (isLoading) {
 		return (
-			<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-				<div className="mb-6 flex items-center gap-2">
-					<Button variant="ghost" size="icon" onClick={handleBack}>
-						<ArrowLeft className="h-4 w-4" />
-					</Button>
-					<h1 className="text-2xl font-bold">Admin Details</h1>
-				</div>
-				<FormSkeleton />
+			<div className="flex min-h-screen items-center justify-center">
+				<Spinner size={40} className="text-primary" />
 			</div>
 		);
 	}

@@ -26,16 +26,6 @@ import {
 export function PermissionsPage() {
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			{/* Header */}
-			<div className="flex items-center justify-between">
-				<div>
-					<h1 className="text-xl font-semibold">Permissions Management</h1>
-					<p className="text-muted-foreground text-sm">
-						Permission groups management - Under construction
-					</p>
-				</div>
-			</div>
-
 			{/* Notice Card */}
 			<Card>
 				<CardHeader>

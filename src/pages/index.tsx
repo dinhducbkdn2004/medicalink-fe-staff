@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { getDashboardPath } from "@/hooks/useAuthRedirect";
-import { Spinner } from "@/components/ui/shadcn-io/spinner";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function IndexPage() {
 	const { user, isAuthenticated, isLoading } = useAuthStatus();

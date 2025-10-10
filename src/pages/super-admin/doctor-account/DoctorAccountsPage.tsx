@@ -2,16 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
-import { DataTableSkeleton } from "@/components/ui/data-table-skeleton";
 import {
 	createDoctorColumns,
 	type DoctorAccount,
@@ -25,7 +18,6 @@ import type { Doctor } from "@/types";
 export function DoctorAccountsPage() {
 	const navigate = useNavigate();
 
-	// Use URL-synced pagination params
 	const { params, setSearch, updateParams } = usePaginationParams({
 		defaultPage: 1,
 		defaultLimit: 10,
@@ -40,7 +32,6 @@ export function DoctorAccountsPage() {
 	const [doctorToDelete, setDoctorToDelete] = useState<string | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
 
-	// API call with URL params (cast sortBy to proper type)
 	const apiParams = {
 		...params,
 		sortBy:
@@ -140,53 +131,35 @@ export function DoctorAccountsPage() {
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			{isLoading ? (
-				<DataTableSkeleton
-					columns={6}
-					rows={10}
-					showHeader={true}
-					showToolbar={true}
-				/>
-			) : (
-				<Card>
-					<CardHeader>
-						<div className="flex flex-1 items-center justify-between space-y-0">
-							<div className="space-y-1">
-								<CardTitle>Doctor Management</CardTitle>
-								<CardDescription>
-									A list of all doctor accounts in the system.
-								</CardDescription>
-							</div>
-						</div>
-					</CardHeader>
-
-					<CardContent className="space-y-4">
-						<DataTable
-							columns={columns}
-							data={doctorAccounts}
-							searchKey="fullName"
-							searchValue={params.search || ""}
-							onSearchChange={setSearch}
-							toolbar={
-								<DataTableToolbar
-									searchKey="fullName"
-									searchPlaceholder="Search doctors..."
-									searchValue={params.search || ""}
-									onSearchChange={setSearch}
-									onCreateNew={handleCreateDoctor}
-									createButtonText="Add Doctor"
-								/>
-							}
-							pageCount={totalPages}
-							pageIndex={params.page}
-							pageSize={params.limit}
-							onPageChange={handlePageChange}
-							onPageSizeChange={handlePageSizeChange}
-							totalCount={totalCount}
-						/>
-					</CardContent>
-				</Card>
-			)}
+			<Card>
+				<CardContent className="space-y-4 p-6">
+					<DataTable
+						columns={columns}
+						data={doctorAccounts}
+						searchKey="fullName"
+						searchValue={params.search || ""}
+						onSearchChange={setSearch}
+						isLoading={isLoading}
+						loadingRows={params.limit}
+						toolbar={
+							<DataTableToolbar
+								searchKey="fullName"
+								searchPlaceholder="Search doctors..."
+								searchValue={params.search || ""}
+								onSearchChange={setSearch}
+								onCreateNew={handleCreateDoctor}
+								createButtonText="Add Doctor"
+							/>
+						}
+						pageCount={totalPages}
+						pageIndex={params.page}
+						pageSize={params.limit}
+						onPageChange={handlePageChange}
+						onPageSizeChange={handlePageSizeChange}
+						totalCount={totalCount}
+					/>
+				</CardContent>
+			</Card>
 
 			<AdminChangePasswordModal
 				open={showPasswordModal}

@@ -44,6 +44,7 @@ import {
 import { useStaffs, useUpdateStaff } from "@/hooks/api/useStaffs";
 import type { UpdateStaffRequest } from "@/types";
 import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
+import { Spinner } from "@/components/ui/spinner";
 
 const editFormSchema = z.object({
 	fullName: z
@@ -168,13 +169,8 @@ export function AdminAccountEditPage() {
 
 	if (isLoading) {
 		return (
-			<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-				<div className="flex items-center gap-2">
-					<Button variant="ghost" size="icon" onClick={handleBack}>
-						<ArrowLeft className="h-4 w-4" />
-					</Button>
-					<h1 className="text-2xl font-bold">Loading...</h1>
-				</div>
+			<div className="flex min-h-screen items-center justify-center">
+				<Spinner size={40} className="text-primary" />
 			</div>
 		);
 	}

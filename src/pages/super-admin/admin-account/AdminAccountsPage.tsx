@@ -1,13 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { DeleteConfirmationModal } from "@/components/modals";
 import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
 import { useStaffs, useDeleteStaff } from "@/hooks/api/useStaffs";
@@ -15,7 +9,6 @@ import { usePaginationParams } from "@/hooks/usePaginationParams";
 import { toast } from "sonner";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
-import { DataTableSkeleton } from "@/components/ui/data-table-skeleton";
 import {
 	createAdminColumns,
 	type AdminAccount,
@@ -171,55 +164,37 @@ export function AdminAccountsPage() {
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			{isLoading ? (
-				<DataTableSkeleton
-					columns={6}
-					rows={10}
-					showHeader={true}
-					showToolbar={true}
-				/>
-			) : (
-				<Card>
-					<CardHeader>
-						<div className="flex flex-1 items-center justify-between space-y-0">
-							<div className="space-y-1">
-								<CardTitle>Admin Management</CardTitle>
-								<CardDescription>
-									A list of all administrator accounts in the system.
-								</CardDescription>
-							</div>
-						</div>
-					</CardHeader>
-
-					<CardContent className="space-y-4">
-						<DataTable
-							columns={columns}
-							data={adminAccounts}
-							searchKey="fullName"
-							searchValue={params.search || ""}
-							onSearchChange={setSearch}
-							toolbar={
-								<DataTableToolbar
-									searchKey="fullName"
-									searchPlaceholder="Search admins..."
-									searchValue={params.search || ""}
-									onSearchChange={setSearch}
-									onCreateNew={handleCreateAdmin}
-									createButtonText="Add Admin"
-									roleFilter={roleFilter}
-									onRoleFilterChange={setRoleFilter}
-								/>
-							}
-							pageCount={totalPages}
-							pageIndex={params.page}
-							pageSize={params.limit}
-							onPageChange={handlePageChange}
-							onPageSizeChange={handlePageSizeChange}
-							totalCount={totalCount}
-						/>
-					</CardContent>
-				</Card>
-			)}
+			<Card>
+				<CardContent className="space-y-4 p-6">
+					<DataTable
+						columns={columns}
+						data={adminAccounts}
+						searchKey="fullName"
+						searchValue={params.search || ""}
+						onSearchChange={setSearch}
+						isLoading={isLoading}
+						loadingRows={params.limit}
+						toolbar={
+							<DataTableToolbar
+								searchKey="fullName"
+								searchPlaceholder="Search admins..."
+								searchValue={params.search || ""}
+								onSearchChange={setSearch}
+								roleFilter={roleFilter}
+								onRoleFilterChange={setRoleFilter}
+								onCreateNew={handleCreateAdmin}
+								createButtonText="Add Admin"
+							/>
+						}
+						pageCount={totalPages}
+						pageIndex={params.page}
+						pageSize={params.limit}
+						onPageChange={handlePageChange}
+						onPageSizeChange={handlePageSizeChange}
+						totalCount={totalCount}
+					/>
+				</CardContent>
+			</Card>
 
 			{/* Change Password Modal */}
 			<AdminChangePasswordModal

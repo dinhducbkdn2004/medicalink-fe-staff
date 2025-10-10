@@ -5,7 +5,7 @@ import { handleApiError } from "./errorHandler";
 
 const API_BASE_URL =
 	import.meta.env["VITE_APP_ENVIRONMENT"] === "production"
-		? import.meta.env["VITE_API_BASE_URL_PRO"] || "https://api.medicalink.com"
+		? import.meta.env["VITE_API_BASE_URL_PRO"] || "https://api.medicalink.click"
 		: import.meta.env["VITE_API_BASE_URL_DEV"] || "http://localhost:3000";
 
 export const apiClient = axios.create({

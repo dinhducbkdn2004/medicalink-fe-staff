@@ -16,9 +16,11 @@
 	"type": "module",
 	"scripts": {
 		"setup": "git init && npx husky init",
-		"format": "prettier \"src/**/*.{ts,tsx}\" --write",
-		"lint": "eslint --max-warnings 0",
-		"lint:fix": "eslint --max-warnings 0 --fix",
+		"format": "prettier \"src/**/*.{ts,tsx,js,jsx}\" --write",
+		"format:check": "prettier \"src/**/*.{ts,tsx,js,jsx}\" --check",
+		"lint": "eslint src --max-warnings 0",
+		"lint:fix": "eslint src --max-warnings 0 --fix",
+		"type-check": "tsc --noEmit",
 		"dev": "vite",
 		"build": "tsc && vite build",
 		"preview": "vite preview",
@@ -44,6 +46,7 @@
 		"@radix-ui/react-separator": "^1.1.7",
 		"@radix-ui/react-slot": "^1.2.3",
 		"@radix-ui/react-switch": "^1.2.6",
+		"@radix-ui/react-tabs": "^1.1.13",
 		"@radix-ui/react-tooltip": "^1.2.8",
 		"@tanstack/react-query": "^5.83.0",
 		"@tanstack/react-router": "^1.131.35",
@@ -92,6 +95,7 @@
 		"eslint-plugin-unicorn": "^60.0.0",
 		"globals": "^16.3.0",
 		"husky": "^9.1.7",
+		"lint-staged": "^16.2.3",
 		"prettier": "^3.6.2",
 		"prettier-plugin-tailwindcss": "^0.6.14",
 		"tailwindcss": "^4.1.11",
@@ -104,5 +108,14 @@
 		"commitizen": {
 			"path": "./node_modules/cz-conventional-changelog"
 		}
+	},
+	"lint-staged": {
+		"src/**/*.{ts,tsx}": [
+			"eslint --fix --max-warnings 0",
+			"prettier --write"
+		],
+		"src/**/*.{js,jsx,json,css,md}": [
+			"prettier --write"
+		]
 	}
 }

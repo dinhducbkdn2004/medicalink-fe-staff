@@ -1,6 +1,6 @@
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
-import { Spinner } from "@/components/ui/shadcn-io/spinner";
+import { Spinner } from "@/components/ui/spinner";
 import { LoginForm } from "@/components/forms/login-form";
 import logoImage from "@/assets/images/rect-logo-xl.png";
 
@@ -12,7 +12,7 @@ export const LoginPage = () => {
 	if (isAuthenticated) {
 		return (
 			<div className="flex min-h-screen items-center justify-center">
-				<Spinner size={48} className="text-primary" />
+				<Spinner size={48} className="text-light" />
 			</div>
 		);
 	}
