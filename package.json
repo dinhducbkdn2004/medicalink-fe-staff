@@ -28,6 +28,15 @@
 		"commitizen": "exec < /dev/tty && git cz --hook || true",
 		"prepare": "husky"
 	},
+	"lint-staged": {
+		"src/**/*.{ts,js,html,css,scss}": [
+			"eslint --fix",
+			"prettier --write"
+		],
+		"*.{json,md}": [
+			"prettier --write"
+		]
+	},
 	"dependencies": {
 		"@dnd-kit/core": "^6.3.1",
 		"@dnd-kit/utilities": "^3.2.2",
@@ -108,14 +117,5 @@
 		"commitizen": {
 			"path": "./node_modules/cz-conventional-changelog"
 		}
-	},
-	"lint-staged": {
-		"src/**/*.{ts,tsx}": [
-			"eslint --fix --max-warnings 0",
-			"prettier --write"
-		],
-		"src/**/*.{js,jsx,json,css,md}": [
-			"prettier --write"
-		]
 	}
 }
