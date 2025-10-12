@@ -22,9 +22,9 @@ export const AdminDashboardLayout = ({
 		<SidebarProvider>
 			<AppSidebar userRole={userRole} />
 			<SidebarInset>
-				<DashboardHeader showSearch={true} onRefresh={handleRefresh} />
+				<DashboardHeader onRefresh={handleRefresh} />
 
-				<div className="flex flex-1 flex-col gap-4 p-4 pt-6">{children}</div>
+				<div className="flex flex-1 flex-col p-2 pt-2">{children}</div>
 			</SidebarInset>
 		</SidebarProvider>
 	);

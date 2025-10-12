@@ -81,7 +81,7 @@ export function IntroductionEditor({
 				quillInstanceRef.current.setText("");
 				// Set to null
 				quillInstanceRef.current = null;
-			} catch (error) {
+			} catch (_error) {
 				// Ignore cleanup errors
 				quillInstanceRef.current = null;
 			}

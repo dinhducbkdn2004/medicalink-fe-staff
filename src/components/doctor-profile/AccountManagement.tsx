@@ -1,8 +1,3 @@
-/**
- * Account Management Component
- * Password change, account settings, security options
- */
-
 import { useState } from "react";
 import { Shield, Key, Settings, Save } from "lucide-react";
 import {
@@ -15,7 +10,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-// Alert components removed as not found in project
 import { Separator } from "@/components/ui/separator";
 
 interface AccountManagementProps {
@@ -47,8 +41,6 @@ export function AccountManagement({ isEditMode }: AccountManagementProps) {
 			return;
 		}
 
-		// TODO: Implement password change API call
-		console.log("Changing password...");
 		setIsChangingPassword(false);
 		setPasswordForm({
 			currentPassword: "",

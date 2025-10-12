@@ -115,7 +115,7 @@ export function DoctorProfileHeader({
 								placeholder="Full Name"
 							/>
 						) : (
-							<h1 className="text-lg font-semibold">{doctor.fullName}</h1>
+							<h1 className="text-xl font-bold">{doctor.fullName}</h1>
 						)}
 
 						{doctor.degree && (
@@ -147,7 +147,7 @@ export function DoctorProfileHeader({
 						<div className="text-muted-foreground flex items-center gap-2">
 							<MapPin className="h-4 w-4" />
 							{doctor.workLocations?.[0] && (
-								<span className="text-sm">
+								<span className="text-base">
 									{doctor.workLocations[0].name}
 									{doctor.workLocations.length > 1 &&
 										` +${doctor.workLocations.length - 1} more`}
@@ -156,24 +156,30 @@ export function DoctorProfileHeader({
 						</div>
 					)}
 
-					<div className="grid grid-cols-3 gap-3 border-t pt-3">
+					<div className="grid grid-cols-3 gap-3 border-t pt-4">
 						<div className="text-center">
-							<div className="text-primary text-base font-semibold">
+							<div className="text-primary text-lg font-bold">
 								{doctor.specialties?.length || 0}
 							</div>
-							<div className="text-muted-foreground text-xs">Specialties</div>
+							<div className="text-muted-foreground text-sm font-medium">
+								Specialties
+							</div>
 						</div>
 						<div className="text-center">
-							<div className="text-primary text-base font-semibold">
+							<div className="text-primary text-lg font-bold">
 								{doctor.workLocations?.length || 0}
 							</div>
-							<div className="text-muted-foreground text-xs">Locations</div>
+							<div className="text-muted-foreground text-sm font-medium">
+								Locations
+							</div>
 						</div>
 						<div className="text-center">
-							<div className="text-primary text-base font-semibold">
+							<div className="text-primary text-lg font-bold">
 								{doctor.experience?.length || 0}
 							</div>
-							<div className="text-muted-foreground text-xs">Years Exp.</div>
+							<div className="text-muted-foreground text-sm font-medium">
+								Years Exp.
+							</div>
 						</div>
 					</div>
 				</div>

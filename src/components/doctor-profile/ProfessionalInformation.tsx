@@ -92,8 +92,6 @@ export function ProfessionalInformation({
 		const editData = formData[field as keyof typeof formData] as string[];
 		const displayData = isEditMode ? editData : data || [];
 
-		if (!isEditMode && (!data || data.length === 0)) return null;
-
 		return (
 			<div className="space-y-3">
 				<div className="flex items-center gap-2">
@@ -139,14 +137,22 @@ export function ProfessionalInformation({
 					</div>
 				) : (
 					<div className="space-y-2">
-						{displayData.map((item, index) => (
-							<div
-								key={`${field}-display-${index}-${item.slice(0, 10)}`}
-								className="bg-muted/50 rounded-lg border p-3"
-							>
-								<p className="text-sm">{item}</p>
+						{displayData.length > 0 ? (
+							displayData.map((item, index) => (
+								<div
+									key={`${field}-display-${index}-${item.slice(0, 10)}`}
+									className="bg-muted/50 rounded-lg border p-3"
+								>
+									<p className="text-base">{item}</p>
+								</div>
+							))
+						) : (
+							<div className="rounded-lg border border-orange-200 bg-orange-50 p-3">
+								<p className="text-sm text-orange-600 italic">
+									⚠️ Cần bổ sung thông tin {title.toLowerCase()}
+								</p>
 							</div>
-						))}
+						)}
 					</div>
 				)}
 			</div>
@@ -154,9 +160,9 @@ export function ProfessionalInformation({
 	};
 	return (
 		<Card>
-			<CardHeader className="pb-3">
-				<CardTitle className="flex items-center gap-2 text-base">
-					<GraduationCap className="h-4 w-4" />
+			<CardHeader className="pb-4">
+				<CardTitle className="flex items-center gap-2 text-lg">
+					<GraduationCap className="h-5 w-5" />
 					Professional Information
 				</CardTitle>
 				<CardDescription className="text-sm">
@@ -165,28 +171,34 @@ export function ProfessionalInformation({
 			</CardHeader>
 			<CardContent className="space-y-6">
 				{/* Academic Degree Section */}
-				{(doctor.degree || isEditMode) && (
-					<div className="space-y-3">
-						<div className="flex items-center gap-2">
-							<Award className="h-4 w-4" />
-							<Label className="font-medium">Academic Degree & Title</Label>
-						</div>
-						{isEditMode ? (
-							<Input
-								value={formData.degree}
-								onChange={(e) => onFormChange("degree", e.target.value)}
-								placeholder="e.g., Associate Professor, Dr., MD, PhD"
-							/>
-						) : (
-							<div className="bg-muted/50 rounded-lg border p-3">
-								<div className="flex items-center gap-3">
-									<Award className="text-primary h-4 w-4" />
-									<p className="text-sm font-semibold">{doctor.degree}</p>
-								</div>
-							</div>
-						)}
+				<div className="space-y-3">
+					<div className="flex items-center gap-2">
+						<Award className="h-4 w-4" />
+						<Label className="font-medium">Academic Degree & Title</Label>
 					</div>
-				)}
+					{isEditMode ? (
+						<Input
+							value={formData.degree}
+							onChange={(e) => onFormChange("degree", e.target.value)}
+							placeholder="e.g., Associate Professor, Dr., MD, PhD"
+						/>
+					) : (
+						<div
+							className={`rounded-lg border p-3 ${doctor.degree ? "bg-muted/50" : "border-orange-200 bg-orange-50"}`}
+						>
+							<div className="flex items-center gap-3">
+								<Award
+									className={`h-4 w-4 ${doctor.degree ? "text-primary" : "text-orange-500"}`}
+								/>
+								<p
+									className={`text-base font-medium ${doctor.degree ? "text-muted-foreground" : "text-orange-600 italic"}`}
+								>
+									{doctor.degree || "⚠️ Cần bổ sung học vị và chức danh"}
+								</p>
+							</div>
+						</div>
+					)}
+				</div>
 
 				{/* Positions */}
 				{renderArrayField(
@@ -198,33 +210,44 @@ export function ProfessionalInformation({
 				)}
 
 				{/* Medical Specialties */}
-				{doctor.specialties && doctor.specialties.length > 0 && (
-					<div className="space-y-4">
-						<div className="flex items-center gap-2">
-							<Stethoscope className="h-4 w-4" />
-							<Label className="font-medium">Medical Specialties</Label>
-						</div>
+				<div className="space-y-4">
+					<div className="flex items-center gap-2">
+						<Stethoscope className="h-4 w-4" />
+						<Label className="font-medium">Medical Specialties</Label>
+					</div>
+					{doctor.specialties && doctor.specialties.length > 0 ? (
 						<div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
 							{doctor.specialties.map((specialty) => (
 								<div
 									key={specialty.id}
-									className="bg-muted/50 flex items-center gap-3 rounded-lg border p-2.5"
+									className="bg-muted/50 flex items-center gap-3 rounded-lg border p-3"
 								>
 									<Stethoscope className="text-primary h-4 w-4" />
-									<span className="text-sm font-medium">{specialty.name}</span>
+									<span className="text-base font-medium">
+										{specialty.name}
+									</span>
 								</div>
 							))}
 						</div>
-					</div>
-				)}
+					) : (
+						<div className="rounded-lg border border-orange-200 bg-orange-50 p-3">
+							<div className="flex items-center gap-3">
+								<Stethoscope className="h-4 w-4 text-orange-500" />
+								<p className="text-sm text-orange-600 italic">
+									⚠️ Cần bổ sung chuyên khoa
+								</p>
+							</div>
+						</div>
+					)}
+				</div>
 
 				{/* Work Locations */}
-				{doctor.workLocations && doctor.workLocations.length > 0 && (
-					<div className="space-y-4">
-						<div className="flex items-center gap-2">
-							<Building2 className="h-4 w-4" />
-							<Label className="font-medium">Work Locations</Label>
-						</div>
+				<div className="space-y-4">
+					<div className="flex items-center gap-2">
+						<Building2 className="h-4 w-4" />
+						<Label className="font-medium">Work Locations</Label>
+					</div>
+					{doctor.workLocations && doctor.workLocations.length > 0 ? (
 						<div className="space-y-2">
 							{doctor.workLocations.map((location) => (
 								<div
@@ -234,20 +257,31 @@ export function ProfessionalInformation({
 									<div className="flex items-start gap-3">
 										<MapPin className="text-primary mt-0.5 h-4 w-4" />
 										<div className="flex-1 space-y-1">
-											<h4 className="text-sm font-semibold">{location.name}</h4>
-											<p className="text-muted-foreground text-xs">
+											<h4 className="text-base font-semibold">
+												{location.name}
+											</h4>
+											<p className="text-muted-foreground text-sm">
 												{location.address}
 											</p>
 											{location.phone && (
-												<p className="text-xs font-medium">{location.phone}</p>
+												<p className="text-sm font-medium">{location.phone}</p>
 											)}
 										</div>
 									</div>
 								</div>
 							))}
 						</div>
-					</div>
-				)}
+					) : (
+						<div className="rounded-lg border border-orange-200 bg-orange-50 p-3">
+							<div className="flex items-center gap-3">
+								<Building2 className="h-4 w-4 text-orange-500" />
+								<p className="text-sm text-orange-600 italic">
+									⚠️ Cần bổ sung nơi làm việc
+								</p>
+							</div>
+						</div>
+					)}
+				</div>
 
 				{/* Professional Memberships */}
 				{renderArrayField(

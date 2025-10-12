@@ -34,6 +34,7 @@ import {
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Spinner } from "@/components/ui/spinner";
+import { DoctorProfileSkeleton } from "@/components/ui/doctor-profile-skeleton";
 
 export function ModernDoctorProfilePage() {
 	const { id } = useParams({
@@ -94,8 +95,24 @@ export function ModernDoctorProfilePage() {
 	const updateDoctorMutation = useMutation({
 		mutationFn: ({ id, data }: { id: string; data: any }) =>
 			doctorsApi.updateDoctor(id, data),
-		onSuccess: () => {
+		onSuccess: (updatedData) => {
 			toast.success(MESSAGES.SUCCESS.DOCTOR.UPDATED);
+			// Update cache immediately for instant UI update
+			queryClient.setQueryData(["doctor-complete", id], (oldData: any) => {
+				if (oldData?.data?.data) {
+					return {
+						...oldData,
+						data: {
+							...oldData.data,
+							data: {
+								...oldData.data.data,
+								...updatedData?.data?.data,
+							},
+						},
+					};
+				}
+				return oldData;
+			});
 			queryClient.invalidateQueries({ queryKey: ["doctor-complete", id] });
 			setIsEditMode(false);
 		},
@@ -107,8 +124,24 @@ export function ModernDoctorProfilePage() {
 	const updateProfileMutation = useMutation({
 		mutationFn: ({ profileId, data }: { profileId: string; data: any }) =>
 			doctorsApi.updateDoctorProfile(profileId, data),
-		onSuccess: () => {
+		onSuccess: (updatedData) => {
 			toast.success(MESSAGES.SUCCESS.DOCTOR.PROFILE_UPDATED);
+			// Update cache immediately for instant UI update
+			queryClient.setQueryData(["doctor-complete", id], (oldData: any) => {
+				if (oldData?.data?.data) {
+					return {
+						...oldData,
+						data: {
+							...oldData.data,
+							data: {
+								...oldData.data.data,
+								...updatedData?.data?.data,
+							},
+						},
+					};
+				}
+				return oldData;
+			});
 			queryClient.invalidateQueries({ queryKey: ["doctor-complete", id] });
 		},
 		onError: () => {
@@ -124,6 +157,22 @@ export function ModernDoctorProfilePage() {
 				? MESSAGES.SUCCESS.DOCTOR.DEACTIVATED
 				: MESSAGES.SUCCESS.DOCTOR.ACTIVATED;
 			toast.success(message);
+			// Update cache immediately for instant UI update
+			queryClient.setQueryData(["doctor-complete", id], (oldData: any) => {
+				if (oldData?.data?.data) {
+					return {
+						...oldData,
+						data: {
+							...oldData.data,
+							data: {
+								...oldData.data.data,
+								isActive: !oldData.data.data.isActive,
+							},
+						},
+					};
+				}
+				return oldData;
+			});
 			queryClient.invalidateQueries({ queryKey: ["doctor-complete", id] });
 			setIsToggleActiveDialogOpen(false);
 		},
@@ -157,10 +206,6 @@ export function ModernDoctorProfilePage() {
 			setIntroductionContent(doctor.introduction || "");
 		}
 	}, [doctor]);
-
-	const handleBack = () => {
-		navigate({ to: "/super-admin/doctor-accounts" });
-	};
 
 	const handleToggleEditMode = () => {
 		if (isEditMode) {
@@ -430,11 +475,7 @@ export function ModernDoctorProfilePage() {
 	};
 
 	if (isLoading) {
-		return (
-			<div className="flex min-h-screen items-center justify-center">
-				<Spinner size={40} className="text-primary" />
-			</div>
-		);
+		return <DoctorProfileSkeleton />;
 	}
 
 	if (error || !doctor) {
@@ -471,74 +512,107 @@ export function ModernDoctorProfilePage() {
 
 	return (
 		<>
-			<div className="min-h-screen">
-				<div className="bg-background shadow-sm">
-					<div className="container mx-auto max-w-6xl px-6 py-4">
-						<div className="flex items-center justify-between">
-							<div className="flex gap-3">
-								<Button
-									variant="outline"
-									onClick={() => setIsChangePasswordOpen(true)}
-									className="gap-2"
-								>
-									<Key className="h-4 w-4" />
-									Change Password
-								</Button>
-								<Button
-									variant={doctor?.isActive ? "destructive" : "default"}
-									onClick={() => setIsToggleActiveDialogOpen(true)}
-									className="gap-2"
-								>
-									{doctor?.isActive ? (
-										<PowerOff className="h-4 w-4" />
-									) : (
-										<Power className="h-4 w-4" />
-									)}
-									{doctor?.isActive ? "Deactivate" : "Activate"}
-								</Button>{" "}
+			<div className="min-h-screen bg-gray-50/30">
+				{/* Enhanced Header */}
+				<div className="border-b border-gray-200 bg-white shadow-sm">
+					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+						<div className="flex h-16 items-center justify-between">
+
+
+							{/* Right side - Actions */}
+							<div className="flex items-center space-x-3">
 								{isEditMode ? (
 									<>
-										<Button
-											onClick={handleSave}
-											disabled={isSubmitting}
-											className="gap-2"
-										>
-											{isSubmitting ? (
-												<>
-													<Spinner size={16} />
-													{MESSAGES.LOADING.GENERAL.SAVING}
-												</>
-											) : (
-												<>
-													<Save className="h-4 w-4" />
-													Save Changes
-												</>
-											)}
-										</Button>
 										<Button
 											variant="outline"
 											onClick={handleCancel}
 											disabled={isSubmitting}
-											className="gap-2"
+											className="gap-2 border-gray-300 hover:bg-gray-50"
 										>
 											<X className="h-4 w-4" />
-											Cancel
+											<span className="hidden sm:inline">Cancel</span>
+										</Button>
+										<Button
+											onClick={handleSave}
+											disabled={isSubmitting}
+											className="gap-2 bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-500"
+										>
+											{isSubmitting ? (
+												<>
+													<Spinner size={16} />
+													<span className="hidden sm:inline">
+														{MESSAGES.LOADING.GENERAL.SAVING}
+													</span>
+												</>
+											) : (
+												<>
+													<Save className="h-4 w-4" />
+													<span className="hidden sm:inline">Save Changes</span>
+												</>
+											)}
 										</Button>
 									</>
 								) : (
-									<Button onClick={handleToggleEditMode} className="gap-2">
-										<Edit3 className="h-4 w-4" />
-										Edit Profile
-									</Button>
+									<>
+										<Button
+											variant="outline"
+											onClick={() => setIsChangePasswordOpen(true)}
+											className="gap-2 border-gray-300 hover:bg-gray-50"
+										>
+											<Key className="h-4 w-4" />
+											<span className="hidden sm:inline">Change Password</span>
+										</Button>
+										<Button
+											variant="outline"
+											onClick={() => setIsToggleActiveDialogOpen(true)}
+											className={`gap-2 border-gray-300 hover:bg-gray-50 ${
+												doctor?.isActive
+													? "text-red-600 hover:border-red-300 hover:text-red-700"
+													: "text-green-600 hover:border-green-300 hover:text-green-700"
+											}`}
+										>
+											{doctor?.isActive ? (
+												<PowerOff className="h-4 w-4" />
+											) : (
+												<Power className="h-4 w-4" />
+											)}
+											<span className="hidden sm:inline">
+												{doctor?.isActive ? "Deactivate" : "Activate"}
+											</span>
+										</Button>
+										<Button
+											onClick={handleToggleEditMode}
+											className="gap-2 bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-500"
+										>
+											<Edit3 className="h-4 w-4" />
+											<span className="hidden sm:inline">Edit Profile</span>
+										</Button>
+									</>
 								)}
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<div className="container mx-auto max-w-6xl px-6 py-6">
-					<div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-						<div className="space-y-4 lg:col-span-4">
+				{/* Status Banner */}
+				{isEditMode && (
+					<div className="border-b border-blue-200 bg-blue-50">
+						<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+							<div className="flex h-12 items-center">
+								<div className="flex items-center space-x-2">
+									<div className="h-2 w-2 animate-pulse rounded-full bg-background"></div>
+									<span className="text-sm font-medium text-foreground">
+										Editing Mode - Make your changes and save when ready
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
+
+				<div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+					<div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+						<div className="space-y-6 lg:col-span-4">
 							<DoctorProfileHeader
 								doctor={doctor}
 								isEditMode={isEditMode}
@@ -557,7 +631,7 @@ export function ModernDoctorProfilePage() {
 							/>
 						</div>
 
-						<div className="space-y-4 lg:col-span-8">
+						<div className="space-y-6 lg:col-span-8">
 							<ProfessionalInformation
 								doctor={doctor}
 								isEditMode={isEditMode}

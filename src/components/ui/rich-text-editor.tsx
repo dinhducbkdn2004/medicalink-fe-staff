@@ -101,7 +101,7 @@ export const RichTextEditor = forwardRef<
 					quillRef.current.setText("");
 					// Set to null
 					quillRef.current = null;
-				} catch (error) {
+				} catch (_error) {
 					// Ignore cleanup errors
 					quillRef.current = null;
 				}
@@ -190,7 +190,7 @@ export const RichTextEditor = forwardRef<
 			formats,
 			minHeight,
 			cleanupQuill,
-		]);  
+		]);
 
 		// Update content when value prop changes
 		useEffect(() => {

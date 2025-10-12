@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { DateRange } from "react-day-picker";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { DataTable } from "@/components/data-table/data-table";
@@ -9,11 +10,14 @@ import {
 	createDoctorColumns,
 	type DoctorAccount,
 } from "@/components/data-table/doctor-columns";
+import type { ContextMenuAction } from "@/components/data-table";
 import { DeleteConfirmationModal } from "@/components/modals";
 import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
 import { useDoctors, useDeleteDoctor } from "@/hooks/api/useDoctors";
 import { usePaginationParams } from "@/hooks/usePaginationParams";
 import type { Doctor } from "@/types";
+import { type SortDirection } from "@/components/ui/date-range-picker";
+import { Eye, Pencil, Lock, Trash2 } from "lucide-react";
 
 export function DoctorAccountsPage() {
 	const navigate = useNavigate();
@@ -32,10 +36,20 @@ export function DoctorAccountsPage() {
 	const [doctorToDelete, setDoctorToDelete] = useState<string | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
 
+	// Date range filter
+	const [dateRange, setDateRange] = useState<DateRange | undefined>();
+	const [dateSortDirection, setDateSortDirection] =
+		useState<SortDirection>(null);
+
 	const apiParams = {
 		...params,
 		sortBy:
 			(params.sortBy as "createdAt" | "fullName" | "email") || "createdAt",
+		// Apply date sort direction if set
+		...(dateSortDirection && {
+			sortOrder:
+				dateSortDirection === "asc" ? ("ASC" as const) : ("DESC" as const),
+		}),
 	};
 	const { data: doctorsData, isLoading } = useDoctors(apiParams);
 
@@ -55,6 +69,21 @@ export function DoctorAccountsPage() {
 		createdAt: String(doctor.createdAt),
 		updatedAt: String(doctor.updatedAt),
 	}));
+
+	// Filter doctors by date range on client side
+	const filteredDoctors = doctorAccounts.filter((doctor) => {
+		if (!dateRange?.from) return true;
+
+		const doctorDate = new Date(doctor.createdAt);
+		const fromDate = new Date(dateRange.from);
+		const toDate = dateRange.to ? new Date(dateRange.to) : fromDate;
+
+		// Set time to start/end of day for proper comparison
+		fromDate.setHours(0, 0, 0, 0);
+		toDate.setHours(23, 59, 59, 999);
+
+		return doctorDate >= fromDate && doctorDate <= toDate;
+	});
 
 	const handleView = (doctorId: string) => {
 		void navigate({
@@ -129,24 +158,57 @@ export function DoctorAccountsPage() {
 		onDelete: handleDelete,
 	});
 
+	// Context menu actions
+	const getRowContextMenuActions = (
+		doctor: DoctorAccount
+	): ContextMenuAction[] => [
+		{
+			label: "View Profile",
+			icon: <Eye className="h-4 w-4" />,
+			onClick: () => handleView(doctor.id),
+		},
+		{
+			label: "Edit Profile",
+			icon: <Pencil className="h-4 w-4" />,
+			onClick: () => handleEdit(doctor.id),
+		},
+		{
+			label: "Change Password",
+			icon: <Lock className="h-4 w-4" />,
+			onClick: () => handleChangePassword(doctor.id),
+		},
+		{
+			label: "Delete",
+			icon: <Trash2 className="h-4 w-4" />,
+			onClick: () => handleDelete(doctor.id),
+			className: "text-red-600 focus:text-red-600",
+			separator: true,
+		},
+	];
+
 	return (
-		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+		<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
 			<Card>
 				<CardContent className="space-y-4 p-6">
 					<DataTable
 						columns={columns}
-						data={doctorAccounts}
+						data={filteredDoctors}
 						searchKey="fullName"
 						searchValue={params.search || ""}
 						onSearchChange={setSearch}
 						isLoading={isLoading}
 						loadingRows={params.limit}
+						getRowContextMenuActions={getRowContextMenuActions}
 						toolbar={
 							<DataTableToolbar
 								searchKey="fullName"
-								searchPlaceholder="Search doctors..."
+								searchPlaceholder="Search doctor..."
 								searchValue={params.search || ""}
 								onSearchChange={setSearch}
+								{...(dateRange ? { dateRange } : {})}
+								onDateRangeChange={setDateRange}
+								dateSortDirection={dateSortDirection}
+								onDateSortChange={setDateSortDirection}
 								onCreateNew={handleCreateDoctor}
 								createButtonText="Add Doctor"
 							/>
@@ -156,7 +218,7 @@ export function DoctorAccountsPage() {
 						pageSize={params.limit}
 						onPageChange={handlePageChange}
 						onPageSizeChange={handlePageSizeChange}
-						totalCount={totalCount}
+						totalCount={filteredDoctors.length}
 					/>
 				</CardContent>
 			</Card>

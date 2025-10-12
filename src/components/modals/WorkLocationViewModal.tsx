@@ -138,7 +138,6 @@ export function WorkLocationViewModal({
 						</Card>
 					</div>
 
-					{/* Basic Information */}
 					<Card>
 						<CardHeader>
 							<CardTitle className="flex items-center gap-2 text-base">

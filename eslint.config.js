@@ -6,6 +6,7 @@ import eslintPluginReact from "eslint-plugin-react";
 import eslintPluginReactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 import typescriptEslint from "typescript-eslint";
+import unusedImports from "eslint-plugin-unused-imports";
 
 const patchedReactHooksPlugin = fixupPluginRules(eslintPluginReactHooks);
 
@@ -29,9 +30,7 @@ export default typescriptEslint.config(
 			parserOptions: {
 				ecmaVersion: 2024,
 				sourceType: "module",
-				ecmaFeatures: {
-					jsx: true,
-				},
+				ecmaFeatures: { jsx: true },
 			},
 			globals: {
 				...globals.browser,
@@ -45,25 +44,36 @@ export default typescriptEslint.config(
 		],
 		plugins: {
 			"react-hooks": patchedReactHooksPlugin,
+			"unused-imports": unusedImports,
 		},
 		rules: {
+			/* --- Clean code --- */
 			"no-console": ["warn", { allow: ["warn", "error"] }],
-			"no-unused-vars": "off",
 			"no-debugger": "error",
 
-			"@typescript-eslint/no-unused-vars": [
+			/* --- Unused import & vars --- */
+			"no-unused-vars": "off",
+			"@typescript-eslint/no-unused-vars": "off",
+
+			"unused-imports/no-unused-imports": "error",
+			"unused-imports/no-unused-vars": [
 				"warn",
 				{
-					argsIgnorePattern: "^_",
+					vars: "all",
 					varsIgnorePattern: "^_",
+					args: "after-used",
+					argsIgnorePattern: "^_",
 				},
 			],
-			"@typescript-eslint/no-explicit-any": "off",
-			"@typescript-eslint/ban-ts-comment": "warn",
 
+			/* --- React --- */
 			"react/react-in-jsx-scope": "off",
 			"react-hooks/rules-of-hooks": "error",
 			"react-hooks/exhaustive-deps": "warn",
+
+			/* --- TypeScript --- */
+			"@typescript-eslint/no-explicit-any": "off",
+			"@typescript-eslint/ban-ts-comment": "warn",
 		},
 	},
 

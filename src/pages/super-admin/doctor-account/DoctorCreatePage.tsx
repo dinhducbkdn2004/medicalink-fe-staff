@@ -4,22 +4,17 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
-	ArrowLeft,
 	User,
-	Calendar,
+	Calendar as CalendarIcon,
 	Phone,
 	Mail,
 	Save,
-	Stethoscope,
+	CalendarDays,
+	MarsStroke,
+	LockKeyhole,
 } from "lucide-react";
 
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	Form,
 	FormControl,
@@ -37,6 +32,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import { toast } from "sonner";
 import { useCreateDoctor } from "@/hooks/api/useDoctors";
 import type { CreateDoctorRequest } from "@/types";
@@ -65,7 +68,7 @@ const createFormSchema = z.object({
 			message: "Please enter a valid phone number",
 		}),
 	isMale: z.boolean().optional(),
-	dateOfBirth: z.string().optional().or(z.literal("")),
+	dateOfBirth: z.date().optional(),
 });
 
 type CreateFormValues = z.infer<typeof createFormSchema>;
@@ -82,7 +85,7 @@ export function DoctorCreatePage() {
 			password: "",
 			phone: "",
 			isMale: true,
-			dateOfBirth: "",
+			dateOfBirth: undefined,
 		},
 	});
 
@@ -96,7 +99,7 @@ export function DoctorCreatePage() {
 				email: values.email,
 				password: values.password,
 				fullName: values.fullName,
-				dateOfBirth: values.dateOfBirth ? new Date(values.dateOfBirth) : null,
+				dateOfBirth: values.dateOfBirth || null,
 				isMale: values.isMale ?? null,
 				phone: values.phone && values.phone.trim() !== "" ? values.phone : null,
 			};
@@ -118,98 +121,79 @@ export function DoctorCreatePage() {
 	};
 
 	return (
-		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			<div className="flex items-center gap-4">
-				<Button
-					variant="outline"
-					size="sm"
-					onClick={handleCancel}
-					className="h-8"
-				>
-					<ArrowLeft className="mr-2 h-4 w-4" />
-					Back to Doctor List
-				</Button>
-			</div>
-
-			<Card className="max-w-3xl">
-				<CardHeader>
-					<CardTitle className="flex items-center gap-2">
-						<Stethoscope className="h-5 w-5" />
+		<div className="flex h-[calc(100vh-80px)] items-center justify-center px-4">
+			<Card className="border-border/40 w-full max-w-2xl border shadow-sm">
+				<CardHeader className="space-y-1 pb-3">
+					<CardTitle className="text-center text-lg font-semibold">
 						Create New Doctor Account
 					</CardTitle>
-					<CardDescription>
-						Create a new doctor account with medical access. Required fields are
-						marked with an asterisk (*). Additional information can be added now
-						or later when editing the profile.
-					</CardDescription>
+					<p className="text-muted-foreground text-center text-sm">
+						Enter doctor details below
+					</p>
 				</CardHeader>
 
-				<CardContent>
+				<CardContent className="px-4 pb-4">
 					<Form {...form}>
 						<form
 							onSubmit={(e) => {
 								e.preventDefault();
 								void form.handleSubmit(onSubmit)(e);
 							}}
-							className="space-y-6"
+							className="grid grid-cols-1 gap-5 md:grid-cols-2"
 						>
-							{/* Required Information */}
+							{/* Left column */}
 							<div className="space-y-4">
-								<h3 className="text-lg font-medium">Basic Information</h3>
+								<FormField
+									control={form.control}
+									name="fullName"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel className="flex items-center gap-2">
+												<User className="h-4 w-4" />
+												Full Name *
+											</FormLabel>
+											<FormControl>
+												<Input placeholder="Doctor's full name" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 
-								<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-									<FormField
-										control={form.control}
-										name="fullName"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel className="flex items-center gap-2">
-													<User className="h-4 w-4" />
-													Full Name *
-												</FormLabel>
-												<FormControl>
-													<Input
-														placeholder="Enter doctor's full name"
-														{...field}
-													/>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-
-									<FormField
-										control={form.control}
-										name="email"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel className="flex items-center gap-2">
-													<Mail className="h-4 w-4" />
-													Email *
-												</FormLabel>
-												<FormControl>
-													<Input
-														type="email"
-														placeholder="Enter email address"
-														{...field}
-													/>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-								</div>
+								<FormField
+									control={form.control}
+									name="email"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel className="flex items-center gap-2">
+												<Mail className="h-4 w-4" />
+												Email *
+											</FormLabel>
+											<FormControl>
+												<Input
+													type="email"
+													placeholder="Email address"
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 
 								<FormField
 									control={form.control}
 									name="password"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Password *</FormLabel>
+											<FormLabel className="flex items-center gap-2">
+												<LockKeyhole className="h-4 w-4" />
+												Password *
+											</FormLabel>
 											<FormControl>
 												<Input
 													type="password"
-													placeholder="Enter password (min 8 chars)"
+													placeholder="Min 8 characters"
 													{...field}
 												/>
 											</FormControl>
@@ -219,87 +203,102 @@ export function DoctorCreatePage() {
 								/>
 							</div>
 
-							{/* Personal Information */}
+							{/* Right column */}
 							<div className="space-y-4">
-								<div className="border-t pt-4">
-									<h3 className="mb-4 text-lg font-medium">
-										Personal Information (Optional)
-									</h3>
+								<FormField
+									control={form.control}
+									name="phone"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel className="flex items-center gap-2">
+												<Phone className="h-4 w-4" />
+												Phone
+											</FormLabel>
+											<FormControl>
+												<Input placeholder="Phone number" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 
-									<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-										<FormField
-											control={form.control}
-											name="phone"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel className="flex items-center gap-2">
-														<Phone className="h-4 w-4" />
-														Phone Number
-													</FormLabel>
-													<FormControl>
-														<Input
-															placeholder="Enter phone number"
-															{...field}
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-
-										<FormField
-											control={form.control}
-											name="isMale"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>Gender</FormLabel>
-													<Select
-														onValueChange={(value) =>
-															field.onChange(value === "true")
-														}
-														value={
-															field.value === undefined
-																? ""
-																: String(field.value)
-														}
-													>
-														<FormControl>
-															<SelectTrigger>
-																<SelectValue placeholder="Select gender" />
-															</SelectTrigger>
-														</FormControl>
-														<SelectContent>
-															<SelectItem value="true">Male</SelectItem>
-															<SelectItem value="false">Female</SelectItem>
-														</SelectContent>
-													</Select>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-									</div>
-
-									<FormField
-										control={form.control}
-										name="dateOfBirth"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel className="flex items-center gap-2">
-													<Calendar className="h-4 w-4" />
-													Date of Birth
-												</FormLabel>
+								<FormField
+									control={form.control}
+									name="isMale"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel className="flex items-center gap-2">
+												<MarsStroke className="h-4 w-4" />
+												Gender
+											</FormLabel>
+											<Select
+												onValueChange={(v) => field.onChange(v === "true")}
+												value={
+													field.value === undefined ? "" : String(field.value)
+												}
+											>
 												<FormControl>
-													<Input type="date" {...field} />
+													<SelectTrigger>
+														<SelectValue placeholder="Select gender" />
+													</SelectTrigger>
 												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-								</div>
+												<SelectContent>
+													<SelectItem value="true">Male</SelectItem>
+													<SelectItem value="false">Female</SelectItem>
+												</SelectContent>
+											</Select>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name="dateOfBirth"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel className="flex items-center gap-2">
+												<CalendarDays className="h-4 w-4" />
+												Date of Birth
+											</FormLabel>
+											<Popover>
+												<PopoverTrigger asChild>
+													<FormControl>
+														<Button
+															variant="outline"
+															className={cn(
+																"w-full pl-3 text-left font-normal",
+																!field.value && "text-muted-foreground"
+															)}
+														>
+															{field.value ? (
+																format(field.value, "PPP")
+															) : (
+																<span>Pick a date</span>
+															)}
+															<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+														</Button>
+													</FormControl>
+												</PopoverTrigger>
+												<PopoverContent className="w-auto p-0" align="start">
+													<Calendar
+														mode="single"
+														selected={field.value}
+														onSelect={field.onChange}
+														disabled={(date) =>
+															date > new Date() || date < new Date("1900-01-01")
+														}
+													/>
+												</PopoverContent>
+											</Popover>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 							</div>
 
-							{/* Form Actions */}
-							<div className="flex justify-end gap-4 border-t pt-6">
+							{/* Actions */}
+							<div className="flex justify-end gap-3 border-t pt-3 md:col-span-2">
 								<Button
 									type="button"
 									variant="outline"

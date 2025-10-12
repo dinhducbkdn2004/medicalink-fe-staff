@@ -66,6 +66,7 @@ import type {
 	UpdateDoctorProfileRequest,
 } from "@/types/api/doctors.types";
 import { Spinner } from "@/components/ui/spinner";
+import { DoctorProfileSkeleton } from "@/components/ui/doctor-profile-skeleton";
 import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { useActiveSpecialties } from "@/hooks/api/useSpecialties";
@@ -166,7 +167,23 @@ export function EnhancedDoctorProfilePage() {
 	const updateProfileMutation = useMutation({
 		mutationFn: (data: UpdateDoctorProfileRequest) =>
 			doctorsApi.updateDoctorProfile(doctor?.profileId || "", data),
-		onSuccess: () => {
+		onSuccess: (updatedData) => {
+			// Update cache immediately for instant UI update
+			queryClient.setQueryData(["doctor-complete", id], (oldData: any) => {
+				if (oldData?.data?.data) {
+					return {
+						...oldData,
+						data: {
+							...oldData.data,
+							data: {
+								...oldData.data.data,
+								...updatedData?.data?.data,
+							},
+						},
+					};
+				}
+				return oldData;
+			});
 			queryClient.invalidateQueries({ queryKey: ["doctor-complete", id] });
 			toast.success("Profile updated successfully");
 			setIsEditMode(false);
@@ -180,6 +197,22 @@ export function EnhancedDoctorProfilePage() {
 		mutationFn: () =>
 			doctorsApi.toggleDoctorProfileActive(doctor?.profileId || ""),
 		onSuccess: () => {
+			// Update cache immediately for instant UI update
+			queryClient.setQueryData(["doctor-complete", id], (oldData: any) => {
+				if (oldData?.data?.data) {
+					return {
+						...oldData,
+						data: {
+							...oldData.data,
+							data: {
+								...oldData.data.data,
+								isActive: !oldData.data.data.isActive,
+							},
+						},
+					};
+				}
+				return oldData;
+			});
 			queryClient.invalidateQueries({ queryKey: ["doctor-complete", id] });
 			toast.success(
 				`Doctor profile ${doctor?.isActive ? "deactivated" : "activated"} successfully`
@@ -269,17 +302,13 @@ export function EnhancedDoctorProfilePage() {
 
 	// Loading state
 	if (isLoading) {
-		return (
-			<div className="flex flex-1 items-center justify-center">
-				<Spinner size={40} className="text-primary" />
-			</div>
-		);
+		return <DoctorProfileSkeleton />;
 	}
 
 	// Error state
 	if (error || !doctor) {
 		return (
-			<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+			<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
 				<div className="flex items-center gap-2">
 					<Button variant="ghost" size="icon" onClick={handleBack}>
 						<ArrowLeft className="h-4 w-4" />
@@ -299,269 +328,294 @@ export function EnhancedDoctorProfilePage() {
 	}
 
 	return (
-		<div className="flex flex-1 flex-col gap-6 p-6">
-			{/* Header */}
-			<div className="flex items-center justify-between">
-				<div className="flex items-center gap-4">
-					<Button variant="ghost" size="icon" onClick={handleBack}>
-						<ArrowLeft className="h-4 w-4" />
-					</Button>
-					<div>
-						<h1 className="text-2xl font-bold">{doctor.fullName}</h1>
-						<p className="text-muted-foreground">Doctor Profile Management</p>
-					</div>
-				</div>
-				<div className="flex items-center gap-2">
-					{isEditMode ? (
-						<>
-							<Button
-								onClick={handleSave}
-								disabled={updateProfileMutation.isPending}
-								className="gap-2"
-							>
-								{updateProfileMutation.isPending ? (
-									<Spinner size={16} />
-								) : (
-									<Save className="h-4 w-4" />
-								)}
-								Save Changes
-							</Button>
-							<Button variant="outline" onClick={handleCancel}>
-								Cancel
-							</Button>
-						</>
-					) : (
-						<>
-							<Button
-								variant="outline"
-								onClick={() => setIsEditMode(true)}
-								className="gap-2"
-							>
-								<Edit3 className="h-4 w-4" />
-								Edit Profile
-							</Button>
-							<Button
-								variant="outline"
-								onClick={() => setIsChangePasswordOpen(true)}
-								className="gap-2"
-							>
-								<Key className="h-4 w-4" />
-								Change Password
-							</Button>
-							<Button
-								variant={doctor.isActive ? "destructive" : "default"}
-								onClick={() => setIsToggleActiveDialogOpen(true)}
-								className="gap-2"
-							>
-								{doctor.isActive ? (
-									<>
-										<PowerOff className="h-4 w-4" />
-										Deactivate
-									</>
-								) : (
-									<>
-										<Power className="h-4 w-4" />
-										Activate
-									</>
-								)}
-							</Button>
-						</>
-					)}
-				</div>
-			</div>
-
-			{/* Profile Content */}
-			<div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-				{/* Sidebar */}
-				<div className="lg:col-span-4">
-					<Card>
-						<CardContent className="p-6">
-							{/* Avatar Section */}
-							<div className="flex flex-col items-center space-y-4">
-								<div className="relative">
-									<Avatar className="h-24 w-24">
-										<AvatarImage src={formData.avatarUrl} />
-										<AvatarFallback className="text-lg">
-											{doctor.fullName
-												.split(" ")
-												.map((n) => n[0])
-												.join("")
-												.toUpperCase()
-												.slice(0, 2)}
-										</AvatarFallback>
-									</Avatar>
-									{isEditMode && (
-										<Button
-											size="sm"
-											variant="outline"
-											className="absolute -right-2 -bottom-2 h-8 w-8 rounded-full p-0"
-										>
-											<Camera className="h-4 w-4" />
-										</Button>
-									)}
-								</div>
-								<div className="text-center">
-									<h3 className="font-semibold">{doctor.fullName}</h3>
-									<p className="text-muted-foreground text-sm">
-										{doctor.email}
-									</p>
-									<Badge
-										variant={doctor.isActive ? "default" : "secondary"}
-										className="mt-2"
+		<div className="min-h-screen bg-gray-50/30">
+			{/* Enhanced Header */}
+			<div className="border-b border-gray-200 bg-white shadow-sm">
+				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+					<div className="flex h-16 items-center justify-end">
+						{/* Right side - Actions */}
+						<div className="flex items-center space-x-3">
+							{isEditMode ? (
+								<>
+									<Button
+										variant="outline"
+										onClick={handleCancel}
+										className="gap-2 border-gray-300 hover:bg-gray-50"
 									>
-										{doctor.isActive ? (
+										<X className="h-4 w-4" />
+										<span className="hidden sm:inline">Cancel</span>
+									</Button>
+									<Button
+										onClick={handleSave}
+										disabled={updateProfileMutation.isPending}
+										className="gap-2 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500"
+									>
+										{updateProfileMutation.isPending ? (
 											<>
-												<CheckCircle className="mr-1 h-3 w-3" />
-												Active
+												<Spinner size={16} />
+												<span className="hidden sm:inline">Saving...</span>
 											</>
 										) : (
 											<>
-												<AlertTriangle className="mr-1 h-3 w-3" />
-												Inactive
+												<Save className="h-4 w-4" />
+												<span className="hidden sm:inline">Save Changes</span>
 											</>
 										)}
-									</Badge>
-								</div>
-							</div>
-
-							<Separator className="my-6" />
-
-							{/* Quick Info */}
-							<div className="space-y-3">
-								<div className="flex items-center gap-3 text-sm">
-									<Mail className="text-muted-foreground h-4 w-4" />
-									<span>{doctor.email}</span>
-								</div>
-								{doctor.phone && (
-									<div className="flex items-center gap-3 text-sm">
-										<Phone className="text-muted-foreground h-4 w-4" />
-										<span>{doctor.phone}</span>
-									</div>
-								)}
-								{doctor.dateOfBirth && (
-									<div className="flex items-center gap-3 text-sm">
-										<Calendar className="text-muted-foreground h-4 w-4" />
-										<span>
-											{new Date(doctor.dateOfBirth).toLocaleDateString()}
-										</span>
-									</div>
-								)}
-								{doctor.degree && (
-									<div className="flex items-center gap-3 text-sm">
-										<GraduationCap className="text-muted-foreground h-4 w-4" />
-										<span>{doctor.degree}</span>
-									</div>
-								)}
-							</div>
-
-							{/* Specialties */}
-							{doctor.specialties && doctor.specialties.length > 0 && (
+									</Button>
+								</>
+							) : (
 								<>
-									<Separator className="my-6" />
-									<div>
-										<h4 className="mb-3 flex items-center gap-2 font-medium">
-											<Stethoscope className="h-4 w-4" />
-											Specialties
-										</h4>
-										<div className="space-y-2">
-											{doctor.specialties.map((specialty) => (
-												<Badge
-													key={specialty.id}
-													variant="outline"
-													className="w-full justify-start"
-												>
-													{specialty.name}
-												</Badge>
-											))}
-										</div>
-									</div>
+									<Button
+										variant="outline"
+										onClick={() => setIsChangePasswordOpen(true)}
+										className="gap-2 border-gray-300 hover:bg-gray-50"
+									>
+										<Key className="h-4 w-4" />
+										<span className="hidden sm:inline">Change Password</span>
+									</Button>
+									<Button
+										variant="outline"
+										onClick={() => setIsToggleActiveDialogOpen(true)}
+										className={`gap-2 border-gray-300 hover:bg-gray-50 ${
+											doctor.isActive
+												? "text-red-600 hover:border-red-300 hover:text-red-700"
+												: "text-green-600 hover:border-green-300 hover:text-green-700"
+										}`}
+									>
+										{doctor.isActive ? (
+											<>
+												<PowerOff className="h-4 w-4" />
+												<span className="hidden sm:inline">Deactivate</span>
+											</>
+										) : (
+											<>
+												<Power className="h-4 w-4" />
+												<span className="hidden sm:inline">Activate</span>
+											</>
+										)}
+									</Button>
+									<Button
+										onClick={() => setIsEditMode(true)}
+										className="gap-2 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500"
+									>
+										<Edit3 className="h-4 w-4" />
+										<span className="hidden sm:inline">Edit Profile</span>
+									</Button>
 								</>
 							)}
-
-							{/* Work Locations */}
-							{doctor.workLocations && doctor.workLocations.length > 0 && (
-								<>
-									<Separator className="my-6" />
-									<div>
-										<h4 className="mb-3 flex items-center gap-2 font-medium">
-											<MapPin className="h-4 w-4" />
-											Work Locations
-										</h4>
-										<div className="space-y-2">
-											{doctor.workLocations.map((location) => (
-												<div key={location.id} className="text-sm">
-													<p className="font-medium">{location.name}</p>
-													<p className="text-muted-foreground">
-														{location.address}
-													</p>
-												</div>
-											))}
-										</div>
-									</div>
-								</>
-							)}
-						</CardContent>
-					</Card>
+						</div>
+					</div>
 				</div>
+			</div>
 
-				{/* Main Content */}
-				<div className="lg:col-span-8">
-					<Tabs value={activeTab} onValueChange={setActiveTab}>
-						<TabsList className="grid w-full grid-cols-4">
-							<TabsTrigger value="basic">Basic Info</TabsTrigger>
-							<TabsTrigger value="professional">Professional</TabsTrigger>
-							<TabsTrigger value="experience">Experience</TabsTrigger>
-							<TabsTrigger value="introduction">Introduction</TabsTrigger>
-						</TabsList>
+			{/* Status Banner */}
+			{isEditMode && (
+				<div className="border-b border-blue-200 bg-blue-50">
+					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+						<div className="flex h-12 items-center">
+							<div className="flex items-center space-x-2">
+								<div className="bg-background h-2 w-2 animate-pulse rounded-full"></div>
+								<span className="text-foreground text-sm font-medium">
+									Editing Mode - Make your changes and save when ready
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 
-						{/* Basic Information Tab */}
-						<TabsContent value="basic" className="space-y-6">
-							<BasicInfoSection
-								doctor={doctor}
-								formData={formData}
-								isEditMode={isEditMode}
-								onFormChange={handleFormChange}
-								specialties={specialties || []}
-								workLocations={workLocations || []}
-							/>
-						</TabsContent>
+			<div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+				{/* Profile Content */}
+				<div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+					{/* Sidebar */}
+					<div className="lg:col-span-4">
+						<Card>
+							<CardContent className="p-6">
+								{/* Avatar Section */}
+								<div className="flex flex-col items-center space-y-4">
+									<div className="relative">
+										<Avatar className="h-24 w-24">
+											<AvatarImage src={formData.avatarUrl} />
+											<AvatarFallback className="text-lg">
+												{doctor.fullName
+													.split(" ")
+													.map((n) => n[0])
+													.join("")
+													.toUpperCase()
+													.slice(0, 2)}
+											</AvatarFallback>
+										</Avatar>
+										{isEditMode && (
+											<Button
+												size="sm"
+												variant="outline"
+												className="absolute -right-2 -bottom-2 h-8 w-8 rounded-full p-0"
+											>
+												<Camera className="h-4 w-4" />
+											</Button>
+										)}
+									</div>
+									<div className="text-center">
+										<h3 className="text-lg font-bold">{doctor.fullName}</h3>
+										<p className="text-muted-foreground text-base">
+											{doctor.email}
+										</p>
+										<Badge
+											variant={doctor.isActive ? "default" : "secondary"}
+											className="mt-2"
+										>
+											{doctor.isActive ? (
+												<>
+													<CheckCircle className="mr-1 h-3 w-3" />
+													Active
+												</>
+											) : (
+												<>
+													<AlertTriangle className="mr-1 h-3 w-3" />
+													Inactive
+												</>
+											)}
+										</Badge>
+									</div>
+								</div>
 
-						{/* Professional Information Tab */}
-						<TabsContent value="professional" className="space-y-6">
-							<ProfessionalInfoSection
-								doctor={doctor}
-								formData={formData}
-								isEditMode={isEditMode}
-								onFormChange={handleFormChange}
-								onAddItem={addArrayItem}
-								onUpdateItem={updateArrayItem}
-								onRemoveItem={removeArrayItem}
-							/>
-						</TabsContent>
+								<Separator className="my-6" />
 
-						{/* Experience Tab */}
-						<TabsContent value="experience" className="space-y-6">
-							<ExperienceSection
-								doctor={doctor}
-								formData={formData}
-								isEditMode={isEditMode}
-								onFormChange={handleFormChange}
-								onAddItem={addArrayItem}
-								onUpdateItem={updateArrayItem}
-								onRemoveItem={removeArrayItem}
-							/>
-						</TabsContent>
+								{/* Quick Info */}
+								<div className="space-y-3">
+									<div className="flex items-center gap-3 text-sm">
+										<Mail className="text-muted-foreground h-4 w-4" />
+										<span>{doctor.email}</span>
+									</div>
+									{doctor.phone && (
+										<div className="flex items-center gap-3 text-sm">
+											<Phone className="text-muted-foreground h-4 w-4" />
+											<span>{doctor.phone}</span>
+										</div>
+									)}
+									{doctor.dateOfBirth && (
+										<div className="flex items-center gap-3 text-sm">
+											<Calendar className="text-muted-foreground h-4 w-4" />
+											<span>
+												{new Date(doctor.dateOfBirth).toLocaleDateString()}
+											</span>
+										</div>
+									)}
+									{doctor.degree && (
+										<div className="flex items-center gap-3 text-sm">
+											<GraduationCap className="text-muted-foreground h-4 w-4" />
+											<span>{doctor.degree}</span>
+										</div>
+									)}
+								</div>
 
-						{/* Introduction Tab */}
-						<TabsContent value="introduction" className="space-y-6">
-							<IntroductionSection
-								doctor={doctor}
-								formData={formData}
-								isEditMode={isEditMode}
-								onFormChange={handleFormChange}
-							/>
-						</TabsContent>
-					</Tabs>
+								{/* Specialties */}
+								{doctor.specialties && doctor.specialties.length > 0 && (
+									<>
+										<Separator className="my-6" />
+										<div>
+											<h4 className="mb-3 flex items-center gap-2 text-base font-semibold">
+												<Stethoscope className="h-4 w-4" />
+												Specialties
+											</h4>
+											<div className="space-y-2">
+												{doctor.specialties.map((specialty) => (
+													<Badge
+														key={specialty.id}
+														variant="outline"
+														className="w-full justify-start"
+													>
+														{specialty.name}
+													</Badge>
+												))}
+											</div>
+										</div>
+									</>
+								)}
+
+								{/* Work Locations */}
+								{doctor.workLocations && doctor.workLocations.length > 0 && (
+									<>
+										<Separator className="my-6" />
+										<div>
+											<h4 className="mb-3 flex items-center gap-2 text-base font-semibold">
+												<MapPin className="h-4 w-4" />
+												Work Locations
+											</h4>
+											<div className="space-y-2">
+												{doctor.workLocations.map((location) => (
+													<div key={location.id} className="text-base">
+														<p className="font-semibold">{location.name}</p>
+														<p className="text-muted-foreground text-sm">
+															{location.address}
+														</p>
+													</div>
+												))}
+											</div>
+										</div>
+									</>
+								)}
+							</CardContent>
+						</Card>
+					</div>
+
+					{/* Main Content */}
+					<div className="space-y-6 lg:col-span-8">
+						<Tabs value={activeTab} onValueChange={setActiveTab}>
+							<TabsList className="grid w-full grid-cols-4">
+								<TabsTrigger value="basic">Basic Info</TabsTrigger>
+								<TabsTrigger value="professional">Professional</TabsTrigger>
+								<TabsTrigger value="experience">Experience</TabsTrigger>
+								<TabsTrigger value="introduction">Introduction</TabsTrigger>
+							</TabsList>
+
+							<TabsContent value="basic" className="space-y-6">
+								<BasicInfoSection
+									doctor={doctor}
+									formData={formData}
+									isEditMode={isEditMode}
+									onFormChange={handleFormChange}
+									specialties={specialties || []}
+									workLocations={workLocations || []}
+								/>
+							</TabsContent>
+
+							<TabsContent value="professional" className="space-y-6">
+								<ProfessionalInfoSection
+									doctor={doctor}
+									formData={formData}
+									isEditMode={isEditMode}
+									onFormChange={handleFormChange}
+									onAddItem={addArrayItem}
+									onUpdateItem={updateArrayItem}
+									onRemoveItem={removeArrayItem}
+								/>
+							</TabsContent>
+
+							{/* Experience Tab */}
+							<TabsContent value="experience" className="space-y-6">
+								<ExperienceSection
+									doctor={doctor}
+									formData={formData}
+									isEditMode={isEditMode}
+									onFormChange={handleFormChange}
+									onAddItem={addArrayItem}
+									onUpdateItem={updateArrayItem}
+									onRemoveItem={removeArrayItem}
+								/>
+							</TabsContent>
+
+							{/* Introduction Tab */}
+							<TabsContent value="introduction" className="space-y-6">
+								<IntroductionSection
+									doctor={doctor}
+									formData={formData}
+									isEditMode={isEditMode}
+									onFormChange={handleFormChange}
+								/>
+							</TabsContent>
+						</Tabs>
+					</div>
 				</div>
 			</div>
 

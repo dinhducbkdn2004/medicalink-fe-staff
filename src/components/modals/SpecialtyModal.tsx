@@ -94,7 +94,7 @@ export function SpecialtyModal({
 		}
 	}, [specialty, open, form]);
 
-	const onSubmit = async (values: SpecialtyFormValues) => {
+	const onSubmit = async (_values: SpecialtyFormValues) => {
 		try {
 			if (isEditing) {
 				toast.success(MESSAGES.SUCCESS.SPECIALTY.UPDATED);
@@ -102,7 +102,7 @@ export function SpecialtyModal({
 				toast.success(MESSAGES.SUCCESS.SPECIALTY.CREATED);
 			}
 			handleClose();
-		} catch (error: any) {
+		} catch (_error: any) {
 			toast.error(
 				isEditing
 					? MESSAGES.ERROR.SPECIALTY.UPDATE_FAILED

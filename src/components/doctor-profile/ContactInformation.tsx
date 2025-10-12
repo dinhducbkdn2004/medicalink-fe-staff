@@ -47,11 +47,11 @@ export function ContactInformation({
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle className="flex items-center gap-2 text-base">
+				<CardTitle className="flex items-center gap-2 text-lg">
 					<Contact className="h-5 w-5" />
 					Contact Information
 				</CardTitle>
-				<CardDescription>
+				<CardDescription className="text-sm">
 					Primary contact details and personal information
 				</CardDescription>
 			</CardHeader>
@@ -69,68 +69,71 @@ export function ContactInformation({
 							placeholder="doctor@medicalink.com"
 						/>
 					) : (
-						<div className="bg-muted/50 rounded-lg border p-2.5">
-							<p className="text-sm font-medium">{doctor.email}</p>
+						<div className="bg-muted/50 rounded-lg border p-3">
+							<p className="text-base font-medium">{doctor.email}</p>
 						</div>
 					)}
 				</div>
 
 				{/* Phone */}
-				{(doctor.phone || isEditMode) && (
-					<div>
-						<div className="mb-1.5 flex items-center gap-2">
-							<Phone className="h-4 w-4" />
-							<Label className="text-sm font-medium">Phone Number</Label>
-						</div>
-						{isEditMode ? (
-							<Input
-								type="tel"
-								value={formData.phone}
-								onChange={(e) => onFormChange("phone", e.target.value)}
-								placeholder="+84 123 456 789"
-							/>
-						) : (
-							<div className="bg-muted/50 rounded-lg border p-2.5">
-								<p className="text-sm font-medium">
-									{doctor.phone || "Not provided"}
-								</p>
-							</div>
-						)}
+				<div>
+					<div className="mb-1.5 flex items-center gap-2">
+						<Phone className="h-4 w-4" />
+						<Label className="text-sm font-medium">Phone Number</Label>
 					</div>
-				)}
+					{isEditMode ? (
+						<Input
+							type="tel"
+							value={formData.phone}
+							onChange={(e) => onFormChange("phone", e.target.value)}
+							placeholder="+84 123 456 789"
+						/>
+					) : (
+						<div
+							className={`rounded-lg border p-3 ${doctor.phone ? "bg-muted/50" : "border-orange-200 bg-orange-50"}`}
+						>
+							<p
+								className={`text-base font-medium ${doctor.phone ? "text-muted-foreground" : "text-orange-600 italic"}`}
+							>
+								{doctor.phone || "⚠️ Cần bổ sung số điện thoại"}
+							</p>
+						</div>
+					)}
+				</div>
 
-				{/* Date of Birth */}
-				{(doctor.dateOfBirth || isEditMode) && (
-					<div>
-						<div className="mb-1.5 flex items-center gap-2">
-							<Calendar className="h-4 w-4" />
-							<Label className="text-sm font-medium">Date of Birth</Label>
-						</div>
-						{isEditMode ? (
-							<Input
-								type="date"
-								value={formData.dateOfBirth}
-								onChange={(e) => onFormChange("dateOfBirth", e.target.value)}
-							/>
-						) : (
-							<div className="bg-muted/50 rounded-lg border p-2.5">
-								<p className="text-sm font-medium">
-									{doctor.dateOfBirth
-										? formatDate(doctor.dateOfBirth)
-										: "Not provided"}
-								</p>
-							</div>
-						)}
+				<div>
+					<div className="mb-1.5 flex items-center gap-2">
+						<Calendar className="h-4 w-4" />
+						<Label className="text-sm font-medium">Date of Birth</Label>
 					</div>
-				)}
+					{isEditMode ? (
+						<Input
+							type="date"
+							value={formData.dateOfBirth}
+							onChange={(e) => onFormChange("dateOfBirth", e.target.value)}
+						/>
+					) : (
+						<div
+							className={`rounded-lg border p-3 ${doctor.dateOfBirth ? "bg-muted/50" : "border-orange-200 bg-orange-50"}`}
+						>
+							<p
+								className={`text-base font-medium ${doctor.dateOfBirth ? "text-muted-foreground" : "text-orange-600 italic"}`}
+							>
+								{doctor.dateOfBirth
+									? formatDate(doctor.dateOfBirth)
+									: "⚠️ Cần bổ sung ngày sinh"}
+							</p>
+						</div>
+					)}
+				</div>
 
 				{/* Gender */}
-				{isEditMode && (
-					<div>
-						<div className="mb-1.5 flex items-center gap-2">
-							<User className="h-4 w-4" />
-							<Label className="text-sm font-medium">Gender</Label>
-						</div>
+				<div>
+					<div className="mb-1.5 flex items-center gap-2">
+						<User className="h-4 w-4" />
+						<Label className="text-sm font-medium">Gender</Label>
+					</div>
+					{isEditMode ? (
 						<Select
 							value={formData.isMale ? "true" : "false"}
 							onValueChange={(value) =>
@@ -145,8 +148,18 @@ export function ContactInformation({
 								<SelectItem value="false">Female</SelectItem>
 							</SelectContent>
 						</Select>
-					</div>
-				)}
+					) : (
+						<div className="bg-muted/50 rounded-lg border p-3">
+							<p className="text-muted-foreground text-base font-medium">
+								{doctor.isMale !== null && doctor.isMale !== undefined
+									? doctor.isMale
+										? "Nam"
+										: "Nữ"
+									: "Chưa cung cấp"}
+							</p>
+						</div>
+					)}
+				</div>
 
 				{/* Full Name (in edit mode) */}
 				{isEditMode && (

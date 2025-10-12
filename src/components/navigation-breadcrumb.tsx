@@ -46,6 +46,12 @@ const createActionMap: Record<string, string> = {
 	"/super-admin/work-locations/create": "Create Work Location",
 };
 
+const actionLabelMap: Record<string, string> = {
+	view: "View Details",
+	edit: "Edit",
+	create: "Create",
+};
+
 function generateBreadcrumbs(pathname: string): BreadcrumbItemType[] {
 	const segments = pathname.split("/").filter(Boolean);
 	const breadcrumbs: BreadcrumbItemType[] = [];
@@ -63,13 +69,22 @@ function generateBreadcrumbs(pathname: string): BreadcrumbItemType[] {
 	}
 
 	// Build path progressively
-	let currentPath = "";
+	let skipNext = false;
+
 	for (let i = 1; i < segments.length; i++) {
-		currentPath += `/${segments.slice(0, i + 1).join("/")}`;
+		if (skipNext) {
+			skipNext = false;
+			continue;
+		}
+
+		const segment = segments[i];
+		if (!segment) continue;
+
+		const fullPath = `/${segments.slice(0, i + 1).join("/")}`;
 
 		// Check if this is a create action
-		if (segments[i] === "create") {
-			const createLabel = createActionMap[currentPath];
+		if (segment === "create") {
+			const createLabel = createActionMap[fullPath];
 			if (createLabel) {
 				breadcrumbs.push({
 					label: createLabel,
@@ -79,8 +94,35 @@ function generateBreadcrumbs(pathname: string): BreadcrumbItemType[] {
 			}
 		}
 
+		// Check if this is a UUID (dynamic ID)
+		const isUUID =
+			/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+				segment
+			);
+
+		if (isUUID) {
+			// Look ahead to see if there's an action (view/edit)
+			const nextSegment = segments[i + 1];
+			if (nextSegment && actionLabelMap[nextSegment]) {
+				breadcrumbs.push({
+					label: actionLabelMap[nextSegment],
+					isCurrentPage: true,
+				});
+				skipNext = true;
+				break;
+			}
+			// If no action, just show "Details"
+			breadcrumbs.push({
+				label: "Details",
+				isCurrentPage: true,
+			});
+			break;
+		}
+
 		// Check if we have a label for this path
-		const label = pathLabelMap[currentPath];
+		const pathToCheck = `/${segments.slice(0, i + 1).join("/")}`;
+		const label = pathLabelMap[pathToCheck];
+
 		if (label) {
 			const isLastSegment = i === segments.length - 1;
 			if (isLastSegment) {
@@ -91,7 +133,7 @@ function generateBreadcrumbs(pathname: string): BreadcrumbItemType[] {
 			} else {
 				breadcrumbs.push({
 					label,
-					href: currentPath,
+					href: pathToCheck,
 				});
 			}
 		}

@@ -37,7 +37,7 @@ export function EditableListSection({
 	isEditMode,
 	formData,
 	onFormChange,
-}: EditableListSectionProps) {
+}: Readonly<EditableListSectionProps>) {
 	const newItemRefs = useRef<{ [key: string]: HTMLTextAreaElement | null }>({});
 
 	const addItem = useCallback(

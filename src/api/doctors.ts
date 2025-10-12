@@ -29,7 +29,9 @@ export const getDoctorById = (id: string) =>
 
 // Get doctor with complete profile information
 export const getDoctorComplete = (id: string) =>
-	apiClient.get<ApiResponse<DoctorComplete>>(`/doctors/${id}/complete`);
+	apiClient.get<ApiResponse<DoctorComplete>>(
+		`/doctors/${id}/complete?skipCache=true`
+	);
 
 // Create new doctor (via staff endpoint with DOCTOR role)
 export const createDoctor = (data: CreateDoctorRequest) =>
@@ -55,8 +57,6 @@ export const changeDoctorPassword = (id: string, newPassword: string) =>
 // Get doctor statistics
 export const getDoctorStats = () =>
 	apiClient.get<ApiResponse<DoctorStats>>("/doctors/stats");
-
-// ==================== Doctor Profile Management ====================
 
 // Get public doctor profiles with pagination
 export const getPublicDoctorProfiles = (params?: DoctorProfileQueryParams) =>

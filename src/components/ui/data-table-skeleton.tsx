@@ -136,7 +136,6 @@ export function FormSkeleton() {
 			</CardHeader>
 
 			<CardContent className="space-y-6">
-				{/* Basic Information Section */}
 				<div className="space-y-4">
 					<Skeleton className="h-5 w-32" />
 					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">

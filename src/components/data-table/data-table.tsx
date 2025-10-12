@@ -24,6 +24,10 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DataTablePagination } from "./data-table-pagination";
+import {
+	DataTableContextMenu,
+	ContextMenuAction,
+} from "./data-table-context-menu";
 
 // Skeleton row component
 const SkeletonRow = ({ columns }: { columns: number }) => (
@@ -60,6 +64,8 @@ interface DataTableProps<TData, TValue> {
 	readonly onPageChange?: (page: number) => void;
 	readonly onPageSizeChange?: (pageSize: number) => void;
 	readonly totalCount?: number;
+	// Context menu
+	readonly getRowContextMenuActions?: (row: TData) => ContextMenuAction[];
 }
 
 export function DataTable<TData, TValue>({
@@ -78,6 +84,7 @@ export function DataTable<TData, TValue>({
 	onPageChange,
 	onPageSizeChange,
 	totalCount,
+	getRowContextMenuActions,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([
 		{ id: "createdAt", desc: true },
@@ -176,25 +183,45 @@ export function DataTable<TData, TValue>({
 							Array.from({ length: loadingRows }, (_, index) => (
 								<SkeletonRow key={index} columns={columns.length} />
 							))}
-
 						{!isLoading &&
 							table.getRowModel().rows?.length > 0 &&
-							table.getRowModel().rows.map((row) => (
-								<TableRow
-									key={row.id}
-									data-state={row.getIsSelected() && "selected"}
-								>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext()
-											)}
-										</TableCell>
-									))}
-								</TableRow>
-							))}
+							table.getRowModel().rows.map((row) => {
+								const contextMenuActions = getRowContextMenuActions
+									? getRowContextMenuActions(row.original)
+									: [];
 
+								const rowContent = (
+									<TableRow
+										key={row.id}
+										data-state={row.getIsSelected() && "selected"}
+										className={
+											getRowContextMenuActions ? "cursor-context-menu" : ""
+										}
+									>
+										{row.getVisibleCells().map((cell) => (
+											<TableCell key={cell.id}>
+												{flexRender(
+													cell.column.columnDef.cell,
+													cell.getContext()
+												)}
+											</TableCell>
+										))}
+									</TableRow>
+								);
+
+								if (getRowContextMenuActions && contextMenuActions.length > 0) {
+									return (
+										<DataTableContextMenu
+											key={row.id}
+											actions={contextMenuActions}
+										>
+											{rowContent}
+										</DataTableContextMenu>
+									);
+								}
+
+								return rowContent;
+							})}{" "}
 						{!isLoading && table.getRowModel().rows?.length === 0 && (
 							<TableRow>
 								<TableCell

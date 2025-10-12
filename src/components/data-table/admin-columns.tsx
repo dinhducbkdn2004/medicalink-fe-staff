@@ -39,7 +39,7 @@ export const createAdminColumns = (
 	{
 		accessorKey: "fullName",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Admin" />
+			<DataTableColumnHeader column={column} title="Full Name" />
 		),
 		cell: ({ row }) => {
 			const admin = row.original;

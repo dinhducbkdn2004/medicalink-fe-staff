@@ -68,35 +68,3 @@ const handleAuthFailure = () => {
 		window.location.href = "/login";
 	}, 1000);
 };
-
-const getErrorMessage = (error: AxiosError<ApiError>): string => {
-	switch (error.response?.status) {
-		case 400:
-			return MESSAGES.ERROR.GENERAL.VALIDATION_ERROR;
-		case 401:
-			return MESSAGES.ERROR.GENERAL.UNAUTHORIZED;
-		case 403:
-			return MESSAGES.ERROR.GENERAL.FORBIDDEN;
-		case 404:
-			return MESSAGES.ERROR.GENERAL.NOT_FOUND;
-		case 409:
-			return MESSAGES.ERROR.GENERAL.VALIDATION_ERROR;
-		case 422:
-			return MESSAGES.ERROR.GENERAL.VALIDATION_ERROR;
-		case 429:
-			return MESSAGES.ERROR.GENERAL.TIMEOUT;
-		case 500:
-			return MESSAGES.ERROR.GENERAL.SERVER_ERROR;
-		case 502:
-		case 503:
-		case 504:
-			return MESSAGES.ERROR.GENERAL.SERVER_ERROR;
-		default:
-			if (error.code === "ECONNABORTED") {
-				return MESSAGES.ERROR.GENERAL.TIMEOUT;
-			} else if (error.code === "ERR_NETWORK") {
-				return MESSAGES.ERROR.GENERAL.NETWORK_ERROR;
-			}
-			return MESSAGES.ERROR.GENERAL.SERVER_ERROR;
-	}
-};

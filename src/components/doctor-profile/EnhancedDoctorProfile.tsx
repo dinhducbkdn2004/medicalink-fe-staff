@@ -14,36 +14,30 @@ interface EnhancedDoctorProfileProps {
 	doctor: DoctorComplete;
 }
 
-export function EnhancedDoctorProfile({ doctor }: EnhancedDoctorProfileProps) {
+export function EnhancedDoctorProfile({ doctor }: Readonly<EnhancedDoctorProfileProps>) {
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [isEditingIntroduction, setIsEditingIntroduction] = useState(false);
 	const [uploadingAvatar, setUploadingAvatar] = useState(false);
 	const [uploadingPortrait, setUploadingPortrait] = useState(false);
 
-	// Form data state with all API fields
 	const [formData, setFormData] = useState({
-		// Basic info
 		fullName: doctor.fullName || "",
 		email: doctor.email || "",
 		phone: doctor.phone || "",
 		dateOfBirth: doctor.dateOfBirth?.split("T")[0] || "",
 		isMale: doctor.isMale ?? true,
 
-		// Professional info
 		degree: doctor.degree || "",
 		position: doctor.position || [],
 
-		// Lists
 		trainingProcess: doctor.trainingProcess || [],
 		experience: doctor.experience || [],
 		memberships: doctor.memberships || [],
 		awards: doctor.awards || [],
 
-		// Rich content
 		introduction: doctor.introduction || "",
 		research: doctor.research || "",
 
-		// Media
 		avatarPreview: doctor.avatarUrl || "",
 		portraitPreview: doctor.portrait || "",
 	});

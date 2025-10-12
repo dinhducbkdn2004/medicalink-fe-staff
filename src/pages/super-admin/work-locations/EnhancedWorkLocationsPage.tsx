@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import debounce from "debounce";
+import { useNavigate } from "@tanstack/react-router";
 import {
 	Search,
 	Plus,
@@ -67,6 +68,8 @@ type SortOrder = "asc" | "desc";
 type FilterStatus = "all" | "active" | "inactive";
 
 export function EnhancedWorkLocationsPage() {
+	const navigate = useNavigate();
+
 	// State management
 	const [selectedLocation, setSelectedLocation] = useState<any>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -144,8 +147,10 @@ export function EnhancedWorkLocationsPage() {
 	};
 
 	const handleViewLocation = (location: any) => {
-		setSelectedLocation(location);
-		setIsViewModalOpen(true);
+		navigate({
+			to: "/super-admin/work-locations/$id",
+			params: { id: location.id },
+		});
 	};
 
 	const handleDeleteLocation = (location: any) => {
