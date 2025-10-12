@@ -5,30 +5,76 @@ export type Doctor = StaffAccount;
 export interface DoctorProfile {
 	id: string;
 	doctorId: string;
-	bio?: string;
-	specialtyId?: string;
-	qualification?: string;
-	experience?: number;
-	consultationFee?: number;
-	workLocationId?: string;
+	degree?: string;
+	position?: string[];
+	introduction?: string;
+	memberships?: string[];
+	awards?: string[];
+	research?: string; // Rich text content with HTML tags
+	trainingProcess?: string[];
+	experience?: string[];
+	avatarUrl?: string;
+	portrait?: string;
+	specialtyIds?: string[];
+	locationIds?: string[];
 	isActive: boolean;
 	createdAt: string;
 	updatedAt: string;
 }
 
-export interface DoctorComplete extends Doctor {
-	profile?: DoctorProfile;
+export interface DoctorComplete {
+	id: string;
+	fullName: string;
+	email: string;
+	phone?: string;
+	isMale?: boolean;
+	dateOfBirth?: string;
+	role: string;
+	profileId?: string;
+	isActive?: boolean;
+	// Profile fields (when complete profile is loaded)
+	degree?: string;
+	position?: string[];
+	introduction?: string;
+	memberships?: string[];
+	awards?: string[];
+	research?: string;
+	trainingProcess?: string[];
+	experience?: string[];
+	avatarUrl?: string;
+	portrait?: string;
+	specialties?: Array<{
+		id: string;
+		name: string;
+		slug: string;
+		description: string;
+		isActive: boolean;
+		createdAt: string;
+		updatedAt: string;
+	}>;
+	workLocations?: Array<{
+		id: string;
+		name: string;
+		address: string;
+		phone: string;
+		timezone: string;
+		isActive: boolean;
+		createdAt: string;
+		updatedAt: string;
+	}>;
+	accountCreatedAt?: string;
+	accountUpdatedAt?: string;
+	profileCreatedAt?: string;
+	profileUpdatedAt?: string;
 }
 
 export interface CreateDoctorRequest {
-	name: string; // Changed from fullName to match API docs
+	fullName: string;
 	email: string;
 	password: string;
 	phone?: string | null;
 	isMale?: boolean | null;
 	dateOfBirth?: Date | null;
-	specialtyId?: string;
-	workLocationId?: string;
 }
 
 export interface UpdateDoctorRequest {
@@ -47,12 +93,18 @@ export interface UpdateDoctorRequest {
 }
 
 export interface UpdateDoctorProfileRequest {
-	bio?: string;
-	specialtyId?: string;
-	qualification?: string;
-	experience?: number;
-	consultationFee?: number;
-	workLocationId?: string;
+	degree?: string;
+	position?: string[];
+	introduction?: string;
+	memberships?: string[];
+	awards?: string[];
+	research?: string; // Rich text content with HTML tags
+	trainingProcess?: string[];
+	experience?: string[];
+	avatarUrl?: string;
+	portrait?: string;
+	specialtyIds?: string[];
+	locationIds?: string[];
 }
 
 export interface DoctorQueryParams {
@@ -70,8 +122,9 @@ export interface DoctorQueryParams {
 export interface DoctorProfileQueryParams {
 	page?: number;
 	limit?: number;
-	specialtyId?: string;
-	workLocationId?: string;
+	specialtyIds?: string[];
+	locationIds?: string[];
+	isActive?: boolean;
 }
 
 export interface DoctorStats {

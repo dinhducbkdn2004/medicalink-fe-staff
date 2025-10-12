@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useLogout } from "@/hooks/api";
 import { useNavigate } from "@tanstack/react-router";
-import { ChangePasswordModal } from "@/components/modals";
+import { AdminChangePasswordModal } from "@/components/modals";
 
 export function NavUser({
 	user,
@@ -111,9 +111,10 @@ export function NavUser({
 			</SidebarMenuItem>
 
 			{/* Change Password Modal */}
-			<ChangePasswordModal
+			<AdminChangePasswordModal
 				open={showChangePasswordModal}
 				onOpenChange={setShowChangePasswordModal}
+				userType="admin"
 			/>
 		</SidebarMenu>
 	);

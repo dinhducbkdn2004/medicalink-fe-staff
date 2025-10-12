@@ -7,16 +7,22 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
 	getDoctors,
 	getDoctorById,
+	getDoctorComplete,
 	createDoctor,
 	updateDoctor,
 	deleteDoctor,
 	changeDoctorPassword,
 	getDoctorStats,
+	getPublicDoctorProfiles,
+	updateDoctorProfile,
+	toggleDoctorProfileActive,
 } from "@/api/doctors";
 import type {
 	CreateDoctorRequest,
 	UpdateDoctorRequest,
 	DoctorQueryParams,
+	UpdateDoctorProfileRequest,
+	DoctorProfileQueryParams,
 } from "@/types/api/doctors.types";
 
 export const doctorKeys = {
@@ -27,6 +33,9 @@ export const doctorKeys = {
 	details: () => [...doctorKeys.all, "detail"] as const,
 	detail: (id: string) => [...doctorKeys.details(), id] as const,
 	stats: () => [...doctorKeys.all, "stats"] as const,
+	profiles: () => [...doctorKeys.all, "profiles"] as const,
+	profileList: (params?: DoctorProfileQueryParams) =>
+		[...doctorKeys.profiles(), "list", params] as const,
 };
 
 // Get doctors with pagination and filters
@@ -47,7 +56,18 @@ export const useDoctor = (id: string) =>
 		queryKey: doctorKeys.detail(id),
 		queryFn: async () => {
 			const response = await getDoctorById(id);
-			return response.data;
+			return response.data.data;
+		},
+		enabled: !!id,
+	});
+
+// Get doctor with complete profile information
+export const useDoctorComplete = (id: string) =>
+	useQuery({
+		queryKey: [...doctorKeys.detail(id), "complete"],
+		queryFn: async () => {
+			const response = await getDoctorComplete(id);
+			return response.data.data;
 		},
 		enabled: !!id,
 	});
@@ -58,7 +78,7 @@ export const useDoctorStats = () =>
 		queryKey: doctorKeys.stats(),
 		queryFn: async () => {
 			const response = await getDoctorStats();
-			return response.data;
+			return response.data.data;
 		},
 		staleTime: 1000 * 60 * 5,
 	});
@@ -70,7 +90,7 @@ export const useCreateDoctor = () => {
 	return useMutation({
 		mutationFn: async (data: CreateDoctorRequest) => {
 			const response = await createDoctor(data);
-			return response.data;
+			return response.data.data;
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
@@ -92,7 +112,7 @@ export const useUpdateDoctor = () => {
 			data: UpdateDoctorRequest;
 		}) => {
 			const response = await updateDoctor(id, data);
-			return response.data;
+			return response.data.data;
 		},
 		onSuccess: (_, { id }) => {
 			// Invalidate doctor lists, detail, and stats
@@ -110,7 +130,7 @@ export const useDeleteDoctor = () => {
 	return useMutation({
 		mutationFn: async (id: string) => {
 			const response = await deleteDoctor(id);
-			return response.data;
+			return response.data.data;
 		},
 		onSuccess: (_, id) => {
 			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
@@ -132,9 +152,61 @@ export const useChangeDoctorPassword = () => {
 			newPassword: string;
 		}) => {
 			const response = await changeDoctorPassword(userId, newPassword);
-			return response.data;
+			return response.data.data;
 		},
 		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
+		},
+	});
+};
+
+// ==================== Doctor Profile Hooks ====================
+
+// Get public doctor profiles with pagination
+export const usePublicDoctorProfiles = (params?: DoctorProfileQueryParams) => {
+	return useQuery({
+		queryKey: doctorKeys.profileList(params),
+		queryFn: async () => {
+			const response = await getPublicDoctorProfiles(params);
+			return response.data.data;
+		},
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+// Update doctor profile mutation
+export const useUpdateDoctorProfile = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async ({
+			profileId,
+			data,
+		}: {
+			profileId: string;
+			data: UpdateDoctorProfileRequest;
+		}) => {
+			const response = await updateDoctorProfile(profileId, data);
+			return response.data.data;
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: doctorKeys.profiles() });
+			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
+		},
+	});
+};
+
+// Toggle doctor profile active status mutation
+export const useToggleDoctorProfileActive = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async (profileId: string) => {
+			const response = await toggleDoctorProfileActive(profileId);
+			return response.data.data;
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: doctorKeys.profiles() });
 			queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
 		},
 	});

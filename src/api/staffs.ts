@@ -4,7 +4,7 @@
  */
 
 import { apiClient } from "./core/client";
-import type { StaffAccount, PaginatedResponse } from "@/types";
+import type { StaffAccount, PaginatedResponse, ApiResponse } from "@/types";
 import type {
 	CreateStaffRequest,
 	UpdateStaffRequest,
@@ -34,4 +34,5 @@ export const changeStaffPassword = (id: string, newPassword: string) =>
 		password: newPassword,
 	});
 
-export const getStaffStats = () => apiClient.get<StaffStats>("/staffs/stats");
+export const getStaffStats = () =>
+	apiClient.get<ApiResponse<StaffStats>>("/staffs/stats");

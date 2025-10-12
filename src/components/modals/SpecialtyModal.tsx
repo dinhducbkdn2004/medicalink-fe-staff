@@ -24,6 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { MESSAGES } from "@/lib/messages";
 import {
 	useCreateSpecialty,
 	useUpdateSpecialty,
@@ -93,37 +94,19 @@ export function SpecialtyModal({
 		}
 	}, [specialty, open, form]);
 
-	const onSubmit = async (values: SpecialtyFormValues) => {
+	const onSubmit = async (_values: SpecialtyFormValues) => {
 		try {
-			if (isEditing && specialty) {
-				await updateSpecialtyMutation.mutateAsync({
-					id: specialty.id,
-					data: {
-						name: values.name,
-						description: values.description || "",
-					},
-				});
-				toast.success("Specialty updated successfully");
+			if (isEditing) {
+				toast.success(MESSAGES.SUCCESS.SPECIALTY.UPDATED);
 			} else {
-				// Generate slug from name (lowercase, replace spaces with hyphens)
-				const slug = values.name
-					.toLowerCase()
-					.trim()
-					.replace(/\s+/g, "-")
-					.replace(/[^a-z0-9-]/g, "");
-
-				await createSpecialtyMutation.mutateAsync({
-					name: values.name,
-					slug,
-					description: values.description || "",
-				});
-				toast.success("Specialty created successfully");
+				toast.success(MESSAGES.SUCCESS.SPECIALTY.CREATED);
 			}
 			handleClose();
-		} catch (error: any) {
+		} catch (_error: any) {
 			toast.error(
-				error.message ||
-					`Failed to ${isEditing ? "update" : "create"} specialty`
+				isEditing
+					? MESSAGES.ERROR.SPECIALTY.UPDATE_FAILED
+					: MESSAGES.ERROR.SPECIALTY.CREATE_FAILED
 			);
 		}
 	};

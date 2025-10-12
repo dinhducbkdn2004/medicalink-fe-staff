@@ -1,13 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useSearch } from "@tanstack/react-router";
+import { DateRange } from "react-day-picker";
 
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { DeleteConfirmationModal } from "@/components/modals";
 import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
 import { useStaffs, useDeleteStaff } from "@/hooks/api/useStaffs";
@@ -15,12 +10,14 @@ import { usePaginationParams } from "@/hooks/usePaginationParams";
 import { toast } from "sonner";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
-import { DataTableSkeleton } from "@/components/ui/data-table-skeleton";
 import {
 	createAdminColumns,
 	type AdminAccount,
 } from "@/components/data-table/admin-columns";
+import type { ContextMenuAction } from "@/components/data-table";
 import type { StaffAccount } from "@/types/common";
+import { type SortDirection } from "@/components/ui/date-range-picker";
+import { Eye, Pencil, Lock, Trash2 } from "lucide-react";
 
 export function AdminAccountsPage() {
 	const navigate = useNavigate();
@@ -40,6 +37,11 @@ export function AdminAccountsPage() {
 	const [adminToDelete, setAdminToDelete] = useState<string | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
 
+	// Date range filter
+	const [dateRange, setDateRange] = useState<DateRange | undefined>();
+	const [dateSortDirection, setDateSortDirection] =
+		useState<SortDirection>(null);
+
 	// Role filter from URL
 	const roleFilter = searchParams.role || "all";
 	const setRoleFilter = (role: string) => {
@@ -51,6 +53,11 @@ export function AdminAccountsPage() {
 		...params,
 		sortBy:
 			(params.sortBy as "createdAt" | "fullName" | "email") || "createdAt",
+		// Apply date sort direction if set
+		...(dateSortDirection && {
+			sortOrder:
+				dateSortDirection === "asc" ? ("ASC" as const) : ("DESC" as const),
+		}),
 		...(roleFilter !== "all" && {
 			role: roleFilter as "ADMIN" | "SUPER_ADMIN",
 		}),
@@ -92,6 +99,21 @@ export function AdminAccountsPage() {
 			};
 		}
 	);
+
+	// Filter admins by date range on client side
+	const filteredAdmins = adminAccounts.filter((admin) => {
+		if (!dateRange?.from) return true;
+
+		const adminDate = new Date(admin.createdAt);
+		const fromDate = new Date(dateRange.from);
+		const toDate = dateRange.to ? new Date(dateRange.to) : fromDate;
+
+		// Set time to start/end of day for proper comparison
+		fromDate.setHours(0, 0, 0, 0);
+		toDate.setHours(23, 59, 59, 999);
+
+		return adminDate >= fromDate && adminDate <= toDate;
+	});
 
 	const handleCreateAdmin = () => {
 		void navigate({ to: "/super-admin/admin-accounts/create" });
@@ -169,57 +191,73 @@ export function AdminAccountsPage() {
 		onDelete: handleDeleteAdmin,
 	});
 
-	return (
-		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			{isLoading ? (
-				<DataTableSkeleton
-					columns={6}
-					rows={10}
-					showHeader={true}
-					showToolbar={true}
-				/>
-			) : (
-				<Card>
-					<CardHeader>
-						<div className="flex flex-1 items-center justify-between space-y-0">
-							<div className="space-y-1">
-								<CardTitle>Admin Management</CardTitle>
-								<CardDescription>
-									A list of all administrator accounts in the system.
-								</CardDescription>
-							</div>
-						</div>
-					</CardHeader>
+	// Context menu actions
+	const getRowContextMenuActions = (
+		admin: AdminAccount
+	): ContextMenuAction[] => [
+		{
+			label: "View Details",
+			icon: <Eye className="h-4 w-4" />,
+			onClick: () => handleViewAdmin(admin.id),
+		},
+		{
+			label: "Edit Profile",
+			icon: <Pencil className="h-4 w-4" />,
+			onClick: () => handleEditAdmin(admin.id),
+			separator: true,
+		},
+		{
+			label: "Change Password",
+			icon: <Lock className="h-4 w-4" />,
+			onClick: () => handleChangePassword(admin.id),
+		},
+		{
+			label: "Delete",
+			icon: <Trash2 className="h-4 w-4" />,
+			onClick: () => handleDeleteAdmin(admin.id),
+			className: "text-red-600 focus:text-red-600",
+			separator: true,
+		},
+	];
 
-					<CardContent className="space-y-4">
-						<DataTable
-							columns={columns}
-							data={adminAccounts}
-							searchKey="fullName"
-							searchValue={params.search || ""}
-							onSearchChange={setSearch}
-							toolbar={
-								<DataTableToolbar
-									searchKey="fullName"
-									searchPlaceholder="Search admins..."
-									searchValue={params.search || ""}
-									onSearchChange={setSearch}
-									onCreateNew={handleCreateAdmin}
-									createButtonText="Add Admin"
-									roleFilter={roleFilter}
-									onRoleFilterChange={setRoleFilter}
-								/>
-							}
-							pageCount={totalPages}
-							pageIndex={params.page}
-							pageSize={params.limit}
-							onPageChange={handlePageChange}
-							onPageSizeChange={handlePageSizeChange}
-							totalCount={totalCount}
-						/>
-					</CardContent>
-				</Card>
-			)}
+	return (
+		<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
+			<Card>
+				<CardContent className="space-y-4 p-6">
+					<DataTable
+						columns={columns}
+						data={filteredAdmins}
+						searchKey="fullName"
+						searchValue={params.search || ""}
+						onSearchChange={setSearch}
+						isLoading={isLoading}
+						loadingRows={params.limit}
+						getRowContextMenuActions={getRowContextMenuActions}
+						toolbar={
+							<DataTableToolbar
+								searchKey="fullName"
+								searchPlaceholder="Search admin..."
+								searchValue={params.search || ""}
+								onSearchChange={setSearch}
+								dateRange={dateRange ?? { from: undefined, to: undefined }}
+								onDateRangeChange={setDateRange}
+								dateSortDirection={dateSortDirection}
+								onDateSortChange={setDateSortDirection}
+								roleFilter={roleFilter}
+								onRoleFilterChange={setRoleFilter}
+								onCreateNew={handleCreateAdmin}
+								createButtonText="Add Admin"
+							/>
+						}
+						pageCount={totalPages}
+						pageIndex={params.page}
+						pageSize={params.limit}
+						onPageChange={handlePageChange}
+						onPageSizeChange={handlePageSizeChange}
+						totalCount={filteredAdmins.length}
+					/>
+				</CardContent>
+			</Card>
 
 			{/* Change Password Modal */}
 			<AdminChangePasswordModal

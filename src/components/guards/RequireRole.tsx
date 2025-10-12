@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 import type { StaffRole } from "@/types";
-import { Spinner } from "@/components/ui/shadcn-io/spinner";
+import { Spinner } from "@/components/ui/spinner";
 
 interface RequireRoleProps {
 	roles: Array<StaffRole>;

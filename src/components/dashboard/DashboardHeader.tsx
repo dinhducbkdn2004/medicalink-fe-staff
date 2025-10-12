@@ -10,34 +10,22 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { RefreshCw, Bell, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { RefreshCw, Bell } from "lucide-react";
 import { NavigationBreadcrumb } from "@/components/navigation-breadcrumb";
 
 interface DashboardHeaderProps {
-	showSearch?: boolean;
 	onRefresh?: () => void;
 }
 
 export const DashboardHeader = ({
-	showSearch = false,
 	onRefresh,
 }: DashboardHeaderProps) => {
 	return (
-		<header className="bg-sidebar flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+		<header className="bg-sidebar flex h-13 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
 			<div className="flex items-center gap-2 px-4">
 				<SidebarTrigger className="-ml-1" />
 				<NavigationBreadcrumb />
 			</div>
-
-			{showSearch && (
-				<div className="mx-4 max-w-sm flex-1">
-					<div className="relative">
-						<Search className="text-muted-foreground absolute top-2.5 left-2 h-4 w-4" />
-						<Input placeholder="Search..." className="pl-8" />
-					</div>
-				</div>
-			)}
 
 			<div className="ml-auto flex items-center gap-2 px-4">
 				{onRefresh && (

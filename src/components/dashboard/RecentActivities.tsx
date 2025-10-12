@@ -144,8 +144,8 @@ export const RecentActivities = ({
 					</Button>
 				)}
 			</CardHeader>
-			<CardContent className="pt-0">
-				<div className="max-h-80 space-y-2 overflow-y-auto">
+			<CardContent className="pt-0 overflow-y-auto">
+				<div className="max-h-80 space-y-2">
 					{displayActivities.length === 0 ? (
 						<div className="text-muted-foreground py-8 text-center">
 							<Clock className="mx-auto mb-4 h-12 w-12 opacity-50" />

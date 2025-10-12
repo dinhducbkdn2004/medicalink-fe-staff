@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Table } from "@tanstack/react-table";
-import { Plus, Search, X, Settings2 } from "lucide-react";
+import { Plus, Search, Settings2 } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import debounce from "debounce";
 
@@ -23,7 +23,10 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DateRangePicker } from "@/components/ui/date-range-picker";
+import {
+	DateRangePicker,
+	type SortDirection,
+} from "@/components/ui/date-range-picker";
 
 interface DataTableToolbarProps<TData> {
 	readonly table?: Table<TData>;
@@ -35,6 +38,8 @@ interface DataTableToolbarProps<TData> {
 	readonly createButtonText?: string;
 	readonly dateRange?: DateRange;
 	readonly onDateRangeChange?: (range: DateRange | undefined) => void;
+	readonly dateSortDirection?: SortDirection;
+	readonly onDateSortChange?: (direction: SortDirection) => void;
 	readonly roleFilter?: string;
 	readonly onRoleFilterChange?: (value: string) => void;
 }
@@ -49,6 +54,8 @@ export function DataTableToolbar<TData>({
 	createButtonText = "Add New",
 	dateRange,
 	onDateRangeChange,
+	dateSortDirection,
+	onDateSortChange,
 	roleFilter,
 	onRoleFilterChange,
 }: DataTableToolbarProps<TData>) {
@@ -75,33 +82,17 @@ export function DataTableToolbar<TData>({
 		debouncedSearch(value);
 	};
 
-	const isFiltered =
-		(table?.getState().columnFilters.length ?? 0) > 0 ||
-		dateRange ||
-		(roleFilter && roleFilter !== "all");
-
-	const clearFilters = () => {
-		table?.resetColumnFilters();
-		if (onSearchChange) onSearchChange("");
-		if (onDateRangeChange) onDateRangeChange(undefined);
-		if (onRoleFilterChange) onRoleFilterChange("all");
-		if (searchInputRef.current) {
-			searchInputRef.current.value = "";
-		}
-	};
-
 	return (
 		<div className="flex flex-wrap items-center justify-between gap-4">
 			<div className="flex flex-1 flex-wrap items-center gap-2">
-				{/* Search Input */}
-				<div className="relative">
-					<Search className="text-muted-foreground absolute top-2.5 left-2 h-4 w-4" />
+				<div className="relative flex items-center">
+					<Search className="text-muted-foreground pointer-events-none absolute left-2 h-4 w-4" />
 					<Input
 						ref={searchInputRef}
 						placeholder={searchPlaceholder}
 						defaultValue={searchValue ?? ""}
 						onChange={(event) => handleSearchChange(event.target.value)}
-						className="h-8 w-[350px] pl-8"
+						className="h-8 w-[280px] pl-8"
 					/>
 				</div>
 
@@ -110,7 +101,12 @@ export function DataTableToolbar<TData>({
 					<DateRangePicker
 						{...(dateRange ? { date: dateRange } : {})}
 						onDateChange={onDateRangeChange}
-						placeholder="Filter by creation date"
+						{...(dateSortDirection !== undefined
+							? { sortDirection: dateSortDirection }
+							: {})}
+						{...(onDateSortChange ? { onSortChange: onDateSortChange } : {})}
+						showSort={false}
+						placeholder="Filter by date"
 						className="w-auto"
 					/>
 				)}
@@ -121,7 +117,7 @@ export function DataTableToolbar<TData>({
 						value={roleFilter ?? "all"}
 						onValueChange={onRoleFilterChange}
 					>
-						<SelectTrigger className="h-8 w-[140px]">
+						<SelectTrigger className="h-8 w-[100px]">
 							<SelectValue placeholder="Role" />
 						</SelectTrigger>
 						<SelectContent>
@@ -130,17 +126,6 @@ export function DataTableToolbar<TData>({
 							<SelectItem value="SUPER_ADMIN">Super Admin</SelectItem>
 						</SelectContent>
 					</Select>
-				)}
-
-				{isFiltered && (
-					<Button
-						variant="ghost"
-						onClick={clearFilters}
-						className="h-8 px-2 lg:px-3"
-					>
-						Reset
-						<X className="ml-2 h-4 w-4" />
-					</Button>
 				)}
 			</div>
 

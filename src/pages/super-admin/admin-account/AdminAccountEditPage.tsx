@@ -11,8 +11,6 @@ import {
 	Phone,
 	Calendar,
 	Shield,
-	Eye,
-	AlertCircle,
 	Key,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -44,6 +42,7 @@ import {
 import { useStaffs, useUpdateStaff } from "@/hooks/api/useStaffs";
 import type { UpdateStaffRequest } from "@/types";
 import { AdminChangePasswordModal } from "@/components/modals/AdminChangePasswordModal";
+import { Spinner } from "@/components/ui/spinner";
 
 const editFormSchema = z.object({
 	fullName: z
@@ -110,13 +109,6 @@ export function AdminAccountEditPage() {
 		void navigate({ to: "/super-admin/admin-accounts" });
 	};
 
-	const handleViewProfile = () => {
-		void navigate({
-			to: "/super-admin/admin-accounts/$id/view",
-			params: { id },
-		});
-	};
-
 	const onSubmit = async (values: EditFormValues) => {
 		if (!admin) return;
 
@@ -168,20 +160,15 @@ export function AdminAccountEditPage() {
 
 	if (isLoading) {
 		return (
-			<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-				<div className="flex items-center gap-2">
-					<Button variant="ghost" size="icon" onClick={handleBack}>
-						<ArrowLeft className="h-4 w-4" />
-					</Button>
-					<h1 className="text-2xl font-bold">Loading...</h1>
-				</div>
+			<div className="flex min-h-screen items-center justify-center">
+				<Spinner size={40} className="text-primary" />
 			</div>
 		);
 	}
 
 	if (!admin) {
 		return (
-			<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+			<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
 				<div className="flex items-center gap-2">
 					<Button variant="ghost" size="icon" onClick={handleBack}>
 						<ArrowLeft className="h-4 w-4" />
@@ -204,20 +191,9 @@ export function AdminAccountEditPage() {
 
 	return (
 		<>
-			<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-				{/* Header */}
-				<div className="flex items-center justify-between">
-					<div className="flex items-center gap-2">
-						<Button variant="ghost" size="icon" onClick={handleBack}>
-							<ArrowLeft className="h-4 w-4" />
-						</Button>
-						<div>
-							<h1 className="text-xl font-semibold">Edit Administrator</h1>
-							<p className="text-muted-foreground text-sm">
-								Update administrator account information and permissions
-							</p>
-						</div>
-					</div>
+			<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
+
+				<div className="flex items-center justify-end">
 					<div className="flex gap-2">
 						<Button
 							variant="outline"
@@ -226,24 +202,6 @@ export function AdminAccountEditPage() {
 							<Key className="mr-2 h-4 w-4" />
 							Change Password
 						</Button>
-						<Button variant="outline" onClick={handleViewProfile}>
-							<Eye className="mr-2 h-4 w-4" />
-							View Profile
-						</Button>
-					</div>
-				</div>
-
-				{/* Warning Banner */}
-				<div className="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950">
-					<AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-600 dark:text-amber-400" />
-					<div>
-						<p className="text-sm font-medium text-amber-900 dark:text-amber-100">
-							Important: Administrator Account
-						</p>
-						<p className="text-muted-foreground mt-0.5 text-xs">
-							Changes to this account will affect system access and permissions.
-							Please verify all information before saving.
-						</p>
 					</div>
 				</div>
 
@@ -255,17 +213,7 @@ export function AdminAccountEditPage() {
 						}}
 						className="space-y-4"
 					>
-						{/* Account & Role Information */}
 						<Card>
-							<CardHeader>
-								<CardTitle className="flex items-center gap-2 text-base">
-									<Shield className="h-4 w-4" />
-									Account & Role Information
-								</CardTitle>
-								<CardDescription className="text-xs">
-									Essential account details and access permissions
-								</CardDescription>
-							</CardHeader>
 							<CardContent className="space-y-4 pt-4">
 								<div className="grid gap-4 md:grid-cols-2">
 									<FormField
@@ -429,7 +377,6 @@ export function AdminAccountEditPage() {
 								onClick={handleBack}
 								disabled={isSubmitting}
 							>
-								<ArrowLeft className="mr-2 h-4 w-4" />
 								Cancel
 							</Button>
 							<Button type="submit" disabled={isSubmitting}>

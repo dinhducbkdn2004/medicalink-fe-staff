@@ -33,7 +33,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { ScheduleModal } from "@/components/modals/ScheduleModal";
 import {
-	Plus,
 	Calendar,
 	Search,
 	MoreHorizontal,
@@ -123,11 +122,6 @@ export function SchedulesPage() {
 				.includes(debouncedSearch.toLowerCase())
 	);
 
-	const handleCreateSchedule = () => {
-		setSelectedSchedule(null);
-		setScheduleModalOpen(true);
-	};
-
 	const handleEditSchedule = (schedule: any) => {
 		setSelectedSchedule(schedule);
 		setScheduleModalOpen(true);
@@ -172,23 +166,7 @@ export function SchedulesPage() {
 	);
 
 	return (
-		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-			{/* Header */}
-			<div className="flex items-center justify-between">
-				<div>
-					<h1 className="text-2xl font-bold tracking-tight">
-						Doctor Schedules
-					</h1>
-					<p className="text-muted-foreground">
-						Manage doctor schedules and appointment slots
-					</p>
-				</div>
-				<Button onClick={handleCreateSchedule} className="gap-2">
-					<Plus className="h-4 w-4" />
-					Add Schedule
-				</Button>
-			</div>
-
+		<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
 			{/* Stats Cards */}
 			<div className="grid gap-4 md:grid-cols-3">
 				<Card>

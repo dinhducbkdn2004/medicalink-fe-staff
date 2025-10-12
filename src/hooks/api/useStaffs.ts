@@ -55,7 +55,7 @@ export const useStaffStats = () =>
 		queryKey: staffKeys.stats(),
 		queryFn: async () => {
 			const response = await getStaffStats();
-			return response.data;
+			return response.data.data;
 		},
 		staleTime: CACHE_TIME.MEDIUM,
 	});

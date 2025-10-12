@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Key, Eye, EyeOff, User } from "lucide-react";
+import { Key, User } from "lucide-react";
 
 import {
 	Dialog,
@@ -62,8 +61,6 @@ export function AdminChangePasswordModal({
 }: Readonly<AdminChangePasswordModalProps>) {
 	const changeStaffPasswordMutation = useChangeStaffPassword();
 	const changeDoctorPasswordMutation = useChangeDoctorPassword();
-	const [showNewPassword, setShowNewPassword] = useState(false);
-	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 	const form = useForm<ChangeUserPasswordFormValues>({
 		resolver: zodResolver(changePasswordSchema),
@@ -127,8 +124,7 @@ export function AdminChangePasswordModal({
 					</DialogTitle>
 					<DialogDescription>
 						Change password for{" "}
-						<span className="text-foreground font-medium">{user.fullName}</span>{" "}
-						({user.email})
+						<span className="text-foreground font-medium">{user.fullName}</span>
 					</DialogDescription>
 				</DialogHeader>
 
@@ -154,23 +150,10 @@ export function AdminChangePasswordModal({
 									<FormControl>
 										<div className="relative">
 											<Input
-												type={showNewPassword ? "text" : "password"}
+												type="password"
 												placeholder="Enter new password"
 												{...field}
 											/>
-											<Button
-												type="button"
-												variant="ghost"
-												size="sm"
-												className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
-												onClick={() => setShowNewPassword(!showNewPassword)}
-											>
-												{showNewPassword ? (
-													<EyeOff className="h-4 w-4" />
-												) : (
-													<Eye className="h-4 w-4" />
-												)}
-											</Button>
 										</div>
 									</FormControl>
 									<FormMessage />
@@ -187,25 +170,10 @@ export function AdminChangePasswordModal({
 									<FormControl>
 										<div className="relative">
 											<Input
-												type={showConfirmPassword ? "text" : "password"}
+												type="password"
 												placeholder="Confirm new password"
 												{...field}
 											/>
-											<Button
-												type="button"
-												variant="ghost"
-												size="sm"
-												className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
-												onClick={() =>
-													setShowConfirmPassword(!showConfirmPassword)
-												}
-											>
-												{showConfirmPassword ? (
-													<EyeOff className="h-4 w-4" />
-												) : (
-													<Eye className="h-4 w-4" />
-												)}
-											</Button>
 										</div>
 									</FormControl>
 									<FormMessage />

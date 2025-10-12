@@ -49,7 +49,7 @@ export function createDoctorColumns({
 		{
 			accessorKey: "fullName",
 			header: ({ column }) => (
-				<DataTableColumnHeader column={column} title="Doctor" />
+				<DataTableColumnHeader column={column} title="Full Name" />
 			),
 			cell: ({ row }) => {
 				const doctor = row.original;
