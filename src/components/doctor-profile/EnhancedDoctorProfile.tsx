@@ -101,7 +101,7 @@ export function EnhancedDoctorProfile({ doctor }: Readonly<EnhancedDoctorProfile
 	const handleSave = async () => {
 		try {
 			// TODO: Implement API call to update doctor profile
-			console.log("Saving doctor profile:", formData);
+			console.warn("Saving doctor profile:", formData);
 			setIsEditMode(false);
 		} catch (error) {
 			console.error("Save failed:", error);

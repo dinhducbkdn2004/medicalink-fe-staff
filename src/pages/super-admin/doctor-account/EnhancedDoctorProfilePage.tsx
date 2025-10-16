@@ -308,7 +308,7 @@ export function EnhancedDoctorProfilePage() {
 	// Error state
 	if (error || !doctor) {
 		return (
-			<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
+			<div className="flex flex-1 flex-col gap-4">
 				<div className="flex items-center gap-2">
 					<Button variant="ghost" size="icon" onClick={handleBack}>
 						<ArrowLeft className="h-4 w-4" />
@@ -328,9 +328,9 @@ export function EnhancedDoctorProfilePage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gray-50/30">
+		<div className="min-h-screen">
 			{/* Enhanced Header */}
-			<div className="border-b border-gray-200 bg-white shadow-sm">
+			<div className="bg-background border-b shadow-sm">
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 					<div className="flex h-16 items-center justify-end">
 						{/* Right side - Actions */}
@@ -340,7 +340,7 @@ export function EnhancedDoctorProfilePage() {
 									<Button
 										variant="outline"
 										onClick={handleCancel}
-										className="gap-2 border-gray-300 hover:bg-gray-50"
+										className="gap-2"
 									>
 										<X className="h-4 w-4" />
 										<span className="hidden sm:inline">Cancel</span>
@@ -348,7 +348,7 @@ export function EnhancedDoctorProfilePage() {
 									<Button
 										onClick={handleSave}
 										disabled={updateProfileMutation.isPending}
-										className="gap-2 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500"
+										className="gap-2"
 									>
 										{updateProfileMutation.isPending ? (
 											<>
@@ -368,7 +368,7 @@ export function EnhancedDoctorProfilePage() {
 									<Button
 										variant="outline"
 										onClick={() => setIsChangePasswordOpen(true)}
-										className="gap-2 border-gray-300 hover:bg-gray-50"
+										className="gap-2"
 									>
 										<Key className="h-4 w-4" />
 										<span className="hidden sm:inline">Change Password</span>
@@ -376,10 +376,10 @@ export function EnhancedDoctorProfilePage() {
 									<Button
 										variant="outline"
 										onClick={() => setIsToggleActiveDialogOpen(true)}
-										className={`gap-2 border-gray-300 hover:bg-gray-50 ${
+										className={`gap-2 ${
 											doctor.isActive
-												? "text-red-600 hover:border-red-300 hover:text-red-700"
-												: "text-green-600 hover:border-green-300 hover:text-green-700"
+												? "text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950"
+												: "text-green-600 hover:bg-green-50 hover:text-green-700 dark:hover:bg-green-950"
 										}`}
 									>
 										{doctor.isActive ? (
@@ -394,10 +394,7 @@ export function EnhancedDoctorProfilePage() {
 											</>
 										)}
 									</Button>
-									<Button
-										onClick={() => setIsEditMode(true)}
-										className="gap-2 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500"
-									>
+									<Button onClick={() => setIsEditMode(true)} className="gap-2">
 										<Edit3 className="h-4 w-4" />
 										<span className="hidden sm:inline">Edit Profile</span>
 									</Button>
@@ -410,12 +407,12 @@ export function EnhancedDoctorProfilePage() {
 
 			{/* Status Banner */}
 			{isEditMode && (
-				<div className="border-b border-blue-200 bg-blue-50">
+				<div className="border-b border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950">
 					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 						<div className="flex h-12 items-center">
 							<div className="flex items-center space-x-2">
-								<div className="bg-background h-2 w-2 animate-pulse rounded-full"></div>
-								<span className="text-foreground text-sm font-medium">
+								<div className="bg-primary h-2 w-2 animate-pulse rounded-full"></div>
+								<span className="text-sm font-medium">
 									Editing Mode - Make your changes and save when ready
 								</span>
 							</div>

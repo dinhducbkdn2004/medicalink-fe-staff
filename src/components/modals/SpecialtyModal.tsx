@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Stethoscope, Plus, Edit } from "lucide-react";
+import { Stethoscope, Plus, Edit, Loader2 } from "lucide-react";
 
 import {
 	Dialog,
@@ -22,9 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { MESSAGES } from "@/lib/messages";
 import {
 	useCreateSpecialty,
 	useUpdateSpecialty,
@@ -36,8 +34,6 @@ const specialtySchema = z.object({
 		.min(2, "Name must be at least 2 characters")
 		.max(120, "Name must not exceed 120 characters"),
 	description: z.string().optional().or(z.literal("")),
-	icon: z.string().optional().or(z.literal("")),
-	isActive: z.boolean().optional(),
 });
 
 type SpecialtyFormValues = z.infer<typeof specialtySchema>;
@@ -49,7 +45,6 @@ interface SpecialtyModalProps {
 		id: string;
 		name: string;
 		description?: string;
-		icon?: string;
 		isActive: boolean;
 	} | null;
 }
@@ -66,8 +61,6 @@ export function SpecialtyModal({
 		defaultValues: {
 			name: "",
 			description: "",
-			icon: "",
-			isActive: true,
 		},
 	});
 
@@ -80,33 +73,39 @@ export function SpecialtyModal({
 				form.reset({
 					name: specialty.name,
 					description: specialty.description || "",
-					icon: specialty.icon || "",
-					isActive: specialty.isActive,
 				});
 			} else {
 				form.reset({
 					name: "",
 					description: "",
-					icon: "",
-					isActive: true,
 				});
 			}
 		}
 	}, [specialty, open, form]);
 
-	const onSubmit = async (_values: SpecialtyFormValues) => {
+	const onSubmit = async (values: SpecialtyFormValues) => {
 		try {
-			if (isEditing) {
-				toast.success(MESSAGES.SUCCESS.SPECIALTY.UPDATED);
+			if (isEditing && specialty) {
+				await updateSpecialtyMutation.mutateAsync({
+					id: specialty.id,
+					data: {
+						name: values.name,
+						...(values.description && { description: values.description }),
+					},
+				});
+				toast.success("Specialty updated successfully");
 			} else {
-				toast.success(MESSAGES.SUCCESS.SPECIALTY.CREATED);
+				await createSpecialtyMutation.mutateAsync({
+					name: values.name,
+					...(values.description && { description: values.description }),
+				});
+				toast.success("Specialty created successfully");
 			}
 			handleClose();
-		} catch (_error: any) {
+		} catch (error: any) {
+			console.error("Specialty operation error:", error);
 			toast.error(
-				isEditing
-					? MESSAGES.ERROR.SPECIALTY.UPDATE_FAILED
-					: MESSAGES.ERROR.SPECIALTY.CREATE_FAILED
+				isEditing ? "Failed to update specialty" : "Failed to create specialty"
 			);
 		}
 	};
@@ -133,7 +132,7 @@ export function SpecialtyModal({
 					</DialogTitle>
 					<DialogDescription>
 						{isEditing
-							? "Update specialty information and settings"
+							? "Update specialty information"
 							: "Add a new medical specialty to the system"}
 					</DialogDescription>
 				</DialogHeader>
@@ -183,45 +182,6 @@ export function SpecialtyModal({
 							)}
 						/>
 
-						{/* Icon */}
-						<FormField
-							control={form.control}
-							name="icon"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Icon (Optional)</FormLabel>
-									<FormControl>
-										<Input placeholder="Icon identifier or emoji" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						{/* Status - Only show for editing */}
-						{isEditing && (
-							<FormField
-								control={form.control}
-								name="isActive"
-								render={({ field }) => (
-									<FormItem className="flex items-center justify-between rounded-lg border p-4">
-										<div className="space-y-0.5">
-											<FormLabel className="text-base">Active Status</FormLabel>
-											<div className="text-muted-foreground text-sm">
-												Enable this specialty for use in the system
-											</div>
-										</div>
-										<FormControl>
-											<Switch
-												checked={field.value ?? true}
-												onCheckedChange={field.onChange}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-						)}
-
 						<div className="flex justify-end gap-2">
 							<Button
 								type="button"
@@ -232,14 +192,17 @@ export function SpecialtyModal({
 								Cancel
 							</Button>
 							<Button type="submit" disabled={isLoading} className="gap-2">
-								<Stethoscope className="h-4 w-4" />
-								{isLoading
-									? isEditing
-										? "Updating..."
-										: "Creating..."
-									: isEditing
-										? "Update Specialty"
-										: "Create Specialty"}
+								{isLoading ? (
+									<Loader2 className="h-4 w-4 animate-spin" />
+								) : (
+									<Stethoscope className="h-4 w-4" />
+								)}
+								{(() => {
+									if (isLoading) {
+										return isEditing ? "Updating..." : "Creating...";
+									}
+									return isEditing ? "Update Specialty" : "Create Specialty";
+								})()}
 							</Button>
 						</div>
 					</form>

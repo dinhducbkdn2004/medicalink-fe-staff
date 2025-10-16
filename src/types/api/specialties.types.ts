@@ -3,8 +3,8 @@ export interface Specialty {
 	name: string;
 	slug: string;
 	description?: string;
-	icon?: string;
 	isActive: boolean;
+	infoSectionsCount: number;
 	createdAt: string;
 	updatedAt: string;
 	infoSections?: InfoSection[];
@@ -13,39 +13,31 @@ export interface Specialty {
 export interface InfoSection {
 	id: string;
 	specialtyId: string;
-	title: string;
+	name: string;
 	content: string;
-	order?: number;
 	createdAt: string;
 	updatedAt: string;
 }
 
 export interface CreateSpecialtyRequest {
 	name: string;
-	slug: string;
 	description?: string;
-	icon?: string;
 }
 
 export interface UpdateSpecialtyRequest {
 	name?: string;
-	slug?: string;
 	description?: string;
-	icon?: string;
-	isActive?: boolean;
 }
 
 export interface CreateInfoSectionRequest {
 	specialtyId: string;
-	title: string;
+	name: string;
 	content: string;
-	order?: number;
 }
 
 export interface UpdateInfoSectionRequest {
-	title?: string;
+	name?: string;
 	content?: string;
-	order?: number;
 }
 
 export interface SpecialtyQueryParams {

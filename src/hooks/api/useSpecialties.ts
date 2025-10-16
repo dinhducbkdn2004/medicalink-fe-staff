@@ -6,8 +6,10 @@ import {
 	createSpecialty,
 	updateSpecialty,
 	deleteSpecialty,
-	toggleSpecialtyStatus,
 	getSpecialtyStats,
+	getInfoSections,
+	createInfoSection,
+	deleteInfoSection,
 } from "@/api/specialties";
 import { extractApiData, extractPaginatedData } from "@/api/core/utils";
 import type {
@@ -15,6 +17,7 @@ import type {
 	CreateSpecialtyRequest,
 	UpdateSpecialtyRequest,
 	SpecialtyQueryParams,
+	CreateInfoSectionRequest,
 } from "@/types";
 
 export const specialtyKeys = {
@@ -30,6 +33,8 @@ export const specialtyKeys = {
 	details: () => [...specialtyKeys.all, "detail"] as const,
 	detail: (id: string) => [...specialtyKeys.details(), id] as const,
 	stats: () => [...specialtyKeys.all, "stats"] as const,
+	infoSections: (specialtyId: string) =>
+		[...specialtyKeys.all, "info-sections", specialtyId] as const,
 };
 
 // Get specialties with pagination and filters
@@ -57,12 +62,23 @@ export const useSpecialty = (id: string) =>
 		enabled: !!id,
 	});
 
+// Alias for consistency with other hooks
+export const useSpecialtyById = useSpecialty;
+
 // Get specialty statistics
 export const useSpecialtyStats = () =>
 	useQuery({
 		queryKey: specialtyKeys.stats(),
 		queryFn: async () => extractApiData(await getSpecialtyStats()),
 		staleTime: 1000 * 60 * 5,
+	});
+
+// Get info sections for a specialty
+export const useInfoSections = (specialtyId: string) =>
+	useQuery({
+		queryKey: specialtyKeys.infoSections(specialtyId),
+		queryFn: async () => extractApiData(await getInfoSections(specialtyId)),
+		enabled: !!specialtyId,
 	});
 
 // Create specialty mutation
@@ -118,20 +134,34 @@ export const useDeleteSpecialty = () => {
 	});
 };
 
-// Toggle specialty status mutation
-export const useToggleSpecialtyStatus = () => {
+// Create info section mutation
+export const useCreateInfoSection = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) =>
-			extractApiData(await toggleSpecialtyStatus(id, isActive)),
-		onSuccess: (_, { id }) => {
-			queryClient.invalidateQueries({ queryKey: specialtyKeys.lists() });
-			queryClient.invalidateQueries({ queryKey: specialtyKeys.active() });
+		mutationFn: async (data: CreateInfoSectionRequest) =>
+			extractApiData(await createInfoSection(data)),
+		onSuccess: (_, data) => {
 			queryClient.invalidateQueries({
-				queryKey: specialtyKeys.detail(id),
+				queryKey: specialtyKeys.infoSections(data.specialtyId),
 			});
-			queryClient.invalidateQueries({ queryKey: specialtyKeys.stats() });
+			queryClient.invalidateQueries({
+				queryKey: specialtyKeys.detail(data.specialtyId),
+			});
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.lists() });
+		},
+	});
+};
+
+// Delete info section mutation
+export const useDeleteInfoSection = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async (id: string) => await deleteInfoSection(id),
+		onSuccess: () => {
+			// Invalidate all related queries since we don't have specialtyId in params
+			queryClient.invalidateQueries({ queryKey: specialtyKeys.all });
 		},
 	});
 };

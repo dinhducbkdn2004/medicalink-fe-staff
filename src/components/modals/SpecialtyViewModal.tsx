@@ -112,9 +112,10 @@ export function SpecialtyViewModal({
 											{index > 0 && <Separator className="my-4" />}
 											<div className="space-y-2">
 												<div className="flex items-center justify-between">
-													<h4 className="font-medium">{section.title}</h4>
+													<h4 className="font-medium">{section.name}</h4>
 													<Badge variant="outline" className="text-xs">
-														Order: {section.order || index + 1}
+														Created:{" "}
+														{format(new Date(section.createdAt), "MMM dd")}
 													</Badge>
 												</div>
 												<div

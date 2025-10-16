@@ -221,7 +221,7 @@ export function AdminAccountsPage() {
 	];
 
 	return (
-		<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
+		<div className="flex flex-1 flex-col gap-4">
 			<Card>
 				<CardContent className="space-y-4 p-6">
 					<DataTable

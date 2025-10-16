@@ -81,7 +81,7 @@ export function IntroductionEditor({
 				quillInstanceRef.current.setText("");
 				// Set to null
 				quillInstanceRef.current = null;
-			} catch (_error) {
+			} catch {
 				// Ignore cleanup errors
 				quillInstanceRef.current = null;
 			}
@@ -152,7 +152,7 @@ export function IntroductionEditor({
 		}
 
 		return cleanupQuill;
-	}, [isEditingIntroduction, toolbarConfig, formats, cleanupQuill]);
+	}, [isEditingIntroduction, toolbarConfig, formats, cleanupQuill, doctor.fullName, introductionContent]);
 
 	// Separate effect to update content when it changes externally
 	useEffect(() => {

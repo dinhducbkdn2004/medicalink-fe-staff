@@ -10,6 +10,7 @@ import {
 	forwardRef,
 	useImperativeHandle,
 	useCallback,
+	useMemo,
 } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
@@ -61,7 +62,7 @@ export const RichTextEditor = forwardRef<
 		const isInitialized = useRef(false);
 
 		// Default modules configuration
-		const defaultModules = {
+		const defaultModules = useMemo(() => ({
 			toolbar: [
 				[{ header: [1, 2, 3, false] }],
 				["bold", "italic", "underline", "strike"],
@@ -75,10 +76,10 @@ export const RichTextEditor = forwardRef<
 				maxStack: 500,
 				userOnly: true,
 			},
-		};
+		}), []);
 
 		// Default formats
-		const defaultFormats = [
+		const defaultFormats = useMemo(() => [
 			"header",
 			"bold",
 			"italic",
@@ -89,33 +90,31 @@ export const RichTextEditor = forwardRef<
 			"blockquote",
 			"code-block",
 			"link",
-		];
+		], []);
 
-		// Cleanup function to properly destroy Quill instance
-		const cleanupQuill = useCallback(() => {
-			if (quillRef.current) {
-				try {
-					// Remove all event listeners
-					quillRef.current.off("text-change");
-					// Clear the editor content
-					quillRef.current.setText("");
-					// Set to null
-					quillRef.current = null;
-				} catch (_error) {
-					// Ignore cleanup errors
-					quillRef.current = null;
-				}
+	// Cleanup function to properly destroy Quill instance
+	const cleanupQuill = useCallback(() => {
+		if (quillRef.current) {
+			try {
+				// Remove all event listeners
+				quillRef.current.off("text-change");
+				// Clear the editor content
+				quillRef.current.setText("");
+				// Set to null
+				quillRef.current = null;
+			} catch {
+				// Ignore cleanup errors
+				quillRef.current = null;
 			}
+		}
 
-			// Clear the DOM completely
-			if (containerRef.current) {
-				containerRef.current.innerHTML = "";
-			}
+		// Clear the DOM completely
+		if (containerRef.current) {
+			containerRef.current.innerHTML = "";
+		}
 
-			isInitialized.current = false;
-		}, []);
-
-		useImperativeHandle(ref, () => ({
+		isInitialized.current = false;
+	}, []);		useImperativeHandle(ref, () => ({
 			getQuill: () => quillRef.current,
 			focus: () => quillRef.current?.focus(),
 			blur: () => quillRef.current?.blur(),
@@ -190,6 +189,10 @@ export const RichTextEditor = forwardRef<
 			formats,
 			minHeight,
 			cleanupQuill,
+			defaultFormats,
+			defaultModules,
+			onChange,
+			value,
 		]);
 
 		// Update content when value prop changes

@@ -117,7 +117,7 @@ export function WorkLocationViewEditPage() {
 
 			setIsEditMode(false);
 			toast.success("Work location updated successfully");
-		} catch (_error) {
+		} catch {
 			toast.error("Failed to update work location");
 		}
 	};
@@ -138,7 +138,7 @@ export function WorkLocationViewEditPage() {
 			await deleteWorkLocationMutation.mutateAsync(id);
 			toast.success("Work location deleted successfully");
 			navigate({ to: "/super-admin/work-locations" });
-		} catch (_error) {
+		} catch {
 			toast.error("Failed to delete work location");
 		}
 	};

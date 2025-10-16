@@ -168,7 +168,7 @@ export function AdminAccountEditPage() {
 
 	if (!admin) {
 		return (
-			<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
+			<div className="flex flex-1 flex-col gap-4">
 				<div className="flex items-center gap-2">
 					<Button variant="ghost" size="icon" onClick={handleBack}>
 						<ArrowLeft className="h-4 w-4" />
@@ -191,7 +191,7 @@ export function AdminAccountEditPage() {
 
 	return (
 		<>
-			<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
+			<div className="flex flex-1 flex-col gap-4">
 
 				<div className="flex items-center justify-end">
 					<div className="flex gap-2">

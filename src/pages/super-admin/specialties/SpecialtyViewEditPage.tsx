@@ -10,12 +10,12 @@ import {
 	X,
 	Trash2,
 	Stethoscope,
-	Users,
 	Calendar,
 	Clock,
 	AlertTriangle,
 	CheckCircle,
 	ArrowLeft,
+	FileText,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -42,14 +42,13 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Switch } from "@/components/ui/switch";
 
 import {
 	useSpecialty,
 	useUpdateSpecialty,
 	useDeleteSpecialty,
-	useToggleSpecialtyStatus,
 } from "@/hooks/api/useSpecialties";
+import { InfoSectionsManager } from "@/components/specialty/InfoSectionsManager";
 import { toast } from "sonner";
 
 const specialtySchema = z.object({
@@ -72,7 +71,6 @@ export function SpecialtyViewEditPage() {
 	const { data: specialty, isLoading, error } = useSpecialty(id);
 	const updateSpecialtyMutation = useUpdateSpecialty();
 	const deleteSpecialtyMutation = useDeleteSpecialty();
-	const toggleStatusMutation = useToggleSpecialtyStatus();
 
 	// Form setup
 	const form = useForm<SpecialtyFormData>({
@@ -112,8 +110,10 @@ export function SpecialtyViewEditPage() {
 			setIsEditMode(false);
 			toast.success("Specialty updated successfully");
 		} catch (error) {
-			console.error('Error updating specialty:', error);
-			toast.error(`Failed to update specialty: ${error instanceof Error ? error.message : 'Unknown error occurred'}`);
+			console.error("Error updating specialty:", error);
+			toast.error(
+				`Failed to update specialty: ${error instanceof Error ? error.message : "Unknown error occurred"}`
+			);
 		}
 	};
 
@@ -133,30 +133,10 @@ export function SpecialtyViewEditPage() {
 			toast.success("Specialty deleted successfully");
 			navigate({ to: "/super-admin/specialties" });
 		} catch (error) {
-			console.error('Error deleting specialty:', error);
-			toast.error(`Failed to delete specialty: ${error instanceof Error ? error.message : 'Unknown error occurred'}`);
-		}
-	};
-
-	const handleToggleStatus = async () => {
-		if (!specialty) return;
-		try {
-			await toggleStatusMutation.mutateAsync({
-				id,
-				isActive: !specialty.isActive
-			});
-
-			queryClient.setQueryData(["specialty", id], (oldData: any) => ({
-				...oldData,
-				isActive: !oldData?.isActive,
-			}));
-
-			toast.success(
-				`Specialty ${specialty?.isActive ? "deactivated" : "activated"} successfully`
+			console.error("Error deleting specialty:", error);
+			toast.error(
+				`Failed to delete specialty: ${error instanceof Error ? error.message : "Unknown error occurred"}`
 			);
-		} catch (error) {
-			console.error('Error toggling specialty status:', error);
-			toast.error(`Failed to update status: ${error instanceof Error ? error.message : 'Unknown error occurred'}`);
 		}
 	};
 
@@ -283,8 +263,8 @@ export function SpecialtyViewEditPage() {
 						<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 							<div className="flex h-12 items-center">
 								<div className="flex items-center space-x-2">
-									<div className="h-2 w-2 animate-pulse rounded-full bg-background"></div>
-									<span className="text-sm font-medium text-foreground">
+									<div className="bg-background h-2 w-2 animate-pulse rounded-full"></div>
+									<span className="text-foreground text-sm font-medium">
 										Editing Mode - Make your changes and save when ready
 									</span>
 								</div>
@@ -338,22 +318,15 @@ export function SpecialtyViewEditPage() {
 											</div>
 											<div className="flex items-center space-x-3">
 												<div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
-													<Users className="h-4 w-4 text-green-600" />
+													<FileText className="h-4 w-4 text-green-600" />
 												</div>
 												<div className="min-w-0 flex-1">
 													<p className="text-sm font-medium text-gray-900">
-														Status
+														Info Sections
 													</p>
-													<div className="flex items-center space-x-2">
-														<Switch
-															checked={specialty.isActive}
-															onCheckedChange={handleToggleStatus}
-															disabled={toggleStatusMutation.isPending}
-														/>
-														<span className="text-sm text-gray-500">
-															{specialty.isActive ? "Active" : "Inactive"}
-														</span>
-													</div>
+													<p className="text-sm text-gray-500">
+														{specialty.infoSectionsCount || 0} sections
+													</p>
 												</div>
 											</div>
 											<div className="flex items-center space-x-3">
@@ -475,6 +448,14 @@ export function SpecialtyViewEditPage() {
 											</div>
 										</CardContent>
 									</Card>
+
+									{/* Info Sections Management */}
+									{!isEditMode && (
+										<InfoSectionsManager
+											specialtyId={id}
+											specialtyName={specialty.name}
+										/>
+									)}
 								</form>
 							</Form>
 						</div>

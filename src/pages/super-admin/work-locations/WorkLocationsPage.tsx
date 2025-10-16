@@ -137,7 +137,7 @@ export function WorkLocationsPage() {
 	};
 
 	return (
-		<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
+		<div className="flex flex-1 flex-col gap-4">
 			<Card>
 				<CardHeader>
 					<div className="flex items-center gap-4">

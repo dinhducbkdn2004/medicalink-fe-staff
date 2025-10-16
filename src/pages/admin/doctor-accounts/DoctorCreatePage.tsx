@@ -122,7 +122,7 @@ export function DoctorCreatePage() {
 
 	return (
 		<div className="flex h-[calc(100vh-80px)] items-center justify-center px-4">
-			<Card className="border-border/40 w-full max-w-2xl border shadow-sm">
+			<Card className="border-border w-full max-w-2xl border shadow-sm">
 				<CardHeader className="space-y-1 pb-3">
 					<CardTitle className="text-center text-lg font-semibold">
 						Create New Doctor Account

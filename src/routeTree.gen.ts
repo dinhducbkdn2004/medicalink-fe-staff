@@ -28,15 +28,23 @@ import { Route as SuperAdminAdminAccountsRouteImport } from "./routes/super-admi
 import { Route as DoctorDashboardRouteImport } from "./routes/doctor/dashboard";
 import { Route as AdminDoctorAccountsRouteImport } from "./routes/admin/doctor-accounts";
 import { Route as AdminDashboardRouteImport } from "./routes/admin/dashboard";
+import { Route as SuperAdminWorkLocationsIndexRouteImport } from "./routes/super-admin/work-locations/index";
+import { Route as SuperAdminSpecialtiesIndexRouteImport } from "./routes/super-admin/specialties/index";
 import { Route as SuperAdminDoctorAccountsIndexRouteImport } from "./routes/super-admin/doctor-accounts.index";
 import { Route as SuperAdminAdminAccountsIndexRouteImport } from "./routes/super-admin/admin-accounts.index";
+import { Route as SuperAdminWorkLocationsCreateRouteImport } from "./routes/super-admin/work-locations/create";
 import { Route as SuperAdminWorkLocationsIdRouteImport } from "./routes/super-admin/work-locations/$id";
+import { Route as SuperAdminSpecialtiesCreateRouteImport } from "./routes/super-admin/specialties/create";
 import { Route as SuperAdminSpecialtiesIdRouteImport } from "./routes/super-admin/specialties/$id";
 import { Route as SuperAdminPermissionsUsersRouteImport } from "./routes/super-admin/permissions/users";
 import { Route as SuperAdminPermissionsGroupsRouteImport } from "./routes/super-admin/permissions/groups";
 import { Route as SuperAdminDoctorAccountsCreateRouteImport } from "./routes/super-admin/doctor-accounts.create";
 import { Route as SuperAdminAdminAccountsCreateRouteImport } from "./routes/super-admin/admin-accounts.create";
 import { Route as AdminDoctorAccountsCreateRouteImport } from "./routes/admin/doctor-accounts.create";
+import { Route as SuperAdminWorkLocationsIdViewRouteImport } from "./routes/super-admin/work-locations/$id.view";
+import { Route as SuperAdminWorkLocationsIdEditRouteImport } from "./routes/super-admin/work-locations/$id.edit";
+import { Route as SuperAdminSpecialtiesIdViewRouteImport } from "./routes/super-admin/specialties/$id.view";
+import { Route as SuperAdminSpecialtiesIdEditRouteImport } from "./routes/super-admin/specialties/$id.edit";
 import { Route as SuperAdminDoctorAccountsIdViewRouteImport } from "./routes/super-admin/doctor-accounts.$id.view";
 import { Route as SuperAdminDoctorAccountsIdEditRouteImport } from "./routes/super-admin/doctor-accounts.$id.edit";
 import { Route as SuperAdminAdminAccountsIdViewRouteImport } from "./routes/super-admin/admin-accounts.$id.view";
@@ -138,6 +146,18 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
 	path: "/dashboard",
 	getParentRoute: () => AdminRoute,
 } as any);
+const SuperAdminWorkLocationsIndexRoute =
+	SuperAdminWorkLocationsIndexRouteImport.update({
+		id: "/",
+		path: "/",
+		getParentRoute: () => SuperAdminWorkLocationsRoute,
+	} as any);
+const SuperAdminSpecialtiesIndexRoute =
+	SuperAdminSpecialtiesIndexRouteImport.update({
+		id: "/",
+		path: "/",
+		getParentRoute: () => SuperAdminSpecialtiesRoute,
+	} as any);
 const SuperAdminDoctorAccountsIndexRoute =
 	SuperAdminDoctorAccountsIndexRouteImport.update({
 		id: "/",
@@ -150,11 +170,23 @@ const SuperAdminAdminAccountsIndexRoute =
 		path: "/",
 		getParentRoute: () => SuperAdminAdminAccountsRoute,
 	} as any);
+const SuperAdminWorkLocationsCreateRoute =
+	SuperAdminWorkLocationsCreateRouteImport.update({
+		id: "/create",
+		path: "/create",
+		getParentRoute: () => SuperAdminWorkLocationsRoute,
+	} as any);
 const SuperAdminWorkLocationsIdRoute =
 	SuperAdminWorkLocationsIdRouteImport.update({
 		id: "/$id",
 		path: "/$id",
 		getParentRoute: () => SuperAdminWorkLocationsRoute,
+	} as any);
+const SuperAdminSpecialtiesCreateRoute =
+	SuperAdminSpecialtiesCreateRouteImport.update({
+		id: "/create",
+		path: "/create",
+		getParentRoute: () => SuperAdminSpecialtiesRoute,
 	} as any);
 const SuperAdminSpecialtiesIdRoute = SuperAdminSpecialtiesIdRouteImport.update({
 	id: "/$id",
@@ -190,6 +222,30 @@ const AdminDoctorAccountsCreateRoute =
 		id: "/create",
 		path: "/create",
 		getParentRoute: () => AdminDoctorAccountsRoute,
+	} as any);
+const SuperAdminWorkLocationsIdViewRoute =
+	SuperAdminWorkLocationsIdViewRouteImport.update({
+		id: "/view",
+		path: "/view",
+		getParentRoute: () => SuperAdminWorkLocationsIdRoute,
+	} as any);
+const SuperAdminWorkLocationsIdEditRoute =
+	SuperAdminWorkLocationsIdEditRouteImport.update({
+		id: "/edit",
+		path: "/edit",
+		getParentRoute: () => SuperAdminWorkLocationsIdRoute,
+	} as any);
+const SuperAdminSpecialtiesIdViewRoute =
+	SuperAdminSpecialtiesIdViewRouteImport.update({
+		id: "/view",
+		path: "/view",
+		getParentRoute: () => SuperAdminSpecialtiesIdRoute,
+	} as any);
+const SuperAdminSpecialtiesIdEditRoute =
+	SuperAdminSpecialtiesIdEditRouteImport.update({
+		id: "/edit",
+		path: "/edit",
+		getParentRoute: () => SuperAdminSpecialtiesIdRoute,
 	} as any);
 const SuperAdminDoctorAccountsIdViewRoute =
 	SuperAdminDoctorAccountsIdViewRouteImport.update({
@@ -241,14 +297,22 @@ export interface FileRoutesByFullPath {
 	"/super-admin/doctor-accounts/create": typeof SuperAdminDoctorAccountsCreateRoute;
 	"/super-admin/permissions/groups": typeof SuperAdminPermissionsGroupsRoute;
 	"/super-admin/permissions/users": typeof SuperAdminPermissionsUsersRoute;
-	"/super-admin/specialties/$id": typeof SuperAdminSpecialtiesIdRoute;
-	"/super-admin/work-locations/$id": typeof SuperAdminWorkLocationsIdRoute;
+	"/super-admin/specialties/$id": typeof SuperAdminSpecialtiesIdRouteWithChildren;
+	"/super-admin/specialties/create": typeof SuperAdminSpecialtiesCreateRoute;
+	"/super-admin/work-locations/$id": typeof SuperAdminWorkLocationsIdRouteWithChildren;
+	"/super-admin/work-locations/create": typeof SuperAdminWorkLocationsCreateRoute;
 	"/super-admin/admin-accounts/": typeof SuperAdminAdminAccountsIndexRoute;
 	"/super-admin/doctor-accounts/": typeof SuperAdminDoctorAccountsIndexRoute;
+	"/super-admin/specialties/": typeof SuperAdminSpecialtiesIndexRoute;
+	"/super-admin/work-locations/": typeof SuperAdminWorkLocationsIndexRoute;
 	"/super-admin/admin-accounts/$id/edit": typeof SuperAdminAdminAccountsIdEditRoute;
 	"/super-admin/admin-accounts/$id/view": typeof SuperAdminAdminAccountsIdViewRoute;
 	"/super-admin/doctor-accounts/$id/edit": typeof SuperAdminDoctorAccountsIdEditRoute;
 	"/super-admin/doctor-accounts/$id/view": typeof SuperAdminDoctorAccountsIdViewRoute;
+	"/super-admin/specialties/$id/edit": typeof SuperAdminSpecialtiesIdEditRoute;
+	"/super-admin/specialties/$id/view": typeof SuperAdminSpecialtiesIdViewRoute;
+	"/super-admin/work-locations/$id/edit": typeof SuperAdminWorkLocationsIdEditRoute;
+	"/super-admin/work-locations/$id/view": typeof SuperAdminWorkLocationsIdViewRoute;
 }
 export interface FileRoutesByTo {
 	"/": typeof IndexRoute;
@@ -260,8 +324,6 @@ export interface FileRoutesByTo {
 	"/super-admin/dashboard": typeof SuperAdminDashboardRoute;
 	"/super-admin/permissions": typeof SuperAdminPermissionsRouteWithChildren;
 	"/super-admin/schedules": typeof SuperAdminSchedulesRoute;
-	"/super-admin/specialties": typeof SuperAdminSpecialtiesRouteWithChildren;
-	"/super-admin/work-locations": typeof SuperAdminWorkLocationsRouteWithChildren;
 	"/admin": typeof AdminIndexRoute;
 	"/doctor": typeof DoctorIndexRoute;
 	"/super-admin": typeof SuperAdminIndexRoute;
@@ -270,14 +332,22 @@ export interface FileRoutesByTo {
 	"/super-admin/doctor-accounts/create": typeof SuperAdminDoctorAccountsCreateRoute;
 	"/super-admin/permissions/groups": typeof SuperAdminPermissionsGroupsRoute;
 	"/super-admin/permissions/users": typeof SuperAdminPermissionsUsersRoute;
-	"/super-admin/specialties/$id": typeof SuperAdminSpecialtiesIdRoute;
-	"/super-admin/work-locations/$id": typeof SuperAdminWorkLocationsIdRoute;
+	"/super-admin/specialties/$id": typeof SuperAdminSpecialtiesIdRouteWithChildren;
+	"/super-admin/specialties/create": typeof SuperAdminSpecialtiesCreateRoute;
+	"/super-admin/work-locations/$id": typeof SuperAdminWorkLocationsIdRouteWithChildren;
+	"/super-admin/work-locations/create": typeof SuperAdminWorkLocationsCreateRoute;
 	"/super-admin/admin-accounts": typeof SuperAdminAdminAccountsIndexRoute;
 	"/super-admin/doctor-accounts": typeof SuperAdminDoctorAccountsIndexRoute;
+	"/super-admin/specialties": typeof SuperAdminSpecialtiesIndexRoute;
+	"/super-admin/work-locations": typeof SuperAdminWorkLocationsIndexRoute;
 	"/super-admin/admin-accounts/$id/edit": typeof SuperAdminAdminAccountsIdEditRoute;
 	"/super-admin/admin-accounts/$id/view": typeof SuperAdminAdminAccountsIdViewRoute;
 	"/super-admin/doctor-accounts/$id/edit": typeof SuperAdminDoctorAccountsIdEditRoute;
 	"/super-admin/doctor-accounts/$id/view": typeof SuperAdminDoctorAccountsIdViewRoute;
+	"/super-admin/specialties/$id/edit": typeof SuperAdminSpecialtiesIdEditRoute;
+	"/super-admin/specialties/$id/view": typeof SuperAdminSpecialtiesIdViewRoute;
+	"/super-admin/work-locations/$id/edit": typeof SuperAdminWorkLocationsIdEditRoute;
+	"/super-admin/work-locations/$id/view": typeof SuperAdminWorkLocationsIdViewRoute;
 }
 export interface FileRoutesById {
 	__root__: typeof rootRouteImport;
@@ -305,14 +375,22 @@ export interface FileRoutesById {
 	"/super-admin/doctor-accounts/create": typeof SuperAdminDoctorAccountsCreateRoute;
 	"/super-admin/permissions/groups": typeof SuperAdminPermissionsGroupsRoute;
 	"/super-admin/permissions/users": typeof SuperAdminPermissionsUsersRoute;
-	"/super-admin/specialties/$id": typeof SuperAdminSpecialtiesIdRoute;
-	"/super-admin/work-locations/$id": typeof SuperAdminWorkLocationsIdRoute;
+	"/super-admin/specialties/$id": typeof SuperAdminSpecialtiesIdRouteWithChildren;
+	"/super-admin/specialties/create": typeof SuperAdminSpecialtiesCreateRoute;
+	"/super-admin/work-locations/$id": typeof SuperAdminWorkLocationsIdRouteWithChildren;
+	"/super-admin/work-locations/create": typeof SuperAdminWorkLocationsCreateRoute;
 	"/super-admin/admin-accounts/": typeof SuperAdminAdminAccountsIndexRoute;
 	"/super-admin/doctor-accounts/": typeof SuperAdminDoctorAccountsIndexRoute;
+	"/super-admin/specialties/": typeof SuperAdminSpecialtiesIndexRoute;
+	"/super-admin/work-locations/": typeof SuperAdminWorkLocationsIndexRoute;
 	"/super-admin/admin-accounts/$id/edit": typeof SuperAdminAdminAccountsIdEditRoute;
 	"/super-admin/admin-accounts/$id/view": typeof SuperAdminAdminAccountsIdViewRoute;
 	"/super-admin/doctor-accounts/$id/edit": typeof SuperAdminDoctorAccountsIdEditRoute;
 	"/super-admin/doctor-accounts/$id/view": typeof SuperAdminDoctorAccountsIdViewRoute;
+	"/super-admin/specialties/$id/edit": typeof SuperAdminSpecialtiesIdEditRoute;
+	"/super-admin/specialties/$id/view": typeof SuperAdminSpecialtiesIdViewRoute;
+	"/super-admin/work-locations/$id/edit": typeof SuperAdminWorkLocationsIdEditRoute;
+	"/super-admin/work-locations/$id/view": typeof SuperAdminWorkLocationsIdViewRoute;
 }
 export interface FileRouteTypes {
 	fileRoutesByFullPath: FileRoutesByFullPath;
@@ -342,13 +420,21 @@ export interface FileRouteTypes {
 		| "/super-admin/permissions/groups"
 		| "/super-admin/permissions/users"
 		| "/super-admin/specialties/$id"
+		| "/super-admin/specialties/create"
 		| "/super-admin/work-locations/$id"
+		| "/super-admin/work-locations/create"
 		| "/super-admin/admin-accounts/"
 		| "/super-admin/doctor-accounts/"
+		| "/super-admin/specialties/"
+		| "/super-admin/work-locations/"
 		| "/super-admin/admin-accounts/$id/edit"
 		| "/super-admin/admin-accounts/$id/view"
 		| "/super-admin/doctor-accounts/$id/edit"
-		| "/super-admin/doctor-accounts/$id/view";
+		| "/super-admin/doctor-accounts/$id/view"
+		| "/super-admin/specialties/$id/edit"
+		| "/super-admin/specialties/$id/view"
+		| "/super-admin/work-locations/$id/edit"
+		| "/super-admin/work-locations/$id/view";
 	fileRoutesByTo: FileRoutesByTo;
 	to:
 		| "/"
@@ -360,8 +446,6 @@ export interface FileRouteTypes {
 		| "/super-admin/dashboard"
 		| "/super-admin/permissions"
 		| "/super-admin/schedules"
-		| "/super-admin/specialties"
-		| "/super-admin/work-locations"
 		| "/admin"
 		| "/doctor"
 		| "/super-admin"
@@ -371,13 +455,21 @@ export interface FileRouteTypes {
 		| "/super-admin/permissions/groups"
 		| "/super-admin/permissions/users"
 		| "/super-admin/specialties/$id"
+		| "/super-admin/specialties/create"
 		| "/super-admin/work-locations/$id"
+		| "/super-admin/work-locations/create"
 		| "/super-admin/admin-accounts"
 		| "/super-admin/doctor-accounts"
+		| "/super-admin/specialties"
+		| "/super-admin/work-locations"
 		| "/super-admin/admin-accounts/$id/edit"
 		| "/super-admin/admin-accounts/$id/view"
 		| "/super-admin/doctor-accounts/$id/edit"
-		| "/super-admin/doctor-accounts/$id/view";
+		| "/super-admin/doctor-accounts/$id/view"
+		| "/super-admin/specialties/$id/edit"
+		| "/super-admin/specialties/$id/view"
+		| "/super-admin/work-locations/$id/edit"
+		| "/super-admin/work-locations/$id/view";
 	id:
 		| "__root__"
 		| "/"
@@ -405,13 +497,21 @@ export interface FileRouteTypes {
 		| "/super-admin/permissions/groups"
 		| "/super-admin/permissions/users"
 		| "/super-admin/specialties/$id"
+		| "/super-admin/specialties/create"
 		| "/super-admin/work-locations/$id"
+		| "/super-admin/work-locations/create"
 		| "/super-admin/admin-accounts/"
 		| "/super-admin/doctor-accounts/"
+		| "/super-admin/specialties/"
+		| "/super-admin/work-locations/"
 		| "/super-admin/admin-accounts/$id/edit"
 		| "/super-admin/admin-accounts/$id/view"
 		| "/super-admin/doctor-accounts/$id/edit"
-		| "/super-admin/doctor-accounts/$id/view";
+		| "/super-admin/doctor-accounts/$id/view"
+		| "/super-admin/specialties/$id/edit"
+		| "/super-admin/specialties/$id/view"
+		| "/super-admin/work-locations/$id/edit"
+		| "/super-admin/work-locations/$id/view";
 	fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
@@ -557,6 +657,20 @@ declare module "@tanstack/react-router" {
 			preLoaderRoute: typeof AdminDashboardRouteImport;
 			parentRoute: typeof AdminRoute;
 		};
+		"/super-admin/work-locations/": {
+			id: "/super-admin/work-locations/";
+			path: "/";
+			fullPath: "/super-admin/work-locations/";
+			preLoaderRoute: typeof SuperAdminWorkLocationsIndexRouteImport;
+			parentRoute: typeof SuperAdminWorkLocationsRoute;
+		};
+		"/super-admin/specialties/": {
+			id: "/super-admin/specialties/";
+			path: "/";
+			fullPath: "/super-admin/specialties/";
+			preLoaderRoute: typeof SuperAdminSpecialtiesIndexRouteImport;
+			parentRoute: typeof SuperAdminSpecialtiesRoute;
+		};
 		"/super-admin/doctor-accounts/": {
 			id: "/super-admin/doctor-accounts/";
 			path: "/";
@@ -571,12 +685,26 @@ declare module "@tanstack/react-router" {
 			preLoaderRoute: typeof SuperAdminAdminAccountsIndexRouteImport;
 			parentRoute: typeof SuperAdminAdminAccountsRoute;
 		};
+		"/super-admin/work-locations/create": {
+			id: "/super-admin/work-locations/create";
+			path: "/create";
+			fullPath: "/super-admin/work-locations/create";
+			preLoaderRoute: typeof SuperAdminWorkLocationsCreateRouteImport;
+			parentRoute: typeof SuperAdminWorkLocationsRoute;
+		};
 		"/super-admin/work-locations/$id": {
 			id: "/super-admin/work-locations/$id";
 			path: "/$id";
 			fullPath: "/super-admin/work-locations/$id";
 			preLoaderRoute: typeof SuperAdminWorkLocationsIdRouteImport;
 			parentRoute: typeof SuperAdminWorkLocationsRoute;
+		};
+		"/super-admin/specialties/create": {
+			id: "/super-admin/specialties/create";
+			path: "/create";
+			fullPath: "/super-admin/specialties/create";
+			preLoaderRoute: typeof SuperAdminSpecialtiesCreateRouteImport;
+			parentRoute: typeof SuperAdminSpecialtiesRoute;
 		};
 		"/super-admin/specialties/$id": {
 			id: "/super-admin/specialties/$id";
@@ -619,6 +747,34 @@ declare module "@tanstack/react-router" {
 			fullPath: "/admin/doctor-accounts/create";
 			preLoaderRoute: typeof AdminDoctorAccountsCreateRouteImport;
 			parentRoute: typeof AdminDoctorAccountsRoute;
+		};
+		"/super-admin/work-locations/$id/view": {
+			id: "/super-admin/work-locations/$id/view";
+			path: "/view";
+			fullPath: "/super-admin/work-locations/$id/view";
+			preLoaderRoute: typeof SuperAdminWorkLocationsIdViewRouteImport;
+			parentRoute: typeof SuperAdminWorkLocationsIdRoute;
+		};
+		"/super-admin/work-locations/$id/edit": {
+			id: "/super-admin/work-locations/$id/edit";
+			path: "/edit";
+			fullPath: "/super-admin/work-locations/$id/edit";
+			preLoaderRoute: typeof SuperAdminWorkLocationsIdEditRouteImport;
+			parentRoute: typeof SuperAdminWorkLocationsIdRoute;
+		};
+		"/super-admin/specialties/$id/view": {
+			id: "/super-admin/specialties/$id/view";
+			path: "/view";
+			fullPath: "/super-admin/specialties/$id/view";
+			preLoaderRoute: typeof SuperAdminSpecialtiesIdViewRouteImport;
+			parentRoute: typeof SuperAdminSpecialtiesIdRoute;
+		};
+		"/super-admin/specialties/$id/edit": {
+			id: "/super-admin/specialties/$id/edit";
+			path: "/edit";
+			fullPath: "/super-admin/specialties/$id/edit";
+			preLoaderRoute: typeof SuperAdminSpecialtiesIdEditRouteImport;
+			parentRoute: typeof SuperAdminSpecialtiesIdRoute;
 		};
 		"/super-admin/doctor-accounts/$id/view": {
 			id: "/super-admin/doctor-accounts/$id/view";
@@ -744,12 +900,32 @@ const SuperAdminPermissionsRouteWithChildren =
 		SuperAdminPermissionsRouteChildren
 	);
 
+interface SuperAdminSpecialtiesIdRouteChildren {
+	SuperAdminSpecialtiesIdEditRoute: typeof SuperAdminSpecialtiesIdEditRoute;
+	SuperAdminSpecialtiesIdViewRoute: typeof SuperAdminSpecialtiesIdViewRoute;
+}
+
+const SuperAdminSpecialtiesIdRouteChildren: SuperAdminSpecialtiesIdRouteChildren =
+	{
+		SuperAdminSpecialtiesIdEditRoute: SuperAdminSpecialtiesIdEditRoute,
+		SuperAdminSpecialtiesIdViewRoute: SuperAdminSpecialtiesIdViewRoute,
+	};
+
+const SuperAdminSpecialtiesIdRouteWithChildren =
+	SuperAdminSpecialtiesIdRoute._addFileChildren(
+		SuperAdminSpecialtiesIdRouteChildren
+	);
+
 interface SuperAdminSpecialtiesRouteChildren {
-	SuperAdminSpecialtiesIdRoute: typeof SuperAdminSpecialtiesIdRoute;
+	SuperAdminSpecialtiesIdRoute: typeof SuperAdminSpecialtiesIdRouteWithChildren;
+	SuperAdminSpecialtiesCreateRoute: typeof SuperAdminSpecialtiesCreateRoute;
+	SuperAdminSpecialtiesIndexRoute: typeof SuperAdminSpecialtiesIndexRoute;
 }
 
 const SuperAdminSpecialtiesRouteChildren: SuperAdminSpecialtiesRouteChildren = {
-	SuperAdminSpecialtiesIdRoute: SuperAdminSpecialtiesIdRoute,
+	SuperAdminSpecialtiesIdRoute: SuperAdminSpecialtiesIdRouteWithChildren,
+	SuperAdminSpecialtiesCreateRoute: SuperAdminSpecialtiesCreateRoute,
+	SuperAdminSpecialtiesIndexRoute: SuperAdminSpecialtiesIndexRoute,
 };
 
 const SuperAdminSpecialtiesRouteWithChildren =
@@ -757,13 +933,33 @@ const SuperAdminSpecialtiesRouteWithChildren =
 		SuperAdminSpecialtiesRouteChildren
 	);
 
+interface SuperAdminWorkLocationsIdRouteChildren {
+	SuperAdminWorkLocationsIdEditRoute: typeof SuperAdminWorkLocationsIdEditRoute;
+	SuperAdminWorkLocationsIdViewRoute: typeof SuperAdminWorkLocationsIdViewRoute;
+}
+
+const SuperAdminWorkLocationsIdRouteChildren: SuperAdminWorkLocationsIdRouteChildren =
+	{
+		SuperAdminWorkLocationsIdEditRoute: SuperAdminWorkLocationsIdEditRoute,
+		SuperAdminWorkLocationsIdViewRoute: SuperAdminWorkLocationsIdViewRoute,
+	};
+
+const SuperAdminWorkLocationsIdRouteWithChildren =
+	SuperAdminWorkLocationsIdRoute._addFileChildren(
+		SuperAdminWorkLocationsIdRouteChildren
+	);
+
 interface SuperAdminWorkLocationsRouteChildren {
-	SuperAdminWorkLocationsIdRoute: typeof SuperAdminWorkLocationsIdRoute;
+	SuperAdminWorkLocationsIdRoute: typeof SuperAdminWorkLocationsIdRouteWithChildren;
+	SuperAdminWorkLocationsCreateRoute: typeof SuperAdminWorkLocationsCreateRoute;
+	SuperAdminWorkLocationsIndexRoute: typeof SuperAdminWorkLocationsIndexRoute;
 }
 
 const SuperAdminWorkLocationsRouteChildren: SuperAdminWorkLocationsRouteChildren =
 	{
-		SuperAdminWorkLocationsIdRoute: SuperAdminWorkLocationsIdRoute,
+		SuperAdminWorkLocationsIdRoute: SuperAdminWorkLocationsIdRouteWithChildren,
+		SuperAdminWorkLocationsCreateRoute: SuperAdminWorkLocationsCreateRoute,
+		SuperAdminWorkLocationsIndexRoute: SuperAdminWorkLocationsIndexRoute,
 	};
 
 const SuperAdminWorkLocationsRouteWithChildren =

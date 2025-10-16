@@ -166,7 +166,7 @@ export function SchedulesPage() {
 	);
 
 	return (
-		<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
+		<div className="flex flex-1 flex-col gap-4">
 			{/* Stats Cards */}
 			<div className="grid gap-4 md:grid-cols-3">
 				<Card>

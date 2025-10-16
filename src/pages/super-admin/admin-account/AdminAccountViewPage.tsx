@@ -189,7 +189,7 @@ export function AdminAccountViewPage() {
 
 	if (!admin) {
 		return (
-			<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
+			<div className="flex flex-1 flex-col gap-4">
 				<div className="flex items-center gap-2">
 					<h1 className="page-title">Admin Not Found</h1>
 				</div>
