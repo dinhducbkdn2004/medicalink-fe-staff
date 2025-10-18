@@ -64,7 +64,7 @@ export function EditableListSection({
 			const newList = currentList.filter((_, i) => i !== index);
 			onFormChange(field, newList);
 		},
-		[onFormChange]
+		[formData, onFormChange]
 	);
 
 	const updateItem = useCallback(
@@ -74,7 +74,7 @@ export function EditableListSection({
 			newList[index] = value;
 			onFormChange(field, newList);
 		},
-		[onFormChange]
+		[formData, onFormChange]
 	);
 
 	const renderListSection = (

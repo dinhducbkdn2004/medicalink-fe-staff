@@ -10,6 +10,7 @@ import {
 	forwardRef,
 	useImperativeHandle,
 	useCallback,
+	useMemo,
 } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
@@ -61,37 +62,40 @@ export const RichTextEditor = forwardRef<
 		const isInitialized = useRef(false);
 
 		// Default modules configuration
-		const defaultModules = {
-			toolbar: [
-				[{ header: [1, 2, 3, false] }],
-				["bold", "italic", "underline", "strike"],
-				[{ list: "ordered" }, { list: "bullet" }],
-				["blockquote", "code-block"],
-				["link"],
-				["clean"],
-			],
-			history: {
-				delay: 1000,
-				maxStack: 500,
-				userOnly: true,
-			},
-		};
+		const defaultModules = useMemo(
+			() => ({
+				toolbar: [
+					[{ header: [1, 2, 3, false] }],
+					["bold", "italic", "underline", "strike"],
+					[{ list: "ordered" }, { list: "bullet" }],
+					["blockquote", "code-block"],
+					["link"],
+					["clean"],
+				],
+				history: {
+					delay: 1000,
+					maxStack: 500,
+					userOnly: true,
+				},
+			}),
+			[]
+		);
 
 		// Default formats
-		const defaultFormats = [
+	const defaultFormats = useMemo(
+		() => [
 			"header",
 			"bold",
 			"italic",
 			"underline",
 			"strike",
 			"list",
-			"bullet",
 			"blockquote",
 			"code-block",
 			"link",
-		];
-
-		// Cleanup function to properly destroy Quill instance
+		],
+		[]
+	);		// Cleanup function to properly destroy Quill instance
 		const cleanupQuill = useCallback(() => {
 			if (quillRef.current) {
 				try {
@@ -101,7 +105,7 @@ export const RichTextEditor = forwardRef<
 					quillRef.current.setText("");
 					// Set to null
 					quillRef.current = null;
-				} catch (_error) {
+				} catch {
 					// Ignore cleanup errors
 					quillRef.current = null;
 				}
@@ -114,7 +118,6 @@ export const RichTextEditor = forwardRef<
 
 			isInitialized.current = false;
 		}, []);
-
 		useImperativeHandle(ref, () => ({
 			getQuill: () => quillRef.current,
 			focus: () => quillRef.current?.focus(),
@@ -190,6 +193,10 @@ export const RichTextEditor = forwardRef<
 			formats,
 			minHeight,
 			cleanupQuill,
+			defaultFormats,
+			defaultModules,
+			onChange,
+			value,
 		]);
 
 		// Update content when value prop changes

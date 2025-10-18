@@ -37,25 +37,15 @@ import {
 	Eye,
 	Edit,
 	Trash2,
-	ToggleLeft,
-	ToggleRight,
 	X,
 	Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { usePagination } from "@/hooks/usePagination";
-import {
-	useSpecialties,
-	useDeleteSpecialty,
-	useToggleSpecialtyStatus,
-} from "@/hooks/api/useSpecialties";
-import { SpecialtyModal } from "@/components/modals/SpecialtyModal";
-import { SpecialtyViewModal } from "@/components/modals/SpecialtyViewModal";
+import { useSpecialties, useDeleteSpecialty } from "@/hooks/api/useSpecialties";
 
 export function SpecialtiesPage() {
-	const [selectedSpecialty, setSelectedSpecialty] = useState<any>(null);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+	const [_selectedSpecialty, setSelectedSpecialty] = useState<any>(null);
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [specialtyToDelete, setSpecialtyToDelete] = useState<any>(null);
 
@@ -104,16 +94,13 @@ export function SpecialtiesPage() {
 	});
 
 	const deleteSpecialtyMutation = useDeleteSpecialty();
-	const toggleStatusMutation = useToggleSpecialtyStatus();
 
 	const handleEditSpecialty = (specialty: any) => {
 		setSelectedSpecialty(specialty);
-		setIsModalOpen(true);
 	};
 
 	const handleViewSpecialty = (specialty: any) => {
 		setSelectedSpecialty(specialty);
-		setIsViewModalOpen(true);
 	};
 
 	const handleDeleteSpecialty = (specialty: any) => {
@@ -134,19 +121,7 @@ export function SpecialtiesPage() {
 		}
 	};
 
-	const handleToggleStatus = async (specialty: any) => {
-		try {
-			await toggleStatusMutation.mutateAsync({
-				id: specialty.id,
-				isActive: !specialty.isActive,
-			});
-			toast.success(
-				`Specialty ${!specialty.isActive ? "activated" : "deactivated"} successfully`
-			);
-		} catch (error: any) {
-			toast.error(error.message || "Failed to update specialty status");
-		}
-	};
+	// Toggle status functionality removed as backend doesn't support it
 
 	const filteredSpecialties = specialties?.data || [];
 
@@ -251,16 +226,7 @@ export function SpecialtiesPage() {
 												<Edit className="mr-2 h-4 w-4" />
 												Edit
 											</DropdownMenuItem>
-											<DropdownMenuItem
-												onClick={() => void handleToggleStatus(specialty)}
-											>
-												{specialty.isActive ? (
-													<ToggleLeft className="mr-2 h-4 w-4" />
-												) : (
-													<ToggleRight className="mr-2 h-4 w-4" />
-												)}
-												{specialty.isActive ? "Deactivate" : "Activate"}
-											</DropdownMenuItem>
+											{/* Status toggle removed - not supported by backend */}
 											<DropdownMenuSeparator />
 											<DropdownMenuItem
 												className="text-red-600"
@@ -281,7 +247,7 @@ export function SpecialtiesPage() {
 	};
 
 	return (
-		<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
+		<div className="flex flex-1 flex-col gap-4">
 			<Card>
 				<CardHeader>
 					<div className="flex items-center gap-4">
@@ -369,24 +335,6 @@ export function SpecialtiesPage() {
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialog>
-
-			{/* Specialty Modal */}
-			<SpecialtyModal
-				open={isModalOpen}
-				onOpenChange={setIsModalOpen}
-				specialty={selectedSpecialty}
-			/>
-
-			{/* Specialty View Modal */}
-			<SpecialtyViewModal
-				open={isViewModalOpen}
-				onClose={() => setIsViewModalOpen(false)}
-				specialty={selectedSpecialty}
-				onEdit={() => {
-					setIsViewModalOpen(false);
-					setIsModalOpen(true);
-				}}
-			/>
 		</div>
 	);
 }

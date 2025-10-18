@@ -118,9 +118,9 @@ export const SuperAdminDashboard = () => {
 	};
 
 	return (
-		<>
+		<div className="space-y-6 p-6">
 			{/* Statistics Cards */}
-			<div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
+			<div className="animate-in fade-in-0 slide-in-from-bottom-4 mb-2 duration-700">
 				{isLoading ? (
 					<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 						{Array.from(
@@ -160,6 +160,6 @@ export const SuperAdminDashboard = () => {
 					<QuickActions onActionClick={handleQuickAction} />
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };

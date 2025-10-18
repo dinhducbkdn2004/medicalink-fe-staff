@@ -4,6 +4,8 @@ import type { FunctionComponent } from "./common/types";
 import type { TanstackRouter } from "./main";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { useNetworkStatus } from "@/hooks/useNetworkStatus";
+import { NetworkStatusIndicator } from "@/components/NetworkStatusIndicator";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -23,7 +25,7 @@ const queryClient = new QueryClient({
 			gcTime: 1000 * 60 * 10,
 			refetchOnWindowFocus: false,
 			refetchOnMount: false,
-			refetchOnReconnect: false,
+			refetchOnReconnect: true, // Auto refetch when reconnecting
 		},
 		mutations: {
 			retry: false,
@@ -37,11 +39,23 @@ if (typeof window !== "undefined") {
 
 type AppProps = { router: TanstackRouter };
 
+const AppContent = ({ router }: AppProps): FunctionComponent => {
+	// Monitor network status
+	useNetworkStatus();
+
+	return (
+		<>
+			<RouterProvider router={router} />
+			<NetworkStatusIndicator />
+		</>
+	);
+};
+
 const App = ({ router }: AppProps): FunctionComponent => {
 	return (
 		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
 			<QueryClientProvider client={queryClient}>
-				<RouterProvider router={router} />
+				<AppContent router={router} />
 				<Toaster position="bottom-right" />
 			</QueryClientProvider>
 		</ThemeProvider>

@@ -1,8 +1,3 @@
-/**
- * Permissions Dashboard
- * Main dashboard for permission management with navigation to different sections
- */
-
 import { Link } from "@tanstack/react-router";
 import {
 	Shield,
@@ -47,18 +42,6 @@ export function PermissionsDashboard() {
 
 	return (
 		<div className="space-y-6">
-			{/* Header */}
-			<div className="flex items-center justify-between">
-				<div>
-					<h1 className="text-3xl font-bold tracking-tight">
-						Permission Management
-					</h1>
-					<p className="text-muted-foreground">
-						Manage user permissions, groups, and access controls
-					</p>
-				</div>
-			</div>
-
 			{/* Stats Overview */}
 			<div className="grid gap-4 md:grid-cols-4">
 				<Card>

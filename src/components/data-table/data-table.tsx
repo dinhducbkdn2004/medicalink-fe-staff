@@ -221,7 +221,7 @@ export function DataTable<TData, TValue>({
 								}
 
 								return rowContent;
-							})}{" "}
+							})}
 						{!isLoading && table.getRowModel().rows?.length === 0 && (
 							<TableRow>
 								<TableCell

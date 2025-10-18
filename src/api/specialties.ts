@@ -11,7 +11,6 @@ import type {
 	CreateSpecialtyRequest,
 	UpdateSpecialtyRequest,
 	CreateInfoSectionRequest,
-	UpdateInfoSectionRequest,
 	SpecialtyQueryParams,
 	SpecialtyStats,
 } from "@/types/api/specialties.types";
@@ -40,13 +39,7 @@ export const updateSpecialty = (id: string, data: UpdateSpecialtyRequest) =>
 
 // Delete specialty (soft delete)
 export const deleteSpecialty = (id: string) =>
-	apiClient.delete<ApiResponse<{ message: string }>>(`/specialties/${id}`);
-
-// Activate/Deactivate specialty
-export const toggleSpecialtyStatus = (id: string, isActive: boolean) =>
-	apiClient.patch<ApiResponse<Specialty>>(`/specialties/${id}/status`, {
-		isActive,
-	});
+	apiClient.delete<ApiResponse<Specialty>>(`/specialties/${id}`);
 
 // Get specialty statistics
 export const getSpecialtyStats = () =>
@@ -61,13 +54,6 @@ export const getInfoSections = (specialtyId: string) =>
 // Create info section
 export const createInfoSection = (data: CreateInfoSectionRequest) =>
 	apiClient.post<ApiResponse<InfoSection>>("/specialties/info-sections", data);
-
-// Update info section
-export const updateInfoSection = (id: string, data: UpdateInfoSectionRequest) =>
-	apiClient.put<ApiResponse<InfoSection>>(
-		`/specialties/info-section/${id}`,
-		data
-	);
 
 // Delete info section
 export const deleteInfoSection = (id: string) =>

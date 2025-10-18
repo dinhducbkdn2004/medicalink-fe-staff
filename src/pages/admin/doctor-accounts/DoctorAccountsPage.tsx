@@ -133,7 +133,7 @@ export function DoctorAccountsPage() {
 	});
 
 	return (
-		<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
+		<div className="flex flex-1 flex-col gap-4">
 			{/* Compact Header */}
 			<div className="flex items-center justify-between border-b bg-white px-6 py-4">
 				<h1 className="text-xl font-semibold text-gray-900">Doctor Accounts</h1>

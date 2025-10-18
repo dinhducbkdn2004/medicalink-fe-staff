@@ -14,7 +14,9 @@ interface EnhancedDoctorProfileProps {
 	doctor: DoctorComplete;
 }
 
-export function EnhancedDoctorProfile({ doctor }: Readonly<EnhancedDoctorProfileProps>) {
+export function EnhancedDoctorProfile({
+	doctor,
+}: Readonly<EnhancedDoctorProfileProps>) {
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [isEditingIntroduction, setIsEditingIntroduction] = useState(false);
 	const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -101,7 +103,7 @@ export function EnhancedDoctorProfile({ doctor }: Readonly<EnhancedDoctorProfile
 	const handleSave = async () => {
 		try {
 			// TODO: Implement API call to update doctor profile
-			console.log("Saving doctor profile:", formData);
+			console.warn("Saving doctor profile:", formData);
 			setIsEditMode(false);
 		} catch (error) {
 			console.error("Save failed:", error);

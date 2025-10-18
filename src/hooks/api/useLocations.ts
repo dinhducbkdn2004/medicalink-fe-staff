@@ -54,6 +54,9 @@ export const useWorkLocation = (id: string) =>
 		enabled: !!id,
 	});
 
+// Alias for consistency with other hooks
+export const useWorkLocationById = useWorkLocation;
+
 export const useWorkLocationStats = () =>
 	useQuery({
 		queryKey: workLocationKeys.stats(),

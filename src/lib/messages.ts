@@ -109,13 +109,19 @@ export const MESSAGES = {
 			SAVE_FAILED: "Failed to save data",
 			LOAD_FAILED: "Failed to load data",
 			UPLOAD_FAILED: "Failed to upload file",
-			NETWORK_ERROR: "Network error",
-			SERVER_ERROR: "Server error",
-			VALIDATION_ERROR: "Invalid data",
-			UNAUTHORIZED: "Unauthorized access",
-			FORBIDDEN: "Access denied",
-			NOT_FOUND: "Data not found",
-			TIMEOUT: "Request timeout",
+			NETWORK_ERROR:
+				"Network connection error. Please check your internet connection.",
+			SERVER_ERROR:
+				"Server is temporarily unavailable. Please try again later.",
+			VALIDATION_ERROR: "Invalid data provided",
+			UNAUTHORIZED: "You are not authorized to perform this action",
+			FORBIDDEN:
+				"Access denied. You don't have permission to access this resource.",
+			NOT_FOUND: "The requested resource was not found",
+			TIMEOUT: "Request timeout. The server is taking too long to respond.",
+			CONNECTION_ERROR:
+				"Unable to connect to server. Please check your connection and try again.",
+			MAINTENANCE: "System is under maintenance. Please try again later.",
 		},
 	},
 

@@ -189,7 +189,7 @@ export function AdminAccountViewPage() {
 
 	if (!admin) {
 		return (
-			<div className="flex flex-1 flex-col gap-4 p-2 pt-2">
+			<div className="flex flex-1 flex-col gap-4">
 				<div className="flex items-center gap-2">
 					<h1 className="page-title">Admin Not Found</h1>
 				</div>
@@ -208,10 +208,26 @@ export function AdminAccountViewPage() {
 	return (
 		<>
 			<div className="min-h-screen bg-gray-50/30">
+				{/* Status Banner */}
+				{isEditMode && (
+					<div className="border-b border-blue-200 bg-blue-50">
+						<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+							<div className="flex h-12 items-center">
+								<div className="flex items-center space-x-2">
+									<div className="bg-background h-2 w-2 animate-pulse rounded-full"></div>
+									<span className="text-foreground text-sm font-medium">
+										Editing Mode - Make your changes and save when ready
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
+
 				{/* Enhanced Header */}
 				<div className="border-b border-gray-200 bg-white shadow-sm">
 					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-						<div className="flex h-16 items-center justify-between">
+						<div className="flex h-16 items-center justify-end">
 							{/* Right side - Actions */}
 							<div className="flex items-center space-x-3">
 								{isEditMode ? (
@@ -227,7 +243,7 @@ export function AdminAccountViewPage() {
 										<Button
 											onClick={form.handleSubmit(handleSave)}
 											disabled={updateStaffMutation.isPending}
-											className="gap-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
+											className="gap-2"
 										>
 											{updateStaffMutation.isPending ? (
 												<Spinner size={16} />
@@ -249,7 +265,7 @@ export function AdminAccountViewPage() {
 										</Button>
 										<Button
 											onClick={() => setIsEditMode(true)}
-											className="gap-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
+											className="gap-2"
 										>
 											<Edit3 className="h-4 w-4" />
 											<span className="hidden sm:inline">Edit Profile</span>
@@ -261,22 +277,6 @@ export function AdminAccountViewPage() {
 					</div>
 				</div>
 
-				{/* Status Banner */}
-				{isEditMode && (
-					<div className="border-b border-blue-200 bg-blue-50">
-						<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-							<div className="flex h-12 items-center">
-								<div className="flex items-center space-x-2">
-									<div className="bg-background h-2 w-2 animate-pulse rounded-full"></div>
-									<span className="text-foreground text-sm font-medium">
-										Editing Mode - Make your changes and save when ready
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				)}
-
 				<div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 					{/* Profile Content */}
 					<div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
@@ -285,7 +285,7 @@ export function AdminAccountViewPage() {
 							<div className="space-y-6">
 								{/* Profile Card */}
 								<Card className="overflow-hidden">
-									<div className="bg-gradient-to-br from-blue-500 to-blue-600 px-6 py-8">
+									<div className="bg-primary px-6 py-8">
 										<div className="flex flex-col items-center space-y-4">
 											<Avatar className="h-20 w-20 ring-4 ring-white/20">
 												<AvatarFallback className="bg-white/20 text-xl font-bold text-white backdrop-blur-sm">
@@ -386,7 +386,7 @@ export function AdminAccountViewPage() {
 								<form className="space-y-6">
 									{/* Basic Information */}
 									<Card className="shadow-sm">
-										<CardHeader className="border-b bg-gray-50/50">
+										<CardHeader className="border-b bg-gray-50/50 px-6 py-4">
 											<CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
 												<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100">
 													<User className="h-4 w-4 text-blue-600" />
@@ -397,7 +397,7 @@ export function AdminAccountViewPage() {
 												Personal and contact information
 											</CardDescription>
 										</CardHeader>
-										<CardContent className="space-y-4">
+										<CardContent className="space-y-4 px-6 py-6">
 											<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 												<div className="space-y-2">
 													<label className="field-label">Full Name</label>
@@ -598,7 +598,7 @@ export function AdminAccountViewPage() {
 
 									{/* Account Activity */}
 									<Card className="shadow-sm">
-										<CardHeader className="border-b bg-gray-50/50">
+										<CardHeader className="border-b bg-gray-50/50 px-6 py-4">
 											<CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
 												<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-100">
 													<Clock className="h-4 w-4 text-green-600" />
@@ -609,7 +609,7 @@ export function AdminAccountViewPage() {
 												Account creation and modification history
 											</CardDescription>
 										</CardHeader>
-										<CardContent>
+										<CardContent className="px-6 py-6">
 											<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 												<div className="space-y-2">
 													<label className="data-label">Created At</label>
