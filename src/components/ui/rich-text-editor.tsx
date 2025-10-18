@@ -62,59 +62,63 @@ export const RichTextEditor = forwardRef<
 		const isInitialized = useRef(false);
 
 		// Default modules configuration
-		const defaultModules = useMemo(() => ({
-			toolbar: [
-				[{ header: [1, 2, 3, false] }],
-				["bold", "italic", "underline", "strike"],
-				[{ list: "ordered" }, { list: "bullet" }],
-				["blockquote", "code-block"],
-				["link"],
-				["clean"],
-			],
-			history: {
-				delay: 1000,
-				maxStack: 500,
-				userOnly: true,
-			},
-		}), []);
+		const defaultModules = useMemo(
+			() => ({
+				toolbar: [
+					[{ header: [1, 2, 3, false] }],
+					["bold", "italic", "underline", "strike"],
+					[{ list: "ordered" }, { list: "bullet" }],
+					["blockquote", "code-block"],
+					["link"],
+					["clean"],
+				],
+				history: {
+					delay: 1000,
+					maxStack: 500,
+					userOnly: true,
+				},
+			}),
+			[]
+		);
 
 		// Default formats
-		const defaultFormats = useMemo(() => [
+	const defaultFormats = useMemo(
+		() => [
 			"header",
 			"bold",
 			"italic",
 			"underline",
 			"strike",
 			"list",
-			"bullet",
 			"blockquote",
 			"code-block",
 			"link",
-		], []);
-
-	// Cleanup function to properly destroy Quill instance
-	const cleanupQuill = useCallback(() => {
-		if (quillRef.current) {
-			try {
-				// Remove all event listeners
-				quillRef.current.off("text-change");
-				// Clear the editor content
-				quillRef.current.setText("");
-				// Set to null
-				quillRef.current = null;
-			} catch {
-				// Ignore cleanup errors
-				quillRef.current = null;
+		],
+		[]
+	);		// Cleanup function to properly destroy Quill instance
+		const cleanupQuill = useCallback(() => {
+			if (quillRef.current) {
+				try {
+					// Remove all event listeners
+					quillRef.current.off("text-change");
+					// Clear the editor content
+					quillRef.current.setText("");
+					// Set to null
+					quillRef.current = null;
+				} catch {
+					// Ignore cleanup errors
+					quillRef.current = null;
+				}
 			}
-		}
 
-		// Clear the DOM completely
-		if (containerRef.current) {
-			containerRef.current.innerHTML = "";
-		}
+			// Clear the DOM completely
+			if (containerRef.current) {
+				containerRef.current.innerHTML = "";
+			}
 
-		isInitialized.current = false;
-	}, []);		useImperativeHandle(ref, () => ({
+			isInitialized.current = false;
+		}, []);
+		useImperativeHandle(ref, () => ({
 			getQuill: () => quillRef.current,
 			focus: () => quillRef.current?.focus(),
 			blur: () => quillRef.current?.blur(),

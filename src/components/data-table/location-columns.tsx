@@ -14,10 +14,7 @@ import {
 	Eye,
 	Edit,
 	Trash2,
-	Building2,
-	MapPin,
-	Phone,
-	Globe,
+	Building2
 } from "lucide-react";
 
 export interface WorkLocationData {
@@ -75,7 +72,6 @@ export function createLocationColumns({
 				const address = row.getValue("address") as string | null;
 				return (
 					<div className="flex max-w-xs items-start gap-2">
-						<MapPin className="text-muted-foreground mt-0.5 h-3 w-3 shrink-0" />
 						<p className="text-muted-foreground line-clamp-2 text-sm">
 							{address || "No address"}
 						</p>
@@ -90,7 +86,6 @@ export function createLocationColumns({
 				const phone = row.getValue("phone") as string | null;
 				return phone ? (
 					<div className="flex items-center gap-2 text-sm whitespace-nowrap">
-						<Phone className="text-muted-foreground h-3 w-3" />
 						{phone}
 					</div>
 				) : (
@@ -105,7 +100,6 @@ export function createLocationColumns({
 				const timezone = row.getValue("timezone") as string;
 				return (
 					<div className="flex items-center gap-2 text-sm whitespace-nowrap">
-						<Globe className="text-muted-foreground h-3 w-3" />
 						{timezone}
 					</div>
 				);

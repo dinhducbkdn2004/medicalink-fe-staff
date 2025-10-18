@@ -1,10 +1,10 @@
 /**
- * Introduction Editor Component - LinkedIn Style
- * Clean QuillJS editor with professional styling and better UX
+ * Introduction Editor Component - Enhanced with Image Upload
+ * Uses enhanced QuillJS editor with proper lifecycle management
  */
 
-import { useRef, useEffect, useMemo, useCallback } from "react";
-import { FileText, Save, Edit3, Type } from "lucide-react";
+import { useRef, useState, useCallback } from "react";
+import { FileText, Save, Edit3, ImageIcon } from "lucide-react";
 import {
 	Card,
 	CardContent,
@@ -13,8 +13,11 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import Quill from "quill";
-import "quill/dist/quill.snow.css";
+import {
+	EnhancedRichTextEditor,
+	type EnhancedRichTextEditorRef,
+	defaultImageUpload,
+} from "@/components/ui/enhanced-rich-text-editor";
 import "@/styles/quill-custom.css";
 
 interface IntroductionEditorProps {
@@ -37,147 +40,28 @@ export function IntroductionEditor({
 	onSaveIntroduction,
 	onIntroductionChange,
 }: IntroductionEditorProps) {
-	const quillRef = useRef<HTMLDivElement>(null);
-	const quillInstanceRef = useRef<Quill | null>(null);
-	const onChangeRef = useRef(onIntroductionChange);
+	const editorRef = useRef<EnhancedRichTextEditorRef>(null);
+	const [wordCount, setWordCount] = useState(0);
 
-	// Keep the callback ref updated
-	useEffect(() => {
-		onChangeRef.current = onIntroductionChange;
-	}, [onIntroductionChange]);
-
-	// Memoize toolbar configuration to prevent re-initialization
-	const toolbarConfig = useMemo(
-		() => [
-			[{ header: [2, 3, false] }],
-			["bold", "italic", "underline"],
-			[{ list: "ordered" }, { list: "bullet" }],
-			["blockquote", "link"],
-			["clean"],
-		],
-		[]
+	// Handle content changes - memoized to prevent re-initialization
+	const handleContentChange = useCallback(
+		(html: string, text: string) => {
+			onIntroductionChange(html);
+			setWordCount(text.trim() ? text.trim().split(/\s+/).length : 0);
+		},
+		[onIntroductionChange]
 	);
 
-	const formats = useMemo(
-		() => [
-			"header",
-			"bold",
-			"italic",
-			"underline",
-			"list",
-			"blockquote",
-			"link",
-		],
-		[]
-	);
-
-	// Cleanup function to properly destroy Quill instance
-	const cleanupQuill = useCallback(() => {
-		if (quillInstanceRef.current) {
-			try {
-				// Remove all event listeners
-				quillInstanceRef.current.off("text-change");
-				// Clear the editor content
-				quillInstanceRef.current.setText("");
-				// Set to null
-				quillInstanceRef.current = null;
-			} catch {
-				// Ignore cleanup errors
-				quillInstanceRef.current = null;
-			}
-		}
-
-		// Clear the DOM completely
-		if (quillRef.current) {
-			quillRef.current.innerHTML = "";
+	// Custom image upload handler - memoized to prevent re-initialization
+	const handleImageUpload = useCallback(async (file: File): Promise<string> => {
+		// TODO: Replace with actual API call to upload image
+		try {
+			return await defaultImageUpload(file);
+		} catch (error) {
+			console.error("Image upload failed:", error);
+			throw error;
 		}
 	}, []);
-
-	useEffect(() => {
-		// Always cleanup first to prevent multiple instances
-		cleanupQuill();
-
-		if (isEditingIntroduction && quillRef.current) {
-			// Small delay to ensure DOM is ready
-			const timeout = setTimeout(() => {
-				if (quillRef.current && !quillInstanceRef.current) {
-					quillInstanceRef.current = new Quill(quillRef.current, {
-						theme: "snow",
-						modules: {
-							toolbar: {
-								container: toolbarConfig,
-								handlers: {},
-							},
-						},
-						placeholder: `Tell patients about ${doctor.fullName}'s expertise, experience, and approach to care...`,
-						formats: formats,
-					});
-
-					// Set initial content
-					if (introductionContent) {
-						quillInstanceRef.current.root.innerHTML = introductionContent;
-					}
-
-					// Listen for content changes
-					quillInstanceRef.current.on("text-change", () => {
-						const content = quillInstanceRef.current?.root.innerHTML || "";
-						onChangeRef.current(content);
-					});
-
-					// Apply custom styling
-					const toolbar = quillRef.current?.querySelector(
-						".ql-toolbar"
-					) as HTMLElement;
-					const editor = quillRef.current?.querySelector(
-						".ql-editor"
-					) as HTMLElement;
-
-					if (toolbar) {
-						toolbar.style.borderRadius = "0.75rem 0.75rem 0 0";
-					}
-
-					if (editor) {
-						editor.style.borderRadius = "0 0 0.75rem 0.75rem";
-						editor.style.minHeight = "150px";
-						editor.style.fontSize = "14px";
-						editor.style.lineHeight = "1.6";
-					}
-				}
-			}, 100);
-
-			return () => {
-				clearTimeout(timeout);
-				cleanupQuill();
-			};
-		}
-
-		return cleanupQuill;
-	}, [isEditingIntroduction, toolbarConfig, formats, cleanupQuill, doctor.fullName, introductionContent]);
-
-	// Separate effect to update content when it changes externally
-	useEffect(() => {
-		if (
-			quillInstanceRef.current &&
-			isEditingIntroduction &&
-			introductionContent
-		) {
-			const currentContent = quillInstanceRef.current.root.innerHTML;
-			if (currentContent !== introductionContent) {
-				const selection = quillInstanceRef.current.getSelection();
-				quillInstanceRef.current.root.innerHTML = introductionContent;
-				if (selection) {
-					quillInstanceRef.current.setSelection(selection);
-				}
-			}
-		}
-	}, [introductionContent, isEditingIntroduction]);
-
-	// Cleanup on component unmount
-	useEffect(() => {
-		return () => {
-			cleanupQuill();
-		};
-	}, [cleanupQuill]);
 
 	return (
 		<Card>
@@ -213,8 +97,8 @@ export function IntroductionEditor({
 							</>
 						) : (
 							<Button
-								variant="outline"
 								onClick={onToggleEditIntroduction}
+								variant="outline"
 								size="sm"
 								className="gap-2"
 							>
@@ -225,53 +109,51 @@ export function IntroductionEditor({
 					</div>
 				</div>
 			</CardHeader>
-			<CardContent className="pt-6">
+			<CardContent>
 				{isEditingIntroduction ? (
 					<div className="space-y-4">
-						<div ref={quillRef} className="overflow-hidden rounded-lg border" />
-						<div className="bg-muted text-muted-foreground flex items-center gap-2 rounded-lg p-3 text-sm">
-							<Type className="h-4 w-4" />
-							<span>
-								Use the toolbar above to format your introduction professionally
-							</span>
-						</div>
+						<EnhancedRichTextEditor
+							ref={editorRef}
+							value={introductionContent}
+							onChange={handleContentChange}
+							placeholder={`Tell patients about ${doctor.fullName}'s expertise, experience, and approach to care...`}
+							minHeight="200px"
+							onImageUpload={handleImageUpload}
+							className="w-full"
+						/>
+						{wordCount > 0 && (
+							<div className="text-muted-foreground flex items-center justify-between text-sm">
+								<span className="flex items-center gap-1">
+									<ImageIcon className="h-3 w-3" />
+									Images supported • Max 5MB per file
+								</span>
+								<span>{wordCount} words</span>
+							</div>
+						)}
 					</div>
 				) : (
 					<div className="space-y-4">
-						{doctor.introduction ? (
-							<div className="prose prose-sm max-w-none">
-								<div
-									className="leading-relaxed"
-									dangerouslySetInnerHTML={{ __html: doctor.introduction }}
-									style={{
-										fontSize: "14px",
-										lineHeight: "1.6",
-									}}
-								/>
-							</div>
+						{introductionContent ? (
+							<div
+								className="prose prose-sm max-w-none"
+								dangerouslySetInnerHTML={{ __html: introductionContent }}
+							/>
 						) : (
-							<div className="rounded-lg border-2 border-dashed py-12 text-center">
-								<div className="mx-auto max-w-sm space-y-4">
-									<div className="bg-muted mx-auto w-fit rounded-full p-3">
-										<FileText className="text-muted-foreground h-8 w-8" />
-									</div>
-									<div>
-										<p className="font-medium">No introduction yet</p>
-										<p className="text-muted-foreground mt-1 text-sm">
-											Click "Edit" to add your professional introduction and
-											share your expertise with patients
-										</p>
-									</div>
-									<Button
-										variant="outline"
-										onClick={onToggleEditIntroduction}
-										size="sm"
-										className="gap-2"
-									>
-										<Edit3 className="h-4 w-4" />
-										Add Introduction
-									</Button>
-								</div>
+							<div className="text-muted-foreground py-8 text-center">
+								<FileText className="mx-auto mb-4 h-12 w-12 opacity-50" />
+								<p className="mb-2 text-lg font-medium">No introduction yet</p>
+								<p className="mb-4 text-sm">
+									Share {doctor.fullName}'s professional background and
+									expertise
+								</p>
+								<Button
+									onClick={onToggleEditIntroduction}
+									variant="outline"
+									className="gap-2"
+								>
+									<Edit3 className="h-4 w-4" />
+									Add Introduction
+								</Button>
 							</div>
 						)}
 					</div>

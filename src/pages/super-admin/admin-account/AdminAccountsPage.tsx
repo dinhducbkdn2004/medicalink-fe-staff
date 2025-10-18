@@ -121,8 +121,9 @@ export function AdminAccountsPage() {
 
 	const handleEditAdmin = (adminId: string) => {
 		void navigate({
-			to: "/super-admin/admin-accounts/$id/edit",
+			to: "/super-admin/admin-accounts/$id/view",
 			params: { id: adminId },
+			search: { mode: "edit" },
 		});
 	};
 
@@ -221,7 +222,7 @@ export function AdminAccountsPage() {
 	];
 
 	return (
-		<div className="flex flex-1 flex-col gap-4">
+		<div className="flex flex-1 flex-col gap-4 p-6">
 			<Card>
 				<CardContent className="space-y-4 p-6">
 					<DataTable

@@ -187,7 +187,7 @@ export function DoctorAccountsPage() {
 	];
 
 	return (
-		<div className="flex flex-1 flex-col gap-4">
+		<div className="flex flex-1 flex-col gap-4 p-6">
 			<Card>
 				<CardContent className="space-y-4 p-6">
 					<DataTable

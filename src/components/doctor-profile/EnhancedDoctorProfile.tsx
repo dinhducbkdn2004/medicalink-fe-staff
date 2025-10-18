@@ -14,7 +14,9 @@ interface EnhancedDoctorProfileProps {
 	doctor: DoctorComplete;
 }
 
-export function EnhancedDoctorProfile({ doctor }: Readonly<EnhancedDoctorProfileProps>) {
+export function EnhancedDoctorProfile({
+	doctor,
+}: Readonly<EnhancedDoctorProfileProps>) {
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [isEditingIntroduction, setIsEditingIntroduction] = useState(false);
 	const [uploadingAvatar, setUploadingAvatar] = useState(false);

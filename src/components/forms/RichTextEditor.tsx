@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface RichTextEditorProps {
@@ -20,11 +20,32 @@ export function RichTextEditor({
 }: RichTextEditorProps) {
 	const editorRef = useRef<HTMLDivElement>(null);
 	const quillRef = useRef<any>(null);
+	const isUpdatingRef = useRef(false);
+	const mountedRef = useRef(true);
+	const [isInitialized, setIsInitialized] = useState(false);
+
+	// Cleanup function
+	const cleanup = useCallback(() => {
+		if (quillRef.current) {
+			try {
+				quillRef.current.off("text-change");
+				quillRef.current = null;
+			} catch {
+				quillRef.current = null;
+			}
+		}
+		if (editorRef.current) {
+			editorRef.current.innerHTML = "";
+		}
+		setIsInitialized(false);
+	}, []);
 
 	useEffect(() => {
-		// Dynamically import Quill to avoid SSR issues
+		// Initialize Quill only once
 		const initializeQuill = async () => {
-			if (typeof window === "undefined") return;
+			if (!mountedRef.current || isInitialized || !editorRef.current) {
+				return;
+			}
 
 			try {
 				const QuillModule = await import("quill");
@@ -33,48 +54,53 @@ export function RichTextEditor({
 				// Import Quill CSS
 				await import("quill/dist/quill.snow.css");
 
-				if (editorRef.current && !quillRef.current) {
-					quillRef.current = new Quill(editorRef.current, {
-						theme: "snow",
-						placeholder,
-						readOnly: disabled,
-						modules: {
-							toolbar: [
-								[{ header: [1, 2, 3, false] }],
-								["bold", "italic", "underline", "strike"],
-								[{ list: "ordered" }, { list: "bullet" }],
-								[{ align: [] }],
-								["link"],
-								[{ color: [] }, { background: [] }],
-								["clean"],
-							],
-						},
-						formats: [
-							"header",
-							"bold",
-							"italic",
-							"underline",
-							"strike",
-							"list",
-							"bullet",
-							"align",
-							"link",
-							"color",
-							"background",
+				if (!mountedRef.current || isInitialized) return;
+
+				const quill = new Quill(editorRef.current, {
+					theme: "snow",
+					placeholder,
+					readOnly: disabled,
+					modules: {
+						toolbar: [
+							[{ header: [1, 2, 3, false] }],
+							["bold", "italic", "underline", "strike"],
+							[{ list: "ordered" }, { list: "bullet" }],
+							[{ align: [] }],
+							["link"],
+							[{ color: [] }, { background: [] }],
+							["clean"],
 						],
-					});
+					},
+					formats: [
+						"header",
+						"bold",
+						"italic",
+						"underline",
+						"strike",
+						"list",
+						"align",
+						"link",
+						"color",
+						"background",
+					],
+				});
 
-					// Set initial content
-					if (value) {
-						quillRef.current.root.innerHTML = value;
-					}
+				quillRef.current = quill;
+				setIsInitialized(true);
 
-					// Listen for text changes
-					quillRef.current.on("text-change", () => {
-						const html = quillRef.current.root.innerHTML;
-						onChange(html);
-					});
+				// Set initial content
+				if (value && mountedRef.current) {
+					isUpdatingRef.current = true;
+					quill.root.innerHTML = value;
+					isUpdatingRef.current = false;
 				}
+
+				// Listen for text changes
+				quill.on("text-change", () => {
+					if (!mountedRef.current || isUpdatingRef.current) return;
+					const html = quill.root.innerHTML;
+					onChange(html);
+				});
 			} catch (error) {
 				console.error("Failed to initialize Quill:", error);
 			}
@@ -83,25 +109,32 @@ export function RichTextEditor({
 		initializeQuill();
 
 		return () => {
-			if (quillRef.current) {
-				quillRef.current = null;
-			}
+			mountedRef.current = false;
+			cleanup();
 		};
-	}, [disabled, onChange, placeholder, value]);
+	}, [cleanup, disabled, isInitialized, onChange, placeholder, value]); // Add missing dependencies
 
 	// Update content when value prop changes
 	useEffect(() => {
-		if (quillRef.current && value !== quillRef.current.root.innerHTML) {
+		if (
+			quillRef.current &&
+			isInitialized &&
+			mountedRef.current &&
+			!isUpdatingRef.current &&
+			value !== quillRef.current.root.innerHTML
+		) {
+			isUpdatingRef.current = true;
 			quillRef.current.root.innerHTML = value;
+			isUpdatingRef.current = false;
 		}
-	}, [value]);
+	}, [value, isInitialized]);
 
 	// Update disabled state
 	useEffect(() => {
-		if (quillRef.current) {
+		if (quillRef.current && isInitialized && mountedRef.current) {
 			quillRef.current.enable(!disabled);
 		}
-	}, [disabled]);
+	}, [disabled, isInitialized]);
 
 	return (
 		<div

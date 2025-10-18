@@ -43,13 +43,9 @@ import {
 import { toast } from "sonner";
 import { usePagination } from "@/hooks/usePagination";
 import { useSpecialties, useDeleteSpecialty } from "@/hooks/api/useSpecialties";
-import { SpecialtyModal } from "@/components/modals/SpecialtyModal";
-import { SpecialtyViewModal } from "@/components/modals/SpecialtyViewModal";
 
 export function SpecialtiesPage() {
-	const [selectedSpecialty, setSelectedSpecialty] = useState<any>(null);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+	const [_selectedSpecialty, setSelectedSpecialty] = useState<any>(null);
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [specialtyToDelete, setSpecialtyToDelete] = useState<any>(null);
 
@@ -101,12 +97,10 @@ export function SpecialtiesPage() {
 
 	const handleEditSpecialty = (specialty: any) => {
 		setSelectedSpecialty(specialty);
-		setIsModalOpen(true);
 	};
 
 	const handleViewSpecialty = (specialty: any) => {
 		setSelectedSpecialty(specialty);
-		setIsViewModalOpen(true);
 	};
 
 	const handleDeleteSpecialty = (specialty: any) => {
@@ -341,24 +335,6 @@ export function SpecialtiesPage() {
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialog>
-
-			{/* Specialty Modal */}
-			<SpecialtyModal
-				open={isModalOpen}
-				onOpenChange={setIsModalOpen}
-				specialty={selectedSpecialty}
-			/>
-
-			{/* Specialty View Modal */}
-			<SpecialtyViewModal
-				open={isViewModalOpen}
-				onClose={() => setIsViewModalOpen(false)}
-				specialty={selectedSpecialty}
-				onEdit={() => {
-					setIsViewModalOpen(false);
-					setIsModalOpen(true);
-				}}
-			/>
 		</div>
 	);
 }

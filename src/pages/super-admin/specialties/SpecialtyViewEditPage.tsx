@@ -204,10 +204,25 @@ export function SpecialtyViewEditPage() {
 	return (
 		<>
 			<div className="min-h-screen bg-gray-50/30">
+			{/* Status Banner */}
+				{isEditMode && (
+					<div className="border-b border-blue-200 bg-blue-50">
+						<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+							<div className="flex h-12 items-center">
+								<div className="flex items-center space-x-2">
+									<div className="bg-background h-2 w-2 animate-pulse rounded-full"></div>
+									<span className="text-foreground text-sm font-medium">
+										Editing Mode - Make your changes and save when ready
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
 				{/* Enhanced Header */}
 				<div className="border-b border-gray-200 bg-white shadow-sm">
 					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-						<div className="flex h-16 items-center justify-between">
+						<div className="flex h-16 items-center justify-end">
 							{/* Right side - Actions */}
 							<div className="flex items-center space-x-3">
 								{isEditMode ? (
@@ -245,7 +260,7 @@ export function SpecialtyViewEditPage() {
 										</Button>
 										<Button
 											onClick={() => setIsEditMode(true)}
-											className="gap-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
+											className="gap-2"
 										>
 											<Edit3 className="h-4 w-4" />
 											<span className="hidden sm:inline">Edit Specialty</span>
@@ -257,21 +272,7 @@ export function SpecialtyViewEditPage() {
 					</div>
 				</div>
 
-				{/* Status Banner */}
-				{isEditMode && (
-					<div className="border-b border-blue-200 bg-blue-50">
-						<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-							<div className="flex h-12 items-center">
-								<div className="flex items-center space-x-2">
-									<div className="bg-background h-2 w-2 animate-pulse rounded-full"></div>
-									<span className="text-foreground text-sm font-medium">
-										Editing Mode - Make your changes and save when ready
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				)}
+
 
 				<div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 					{/* Profile Content */}

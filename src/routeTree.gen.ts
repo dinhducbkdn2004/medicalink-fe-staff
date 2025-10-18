@@ -48,7 +48,6 @@ import { Route as SuperAdminSpecialtiesIdEditRouteImport } from "./routes/super-
 import { Route as SuperAdminDoctorAccountsIdViewRouteImport } from "./routes/super-admin/doctor-accounts.$id.view";
 import { Route as SuperAdminDoctorAccountsIdEditRouteImport } from "./routes/super-admin/doctor-accounts.$id.edit";
 import { Route as SuperAdminAdminAccountsIdViewRouteImport } from "./routes/super-admin/admin-accounts.$id.view";
-import { Route as SuperAdminAdminAccountsIdEditRouteImport } from "./routes/super-admin/admin-accounts.$id.edit";
 
 const SuperAdminRoute = SuperAdminRouteImport.update({
 	id: "/super-admin",
@@ -265,12 +264,6 @@ const SuperAdminAdminAccountsIdViewRoute =
 		path: "/$id/view",
 		getParentRoute: () => SuperAdminAdminAccountsRoute,
 	} as any);
-const SuperAdminAdminAccountsIdEditRoute =
-	SuperAdminAdminAccountsIdEditRouteImport.update({
-		id: "/$id/edit",
-		path: "/$id/edit",
-		getParentRoute: () => SuperAdminAdminAccountsRoute,
-	} as any);
 
 export interface FileRoutesByFullPath {
 	"/": typeof IndexRoute;
@@ -305,7 +298,6 @@ export interface FileRoutesByFullPath {
 	"/super-admin/doctor-accounts/": typeof SuperAdminDoctorAccountsIndexRoute;
 	"/super-admin/specialties/": typeof SuperAdminSpecialtiesIndexRoute;
 	"/super-admin/work-locations/": typeof SuperAdminWorkLocationsIndexRoute;
-	"/super-admin/admin-accounts/$id/edit": typeof SuperAdminAdminAccountsIdEditRoute;
 	"/super-admin/admin-accounts/$id/view": typeof SuperAdminAdminAccountsIdViewRoute;
 	"/super-admin/doctor-accounts/$id/edit": typeof SuperAdminDoctorAccountsIdEditRoute;
 	"/super-admin/doctor-accounts/$id/view": typeof SuperAdminDoctorAccountsIdViewRoute;
@@ -340,7 +332,6 @@ export interface FileRoutesByTo {
 	"/super-admin/doctor-accounts": typeof SuperAdminDoctorAccountsIndexRoute;
 	"/super-admin/specialties": typeof SuperAdminSpecialtiesIndexRoute;
 	"/super-admin/work-locations": typeof SuperAdminWorkLocationsIndexRoute;
-	"/super-admin/admin-accounts/$id/edit": typeof SuperAdminAdminAccountsIdEditRoute;
 	"/super-admin/admin-accounts/$id/view": typeof SuperAdminAdminAccountsIdViewRoute;
 	"/super-admin/doctor-accounts/$id/edit": typeof SuperAdminDoctorAccountsIdEditRoute;
 	"/super-admin/doctor-accounts/$id/view": typeof SuperAdminDoctorAccountsIdViewRoute;
@@ -383,7 +374,6 @@ export interface FileRoutesById {
 	"/super-admin/doctor-accounts/": typeof SuperAdminDoctorAccountsIndexRoute;
 	"/super-admin/specialties/": typeof SuperAdminSpecialtiesIndexRoute;
 	"/super-admin/work-locations/": typeof SuperAdminWorkLocationsIndexRoute;
-	"/super-admin/admin-accounts/$id/edit": typeof SuperAdminAdminAccountsIdEditRoute;
 	"/super-admin/admin-accounts/$id/view": typeof SuperAdminAdminAccountsIdViewRoute;
 	"/super-admin/doctor-accounts/$id/edit": typeof SuperAdminDoctorAccountsIdEditRoute;
 	"/super-admin/doctor-accounts/$id/view": typeof SuperAdminDoctorAccountsIdViewRoute;
@@ -427,7 +417,6 @@ export interface FileRouteTypes {
 		| "/super-admin/doctor-accounts/"
 		| "/super-admin/specialties/"
 		| "/super-admin/work-locations/"
-		| "/super-admin/admin-accounts/$id/edit"
 		| "/super-admin/admin-accounts/$id/view"
 		| "/super-admin/doctor-accounts/$id/edit"
 		| "/super-admin/doctor-accounts/$id/view"
@@ -462,7 +451,6 @@ export interface FileRouteTypes {
 		| "/super-admin/doctor-accounts"
 		| "/super-admin/specialties"
 		| "/super-admin/work-locations"
-		| "/super-admin/admin-accounts/$id/edit"
 		| "/super-admin/admin-accounts/$id/view"
 		| "/super-admin/doctor-accounts/$id/edit"
 		| "/super-admin/doctor-accounts/$id/view"
@@ -504,7 +492,6 @@ export interface FileRouteTypes {
 		| "/super-admin/doctor-accounts/"
 		| "/super-admin/specialties/"
 		| "/super-admin/work-locations/"
-		| "/super-admin/admin-accounts/$id/edit"
 		| "/super-admin/admin-accounts/$id/view"
 		| "/super-admin/doctor-accounts/$id/edit"
 		| "/super-admin/doctor-accounts/$id/view"
@@ -797,13 +784,6 @@ declare module "@tanstack/react-router" {
 			preLoaderRoute: typeof SuperAdminAdminAccountsIdViewRouteImport;
 			parentRoute: typeof SuperAdminAdminAccountsRoute;
 		};
-		"/super-admin/admin-accounts/$id/edit": {
-			id: "/super-admin/admin-accounts/$id/edit";
-			path: "/$id/edit";
-			fullPath: "/super-admin/admin-accounts/$id/edit";
-			preLoaderRoute: typeof SuperAdminAdminAccountsIdEditRouteImport;
-			parentRoute: typeof SuperAdminAdminAccountsRoute;
-		};
 	}
 }
 
@@ -848,7 +828,6 @@ const DoctorRouteWithChildren =
 interface SuperAdminAdminAccountsRouteChildren {
 	SuperAdminAdminAccountsCreateRoute: typeof SuperAdminAdminAccountsCreateRoute;
 	SuperAdminAdminAccountsIndexRoute: typeof SuperAdminAdminAccountsIndexRoute;
-	SuperAdminAdminAccountsIdEditRoute: typeof SuperAdminAdminAccountsIdEditRoute;
 	SuperAdminAdminAccountsIdViewRoute: typeof SuperAdminAdminAccountsIdViewRoute;
 }
 
@@ -856,7 +835,6 @@ const SuperAdminAdminAccountsRouteChildren: SuperAdminAdminAccountsRouteChildren
 	{
 		SuperAdminAdminAccountsCreateRoute: SuperAdminAdminAccountsCreateRoute,
 		SuperAdminAdminAccountsIndexRoute: SuperAdminAdminAccountsIndexRoute,
-		SuperAdminAdminAccountsIdEditRoute: SuperAdminAdminAccountsIdEditRoute,
 		SuperAdminAdminAccountsIdViewRoute: SuperAdminAdminAccountsIdViewRoute,
 	};
 

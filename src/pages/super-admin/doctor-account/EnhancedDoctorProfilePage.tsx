@@ -308,7 +308,7 @@ export function EnhancedDoctorProfilePage() {
 	// Error state
 	if (error || !doctor) {
 		return (
-			<div className="flex flex-1 flex-col gap-4">
+			<div className="flex flex-1 flex-col gap-4 p-6">
 				<div className="flex items-center gap-2">
 					<Button variant="ghost" size="icon" onClick={handleBack}>
 						<ArrowLeft className="h-4 w-4" />
@@ -329,6 +329,21 @@ export function EnhancedDoctorProfilePage() {
 
 	return (
 		<div className="min-h-screen">
+			{/* Status Banner */}
+			{isEditMode && (
+				<div className="border-b border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950">
+					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+						<div className="flex h-12 items-center">
+							<div className="flex items-center space-x-2">
+								<div className="bg-primary h-2 w-2 animate-pulse rounded-full"></div>
+								<span className="text-sm font-medium">
+									Editing Mode - Make your changes and save when ready
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 			{/* Enhanced Header */}
 			<div className="bg-background border-b shadow-sm">
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -404,22 +419,6 @@ export function EnhancedDoctorProfilePage() {
 					</div>
 				</div>
 			</div>
-
-			{/* Status Banner */}
-			{isEditMode && (
-				<div className="border-b border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950">
-					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-						<div className="flex h-12 items-center">
-							<div className="flex items-center space-x-2">
-								<div className="bg-primary h-2 w-2 animate-pulse rounded-full"></div>
-								<span className="text-sm font-medium">
-									Editing Mode - Make your changes and save when ready
-								</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			)}
 
 			<div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 				{/* Profile Content */}

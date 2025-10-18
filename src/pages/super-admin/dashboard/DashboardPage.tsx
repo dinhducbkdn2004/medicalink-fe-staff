@@ -118,7 +118,7 @@ export const SuperAdminDashboard = () => {
 	};
 
 	return (
-		<>
+		<div className="space-y-6 p-6">
 			{/* Statistics Cards */}
 			<div className="animate-in fade-in-0 slide-in-from-bottom-4 mb-2 duration-700">
 				{isLoading ? (
@@ -160,6 +160,6 @@ export const SuperAdminDashboard = () => {
 					<QuickActions onActionClick={handleQuickAction} />
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };

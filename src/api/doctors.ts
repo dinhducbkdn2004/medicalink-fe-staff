@@ -29,9 +29,7 @@ export const getDoctorById = (id: string) =>
 
 // Get doctor with complete profile information
 export const getDoctorComplete = (id: string) =>
-	apiClient.get<ApiResponse<DoctorComplete>>(
-		`/doctors/${id}/complete?skipCache=true`
-	);
+	apiClient.get<ApiResponse<DoctorComplete>>(`/doctors/${id}/complete`);
 
 // Create new doctor (via staff endpoint with DOCTOR role)
 export const createDoctor = (data: CreateDoctorRequest) =>

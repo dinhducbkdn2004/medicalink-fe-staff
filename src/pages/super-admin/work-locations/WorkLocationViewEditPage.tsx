@@ -207,10 +207,25 @@ export function WorkLocationViewEditPage() {
 	return (
 		<>
 			<div className="min-h-screen bg-gray-50/30">
+				{/* Status Banner */}
+				{isEditMode && (
+					<div className="border-b border-blue-200 bg-blue-50">
+						<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+							<div className="flex h-12 items-center">
+								<div className="flex items-center space-x-2">
+									<div className="bg-background h-2 w-2 animate-pulse rounded-full"></div>
+									<span className="text-foreground text-sm font-medium">
+										Editing Mode - Make your changes and save when ready
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
 				{/* Enhanced Header */}
 				<div className="border-b border-gray-200 bg-white shadow-sm">
 					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-						<div className="flex h-16 items-center justify-between">
+						<div className="flex h-16 items-center justify-end">
 							{/* Right side - Actions */}
 							<div className="flex items-center space-x-3">
 								{isEditMode ? (
@@ -226,7 +241,7 @@ export function WorkLocationViewEditPage() {
 										<Button
 											onClick={form.handleSubmit(handleSave)}
 											disabled={updateWorkLocationMutation.isPending}
-											className="gap-2 bg-green-600 hover:bg-green-700 focus:ring-green-500"
+											className="bg-primary gap-2"
 										>
 											{updateWorkLocationMutation.isPending ? (
 												<Spinner size={16} />
@@ -248,7 +263,7 @@ export function WorkLocationViewEditPage() {
 										</Button>
 										<Button
 											onClick={() => setIsEditMode(true)}
-											className="gap-2 bg-green-600 hover:bg-green-700 focus:ring-green-500"
+											className="gap-2"
 										>
 											<Edit3 className="h-4 w-4" />
 											<span className="hidden sm:inline">Edit Location</span>
@@ -260,22 +275,6 @@ export function WorkLocationViewEditPage() {
 					</div>
 				</div>
 
-				{/* Status Banner */}
-				{isEditMode && (
-					<div className="border-b border-blue-200 bg-blue-50">
-						<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-							<div className="flex h-12 items-center">
-								<div className="flex items-center space-x-2">
-									<div className="bg-background h-2 w-2 animate-pulse rounded-full"></div>
-									<span className="text-foreground text-sm font-medium">
-										Editing Mode - Make your changes and save when ready
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				)}
-
 				<div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 					{/* Profile Content */}
 					<div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
@@ -284,7 +283,7 @@ export function WorkLocationViewEditPage() {
 							<div className="space-y-6">
 								{/* Profile Card */}
 								<Card className="overflow-hidden">
-									<div className="bg-gradient-to-br from-green-500 to-green-600 px-6 py-8">
+									<div className="bg-primary px-6 py-8">
 										<div className="flex flex-col items-center space-y-4">
 											<div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 ring-4 ring-white/20 backdrop-blur-sm">
 												<Building2 className="h-10 w-10 text-white" />

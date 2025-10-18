@@ -49,13 +49,9 @@ import {
 	useWorkLocations,
 	useDeleteWorkLocation,
 } from "@/hooks/api/useLocations";
-import { WorkLocationModal } from "@/components/modals/WorkLocationModal";
-import { WorkLocationViewModal } from "@/components/modals/WorkLocationViewModal";
 
 export function WorkLocationsPage() {
-	const [selectedLocation, setSelectedLocation] = useState<any | null>(null);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+		const [_selectedLocation, setSelectedLocation] = useState<any>(null);
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [locationToDelete, setLocationToDelete] = useState<any | null>(null);
 
@@ -110,12 +106,10 @@ export function WorkLocationsPage() {
 
 	const handleEditLocation = (location: any) => {
 		setSelectedLocation(location);
-		setIsModalOpen(true);
 	};
 
 	const handleViewLocation = (location: any) => {
 		setSelectedLocation(location);
-		setIsViewModalOpen(true);
 	};
 
 	const handleDeleteLocation = (location: any) => {
@@ -328,23 +322,6 @@ export function WorkLocationsPage() {
 				</CardContent>
 			</Card>
 
-			{/* Work Location Modal */}
-			<WorkLocationModal
-				open={isModalOpen}
-				onOpenChange={setIsModalOpen}
-				location={selectedLocation}
-			/>
-
-			{/* Work Location View Modal */}
-			<WorkLocationViewModal
-				open={isViewModalOpen}
-				onClose={() => setIsViewModalOpen(false)}
-				location={selectedLocation}
-				onEdit={() => {
-					setIsViewModalOpen(false);
-					setIsModalOpen(true);
-				}}
-			/>
 
 			{/* Delete Confirmation Dialog */}
 			<AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
