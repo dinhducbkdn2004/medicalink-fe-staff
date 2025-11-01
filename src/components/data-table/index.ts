@@ -1,12 +1,6 @@
-export * from "./data-table";
-export * from "./data-table-pagination";
-export * from "./data-table-toolbar";
-export * from "./data-table-view-options";
-export * from "./data-table-column-header";
-export * from "./data-table-context-menu";
-export * from "./admin-columns";
-export * from "./doctor-columns";
-export { createSpecialtyColumns } from "./specialty-columns";
-export type { SpecialtyData } from "./specialty-columns";
-export { createLocationColumns } from "./location-columns";
-export type { WorkLocationData } from "./location-columns";
+export { DataTablePagination } from './pagination'
+export { DataTableColumnHeader } from './column-header'
+export { DataTableFacetedFilter } from './faceted-filter'
+export { DataTableViewOptions } from './view-options'
+export { DataTableToolbar } from './toolbar'
+export { DataTableBulkActions } from './bulk-actions'
