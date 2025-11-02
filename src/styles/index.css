@@ -15,6 +15,7 @@
   }
   body {
     @apply bg-background text-foreground has-[div[data-variant='inset']]:bg-sidebar min-h-svh w-full;
+    letter-spacing: var(--tracking-normal);
   }
 
   /* Override Radix scroll locking for sticky headers */
