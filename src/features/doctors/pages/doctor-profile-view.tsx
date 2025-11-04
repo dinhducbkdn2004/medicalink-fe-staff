@@ -1,0 +1,618 @@
+/**
+ * Doctor Profile View Page
+ * Displays doctor profile information in read-only mode with collapsible sections
+ */
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from '@tanstack/react-router'
+import { ArrowLeft, Edit, Mail, Phone, User, ChevronDown } from 'lucide-react'
+import { useAuth } from '@/hooks/use-auth'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible'
+import { RichTextDisplay } from '../components/rich-text-editor'
+import { useCompleteDoctor } from '../data/use-doctors'
+import { canEditOwnProfile } from '../utils/permissions'
+import { DoctorProfileForm } from './doctor-profile-form'
+
+// ============================================================================
+// Empty Field Component
+// ============================================================================
+
+function EmptyField({ text = 'No information provided' }: { text?: string }) {
+  return (
+    <div className='text-muted-foreground flex items-center gap-2 text-xs italic'>
+      <span>-</span>
+      <span>{text}</span>
+    </div>
+  )
+}
+
+// ============================================================================
+// Main Component
+// ============================================================================
+
+export function DoctorProfileView() {
+  const { doctorId } = useParams({
+    from: '/_authenticated/doctors/$doctorId/profile',
+  })
+  const navigate = useNavigate()
+  const { user } = useAuth()
+  const [isEditMode, setIsEditMode] = useState(false)
+
+  const { data: completeData, isLoading, error } = useCompleteDoctor(doctorId)
+
+  // Log data for debugging
+  useEffect(() => {
+    if (completeData) {
+      console.log('Complete Doctor Data:', completeData)
+    }
+  }, [completeData])
+
+  const handleBack = () => {
+    navigate({ to: '/doctors' })
+  }
+
+  const handleEdit = () => {
+    setIsEditMode(true)
+  }
+
+  const handleCancelEdit = () => {
+    setIsEditMode(false)
+  }
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className='flex h-screen items-center justify-center'>
+        <div className='text-center'>
+          <div className='border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent' />
+          <p className='text-muted-foreground mt-4'>Loading profile...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className='flex h-screen items-center justify-center'>
+        <div className='text-center'>
+          <p className='text-lg font-medium text-red-500'>
+            Error loading doctor profile
+          </p>
+          <p className='text-muted-foreground mt-2 text-sm'>
+            {error instanceof Error ? error.message : 'Unknown error'}
+          </p>
+          <Button onClick={handleBack} className='mt-4'>
+            Back to Doctors
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  // Not found state
+  if (!completeData) {
+    return (
+      <div className='flex h-screen items-center justify-center'>
+        <div className='text-center'>
+          <p className='text-lg font-medium'>Doctor not found</p>
+          <Button onClick={handleBack} className='mt-4'>
+            Back to Doctors
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  // Data is flat, not nested
+  const doctor = completeData
+  const canEdit = canEditOwnProfile(user, doctorId)
+  const hasProfile = Boolean(doctor?.degree || doctor?.introduction)
+
+  // If in edit mode, show the form
+  if (isEditMode) {
+    return <DoctorProfileForm onCancel={handleCancelEdit} />
+  }
+
+  // View Mode
+  return (
+    <div className='container mx-auto max-w-6xl py-6'>
+      {/* Header */}
+      <div className='mb-6 flex items-center justify-between'>
+        <div>
+          <Button variant='ghost' onClick={handleBack} className='mb-4'>
+            <ArrowLeft className='mr-2 h-4 w-4' />
+            Back to Doctors
+          </Button>
+          <h1 className='text-3xl font-bold tracking-tight'>Doctor Profile</h1>
+          <p className='text-muted-foreground mt-1'>
+            Detailed professional information
+          </p>
+        </div>
+        {canEdit && (
+          <Button onClick={handleEdit}>
+            <Edit className='mr-2 h-4 w-4' />
+            Edit Profile
+          </Button>
+        )}
+      </div>
+
+      {/* Empty Profile Warning */}
+      {!hasProfile && (
+        <Card className='mb-6 border-yellow-500/50 bg-yellow-500/10'>
+          <CardContent className='pt-6'>
+            <div className='flex items-center gap-3'>
+              <div className='rounded-full bg-yellow-500/20 p-2'>
+                <User className='h-5 w-5 text-yellow-600' />
+              </div>
+              <div className='flex-1'>
+                <h3 className='font-semibold'>Profile Not Completed</h3>
+                <p className='text-muted-foreground text-sm'>
+                  This doctor's profile has not been set up yet. Click "Edit
+                  Profile" to add information.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className='grid gap-4 md:grid-cols-3'>
+        {/* Left Column - Avatar & Basic Info */}
+        <div className='space-y-4'>
+          {/* Avatar Card */}
+          <Card>
+            <CardContent className='pt-6'>
+              <div className='flex flex-col items-center text-center'>
+                {/* Avatar with Image Preview */}
+                {doctor?.avatarUrl ? (
+                  <div className='relative'>
+                    <img
+                      src={doctor.avatarUrl}
+                      alt={doctor?.fullName}
+                      className='ring-border h-32 w-32 rounded-full object-cover ring-4'
+                      onError={(e) => {
+                        // Fallback to Avatar if image fails
+                        e.currentTarget.style.display = 'none'
+                        const fallback = e.currentTarget.nextElementSibling
+                        if (fallback) fallback.classList.remove('hidden')
+                      }}
+                    />
+                    <Avatar className='ring-border hidden h-32 w-32 ring-4'>
+                      <AvatarFallback className='text-2xl'>
+                        <User className='h-16 w-16' />
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                ) : (
+                  <div className='relative'>
+                    <Avatar className='ring-border h-32 w-32 ring-4'>
+                      <AvatarFallback className='bg-muted text-2xl'>
+                        <User className='h-16 w-16' />
+                      </AvatarFallback>
+                    </Avatar>
+                    <EmptyField text='No avatar uploaded' />
+                  </div>
+                )}
+
+                <h2 className='mt-4 text-2xl font-bold'>
+                  {doctor?.fullName || 'Unknown Doctor'}
+                </h2>
+
+                {doctor?.degree ? (
+                  <p className='text-muted-foreground text-sm'>
+                    {doctor.degree}
+                  </p>
+                ) : (
+                  <EmptyField text='No degree specified' />
+                )}
+
+                {/* Active Status */}
+                <div className='mt-4'>
+                  <Badge variant={doctor?.isActive ? 'default' : 'secondary'}>
+                    {doctor?.isActive ? 'Active' : 'Inactive'}
+                  </Badge>
+                </div>
+
+                {/* Contact Info */}
+                <div className='mt-6 w-full space-y-2 text-left'>
+                  <div className='bg-muted/50 rounded-md p-3'>
+                    <div className='text-muted-foreground mb-1 text-xs font-medium'>
+                      Email
+                    </div>
+                    {doctor?.email ? (
+                      <div className='flex items-center gap-2 text-sm'>
+                        <Mail className='text-muted-foreground h-4 w-4' />
+                        <span className='truncate'>{doctor.email}</span>
+                      </div>
+                    ) : (
+                      <EmptyField text='No email provided' />
+                    )}
+                  </div>
+                  <div className='bg-muted/50 rounded-md p-3'>
+                    <div className='text-muted-foreground mb-1 text-xs font-medium'>
+                      Phone
+                    </div>
+                    {doctor?.phone ? (
+                      <div className='flex items-center gap-2 text-sm'>
+                        <Phone className='text-muted-foreground h-4 w-4' />
+                        <span>{doctor.phone}</span>
+                      </div>
+                    ) : (
+                      <EmptyField text='No phone number' />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Positions Card */}
+          <Collapsible defaultOpen={true}>
+            <Card>
+              <CardHeader className='pb-3'>
+                <div className='flex items-center justify-between'>
+                  <CardTitle className='text-sm'>Positions</CardTitle>
+                  <CollapsibleTrigger asChild>
+                    <Button variant='ghost' size='sm' className='h-6 w-6 p-0'>
+                      <ChevronDown className='h-3 w-3 transition-transform duration-200 data-[state=open]:rotate-180' />
+                      <span className='sr-only'>Toggle positions</span>
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent className='pt-0'>
+                  {doctor?.position && doctor.position.length > 0 ? (
+                    <ul className='space-y-2'>
+                      {doctor.position.map((pos, idx) => (
+                        <li key={idx} className='text-sm'>
+                          • {pos}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <EmptyField text='No positions listed' />
+                  )}
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+
+          {/* Specialties Card */}
+          <Collapsible defaultOpen={true}>
+            <Card>
+              <CardHeader className='pb-3'>
+                <div className='flex items-center justify-between'>
+                  <CardTitle className='text-sm'>Specialties</CardTitle>
+                  <CollapsibleTrigger asChild>
+                    <Button variant='ghost' size='sm' className='h-6 w-6 p-0'>
+                      <ChevronDown className='h-3 w-3 transition-transform duration-200 data-[state=open]:rotate-180' />
+                      <span className='sr-only'>Toggle specialties</span>
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent className='pt-0'>
+                  {doctor?.specialties && doctor.specialties.length > 0 ? (
+                    <div className='flex flex-wrap gap-2'>
+                      {doctor.specialties.map((specialty) => (
+                        <Badge key={specialty.id} variant='outline'>
+                          {specialty.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  ) : (
+                    <EmptyField text='No specialties assigned' />
+                  )}
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+
+          {/* Work Locations Card */}
+          <Collapsible defaultOpen={true}>
+            <Card>
+              <CardHeader className='pb-3'>
+                <div className='flex items-center justify-between'>
+                  <CardTitle className='text-sm'>Work Locations</CardTitle>
+                  <CollapsibleTrigger asChild>
+                    <Button variant='ghost' size='sm' className='h-6 w-6 p-0'>
+                      <ChevronDown className='h-3 w-3 transition-transform duration-200 data-[state=open]:rotate-180' />
+                      <span className='sr-only'>Toggle locations</span>
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent className='pt-0'>
+                  {doctor?.workLocations && doctor.workLocations.length > 0 ? (
+                    <ul className='space-y-3'>
+                      {doctor.workLocations.map((location) => (
+                        <li key={location.id} className='text-sm'>
+                          <div className='font-medium'>{location.name}</div>
+                          {location.address && (
+                            <div className='text-muted-foreground text-xs'>
+                              {location.address}
+                            </div>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <EmptyField text='No work locations assigned' />
+                  )}
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+        </div>
+
+        {/* Right Column - Detailed Information */}
+        <div className='space-y-4 md:col-span-2'>
+          {/* Introduction */}
+          <Collapsible defaultOpen={true}>
+            <Card>
+              <CardHeader className='pb-3'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex-1'>
+                    <CardTitle className='text-base'>Introduction</CardTitle>
+                    <CardDescription className='text-xs'>
+                      Professional background and overview
+                    </CardDescription>
+                  </div>
+                  <CollapsibleTrigger asChild>
+                    <Button variant='ghost' size='sm' className='h-8 w-8 p-0'>
+                      <ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
+                      <span className='sr-only'>Toggle introduction</span>
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent className='pt-0'>
+                  {doctor?.introduction ? (
+                    <RichTextDisplay content={doctor.introduction} />
+                  ) : (
+                    <EmptyField text='No introduction provided' />
+                  )}
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+
+          {/* Research & Publications */}
+          <Collapsible defaultOpen={false}>
+            <Card>
+              <CardHeader className='pb-3'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex-1'>
+                    <CardTitle className='text-base'>
+                      Research & Publications
+                    </CardTitle>
+                    <CardDescription className='text-xs'>
+                      Scientific work and contributions
+                    </CardDescription>
+                  </div>
+                  <CollapsibleTrigger asChild>
+                    <Button variant='ghost' size='sm' className='h-8 w-8 p-0'>
+                      <ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
+                      <span className='sr-only'>Toggle research</span>
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent className='pt-0'>
+                  {doctor?.research ? (
+                    <RichTextDisplay content={doctor.research} />
+                  ) : (
+                    <EmptyField text='No research information provided' />
+                  )}
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+
+          {/* Training Process */}
+          <Collapsible defaultOpen={false}>
+            <Card>
+              <CardHeader className='pb-3'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex-1'>
+                    <CardTitle className='text-base'>
+                      Training Process
+                    </CardTitle>
+                    <CardDescription className='text-xs'>
+                      Educational background and training
+                    </CardDescription>
+                  </div>
+                  <CollapsibleTrigger asChild>
+                    <Button variant='ghost' size='sm' className='h-8 w-8 p-0'>
+                      <ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
+                      <span className='sr-only'>Toggle training</span>
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent className='pt-0'>
+                  {doctor?.trainingProcess &&
+                  doctor.trainingProcess.length > 0 ? (
+                    <ul className='space-y-3'>
+                      {doctor.trainingProcess.map((training, idx) => (
+                        <li key={idx} className='flex gap-3'>
+                          <div className='bg-primary/10 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full'>
+                            <div className='bg-primary h-2 w-2 rounded-full' />
+                          </div>
+                          <p className='text-sm'>{training}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <EmptyField text='No training process documented' />
+                  )}
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+
+          {/* Experience */}
+          <Collapsible defaultOpen={false}>
+            <Card>
+              <CardHeader className='pb-3'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex-1'>
+                    <CardTitle className='text-base'>
+                      Professional Experience
+                    </CardTitle>
+                    <CardDescription className='text-xs'>
+                      Work history and career timeline
+                    </CardDescription>
+                  </div>
+                  <CollapsibleTrigger asChild>
+                    <Button variant='ghost' size='sm' className='h-8 w-8 p-0'>
+                      <ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
+                      <span className='sr-only'>Toggle experience</span>
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent className='pt-0'>
+                  {doctor?.experience && doctor.experience.length > 0 ? (
+                    <ul className='space-y-3'>
+                      {doctor.experience.map((exp, idx) => (
+                        <li key={idx} className='flex gap-3'>
+                          <div className='bg-primary/10 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full'>
+                            <div className='bg-primary h-2 w-2 rounded-full' />
+                          </div>
+                          <p className='text-sm'>{exp}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <EmptyField text='No experience documented' />
+                  )}
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+
+          {/* Memberships */}
+          <Collapsible defaultOpen={false}>
+            <Card>
+              <CardHeader className='pb-3'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex-1'>
+                    <CardTitle className='text-base'>
+                      Professional Memberships
+                    </CardTitle>
+                    <CardDescription className='text-xs'>
+                      Organizations and professional associations
+                    </CardDescription>
+                  </div>
+                  <CollapsibleTrigger asChild>
+                    <Button variant='ghost' size='sm' className='h-8 w-8 p-0'>
+                      <ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
+                      <span className='sr-only'>Toggle memberships</span>
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent className='pt-0'>
+                  {doctor?.memberships && doctor.memberships.length > 0 ? (
+                    <ul className='space-y-2'>
+                      {doctor.memberships.map((membership, idx) => (
+                        <li key={idx} className='text-sm'>
+                          • {membership}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <EmptyField text='No memberships listed' />
+                  )}
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+
+          {/* Awards */}
+          <Collapsible defaultOpen={false}>
+            <Card>
+              <CardHeader className='pb-3'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex-1'>
+                    <CardTitle className='text-base'>
+                      Awards & Recognition
+                    </CardTitle>
+                    <CardDescription className='text-xs'>
+                      Honors and achievements
+                    </CardDescription>
+                  </div>
+                  <CollapsibleTrigger asChild>
+                    <Button variant='ghost' size='sm' className='h-8 w-8 p-0'>
+                      <ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
+                      <span className='sr-only'>Toggle awards</span>
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </CardHeader>
+              <CollapsibleContent>
+                <CardContent className='pt-0'>
+                  {doctor?.awards && doctor.awards.length > 0 ? (
+                    <ul className='space-y-2'>
+                      {doctor.awards.map((award, idx) => (
+                        <li key={idx} className='text-sm'>
+                          🏆 {award}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <EmptyField text='No awards listed' />
+                  )}
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+
+          {/* Portrait Image - Full Width Preview */}
+          {doctor?.portrait && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Portrait</CardTitle>
+                <CardDescription>Professional portrait photo</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <img
+                  src={doctor.portrait}
+                  alt={`${doctor?.fullName} portrait`}
+                  className='h-auto w-full rounded-lg object-cover'
+                  onError={(e) => {
+                    e.currentTarget.parentElement!.innerHTML =
+                      '<div class="text-muted-foreground text-sm italic">Failed to load portrait image</div>'
+                  }}
+                />
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

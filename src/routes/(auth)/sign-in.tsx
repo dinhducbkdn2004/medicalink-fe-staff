@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { SignIn } from '@/features/auth/sign-in'
 
 const searchSchema = z.object({
@@ -9,4 +9,13 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/(auth)/sign-in')({
   component: SignIn,
   validateSearch: searchSchema,
+  beforeLoad: () => {
+    // Check if user is already authenticated
+    const accessToken = localStorage.getItem('access_token')
+
+    // If authenticated, redirect to home
+    if (accessToken) {
+      throw redirect({ to: '/' })
+    }
+  },
 })

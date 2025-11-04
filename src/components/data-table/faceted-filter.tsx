@@ -35,8 +35,17 @@ export function DataTableFacetedFilter<TData, TValue>({
   title,
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
-  const facets = column?.getFacetedUniqueValues()
-  const selectedValues = new Set(column?.getFilterValue() as string[])
+  if (!column) return null
+  
+  // Safely get faceted values with fallback
+  let facets: Map<any, number>
+  try {
+    facets = column.getFacetedUniqueValues() ?? new Map()
+  } catch {
+    facets = new Map()
+  }
+  
+  const selectedValues = new Set(column.getFilterValue() as string[])
 
   return (
     <Popover>

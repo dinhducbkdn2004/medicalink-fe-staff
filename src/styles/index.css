@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import './theme.css';
+@import './quill.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -15,7 +16,6 @@
   }
   body {
     @apply bg-background text-foreground has-[div[data-variant='inset']]:bg-sidebar min-h-svh w-full;
-    letter-spacing: var(--tracking-normal);
   }
 
   /* Override Radix scroll locking for sticky headers */

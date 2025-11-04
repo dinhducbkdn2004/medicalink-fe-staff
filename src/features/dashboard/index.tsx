@@ -7,23 +7,26 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Skeleton } from '@/components/ui/skeleton'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { TopNav } from '@/components/layout/top-nav'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { useStaffStats, useDoctorStats } from '@/hooks/use-stats'
 import { Analytics } from './components/analytics'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 
 export function Dashboard() {
+  const { data: staffStats, isLoading: isLoadingStaff } = useStaffStats()
+  const { data: doctorStats, isLoading: isLoadingDoctor } = useDoctorStats()
   return (
     <>
       {/* ===== Top Heading ===== */}
       <Header>
-        <TopNav links={topNav} />
+        {/* <TopNav links={topNav} /> */}
         <div className='ms-auto flex items-center space-x-4'>
           <Search />
           <ThemeSwitch />
@@ -62,32 +65,7 @@ export function Dashboard() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Total Revenue
-                  </CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='text-muted-foreground h-4 w-4'
-                  >
-                    <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>$45,231.89</div>
-                  <p className='text-muted-foreground text-xs'>
-                    +20.1% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    Subscriptions
+                    Total Staffs
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -105,40 +83,25 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+2350</div>
-                  <p className='text-muted-foreground text-xs'>
-                    +180.1% from last month
-                  </p>
+                  {isLoadingStaff ? (
+                    <Skeleton className='h-8 w-20' />
+                  ) : (
+                    <>
+                      <div className='text-2xl font-bold'>
+                        {staffStats?.total || 0}
+                      </div>
+                      <p className='text-muted-foreground text-xs'>
+                        {staffStats?.recentlyCreated || 0} recently created
+                      </p>
+                    </>
+                  )}
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>Sales</CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='text-muted-foreground h-4 w-4'
-                  >
-                    <rect width='20' height='14' x='2' y='5' rx='2' />
-                    <path d='M2 10h20' />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>+12,234</div>
-                  <p className='text-muted-foreground text-xs'>
-                    +19% from last month
-                  </p>
-                </CardContent>
-              </Card>
+
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Active Now
+                    Total Doctors
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -150,14 +113,97 @@ export function Dashboard() {
                     strokeWidth='2'
                     className='text-muted-foreground h-4 w-4'
                   >
-                    <path d='M22 12h-4l-3 9L9 3l-3 9H2' />
+                    <path d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' />
+                    <circle cx='12' cy='7' r='4' />
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+573</div>
-                  <p className='text-muted-foreground text-xs'>
-                    +201 since last hour
-                  </p>
+                  {isLoadingDoctor ? (
+                    <Skeleton className='h-8 w-20' />
+                  ) : (
+                    <>
+                      <div className='text-2xl font-bold'>
+                        {doctorStats?.total || 0}
+                      </div>
+                      <p className='text-muted-foreground text-xs'>
+                        {doctorStats?.byRole.DOCTOR || 0} active doctors
+                      </p>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <CardTitle className='text-sm font-medium'>
+                    Admins
+                  </CardTitle>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    className='text-muted-foreground h-4 w-4'
+                  >
+                    <path d='M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z' />
+                    <circle cx='12' cy='12' r='3' />
+                  </svg>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingStaff ? (
+                    <Skeleton className='h-8 w-20' />
+                  ) : (
+                    <>
+                      <div className='text-2xl font-bold'>
+                        {(staffStats?.byRole.ADMIN || 0) +
+                          (staffStats?.byRole.SUPER_ADMIN || 0)}
+                      </div>
+                      <p className='text-muted-foreground text-xs'>
+                        {staffStats?.byRole.SUPER_ADMIN || 0} super admin
+                      </p>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <CardTitle className='text-sm font-medium'>
+                    Deleted Accounts
+                  </CardTitle>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    className='text-muted-foreground h-4 w-4'
+                  >
+                    <path d='M3 6h18' />
+                    <path d='M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6' />
+                    <path d='M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2' />
+                    <line x1='10' x2='10' y1='11' y2='17' />
+                    <line x1='14' x2='14' y1='11' y2='17' />
+                  </svg>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingStaff ? (
+                    <Skeleton className='h-8 w-20' />
+                  ) : (
+                    <>
+                      <div className='text-2xl font-bold'>
+                        {staffStats?.deleted || 0}
+                      </div>
+                      <p className='text-muted-foreground text-xs'>
+                        Total deleted staffs
+                      </p>
+                    </>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -192,29 +238,29 @@ export function Dashboard() {
   )
 }
 
-const topNav = [
-  {
-    title: 'Overview',
-    href: 'dashboard/overview',
-    isActive: true,
-    disabled: false,
-  },
-  {
-    title: 'Customers',
-    href: 'dashboard/customers',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Products',
-    href: 'dashboard/products',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Settings',
-    href: 'dashboard/settings',
-    isActive: false,
-    disabled: true,
-  },
-]
+// const topNav = [
+//   {
+//     title: 'Overview',
+//     href: 'dashboard/overview',
+//     isActive: true,
+//     disabled: false,
+//   },
+//   {
+//     title: 'Customers',
+//     href: 'dashboard/customers',
+//     isActive: false,
+//     disabled: true,
+//   },
+//   {
+//     title: 'Products',
+//     href: 'dashboard/products',
+//     isActive: false,
+//     disabled: true,
+//   },
+//   {
+//     title: 'Settings',
+//     href: 'dashboard/settings',
+//     isActive: false,
+//     disabled: true,
+//   },
+// ]

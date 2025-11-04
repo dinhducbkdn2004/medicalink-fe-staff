@@ -15,6 +15,30 @@ const API_BASE_URL =
     ? import.meta.env['VITE_API_BASE_URL_PRO'] || 'https://api.medicalink.click'
     : import.meta.env['VITE_API_BASE_URL_DEV'] || 'http://localhost:3000'
 
+/**
+ * Flag to prevent multiple simultaneous refresh token requests
+ */
+let isRefreshing = false
+let failedQueue: Array<{
+  resolve: (value: unknown) => void
+  reject: (reason?: unknown) => void
+}> = []
+
+/**
+ * Process queued requests after token refresh
+ */
+const processQueue = (error: unknown, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error)
+    } else {
+      prom.resolve(token)
+    }
+  })
+
+  failedQueue = []
+}
+
 export const apiClient: AxiosInstance = axios.create({
   baseURL: `${API_BASE_URL}/api`,
   timeout: 30000,
@@ -42,7 +66,33 @@ apiClient.interceptors.request.use(
 
 // Response interceptor - Handle token refresh and errors
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => response,
+  (response: AxiosResponse) => {
+    // Auto-unwrap data field from API response wrapper
+    // API returns: { success, message, data, meta?, timestamp, path, method, statusCode }
+    // For paginated responses, preserve both data and meta
+    if (
+      response.data &&
+      typeof response.data === 'object' &&
+      'data' in response.data
+    ) {
+      // Check if this is a paginated response (has meta field)
+      if ('meta' in response.data) {
+        return {
+          ...response,
+          data: {
+            data: response.data.data,
+            meta: response.data.meta,
+          },
+        }
+      }
+      // Regular response - just unwrap data
+      return {
+        ...response,
+        data: response.data.data,
+      }
+    }
+    return response
+  },
   async (
     error: AxiosError<{
       message?: string
@@ -68,7 +118,24 @@ apiClient.interceptors.response.use(
         return Promise.reject(error)
       }
 
+      // If already refreshing, queue this request
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject })
+        })
+          .then((token) => {
+            if (originalRequest.headers && token) {
+              originalRequest.headers.Authorization = `Bearer ${token}`
+            }
+            return apiClient(originalRequest)
+          })
+          .catch((err) => {
+            return Promise.reject(err)
+          })
+      }
+
       originalRequest._retry = true
+      isRefreshing = true
 
       try {
         // Call refresh endpoint with correct field name
@@ -76,22 +143,46 @@ apiClient.interceptors.response.use(
           refresh_token: refreshToken, // Use refresh_token as per API spec
         })
 
-        const { access_token, refresh_token } = response.data
+        // Handle both wrapped and unwrapped response structures
+        // API may return: { data: { access_token, refresh_token } }
+        // or directly: { access_token, refresh_token }
+        const responseData = response.data.data || response.data
+        const newAccessToken = responseData.access_token
+        const newRefreshToken = responseData.refresh_token
 
-        if (access_token && refresh_token) {
-          // Update tokens in localStorage
-          localStorage.setItem('access_token', access_token)
-          localStorage.setItem('refresh_token', refresh_token)
-
-          // Update Authorization header
-          if (originalRequest.headers) {
-            originalRequest.headers.Authorization = `Bearer ${access_token}`
-          }
-
-          // Retry the original request
-          return apiClient(originalRequest)
+        if (!newAccessToken || !newRefreshToken) {
+          throw new Error('Invalid refresh token response')
         }
+
+        // Update tokens in localStorage
+        localStorage.setItem('access_token', newAccessToken)
+        localStorage.setItem('refresh_token', newRefreshToken)
+
+        // Update Authorization header for original request
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+        }
+
+        // Update auth store if available (for UI sync)
+        try {
+          const { useAuthStore } = await import('@/stores/auth-store')
+          const store = useAuthStore.getState()
+          store.setTokens(newAccessToken, newRefreshToken)
+        } catch {
+          // Store not available, tokens are already in localStorage
+        }
+
+        // Process queued requests
+        processQueue(null, newAccessToken)
+        isRefreshing = false
+
+        // Retry the original request
+        return apiClient(originalRequest)
       } catch (refreshError) {
+        // Process queued requests with error
+        processQueue(refreshError, null)
+        isRefreshing = false
+
         // Refresh token expired or invalid
         handleLogout('Session expired. Please sign in again.')
         return Promise.reject(refreshError)

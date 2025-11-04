@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { type Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useDebounce } from '@/hooks/use-debounce'
 import { DataTableFacetedFilter } from './faceted-filter'
 import { DataTableViewOptions } from './view-options'
 
@@ -26,31 +28,53 @@ export function DataTableToolbar<TData>({
   searchKey,
   filters = [],
 }: DataTableToolbarProps<TData>) {
+  // Local state for search input (for immediate UI feedback)
+  const [searchValue, setSearchValue] = useState(() => {
+    if (searchKey) {
+      return (table.getColumn(searchKey)?.getFilterValue() as string) ?? ''
+    }
+    return table.getState().globalFilter ?? ''
+  })
+
+  // Debounced search value (for API calls)
+  const debouncedSearchValue = useDebounce(searchValue, 300)
+
+  // Sync debounced value to table filter
+  useEffect(() => {
+    if (searchKey) {
+      table.getColumn(searchKey)?.setFilterValue(debouncedSearchValue || undefined)
+    } else {
+      table.setGlobalFilter(debouncedSearchValue || undefined)
+    }
+  }, [debouncedSearchValue, searchKey, table])
+
+  // Sync external filter changes back to local state
+  // Only when URL changes externally (not from typing)
+  useEffect(() => {
+    const currentValue = searchKey
+      ? (table.getColumn(searchKey)?.getFilterValue() as string) ?? ''
+      : table.getState().globalFilter ?? ''
+    
+    // Only update if different AND not currently typing
+    // Check if the current filter value is different from BOTH searchValue and debouncedSearchValue
+    if (currentValue !== debouncedSearchValue && searchValue === debouncedSearchValue) {
+      setSearchValue(currentValue)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchKey, table.getState().columnFilters, table.getState().globalFilter])
+
   const isFiltered =
     table.getState().columnFilters.length > 0 || table.getState().globalFilter
 
   return (
     <div className='flex items-center justify-between'>
       <div className='flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2'>
-        {searchKey ? (
-          <Input
-            placeholder={searchPlaceholder}
-            value={
-              (table.getColumn(searchKey)?.getFilterValue() as string) ?? ''
-            }
-            onChange={(event) =>
-              table.getColumn(searchKey)?.setFilterValue(event.target.value)
-            }
-            className='h-8 w-[150px] lg:w-[250px]'
-          />
-        ) : (
-          <Input
-            placeholder={searchPlaceholder}
-            value={table.getState().globalFilter ?? ''}
-            onChange={(event) => table.setGlobalFilter(event.target.value)}
-            className='h-8 w-[150px] lg:w-[250px]'
-          />
-        )}
+        <Input
+          placeholder={searchPlaceholder}
+          value={searchValue}
+          onChange={(event) => setSearchValue(event.target.value)}
+          className='h-8 w-[150px] lg:w-[250px]'
+        />
         <div className='flex gap-x-2'>
           {filters.map((filter) => {
             const column = table.getColumn(filter.columnId)
@@ -69,6 +93,7 @@ export function DataTableToolbar<TData>({
           <Button
             variant='ghost'
             onClick={() => {
+              setSearchValue('')
               table.resetColumnFilters()
               table.setGlobalFilter('')
             }}

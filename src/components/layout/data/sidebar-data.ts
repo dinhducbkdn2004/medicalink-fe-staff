@@ -1,205 +1,205 @@
 import {
-  Construction,
   LayoutDashboard,
   Monitor,
-  Bug,
-  ListTodo,
-  FileX,
   HelpCircle,
-  Lock,
   Bell,
-  Package,
   Palette,
-  ServerOff,
   Settings,
   Wrench,
   UserCog,
-  UserX,
   Users,
-  MessagesSquare,
   ShieldCheck,
-  AudioWaveform,
-  Command,
-  GalleryVerticalEnd,
+  UserRoundCog,
+  Shield,
+  UsersRound,
+  Stethoscope,
+  MapPin,
+  Clock,
+  CalendarDays,
+  Star,
+  MessageCircleQuestion,
+  MessageCircle,
 } from 'lucide-react'
-import { ClerkLogo } from '@/assets/clerk-logo'
-import { type SidebarData } from '../types'
+import type { UserRole } from '@/api/types/auth.types'
+import type { NavGroupWithAccess } from '@/lib/sidebar-utils'
 
-export const sidebarData: SidebarData = {
-  user: {
-    name: 'satnaing',
-    email: 'satnaingdev@gmail.com',
-    avatar: '/avatars/shadcn.jpg',
+/**
+ * Define role-based sidebar navigation
+ * Super Admin: Full access to all features
+ * Admin: Limited access (no Permission management)
+ * Doctor: Will have separate UI (not implemented yet)
+ */
+export const navGroups: NavGroupWithAccess[] = [
+  {
+    title: 'Dashboard',
+    items: [
+      {
+        title: 'Dashboard',
+        url: '/',
+        icon: LayoutDashboard,
+      },
+    ],
   },
-  teams: [
-    {
-      name: 'Shadcn Admin',
-      logo: Command,
-      plan: 'Vite + ShadcnUI',
-    },
-    {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
-    },
-    {
-      name: 'Acme Corp.',
-      logo: AudioWaveform,
-      plan: 'Startup',
-    },
-  ],
-  navGroups: [
-    {
-      title: 'General',
-      items: [
-        {
-          title: 'Dashboard',
-          url: '/',
-          icon: LayoutDashboard,
-        },
-        {
-          title: 'Tasks',
-          url: '/tasks',
-          icon: ListTodo,
-        },
-        {
-          title: 'Apps',
-          url: '/apps',
-          icon: Package,
-        },
-        {
-          title: 'Chats',
-          url: '/chats',
-          badge: '3',
-          icon: MessagesSquare,
-        },
-        {
-          title: 'Users',
-          url: '/users',
-          icon: Users,
-        },
-        {
-          title: 'Secured by Clerk',
-          icon: ClerkLogo,
-          items: [
-            {
-              title: 'Sign In',
-              url: '/clerk/sign-in',
-            },
-            {
-              title: 'Sign Up',
-              url: '/clerk/sign-up',
-            },
-            {
-              title: 'User Management',
-              url: '/clerk/user-management',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      title: 'Pages',
-      items: [
-        {
-          title: 'Auth',
-          icon: ShieldCheck,
-          items: [
-            {
-              title: 'Sign In',
-              url: '/sign-in',
-            },
-            {
-              title: 'Sign In (2 Col)',
-              url: '/sign-in-2',
-            },
-            {
-              title: 'Sign Up',
-              url: '/sign-up',
-            },
-            {
-              title: 'Forgot Password',
-              url: '/forgot-password',
-            },
-            {
-              title: 'OTP',
-              url: '/otp',
-            },
-          ],
-        },
-        {
-          title: 'Errors',
-          icon: Bug,
-          items: [
-            {
-              title: 'Unauthorized',
-              url: '/errors/unauthorized',
-              icon: Lock,
-            },
-            {
-              title: 'Forbidden',
-              url: '/errors/forbidden',
-              icon: UserX,
-            },
-            {
-              title: 'Not Found',
-              url: '/errors/not-found',
-              icon: FileX,
-            },
-            {
-              title: 'Internal Server Error',
-              url: '/errors/internal-server-error',
-              icon: ServerOff,
-            },
-            {
-              title: 'Maintenance Error',
-              url: '/errors/maintenance-error',
-              icon: Construction,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      title: 'Other',
-      items: [
-        {
-          title: 'Settings',
-          icon: Settings,
-          items: [
-            {
-              title: 'Profile',
-              url: '/settings',
-              icon: UserCog,
-            },
-            {
-              title: 'Account',
-              url: '/settings/account',
-              icon: Wrench,
-            },
-            {
-              title: 'Appearance',
-              url: '/settings/appearance',
-              icon: Palette,
-            },
-            {
-              title: 'Notifications',
-              url: '/settings/notifications',
-              icon: Bell,
-            },
-            {
-              title: 'Display',
-              url: '/settings/display',
-              icon: Monitor,
-            },
-          ],
-        },
-        {
-          title: 'Help Center',
-          url: '/help-center',
-          icon: HelpCircle,
-        },
-      ],
-    },
-  ],
+  {
+    title: 'User & Access Control',
+    items: [
+      {
+        title: 'User Management',
+        icon: Users,
+        items: [
+          {
+            title: 'Staff Accounts',
+            url: '/staffs',
+            icon: UserRoundCog,
+          },
+          {
+            title: 'Doctor Accounts',
+            url: '/doctors',
+            icon: Stethoscope,
+          },
+        ],
+      },
+      {
+        title: 'Permission',
+        icon: Shield,
+        allowedRoles: ['SUPER_ADMIN'], // Only Super Admin can access
+        items: [
+          {
+            title: 'Group Manager',
+            url: '/group-manager',
+            icon: UsersRound,
+          },
+          {
+            title: 'User Permission',
+            url: '/user-permission',
+            icon: ShieldCheck,
+          },
+          {
+            title: 'User Group',
+            url: '/user-group',
+            icon: UsersRound,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Hospital Configuration',
+    items: [
+      {
+        title: 'Specialties',
+        url: '/specialties',
+        icon: Stethoscope,
+      },
+      {
+        title: 'Work Locations',
+        url: '/work-locations',
+        icon: MapPin,
+      },
+      {
+        title: 'Office Hours',
+        url: '/office-hours',
+        icon: Clock,
+      },
+    ],
+  },
+  {
+    title: 'Operations',
+    items: [
+      {
+        title: 'Appointments',
+        url: '/appointments',
+        icon: CalendarDays,
+      },
+      {
+        title: 'Reviews',
+        url: '/reviews',
+        icon: Star,
+      },
+      {
+        title: 'Q&A',
+        icon: MessageCircleQuestion,
+        items: [
+          {
+            title: 'Questions',
+            url: '/questions',
+            icon: MessageCircleQuestion,
+          },
+          {
+            title: 'Answers',
+            url: '/answers',
+            icon: MessageCircle,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Other',
+    items: [
+      {
+        title: 'Settings',
+        icon: Settings,
+        items: [
+          {
+            title: 'Profile',
+            url: '/settings',
+            icon: UserCog,
+          },
+          {
+            title: 'Account',
+            url: '/settings/account',
+            icon: Wrench,
+          },
+          {
+            title: 'Appearance',
+            url: '/settings/appearance',
+            icon: Palette,
+          },
+          {
+            title: 'Notifications',
+            url: '/settings/notifications',
+            icon: Bell,
+          },
+          {
+            title: 'Display',
+            url: '/settings/display',
+            icon: Monitor,
+          },
+        ],
+      },
+      {
+        title: 'Help Center',
+        url: '/help-center',
+        icon: HelpCircle,
+      },
+    ],
+  },
+]
+
+/**
+ * Default teams configuration
+ */
+export const teams = [
+  {
+    name: 'MedicaLink',
+    logo: Stethoscope,
+    plan: 'Staff Portal',
+  },
+  {
+    name: 'MedicaLink Admin',
+    logo: ShieldCheck,
+    plan: 'Management',
+  },
+]
+
+/**
+ * Get sidebar data with role-based filtering
+ */
+export function getSidebarData(userRole?: UserRole) {
+  return {
+    teams,
+    navGroups,
+    userRole,
+  }
 }

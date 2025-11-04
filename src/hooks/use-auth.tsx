@@ -29,18 +29,10 @@ export function useLogin() {
   return useMutation({
     mutationFn: (credentials: LoginRequest) => authService.login(credentials),
     onSuccess: (data) => {
-      console.log('Login response data:', data)
+      // Data is already unwrapped by API client interceptor
+      const { user, access_token, refresh_token } = data
 
-      // Handle potential nested data structure
-      const responseData = data as any
-      const user = responseData.user || responseData.data?.user
-      const accessToken =
-        responseData.access_token || responseData.data?.access_token
-      const refreshToken =
-        responseData.refresh_token || responseData.data?.refresh_token
-
-      if (!user || !accessToken || !refreshToken) {
-        console.error('Invalid response structure:', data)
+      if (!user || !access_token || !refresh_token) {
         toast.error(
           'Login successful but unable to parse response. Please try again.'
         )
@@ -48,16 +40,15 @@ export function useLogin() {
       }
 
       // Store auth data in Zustand store (which also saves to localStorage)
-      setAuth(user, accessToken, refreshToken)
+      setAuth(user, access_token, refresh_token)
 
       toast.success(`Welcome back, ${user.fullName}!`)
 
       // Redirect to dashboard
       navigate({ to: '/', replace: true })
     },
-    onError: (error: any) => {
+    onError: () => {
       // Error already handled by apiClient interceptor
-      console.error('Login error:', error)
     },
   })
 }
@@ -115,9 +106,8 @@ export function useChangePassword() {
       // Invalidate profile query to ensure data is fresh
       queryClient.invalidateQueries({ queryKey: authKeys.profile() })
     },
-    onError: (error: any) => {
+    onError: () => {
       // Error already handled by apiClient interceptor
-      console.error('Change password error:', error)
     },
   })
 }
@@ -133,9 +123,8 @@ export function useVerifyPassword() {
       // Don't show toast by default, let the caller handle it
       return data
     },
-    onError: (error: any) => {
+    onError: () => {
       // Error already handled by apiClient interceptor
-      console.error('Verify password error:', error)
     },
   })
 }

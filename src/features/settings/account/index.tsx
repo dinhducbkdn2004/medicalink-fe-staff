@@ -1,14 +1,13 @@
 import { ContentSection } from '../components/content-section'
-import { AccountForm } from './account-form'
+import { ChangePasswordSection } from './change-password-section'
 
 export function SettingsAccount() {
   return (
     <ContentSection
       title='Account'
-      desc='Update your account settings. Set your preferred language and
-          timezone.'
+      desc='Manage your account settings and change your password.'
     >
-      <AccountForm />
+        <ChangePasswordSection />
     </ContentSection>
   )
 }
