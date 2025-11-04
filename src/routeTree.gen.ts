@@ -8,978 +8,608 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as SuperAdminRouteImport } from "./routes/super-admin";
-import { Route as LoginRouteImport } from "./routes/login";
-import { Route as DoctorRouteImport } from "./routes/doctor";
-import { Route as AdminRouteImport } from "./routes/admin";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as SuperAdminIndexRouteImport } from "./routes/super-admin/index";
-import { Route as DoctorIndexRouteImport } from "./routes/doctor/index";
-import { Route as AdminIndexRouteImport } from "./routes/admin/index";
-import { Route as SuperAdminWorkLocationsRouteImport } from "./routes/super-admin/work-locations";
-import { Route as SuperAdminSpecialtiesRouteImport } from "./routes/super-admin/specialties";
-import { Route as SuperAdminSchedulesRouteImport } from "./routes/super-admin/schedules";
-import { Route as SuperAdminPermissionsRouteImport } from "./routes/super-admin/permissions";
-import { Route as SuperAdminDoctorAccountsRouteImport } from "./routes/super-admin/doctor-accounts";
-import { Route as SuperAdminDashboardRouteImport } from "./routes/super-admin/dashboard";
-import { Route as SuperAdminAppointmentsRouteImport } from "./routes/super-admin/appointments";
-import { Route as SuperAdminAdminAccountsRouteImport } from "./routes/super-admin/admin-accounts";
-import { Route as DoctorDashboardRouteImport } from "./routes/doctor/dashboard";
-import { Route as AdminDoctorAccountsRouteImport } from "./routes/admin/doctor-accounts";
-import { Route as AdminDashboardRouteImport } from "./routes/admin/dashboard";
-import { Route as SuperAdminWorkLocationsIndexRouteImport } from "./routes/super-admin/work-locations/index";
-import { Route as SuperAdminSpecialtiesIndexRouteImport } from "./routes/super-admin/specialties/index";
-import { Route as SuperAdminDoctorAccountsIndexRouteImport } from "./routes/super-admin/doctor-accounts.index";
-import { Route as SuperAdminAdminAccountsIndexRouteImport } from "./routes/super-admin/admin-accounts.index";
-import { Route as SuperAdminWorkLocationsCreateRouteImport } from "./routes/super-admin/work-locations/create";
-import { Route as SuperAdminWorkLocationsIdRouteImport } from "./routes/super-admin/work-locations/$id";
-import { Route as SuperAdminSpecialtiesCreateRouteImport } from "./routes/super-admin/specialties/create";
-import { Route as SuperAdminSpecialtiesIdRouteImport } from "./routes/super-admin/specialties/$id";
-import { Route as SuperAdminPermissionsUsersRouteImport } from "./routes/super-admin/permissions/users";
-import { Route as SuperAdminPermissionsGroupsRouteImport } from "./routes/super-admin/permissions/groups";
-import { Route as SuperAdminDoctorAccountsCreateRouteImport } from "./routes/super-admin/doctor-accounts.create";
-import { Route as SuperAdminAdminAccountsCreateRouteImport } from "./routes/super-admin/admin-accounts.create";
-import { Route as AdminDoctorAccountsCreateRouteImport } from "./routes/admin/doctor-accounts.create";
-import { Route as SuperAdminWorkLocationsIdViewRouteImport } from "./routes/super-admin/work-locations/$id.view";
-import { Route as SuperAdminWorkLocationsIdEditRouteImport } from "./routes/super-admin/work-locations/$id.edit";
-import { Route as SuperAdminSpecialtiesIdViewRouteImport } from "./routes/super-admin/specialties/$id.view";
-import { Route as SuperAdminSpecialtiesIdEditRouteImport } from "./routes/super-admin/specialties/$id.edit";
-import { Route as SuperAdminDoctorAccountsIdViewRouteImport } from "./routes/super-admin/doctor-accounts.$id.view";
-import { Route as SuperAdminDoctorAccountsIdEditRouteImport } from "./routes/super-admin/doctor-accounts.$id.edit";
-import { Route as SuperAdminAdminAccountsIdViewRouteImport } from "./routes/super-admin/admin-accounts.$id.view";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as errors503RouteImport } from './routes/(errors)/503'
+import { Route as errors500RouteImport } from './routes/(errors)/500'
+import { Route as errors404RouteImport } from './routes/(errors)/404'
+import { Route as errors403RouteImport } from './routes/(errors)/403'
+import { Route as errors401RouteImport } from './routes/(errors)/401'
+import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
+import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
+import { Route as authOtpRouteImport } from './routes/(auth)/otp'
+import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
+import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
+import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
+import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
+import { Route as AuthenticatedStaffsIndexRouteImport } from './routes/_authenticated/staffs/index'
+import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
+import { Route as AuthenticatedDoctorsIndexRouteImport } from './routes/_authenticated/doctors.index'
+import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
+import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
+import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
+import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
+import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
+import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
+import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedDoctorsDoctorIdProfileRouteImport } from './routes/_authenticated/doctors/$doctorId.profile'
 
-const SuperAdminRoute = SuperAdminRouteImport.update({
-	id: "/super-admin",
-	path: "/super-admin",
-	getParentRoute: () => rootRouteImport,
-} as any);
-const LoginRoute = LoginRouteImport.update({
-	id: "/login",
-	path: "/login",
-	getParentRoute: () => rootRouteImport,
-} as any);
-const DoctorRoute = DoctorRouteImport.update({
-	id: "/doctor",
-	path: "/doctor",
-	getParentRoute: () => rootRouteImport,
-} as any);
-const AdminRoute = AdminRouteImport.update({
-	id: "/admin",
-	path: "/admin",
-	getParentRoute: () => rootRouteImport,
-} as any);
-const IndexRoute = IndexRouteImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => rootRouteImport,
-} as any);
-const SuperAdminIndexRoute = SuperAdminIndexRouteImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => SuperAdminRoute,
-} as any);
-const DoctorIndexRoute = DoctorIndexRouteImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => DoctorRoute,
-} as any);
-const AdminIndexRoute = AdminIndexRouteImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => AdminRoute,
-} as any);
-const SuperAdminWorkLocationsRoute = SuperAdminWorkLocationsRouteImport.update({
-	id: "/work-locations",
-	path: "/work-locations",
-	getParentRoute: () => SuperAdminRoute,
-} as any);
-const SuperAdminSpecialtiesRoute = SuperAdminSpecialtiesRouteImport.update({
-	id: "/specialties",
-	path: "/specialties",
-	getParentRoute: () => SuperAdminRoute,
-} as any);
-const SuperAdminSchedulesRoute = SuperAdminSchedulesRouteImport.update({
-	id: "/schedules",
-	path: "/schedules",
-	getParentRoute: () => SuperAdminRoute,
-} as any);
-const SuperAdminPermissionsRoute = SuperAdminPermissionsRouteImport.update({
-	id: "/permissions",
-	path: "/permissions",
-	getParentRoute: () => SuperAdminRoute,
-} as any);
-const SuperAdminDoctorAccountsRoute =
-	SuperAdminDoctorAccountsRouteImport.update({
-		id: "/doctor-accounts",
-		path: "/doctor-accounts",
-		getParentRoute: () => SuperAdminRoute,
-	} as any);
-const SuperAdminDashboardRoute = SuperAdminDashboardRouteImport.update({
-	id: "/dashboard",
-	path: "/dashboard",
-	getParentRoute: () => SuperAdminRoute,
-} as any);
-const SuperAdminAppointmentsRoute = SuperAdminAppointmentsRouteImport.update({
-	id: "/appointments",
-	path: "/appointments",
-	getParentRoute: () => SuperAdminRoute,
-} as any);
-const SuperAdminAdminAccountsRoute = SuperAdminAdminAccountsRouteImport.update({
-	id: "/admin-accounts",
-	path: "/admin-accounts",
-	getParentRoute: () => SuperAdminRoute,
-} as any);
-const DoctorDashboardRoute = DoctorDashboardRouteImport.update({
-	id: "/dashboard",
-	path: "/dashboard",
-	getParentRoute: () => DoctorRoute,
-} as any);
-const AdminDoctorAccountsRoute = AdminDoctorAccountsRouteImport.update({
-	id: "/doctor-accounts",
-	path: "/doctor-accounts",
-	getParentRoute: () => AdminRoute,
-} as any);
-const AdminDashboardRoute = AdminDashboardRouteImport.update({
-	id: "/dashboard",
-	path: "/dashboard",
-	getParentRoute: () => AdminRoute,
-} as any);
-const SuperAdminWorkLocationsIndexRoute =
-	SuperAdminWorkLocationsIndexRouteImport.update({
-		id: "/",
-		path: "/",
-		getParentRoute: () => SuperAdminWorkLocationsRoute,
-	} as any);
-const SuperAdminSpecialtiesIndexRoute =
-	SuperAdminSpecialtiesIndexRouteImport.update({
-		id: "/",
-		path: "/",
-		getParentRoute: () => SuperAdminSpecialtiesRoute,
-	} as any);
-const SuperAdminDoctorAccountsIndexRoute =
-	SuperAdminDoctorAccountsIndexRouteImport.update({
-		id: "/",
-		path: "/",
-		getParentRoute: () => SuperAdminDoctorAccountsRoute,
-	} as any);
-const SuperAdminAdminAccountsIndexRoute =
-	SuperAdminAdminAccountsIndexRouteImport.update({
-		id: "/",
-		path: "/",
-		getParentRoute: () => SuperAdminAdminAccountsRoute,
-	} as any);
-const SuperAdminWorkLocationsCreateRoute =
-	SuperAdminWorkLocationsCreateRouteImport.update({
-		id: "/create",
-		path: "/create",
-		getParentRoute: () => SuperAdminWorkLocationsRoute,
-	} as any);
-const SuperAdminWorkLocationsIdRoute =
-	SuperAdminWorkLocationsIdRouteImport.update({
-		id: "/$id",
-		path: "/$id",
-		getParentRoute: () => SuperAdminWorkLocationsRoute,
-	} as any);
-const SuperAdminSpecialtiesCreateRoute =
-	SuperAdminSpecialtiesCreateRouteImport.update({
-		id: "/create",
-		path: "/create",
-		getParentRoute: () => SuperAdminSpecialtiesRoute,
-	} as any);
-const SuperAdminSpecialtiesIdRoute = SuperAdminSpecialtiesIdRouteImport.update({
-	id: "/$id",
-	path: "/$id",
-	getParentRoute: () => SuperAdminSpecialtiesRoute,
-} as any);
-const SuperAdminPermissionsUsersRoute =
-	SuperAdminPermissionsUsersRouteImport.update({
-		id: "/users",
-		path: "/users",
-		getParentRoute: () => SuperAdminPermissionsRoute,
-	} as any);
-const SuperAdminPermissionsGroupsRoute =
-	SuperAdminPermissionsGroupsRouteImport.update({
-		id: "/groups",
-		path: "/groups",
-		getParentRoute: () => SuperAdminPermissionsRoute,
-	} as any);
-const SuperAdminDoctorAccountsCreateRoute =
-	SuperAdminDoctorAccountsCreateRouteImport.update({
-		id: "/create",
-		path: "/create",
-		getParentRoute: () => SuperAdminDoctorAccountsRoute,
-	} as any);
-const SuperAdminAdminAccountsCreateRoute =
-	SuperAdminAdminAccountsCreateRouteImport.update({
-		id: "/create",
-		path: "/create",
-		getParentRoute: () => SuperAdminAdminAccountsRoute,
-	} as any);
-const AdminDoctorAccountsCreateRoute =
-	AdminDoctorAccountsCreateRouteImport.update({
-		id: "/create",
-		path: "/create",
-		getParentRoute: () => AdminDoctorAccountsRoute,
-	} as any);
-const SuperAdminWorkLocationsIdViewRoute =
-	SuperAdminWorkLocationsIdViewRouteImport.update({
-		id: "/view",
-		path: "/view",
-		getParentRoute: () => SuperAdminWorkLocationsIdRoute,
-	} as any);
-const SuperAdminWorkLocationsIdEditRoute =
-	SuperAdminWorkLocationsIdEditRouteImport.update({
-		id: "/edit",
-		path: "/edit",
-		getParentRoute: () => SuperAdminWorkLocationsIdRoute,
-	} as any);
-const SuperAdminSpecialtiesIdViewRoute =
-	SuperAdminSpecialtiesIdViewRouteImport.update({
-		id: "/view",
-		path: "/view",
-		getParentRoute: () => SuperAdminSpecialtiesIdRoute,
-	} as any);
-const SuperAdminSpecialtiesIdEditRoute =
-	SuperAdminSpecialtiesIdEditRouteImport.update({
-		id: "/edit",
-		path: "/edit",
-		getParentRoute: () => SuperAdminSpecialtiesIdRoute,
-	} as any);
-const SuperAdminDoctorAccountsIdViewRoute =
-	SuperAdminDoctorAccountsIdViewRouteImport.update({
-		id: "/$id/view",
-		path: "/$id/view",
-		getParentRoute: () => SuperAdminDoctorAccountsRoute,
-	} as any);
-const SuperAdminDoctorAccountsIdEditRoute =
-	SuperAdminDoctorAccountsIdEditRouteImport.update({
-		id: "/$id/edit",
-		path: "/$id/edit",
-		getParentRoute: () => SuperAdminDoctorAccountsRoute,
-	} as any);
-const SuperAdminAdminAccountsIdViewRoute =
-	SuperAdminAdminAccountsIdViewRouteImport.update({
-		id: "/$id/view",
-		path: "/$id/view",
-		getParentRoute: () => SuperAdminAdminAccountsRoute,
-	} as any);
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const errors503Route = errors503RouteImport.update({
+  id: '/(errors)/503',
+  path: '/503',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const errors500Route = errors500RouteImport.update({
+  id: '/(errors)/500',
+  path: '/500',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const errors404Route = errors404RouteImport.update({
+  id: '/(errors)/404',
+  path: '/404',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const errors403Route = errors403RouteImport.update({
+  id: '/(errors)/403',
+  path: '/403',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const errors401Route = errors401RouteImport.update({
+  id: '/(errors)/401',
+  path: '/401',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authSignUpRoute = authSignUpRouteImport.update({
+  id: '/(auth)/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authSignInRoute = authSignInRouteImport.update({
+  id: '/(auth)/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authOtpRoute = authOtpRouteImport.update({
+  id: '/(auth)/otp',
+  path: '/otp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
+  id: '/(auth)/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedSettingsRouteRoute =
+  AuthenticatedSettingsRouteRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
+  id: '/tasks/',
+  path: '/tasks/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedStaffsIndexRoute =
+  AuthenticatedStaffsIndexRouteImport.update({
+    id: '/staffs/',
+    path: '/staffs/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSettingsIndexRoute =
+  AuthenticatedSettingsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedHelpCenterIndexRoute =
+  AuthenticatedHelpCenterIndexRouteImport.update({
+    id: '/help-center/',
+    path: '/help-center/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDoctorsIndexRoute =
+  AuthenticatedDoctorsIndexRouteImport.update({
+    id: '/doctors/',
+    path: '/doctors/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedChatsIndexRoute = AuthenticatedChatsIndexRouteImport.update({
+  id: '/chats/',
+  path: '/chats/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAppsIndexRoute = AuthenticatedAppsIndexRouteImport.update({
+  id: '/apps/',
+  path: '/apps/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSettingsNotificationsRoute =
+  AuthenticatedSettingsNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedSettingsDisplayRoute =
+  AuthenticatedSettingsDisplayRouteImport.update({
+    id: '/display',
+    path: '/display',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedSettingsAppearanceRoute =
+  AuthenticatedSettingsAppearanceRouteImport.update({
+    id: '/appearance',
+    path: '/appearance',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedSettingsAccountRoute =
+  AuthenticatedSettingsAccountRouteImport.update({
+    id: '/account',
+    path: '/account',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedErrorsErrorRoute =
+  AuthenticatedErrorsErrorRouteImport.update({
+    id: '/errors/$error',
+    path: '/errors/$error',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDoctorsDoctorIdProfileRoute =
+  AuthenticatedDoctorsDoctorIdProfileRouteImport.update({
+    id: '/doctors/$doctorId/profile',
+    path: '/doctors/$doctorId/profile',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-	"/": typeof IndexRoute;
-	"/admin": typeof AdminRouteWithChildren;
-	"/doctor": typeof DoctorRouteWithChildren;
-	"/login": typeof LoginRoute;
-	"/super-admin": typeof SuperAdminRouteWithChildren;
-	"/admin/dashboard": typeof AdminDashboardRoute;
-	"/admin/doctor-accounts": typeof AdminDoctorAccountsRouteWithChildren;
-	"/doctor/dashboard": typeof DoctorDashboardRoute;
-	"/super-admin/admin-accounts": typeof SuperAdminAdminAccountsRouteWithChildren;
-	"/super-admin/appointments": typeof SuperAdminAppointmentsRoute;
-	"/super-admin/dashboard": typeof SuperAdminDashboardRoute;
-	"/super-admin/doctor-accounts": typeof SuperAdminDoctorAccountsRouteWithChildren;
-	"/super-admin/permissions": typeof SuperAdminPermissionsRouteWithChildren;
-	"/super-admin/schedules": typeof SuperAdminSchedulesRoute;
-	"/super-admin/specialties": typeof SuperAdminSpecialtiesRouteWithChildren;
-	"/super-admin/work-locations": typeof SuperAdminWorkLocationsRouteWithChildren;
-	"/admin/": typeof AdminIndexRoute;
-	"/doctor/": typeof DoctorIndexRoute;
-	"/super-admin/": typeof SuperAdminIndexRoute;
-	"/admin/doctor-accounts/create": typeof AdminDoctorAccountsCreateRoute;
-	"/super-admin/admin-accounts/create": typeof SuperAdminAdminAccountsCreateRoute;
-	"/super-admin/doctor-accounts/create": typeof SuperAdminDoctorAccountsCreateRoute;
-	"/super-admin/permissions/groups": typeof SuperAdminPermissionsGroupsRoute;
-	"/super-admin/permissions/users": typeof SuperAdminPermissionsUsersRoute;
-	"/super-admin/specialties/$id": typeof SuperAdminSpecialtiesIdRouteWithChildren;
-	"/super-admin/specialties/create": typeof SuperAdminSpecialtiesCreateRoute;
-	"/super-admin/work-locations/$id": typeof SuperAdminWorkLocationsIdRouteWithChildren;
-	"/super-admin/work-locations/create": typeof SuperAdminWorkLocationsCreateRoute;
-	"/super-admin/admin-accounts/": typeof SuperAdminAdminAccountsIndexRoute;
-	"/super-admin/doctor-accounts/": typeof SuperAdminDoctorAccountsIndexRoute;
-	"/super-admin/specialties/": typeof SuperAdminSpecialtiesIndexRoute;
-	"/super-admin/work-locations/": typeof SuperAdminWorkLocationsIndexRoute;
-	"/super-admin/admin-accounts/$id/view": typeof SuperAdminAdminAccountsIdViewRoute;
-	"/super-admin/doctor-accounts/$id/edit": typeof SuperAdminDoctorAccountsIdEditRoute;
-	"/super-admin/doctor-accounts/$id/view": typeof SuperAdminDoctorAccountsIdViewRoute;
-	"/super-admin/specialties/$id/edit": typeof SuperAdminSpecialtiesIdEditRoute;
-	"/super-admin/specialties/$id/view": typeof SuperAdminSpecialtiesIdViewRoute;
-	"/super-admin/work-locations/$id/edit": typeof SuperAdminWorkLocationsIdEditRoute;
-	"/super-admin/work-locations/$id/view": typeof SuperAdminWorkLocationsIdViewRoute;
+  '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
+  '/forgot-password': typeof authForgotPasswordRoute
+  '/otp': typeof authOtpRoute
+  '/sign-in': typeof authSignInRoute
+  '/sign-up': typeof authSignUpRoute
+  '/401': typeof errors401Route
+  '/403': typeof errors403Route
+  '/404': typeof errors404Route
+  '/500': typeof errors500Route
+  '/503': typeof errors503Route
+  '/': typeof AuthenticatedIndexRoute
+  '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/settings/account': typeof AuthenticatedSettingsAccountRoute
+  '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/settings/display': typeof AuthenticatedSettingsDisplayRoute
+  '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/apps': typeof AuthenticatedAppsIndexRoute
+  '/chats': typeof AuthenticatedChatsIndexRoute
+  '/doctors': typeof AuthenticatedDoctorsIndexRoute
+  '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/staffs': typeof AuthenticatedStaffsIndexRoute
+  '/tasks': typeof AuthenticatedTasksIndexRoute
+  '/users': typeof AuthenticatedUsersIndexRoute
+  '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
 export interface FileRoutesByTo {
-	"/": typeof IndexRoute;
-	"/login": typeof LoginRoute;
-	"/admin/dashboard": typeof AdminDashboardRoute;
-	"/admin/doctor-accounts": typeof AdminDoctorAccountsRouteWithChildren;
-	"/doctor/dashboard": typeof DoctorDashboardRoute;
-	"/super-admin/appointments": typeof SuperAdminAppointmentsRoute;
-	"/super-admin/dashboard": typeof SuperAdminDashboardRoute;
-	"/super-admin/permissions": typeof SuperAdminPermissionsRouteWithChildren;
-	"/super-admin/schedules": typeof SuperAdminSchedulesRoute;
-	"/admin": typeof AdminIndexRoute;
-	"/doctor": typeof DoctorIndexRoute;
-	"/super-admin": typeof SuperAdminIndexRoute;
-	"/admin/doctor-accounts/create": typeof AdminDoctorAccountsCreateRoute;
-	"/super-admin/admin-accounts/create": typeof SuperAdminAdminAccountsCreateRoute;
-	"/super-admin/doctor-accounts/create": typeof SuperAdminDoctorAccountsCreateRoute;
-	"/super-admin/permissions/groups": typeof SuperAdminPermissionsGroupsRoute;
-	"/super-admin/permissions/users": typeof SuperAdminPermissionsUsersRoute;
-	"/super-admin/specialties/$id": typeof SuperAdminSpecialtiesIdRouteWithChildren;
-	"/super-admin/specialties/create": typeof SuperAdminSpecialtiesCreateRoute;
-	"/super-admin/work-locations/$id": typeof SuperAdminWorkLocationsIdRouteWithChildren;
-	"/super-admin/work-locations/create": typeof SuperAdminWorkLocationsCreateRoute;
-	"/super-admin/admin-accounts": typeof SuperAdminAdminAccountsIndexRoute;
-	"/super-admin/doctor-accounts": typeof SuperAdminDoctorAccountsIndexRoute;
-	"/super-admin/specialties": typeof SuperAdminSpecialtiesIndexRoute;
-	"/super-admin/work-locations": typeof SuperAdminWorkLocationsIndexRoute;
-	"/super-admin/admin-accounts/$id/view": typeof SuperAdminAdminAccountsIdViewRoute;
-	"/super-admin/doctor-accounts/$id/edit": typeof SuperAdminDoctorAccountsIdEditRoute;
-	"/super-admin/doctor-accounts/$id/view": typeof SuperAdminDoctorAccountsIdViewRoute;
-	"/super-admin/specialties/$id/edit": typeof SuperAdminSpecialtiesIdEditRoute;
-	"/super-admin/specialties/$id/view": typeof SuperAdminSpecialtiesIdViewRoute;
-	"/super-admin/work-locations/$id/edit": typeof SuperAdminWorkLocationsIdEditRoute;
-	"/super-admin/work-locations/$id/view": typeof SuperAdminWorkLocationsIdViewRoute;
+  '/forgot-password': typeof authForgotPasswordRoute
+  '/otp': typeof authOtpRoute
+  '/sign-in': typeof authSignInRoute
+  '/sign-up': typeof authSignUpRoute
+  '/401': typeof errors401Route
+  '/403': typeof errors403Route
+  '/404': typeof errors404Route
+  '/500': typeof errors500Route
+  '/503': typeof errors503Route
+  '/': typeof AuthenticatedIndexRoute
+  '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/settings/account': typeof AuthenticatedSettingsAccountRoute
+  '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/settings/display': typeof AuthenticatedSettingsDisplayRoute
+  '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/apps': typeof AuthenticatedAppsIndexRoute
+  '/chats': typeof AuthenticatedChatsIndexRoute
+  '/doctors': typeof AuthenticatedDoctorsIndexRoute
+  '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/staffs': typeof AuthenticatedStaffsIndexRoute
+  '/tasks': typeof AuthenticatedTasksIndexRoute
+  '/users': typeof AuthenticatedUsersIndexRoute
+  '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
 export interface FileRoutesById {
-	__root__: typeof rootRouteImport;
-	"/": typeof IndexRoute;
-	"/admin": typeof AdminRouteWithChildren;
-	"/doctor": typeof DoctorRouteWithChildren;
-	"/login": typeof LoginRoute;
-	"/super-admin": typeof SuperAdminRouteWithChildren;
-	"/admin/dashboard": typeof AdminDashboardRoute;
-	"/admin/doctor-accounts": typeof AdminDoctorAccountsRouteWithChildren;
-	"/doctor/dashboard": typeof DoctorDashboardRoute;
-	"/super-admin/admin-accounts": typeof SuperAdminAdminAccountsRouteWithChildren;
-	"/super-admin/appointments": typeof SuperAdminAppointmentsRoute;
-	"/super-admin/dashboard": typeof SuperAdminDashboardRoute;
-	"/super-admin/doctor-accounts": typeof SuperAdminDoctorAccountsRouteWithChildren;
-	"/super-admin/permissions": typeof SuperAdminPermissionsRouteWithChildren;
-	"/super-admin/schedules": typeof SuperAdminSchedulesRoute;
-	"/super-admin/specialties": typeof SuperAdminSpecialtiesRouteWithChildren;
-	"/super-admin/work-locations": typeof SuperAdminWorkLocationsRouteWithChildren;
-	"/admin/": typeof AdminIndexRoute;
-	"/doctor/": typeof DoctorIndexRoute;
-	"/super-admin/": typeof SuperAdminIndexRoute;
-	"/admin/doctor-accounts/create": typeof AdminDoctorAccountsCreateRoute;
-	"/super-admin/admin-accounts/create": typeof SuperAdminAdminAccountsCreateRoute;
-	"/super-admin/doctor-accounts/create": typeof SuperAdminDoctorAccountsCreateRoute;
-	"/super-admin/permissions/groups": typeof SuperAdminPermissionsGroupsRoute;
-	"/super-admin/permissions/users": typeof SuperAdminPermissionsUsersRoute;
-	"/super-admin/specialties/$id": typeof SuperAdminSpecialtiesIdRouteWithChildren;
-	"/super-admin/specialties/create": typeof SuperAdminSpecialtiesCreateRoute;
-	"/super-admin/work-locations/$id": typeof SuperAdminWorkLocationsIdRouteWithChildren;
-	"/super-admin/work-locations/create": typeof SuperAdminWorkLocationsCreateRoute;
-	"/super-admin/admin-accounts/": typeof SuperAdminAdminAccountsIndexRoute;
-	"/super-admin/doctor-accounts/": typeof SuperAdminDoctorAccountsIndexRoute;
-	"/super-admin/specialties/": typeof SuperAdminSpecialtiesIndexRoute;
-	"/super-admin/work-locations/": typeof SuperAdminWorkLocationsIndexRoute;
-	"/super-admin/admin-accounts/$id/view": typeof SuperAdminAdminAccountsIdViewRoute;
-	"/super-admin/doctor-accounts/$id/edit": typeof SuperAdminDoctorAccountsIdEditRoute;
-	"/super-admin/doctor-accounts/$id/view": typeof SuperAdminDoctorAccountsIdViewRoute;
-	"/super-admin/specialties/$id/edit": typeof SuperAdminSpecialtiesIdEditRoute;
-	"/super-admin/specialties/$id/view": typeof SuperAdminSpecialtiesIdViewRoute;
-	"/super-admin/work-locations/$id/edit": typeof SuperAdminWorkLocationsIdEditRoute;
-	"/super-admin/work-locations/$id/view": typeof SuperAdminWorkLocationsIdViewRoute;
+  __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
+  '/(auth)/forgot-password': typeof authForgotPasswordRoute
+  '/(auth)/otp': typeof authOtpRoute
+  '/(auth)/sign-in': typeof authSignInRoute
+  '/(auth)/sign-up': typeof authSignUpRoute
+  '/(errors)/401': typeof errors401Route
+  '/(errors)/403': typeof errors403Route
+  '/(errors)/404': typeof errors404Route
+  '/(errors)/500': typeof errors500Route
+  '/(errors)/503': typeof errors503Route
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
+  '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
+  '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
+  '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
+  '/_authenticated/doctors/': typeof AuthenticatedDoctorsIndexRoute
+  '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/staffs/': typeof AuthenticatedStaffsIndexRoute
+  '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
+  '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
 export interface FileRouteTypes {
-	fileRoutesByFullPath: FileRoutesByFullPath;
-	fullPaths:
-		| "/"
-		| "/admin"
-		| "/doctor"
-		| "/login"
-		| "/super-admin"
-		| "/admin/dashboard"
-		| "/admin/doctor-accounts"
-		| "/doctor/dashboard"
-		| "/super-admin/admin-accounts"
-		| "/super-admin/appointments"
-		| "/super-admin/dashboard"
-		| "/super-admin/doctor-accounts"
-		| "/super-admin/permissions"
-		| "/super-admin/schedules"
-		| "/super-admin/specialties"
-		| "/super-admin/work-locations"
-		| "/admin/"
-		| "/doctor/"
-		| "/super-admin/"
-		| "/admin/doctor-accounts/create"
-		| "/super-admin/admin-accounts/create"
-		| "/super-admin/doctor-accounts/create"
-		| "/super-admin/permissions/groups"
-		| "/super-admin/permissions/users"
-		| "/super-admin/specialties/$id"
-		| "/super-admin/specialties/create"
-		| "/super-admin/work-locations/$id"
-		| "/super-admin/work-locations/create"
-		| "/super-admin/admin-accounts/"
-		| "/super-admin/doctor-accounts/"
-		| "/super-admin/specialties/"
-		| "/super-admin/work-locations/"
-		| "/super-admin/admin-accounts/$id/view"
-		| "/super-admin/doctor-accounts/$id/edit"
-		| "/super-admin/doctor-accounts/$id/view"
-		| "/super-admin/specialties/$id/edit"
-		| "/super-admin/specialties/$id/view"
-		| "/super-admin/work-locations/$id/edit"
-		| "/super-admin/work-locations/$id/view";
-	fileRoutesByTo: FileRoutesByTo;
-	to:
-		| "/"
-		| "/login"
-		| "/admin/dashboard"
-		| "/admin/doctor-accounts"
-		| "/doctor/dashboard"
-		| "/super-admin/appointments"
-		| "/super-admin/dashboard"
-		| "/super-admin/permissions"
-		| "/super-admin/schedules"
-		| "/admin"
-		| "/doctor"
-		| "/super-admin"
-		| "/admin/doctor-accounts/create"
-		| "/super-admin/admin-accounts/create"
-		| "/super-admin/doctor-accounts/create"
-		| "/super-admin/permissions/groups"
-		| "/super-admin/permissions/users"
-		| "/super-admin/specialties/$id"
-		| "/super-admin/specialties/create"
-		| "/super-admin/work-locations/$id"
-		| "/super-admin/work-locations/create"
-		| "/super-admin/admin-accounts"
-		| "/super-admin/doctor-accounts"
-		| "/super-admin/specialties"
-		| "/super-admin/work-locations"
-		| "/super-admin/admin-accounts/$id/view"
-		| "/super-admin/doctor-accounts/$id/edit"
-		| "/super-admin/doctor-accounts/$id/view"
-		| "/super-admin/specialties/$id/edit"
-		| "/super-admin/specialties/$id/view"
-		| "/super-admin/work-locations/$id/edit"
-		| "/super-admin/work-locations/$id/view";
-	id:
-		| "__root__"
-		| "/"
-		| "/admin"
-		| "/doctor"
-		| "/login"
-		| "/super-admin"
-		| "/admin/dashboard"
-		| "/admin/doctor-accounts"
-		| "/doctor/dashboard"
-		| "/super-admin/admin-accounts"
-		| "/super-admin/appointments"
-		| "/super-admin/dashboard"
-		| "/super-admin/doctor-accounts"
-		| "/super-admin/permissions"
-		| "/super-admin/schedules"
-		| "/super-admin/specialties"
-		| "/super-admin/work-locations"
-		| "/admin/"
-		| "/doctor/"
-		| "/super-admin/"
-		| "/admin/doctor-accounts/create"
-		| "/super-admin/admin-accounts/create"
-		| "/super-admin/doctor-accounts/create"
-		| "/super-admin/permissions/groups"
-		| "/super-admin/permissions/users"
-		| "/super-admin/specialties/$id"
-		| "/super-admin/specialties/create"
-		| "/super-admin/work-locations/$id"
-		| "/super-admin/work-locations/create"
-		| "/super-admin/admin-accounts/"
-		| "/super-admin/doctor-accounts/"
-		| "/super-admin/specialties/"
-		| "/super-admin/work-locations/"
-		| "/super-admin/admin-accounts/$id/view"
-		| "/super-admin/doctor-accounts/$id/edit"
-		| "/super-admin/doctor-accounts/$id/view"
-		| "/super-admin/specialties/$id/edit"
-		| "/super-admin/specialties/$id/view"
-		| "/super-admin/work-locations/$id/edit"
-		| "/super-admin/work-locations/$id/view";
-	fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/settings'
+    | '/forgot-password'
+    | '/otp'
+    | '/sign-in'
+    | '/sign-up'
+    | '/401'
+    | '/403'
+    | '/404'
+    | '/500'
+    | '/503'
+    | '/'
+    | '/errors/$error'
+    | '/settings/account'
+    | '/settings/appearance'
+    | '/settings/display'
+    | '/settings/notifications'
+    | '/apps'
+    | '/chats'
+    | '/doctors'
+    | '/help-center'
+    | '/settings/'
+    | '/staffs'
+    | '/tasks'
+    | '/users'
+    | '/doctors/$doctorId/profile'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/forgot-password'
+    | '/otp'
+    | '/sign-in'
+    | '/sign-up'
+    | '/401'
+    | '/403'
+    | '/404'
+    | '/500'
+    | '/503'
+    | '/'
+    | '/errors/$error'
+    | '/settings/account'
+    | '/settings/appearance'
+    | '/settings/display'
+    | '/settings/notifications'
+    | '/apps'
+    | '/chats'
+    | '/doctors'
+    | '/help-center'
+    | '/settings'
+    | '/staffs'
+    | '/tasks'
+    | '/users'
+    | '/doctors/$doctorId/profile'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/_authenticated/settings'
+    | '/(auth)/forgot-password'
+    | '/(auth)/otp'
+    | '/(auth)/sign-in'
+    | '/(auth)/sign-up'
+    | '/(errors)/401'
+    | '/(errors)/403'
+    | '/(errors)/404'
+    | '/(errors)/500'
+    | '/(errors)/503'
+    | '/_authenticated/'
+    | '/_authenticated/errors/$error'
+    | '/_authenticated/settings/account'
+    | '/_authenticated/settings/appearance'
+    | '/_authenticated/settings/display'
+    | '/_authenticated/settings/notifications'
+    | '/_authenticated/apps/'
+    | '/_authenticated/chats/'
+    | '/_authenticated/doctors/'
+    | '/_authenticated/help-center/'
+    | '/_authenticated/settings/'
+    | '/_authenticated/staffs/'
+    | '/_authenticated/tasks/'
+    | '/_authenticated/users/'
+    | '/_authenticated/doctors/$doctorId/profile'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-	IndexRoute: typeof IndexRoute;
-	AdminRoute: typeof AdminRouteWithChildren;
-	DoctorRoute: typeof DoctorRouteWithChildren;
-	LoginRoute: typeof LoginRoute;
-	SuperAdminRoute: typeof SuperAdminRouteWithChildren;
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  authForgotPasswordRoute: typeof authForgotPasswordRoute
+  authOtpRoute: typeof authOtpRoute
+  authSignInRoute: typeof authSignInRoute
+  authSignUpRoute: typeof authSignUpRoute
+  errors401Route: typeof errors401Route
+  errors403Route: typeof errors403Route
+  errors404Route: typeof errors404Route
+  errors500Route: typeof errors500Route
+  errors503Route: typeof errors503Route
 }
 
-declare module "@tanstack/react-router" {
-	interface FileRoutesByPath {
-		"/super-admin": {
-			id: "/super-admin";
-			path: "/super-admin";
-			fullPath: "/super-admin";
-			preLoaderRoute: typeof SuperAdminRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/login": {
-			id: "/login";
-			path: "/login";
-			fullPath: "/login";
-			preLoaderRoute: typeof LoginRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/doctor": {
-			id: "/doctor";
-			path: "/doctor";
-			fullPath: "/doctor";
-			preLoaderRoute: typeof DoctorRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/admin": {
-			id: "/admin";
-			path: "/admin";
-			fullPath: "/admin";
-			preLoaderRoute: typeof AdminRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/": {
-			id: "/";
-			path: "/";
-			fullPath: "/";
-			preLoaderRoute: typeof IndexRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/super-admin/": {
-			id: "/super-admin/";
-			path: "/";
-			fullPath: "/super-admin/";
-			preLoaderRoute: typeof SuperAdminIndexRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/doctor/": {
-			id: "/doctor/";
-			path: "/";
-			fullPath: "/doctor/";
-			preLoaderRoute: typeof DoctorIndexRouteImport;
-			parentRoute: typeof DoctorRoute;
-		};
-		"/admin/": {
-			id: "/admin/";
-			path: "/";
-			fullPath: "/admin/";
-			preLoaderRoute: typeof AdminIndexRouteImport;
-			parentRoute: typeof AdminRoute;
-		};
-		"/super-admin/work-locations": {
-			id: "/super-admin/work-locations";
-			path: "/work-locations";
-			fullPath: "/super-admin/work-locations";
-			preLoaderRoute: typeof SuperAdminWorkLocationsRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/super-admin/specialties": {
-			id: "/super-admin/specialties";
-			path: "/specialties";
-			fullPath: "/super-admin/specialties";
-			preLoaderRoute: typeof SuperAdminSpecialtiesRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/super-admin/schedules": {
-			id: "/super-admin/schedules";
-			path: "/schedules";
-			fullPath: "/super-admin/schedules";
-			preLoaderRoute: typeof SuperAdminSchedulesRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/super-admin/permissions": {
-			id: "/super-admin/permissions";
-			path: "/permissions";
-			fullPath: "/super-admin/permissions";
-			preLoaderRoute: typeof SuperAdminPermissionsRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/super-admin/doctor-accounts": {
-			id: "/super-admin/doctor-accounts";
-			path: "/doctor-accounts";
-			fullPath: "/super-admin/doctor-accounts";
-			preLoaderRoute: typeof SuperAdminDoctorAccountsRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/super-admin/dashboard": {
-			id: "/super-admin/dashboard";
-			path: "/dashboard";
-			fullPath: "/super-admin/dashboard";
-			preLoaderRoute: typeof SuperAdminDashboardRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/super-admin/appointments": {
-			id: "/super-admin/appointments";
-			path: "/appointments";
-			fullPath: "/super-admin/appointments";
-			preLoaderRoute: typeof SuperAdminAppointmentsRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/super-admin/admin-accounts": {
-			id: "/super-admin/admin-accounts";
-			path: "/admin-accounts";
-			fullPath: "/super-admin/admin-accounts";
-			preLoaderRoute: typeof SuperAdminAdminAccountsRouteImport;
-			parentRoute: typeof SuperAdminRoute;
-		};
-		"/doctor/dashboard": {
-			id: "/doctor/dashboard";
-			path: "/dashboard";
-			fullPath: "/doctor/dashboard";
-			preLoaderRoute: typeof DoctorDashboardRouteImport;
-			parentRoute: typeof DoctorRoute;
-		};
-		"/admin/doctor-accounts": {
-			id: "/admin/doctor-accounts";
-			path: "/doctor-accounts";
-			fullPath: "/admin/doctor-accounts";
-			preLoaderRoute: typeof AdminDoctorAccountsRouteImport;
-			parentRoute: typeof AdminRoute;
-		};
-		"/admin/dashboard": {
-			id: "/admin/dashboard";
-			path: "/dashboard";
-			fullPath: "/admin/dashboard";
-			preLoaderRoute: typeof AdminDashboardRouteImport;
-			parentRoute: typeof AdminRoute;
-		};
-		"/super-admin/work-locations/": {
-			id: "/super-admin/work-locations/";
-			path: "/";
-			fullPath: "/super-admin/work-locations/";
-			preLoaderRoute: typeof SuperAdminWorkLocationsIndexRouteImport;
-			parentRoute: typeof SuperAdminWorkLocationsRoute;
-		};
-		"/super-admin/specialties/": {
-			id: "/super-admin/specialties/";
-			path: "/";
-			fullPath: "/super-admin/specialties/";
-			preLoaderRoute: typeof SuperAdminSpecialtiesIndexRouteImport;
-			parentRoute: typeof SuperAdminSpecialtiesRoute;
-		};
-		"/super-admin/doctor-accounts/": {
-			id: "/super-admin/doctor-accounts/";
-			path: "/";
-			fullPath: "/super-admin/doctor-accounts/";
-			preLoaderRoute: typeof SuperAdminDoctorAccountsIndexRouteImport;
-			parentRoute: typeof SuperAdminDoctorAccountsRoute;
-		};
-		"/super-admin/admin-accounts/": {
-			id: "/super-admin/admin-accounts/";
-			path: "/";
-			fullPath: "/super-admin/admin-accounts/";
-			preLoaderRoute: typeof SuperAdminAdminAccountsIndexRouteImport;
-			parentRoute: typeof SuperAdminAdminAccountsRoute;
-		};
-		"/super-admin/work-locations/create": {
-			id: "/super-admin/work-locations/create";
-			path: "/create";
-			fullPath: "/super-admin/work-locations/create";
-			preLoaderRoute: typeof SuperAdminWorkLocationsCreateRouteImport;
-			parentRoute: typeof SuperAdminWorkLocationsRoute;
-		};
-		"/super-admin/work-locations/$id": {
-			id: "/super-admin/work-locations/$id";
-			path: "/$id";
-			fullPath: "/super-admin/work-locations/$id";
-			preLoaderRoute: typeof SuperAdminWorkLocationsIdRouteImport;
-			parentRoute: typeof SuperAdminWorkLocationsRoute;
-		};
-		"/super-admin/specialties/create": {
-			id: "/super-admin/specialties/create";
-			path: "/create";
-			fullPath: "/super-admin/specialties/create";
-			preLoaderRoute: typeof SuperAdminSpecialtiesCreateRouteImport;
-			parentRoute: typeof SuperAdminSpecialtiesRoute;
-		};
-		"/super-admin/specialties/$id": {
-			id: "/super-admin/specialties/$id";
-			path: "/$id";
-			fullPath: "/super-admin/specialties/$id";
-			preLoaderRoute: typeof SuperAdminSpecialtiesIdRouteImport;
-			parentRoute: typeof SuperAdminSpecialtiesRoute;
-		};
-		"/super-admin/permissions/users": {
-			id: "/super-admin/permissions/users";
-			path: "/users";
-			fullPath: "/super-admin/permissions/users";
-			preLoaderRoute: typeof SuperAdminPermissionsUsersRouteImport;
-			parentRoute: typeof SuperAdminPermissionsRoute;
-		};
-		"/super-admin/permissions/groups": {
-			id: "/super-admin/permissions/groups";
-			path: "/groups";
-			fullPath: "/super-admin/permissions/groups";
-			preLoaderRoute: typeof SuperAdminPermissionsGroupsRouteImport;
-			parentRoute: typeof SuperAdminPermissionsRoute;
-		};
-		"/super-admin/doctor-accounts/create": {
-			id: "/super-admin/doctor-accounts/create";
-			path: "/create";
-			fullPath: "/super-admin/doctor-accounts/create";
-			preLoaderRoute: typeof SuperAdminDoctorAccountsCreateRouteImport;
-			parentRoute: typeof SuperAdminDoctorAccountsRoute;
-		};
-		"/super-admin/admin-accounts/create": {
-			id: "/super-admin/admin-accounts/create";
-			path: "/create";
-			fullPath: "/super-admin/admin-accounts/create";
-			preLoaderRoute: typeof SuperAdminAdminAccountsCreateRouteImport;
-			parentRoute: typeof SuperAdminAdminAccountsRoute;
-		};
-		"/admin/doctor-accounts/create": {
-			id: "/admin/doctor-accounts/create";
-			path: "/create";
-			fullPath: "/admin/doctor-accounts/create";
-			preLoaderRoute: typeof AdminDoctorAccountsCreateRouteImport;
-			parentRoute: typeof AdminDoctorAccountsRoute;
-		};
-		"/super-admin/work-locations/$id/view": {
-			id: "/super-admin/work-locations/$id/view";
-			path: "/view";
-			fullPath: "/super-admin/work-locations/$id/view";
-			preLoaderRoute: typeof SuperAdminWorkLocationsIdViewRouteImport;
-			parentRoute: typeof SuperAdminWorkLocationsIdRoute;
-		};
-		"/super-admin/work-locations/$id/edit": {
-			id: "/super-admin/work-locations/$id/edit";
-			path: "/edit";
-			fullPath: "/super-admin/work-locations/$id/edit";
-			preLoaderRoute: typeof SuperAdminWorkLocationsIdEditRouteImport;
-			parentRoute: typeof SuperAdminWorkLocationsIdRoute;
-		};
-		"/super-admin/specialties/$id/view": {
-			id: "/super-admin/specialties/$id/view";
-			path: "/view";
-			fullPath: "/super-admin/specialties/$id/view";
-			preLoaderRoute: typeof SuperAdminSpecialtiesIdViewRouteImport;
-			parentRoute: typeof SuperAdminSpecialtiesIdRoute;
-		};
-		"/super-admin/specialties/$id/edit": {
-			id: "/super-admin/specialties/$id/edit";
-			path: "/edit";
-			fullPath: "/super-admin/specialties/$id/edit";
-			preLoaderRoute: typeof SuperAdminSpecialtiesIdEditRouteImport;
-			parentRoute: typeof SuperAdminSpecialtiesIdRoute;
-		};
-		"/super-admin/doctor-accounts/$id/view": {
-			id: "/super-admin/doctor-accounts/$id/view";
-			path: "/$id/view";
-			fullPath: "/super-admin/doctor-accounts/$id/view";
-			preLoaderRoute: typeof SuperAdminDoctorAccountsIdViewRouteImport;
-			parentRoute: typeof SuperAdminDoctorAccountsRoute;
-		};
-		"/super-admin/doctor-accounts/$id/edit": {
-			id: "/super-admin/doctor-accounts/$id/edit";
-			path: "/$id/edit";
-			fullPath: "/super-admin/doctor-accounts/$id/edit";
-			preLoaderRoute: typeof SuperAdminDoctorAccountsIdEditRouteImport;
-			parentRoute: typeof SuperAdminDoctorAccountsRoute;
-		};
-		"/super-admin/admin-accounts/$id/view": {
-			id: "/super-admin/admin-accounts/$id/view";
-			path: "/$id/view";
-			fullPath: "/super-admin/admin-accounts/$id/view";
-			preLoaderRoute: typeof SuperAdminAdminAccountsIdViewRouteImport;
-			parentRoute: typeof SuperAdminAdminAccountsRoute;
-		};
-	}
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/(errors)/503': {
+      id: '/(errors)/503'
+      path: '/503'
+      fullPath: '/503'
+      preLoaderRoute: typeof errors503RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(errors)/500': {
+      id: '/(errors)/500'
+      path: '/500'
+      fullPath: '/500'
+      preLoaderRoute: typeof errors500RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(errors)/404': {
+      id: '/(errors)/404'
+      path: '/404'
+      fullPath: '/404'
+      preLoaderRoute: typeof errors404RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(errors)/403': {
+      id: '/(errors)/403'
+      path: '/403'
+      fullPath: '/403'
+      preLoaderRoute: typeof errors403RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(errors)/401': {
+      id: '/(errors)/401'
+      path: '/401'
+      fullPath: '/401'
+      preLoaderRoute: typeof errors401RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/sign-up': {
+      id: '/(auth)/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof authSignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/sign-in': {
+      id: '/(auth)/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof authSignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/otp': {
+      id: '/(auth)/otp'
+      path: '/otp'
+      fullPath: '/otp'
+      preLoaderRoute: typeof authOtpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/forgot-password': {
+      id: '/(auth)/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof authForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/users/': {
+      id: '/_authenticated/users/'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof AuthenticatedUsersIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/tasks/': {
+      id: '/_authenticated/tasks/'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof AuthenticatedTasksIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/staffs/': {
+      id: '/_authenticated/staffs/'
+      path: '/staffs'
+      fullPath: '/staffs'
+      preLoaderRoute: typeof AuthenticatedStaffsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings/': {
+      id: '/_authenticated/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
+    '/_authenticated/help-center/': {
+      id: '/_authenticated/help-center/'
+      path: '/help-center'
+      fullPath: '/help-center'
+      preLoaderRoute: typeof AuthenticatedHelpCenterIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/doctors/': {
+      id: '/_authenticated/doctors/'
+      path: '/doctors'
+      fullPath: '/doctors'
+      preLoaderRoute: typeof AuthenticatedDoctorsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/chats/': {
+      id: '/_authenticated/chats/'
+      path: '/chats'
+      fullPath: '/chats'
+      preLoaderRoute: typeof AuthenticatedChatsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/apps/': {
+      id: '/_authenticated/apps/'
+      path: '/apps'
+      fullPath: '/apps'
+      preLoaderRoute: typeof AuthenticatedAppsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings/notifications': {
+      id: '/_authenticated/settings/notifications'
+      path: '/notifications'
+      fullPath: '/settings/notifications'
+      preLoaderRoute: typeof AuthenticatedSettingsNotificationsRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
+    '/_authenticated/settings/display': {
+      id: '/_authenticated/settings/display'
+      path: '/display'
+      fullPath: '/settings/display'
+      preLoaderRoute: typeof AuthenticatedSettingsDisplayRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
+    '/_authenticated/settings/appearance': {
+      id: '/_authenticated/settings/appearance'
+      path: '/appearance'
+      fullPath: '/settings/appearance'
+      preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
+    '/_authenticated/settings/account': {
+      id: '/_authenticated/settings/account'
+      path: '/account'
+      fullPath: '/settings/account'
+      preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
+    '/_authenticated/errors/$error': {
+      id: '/_authenticated/errors/$error'
+      path: '/errors/$error'
+      fullPath: '/errors/$error'
+      preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/doctors/$doctorId/profile': {
+      id: '/_authenticated/doctors/$doctorId/profile'
+      path: '/doctors/$doctorId/profile'
+      fullPath: '/doctors/$doctorId/profile'
+      preLoaderRoute: typeof AuthenticatedDoctorsDoctorIdProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+  }
 }
 
-interface AdminDoctorAccountsRouteChildren {
-	AdminDoctorAccountsCreateRoute: typeof AdminDoctorAccountsCreateRoute;
+interface AuthenticatedSettingsRouteRouteChildren {
+  AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
+  AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
+  AuthenticatedSettingsDisplayRoute: typeof AuthenticatedSettingsDisplayRoute
+  AuthenticatedSettingsNotificationsRoute: typeof AuthenticatedSettingsNotificationsRoute
+  AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
 
-const AdminDoctorAccountsRouteChildren: AdminDoctorAccountsRouteChildren = {
-	AdminDoctorAccountsCreateRoute: AdminDoctorAccountsCreateRoute,
-};
+const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteChildren =
+  {
+    AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
+    AuthenticatedSettingsAppearanceRoute: AuthenticatedSettingsAppearanceRoute,
+    AuthenticatedSettingsDisplayRoute: AuthenticatedSettingsDisplayRoute,
+    AuthenticatedSettingsNotificationsRoute:
+      AuthenticatedSettingsNotificationsRoute,
+    AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
+  }
 
-const AdminDoctorAccountsRouteWithChildren =
-	AdminDoctorAccountsRoute._addFileChildren(AdminDoctorAccountsRouteChildren);
+const AuthenticatedSettingsRouteRouteWithChildren =
+  AuthenticatedSettingsRouteRoute._addFileChildren(
+    AuthenticatedSettingsRouteRouteChildren,
+  )
 
-interface AdminRouteChildren {
-	AdminDashboardRoute: typeof AdminDashboardRoute;
-	AdminDoctorAccountsRoute: typeof AdminDoctorAccountsRouteWithChildren;
-	AdminIndexRoute: typeof AdminIndexRoute;
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
+  AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
+  AuthenticatedDoctorsIndexRoute: typeof AuthenticatedDoctorsIndexRoute
+  AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedStaffsIndexRoute: typeof AuthenticatedStaffsIndexRoute
+  AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
+  AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedDoctorsDoctorIdProfileRoute: typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
 
-const AdminRouteChildren: AdminRouteChildren = {
-	AdminDashboardRoute: AdminDashboardRoute,
-	AdminDoctorAccountsRoute: AdminDoctorAccountsRouteWithChildren,
-	AdminIndexRoute: AdminIndexRoute,
-};
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren);
-
-interface DoctorRouteChildren {
-	DoctorDashboardRoute: typeof DoctorDashboardRoute;
-	DoctorIndexRoute: typeof DoctorIndexRoute;
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
+  AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
+  AuthenticatedDoctorsIndexRoute: AuthenticatedDoctorsIndexRoute,
+  AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedStaffsIndexRoute: AuthenticatedStaffsIndexRoute,
+  AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
+  AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedDoctorsDoctorIdProfileRoute:
+    AuthenticatedDoctorsDoctorIdProfileRoute,
 }
 
-const DoctorRouteChildren: DoctorRouteChildren = {
-	DoctorDashboardRoute: DoctorDashboardRoute,
-	DoctorIndexRoute: DoctorIndexRoute,
-};
-
-const DoctorRouteWithChildren =
-	DoctorRoute._addFileChildren(DoctorRouteChildren);
-
-interface SuperAdminAdminAccountsRouteChildren {
-	SuperAdminAdminAccountsCreateRoute: typeof SuperAdminAdminAccountsCreateRoute;
-	SuperAdminAdminAccountsIndexRoute: typeof SuperAdminAdminAccountsIndexRoute;
-	SuperAdminAdminAccountsIdViewRoute: typeof SuperAdminAdminAccountsIdViewRoute;
-}
-
-const SuperAdminAdminAccountsRouteChildren: SuperAdminAdminAccountsRouteChildren =
-	{
-		SuperAdminAdminAccountsCreateRoute: SuperAdminAdminAccountsCreateRoute,
-		SuperAdminAdminAccountsIndexRoute: SuperAdminAdminAccountsIndexRoute,
-		SuperAdminAdminAccountsIdViewRoute: SuperAdminAdminAccountsIdViewRoute,
-	};
-
-const SuperAdminAdminAccountsRouteWithChildren =
-	SuperAdminAdminAccountsRoute._addFileChildren(
-		SuperAdminAdminAccountsRouteChildren
-	);
-
-interface SuperAdminDoctorAccountsRouteChildren {
-	SuperAdminDoctorAccountsCreateRoute: typeof SuperAdminDoctorAccountsCreateRoute;
-	SuperAdminDoctorAccountsIndexRoute: typeof SuperAdminDoctorAccountsIndexRoute;
-	SuperAdminDoctorAccountsIdEditRoute: typeof SuperAdminDoctorAccountsIdEditRoute;
-	SuperAdminDoctorAccountsIdViewRoute: typeof SuperAdminDoctorAccountsIdViewRoute;
-}
-
-const SuperAdminDoctorAccountsRouteChildren: SuperAdminDoctorAccountsRouteChildren =
-	{
-		SuperAdminDoctorAccountsCreateRoute: SuperAdminDoctorAccountsCreateRoute,
-		SuperAdminDoctorAccountsIndexRoute: SuperAdminDoctorAccountsIndexRoute,
-		SuperAdminDoctorAccountsIdEditRoute: SuperAdminDoctorAccountsIdEditRoute,
-		SuperAdminDoctorAccountsIdViewRoute: SuperAdminDoctorAccountsIdViewRoute,
-	};
-
-const SuperAdminDoctorAccountsRouteWithChildren =
-	SuperAdminDoctorAccountsRoute._addFileChildren(
-		SuperAdminDoctorAccountsRouteChildren
-	);
-
-interface SuperAdminPermissionsRouteChildren {
-	SuperAdminPermissionsGroupsRoute: typeof SuperAdminPermissionsGroupsRoute;
-	SuperAdminPermissionsUsersRoute: typeof SuperAdminPermissionsUsersRoute;
-}
-
-const SuperAdminPermissionsRouteChildren: SuperAdminPermissionsRouteChildren = {
-	SuperAdminPermissionsGroupsRoute: SuperAdminPermissionsGroupsRoute,
-	SuperAdminPermissionsUsersRoute: SuperAdminPermissionsUsersRoute,
-};
-
-const SuperAdminPermissionsRouteWithChildren =
-	SuperAdminPermissionsRoute._addFileChildren(
-		SuperAdminPermissionsRouteChildren
-	);
-
-interface SuperAdminSpecialtiesIdRouteChildren {
-	SuperAdminSpecialtiesIdEditRoute: typeof SuperAdminSpecialtiesIdEditRoute;
-	SuperAdminSpecialtiesIdViewRoute: typeof SuperAdminSpecialtiesIdViewRoute;
-}
-
-const SuperAdminSpecialtiesIdRouteChildren: SuperAdminSpecialtiesIdRouteChildren =
-	{
-		SuperAdminSpecialtiesIdEditRoute: SuperAdminSpecialtiesIdEditRoute,
-		SuperAdminSpecialtiesIdViewRoute: SuperAdminSpecialtiesIdViewRoute,
-	};
-
-const SuperAdminSpecialtiesIdRouteWithChildren =
-	SuperAdminSpecialtiesIdRoute._addFileChildren(
-		SuperAdminSpecialtiesIdRouteChildren
-	);
-
-interface SuperAdminSpecialtiesRouteChildren {
-	SuperAdminSpecialtiesIdRoute: typeof SuperAdminSpecialtiesIdRouteWithChildren;
-	SuperAdminSpecialtiesCreateRoute: typeof SuperAdminSpecialtiesCreateRoute;
-	SuperAdminSpecialtiesIndexRoute: typeof SuperAdminSpecialtiesIndexRoute;
-}
-
-const SuperAdminSpecialtiesRouteChildren: SuperAdminSpecialtiesRouteChildren = {
-	SuperAdminSpecialtiesIdRoute: SuperAdminSpecialtiesIdRouteWithChildren,
-	SuperAdminSpecialtiesCreateRoute: SuperAdminSpecialtiesCreateRoute,
-	SuperAdminSpecialtiesIndexRoute: SuperAdminSpecialtiesIndexRoute,
-};
-
-const SuperAdminSpecialtiesRouteWithChildren =
-	SuperAdminSpecialtiesRoute._addFileChildren(
-		SuperAdminSpecialtiesRouteChildren
-	);
-
-interface SuperAdminWorkLocationsIdRouteChildren {
-	SuperAdminWorkLocationsIdEditRoute: typeof SuperAdminWorkLocationsIdEditRoute;
-	SuperAdminWorkLocationsIdViewRoute: typeof SuperAdminWorkLocationsIdViewRoute;
-}
-
-const SuperAdminWorkLocationsIdRouteChildren: SuperAdminWorkLocationsIdRouteChildren =
-	{
-		SuperAdminWorkLocationsIdEditRoute: SuperAdminWorkLocationsIdEditRoute,
-		SuperAdminWorkLocationsIdViewRoute: SuperAdminWorkLocationsIdViewRoute,
-	};
-
-const SuperAdminWorkLocationsIdRouteWithChildren =
-	SuperAdminWorkLocationsIdRoute._addFileChildren(
-		SuperAdminWorkLocationsIdRouteChildren
-	);
-
-interface SuperAdminWorkLocationsRouteChildren {
-	SuperAdminWorkLocationsIdRoute: typeof SuperAdminWorkLocationsIdRouteWithChildren;
-	SuperAdminWorkLocationsCreateRoute: typeof SuperAdminWorkLocationsCreateRoute;
-	SuperAdminWorkLocationsIndexRoute: typeof SuperAdminWorkLocationsIndexRoute;
-}
-
-const SuperAdminWorkLocationsRouteChildren: SuperAdminWorkLocationsRouteChildren =
-	{
-		SuperAdminWorkLocationsIdRoute: SuperAdminWorkLocationsIdRouteWithChildren,
-		SuperAdminWorkLocationsCreateRoute: SuperAdminWorkLocationsCreateRoute,
-		SuperAdminWorkLocationsIndexRoute: SuperAdminWorkLocationsIndexRoute,
-	};
-
-const SuperAdminWorkLocationsRouteWithChildren =
-	SuperAdminWorkLocationsRoute._addFileChildren(
-		SuperAdminWorkLocationsRouteChildren
-	);
-
-interface SuperAdminRouteChildren {
-	SuperAdminAdminAccountsRoute: typeof SuperAdminAdminAccountsRouteWithChildren;
-	SuperAdminAppointmentsRoute: typeof SuperAdminAppointmentsRoute;
-	SuperAdminDashboardRoute: typeof SuperAdminDashboardRoute;
-	SuperAdminDoctorAccountsRoute: typeof SuperAdminDoctorAccountsRouteWithChildren;
-	SuperAdminPermissionsRoute: typeof SuperAdminPermissionsRouteWithChildren;
-	SuperAdminSchedulesRoute: typeof SuperAdminSchedulesRoute;
-	SuperAdminSpecialtiesRoute: typeof SuperAdminSpecialtiesRouteWithChildren;
-	SuperAdminWorkLocationsRoute: typeof SuperAdminWorkLocationsRouteWithChildren;
-	SuperAdminIndexRoute: typeof SuperAdminIndexRoute;
-}
-
-const SuperAdminRouteChildren: SuperAdminRouteChildren = {
-	SuperAdminAdminAccountsRoute: SuperAdminAdminAccountsRouteWithChildren,
-	SuperAdminAppointmentsRoute: SuperAdminAppointmentsRoute,
-	SuperAdminDashboardRoute: SuperAdminDashboardRoute,
-	SuperAdminDoctorAccountsRoute: SuperAdminDoctorAccountsRouteWithChildren,
-	SuperAdminPermissionsRoute: SuperAdminPermissionsRouteWithChildren,
-	SuperAdminSchedulesRoute: SuperAdminSchedulesRoute,
-	SuperAdminSpecialtiesRoute: SuperAdminSpecialtiesRouteWithChildren,
-	SuperAdminWorkLocationsRoute: SuperAdminWorkLocationsRouteWithChildren,
-	SuperAdminIndexRoute: SuperAdminIndexRoute,
-};
-
-const SuperAdminRouteWithChildren = SuperAdminRoute._addFileChildren(
-	SuperAdminRouteChildren
-);
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-	IndexRoute: IndexRoute,
-	AdminRoute: AdminRouteWithChildren,
-	DoctorRoute: DoctorRouteWithChildren,
-	LoginRoute: LoginRoute,
-	SuperAdminRoute: SuperAdminRouteWithChildren,
-};
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  authForgotPasswordRoute: authForgotPasswordRoute,
+  authOtpRoute: authOtpRoute,
+  authSignInRoute: authSignInRoute,
+  authSignUpRoute: authSignUpRoute,
+  errors401Route: errors401Route,
+  errors403Route: errors403Route,
+  errors404Route: errors404Route,
+  errors500Route: errors500Route,
+  errors503Route: errors503Route,
+}
 export const routeTree = rootRouteImport
-	._addFileChildren(rootRouteChildren)
-	._addFileTypes<FileRouteTypes>();
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()

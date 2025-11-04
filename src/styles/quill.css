@@ -1,0 +1,149 @@
+/* Quill wrapper */
+.quill-editor-wrapper {
+  @apply border-border w-full overflow-hidden rounded-md border;
+}
+
+/* Quill container */
+.quill-editor-wrapper .ql-container,
+.ql-container {
+  @apply border-input rounded-b-md border-0 text-sm;
+  font-family: inherit;
+}
+
+/* Quill toolbar */
+.quill-editor-wrapper .ql-toolbar,
+.ql-toolbar {
+  @apply bg-muted/30 border-border rounded-t-md border-0 border-b;
+  @apply flex flex-wrap items-center gap-1 p-2;
+  @apply sticky top-0 z-10;
+}
+
+/* Quill editor content area */
+.quill-editor-wrapper .ql-editor,
+.ql-editor {
+  @apply max-h-[400px] min-h-[180px] overflow-y-auto p-3;
+  @apply text-sm leading-relaxed;
+}
+
+/* Focus state */
+.quill-editor-wrapper .ql-container:focus-within {
+  @apply ring-primary/20 ring-2 ring-offset-2;
+}
+
+/* Quill editor placeholder */
+.quill-editor-wrapper .ql-editor.ql-blank::before,
+.ql-editor.ql-blank::before {
+  @apply text-muted-foreground italic;
+  font-style: normal;
+}
+
+/* Quill toolbar buttons */
+.quill-editor-wrapper .ql-toolbar button,
+.ql-toolbar button {
+  @apply flex h-8 w-8 items-center justify-center rounded;
+  @apply hover:bg-accent transition-colors duration-200;
+}
+
+.quill-editor-wrapper .ql-toolbar button.ql-active,
+.ql-toolbar button.ql-active,
+.quill-editor-wrapper .ql-toolbar .ql-picker-label.ql-active,
+.ql-toolbar .ql-picker-label.ql-active,
+.quill-editor-wrapper .ql-toolbar .ql-picker-item.ql-selected,
+.ql-toolbar .ql-picker-item.ql-selected {
+  @apply bg-primary/10 text-primary;
+}
+
+/* Toolbar dropdowns */
+.quill-editor-wrapper .ql-toolbar .ql-picker,
+.ql-toolbar .ql-picker {
+  @apply h-8 rounded;
+}
+
+.quill-editor-wrapper .ql-toolbar .ql-picker-label,
+.ql-toolbar .ql-picker-label {
+  @apply hover:bg-accent rounded px-2 py-1;
+  border: 1px solid hsl(var(--border));
+}
+
+/* Quill snow theme specific */
+.ql-snow .ql-stroke {
+  stroke: currentColor;
+}
+
+.ql-snow .ql-fill {
+  fill: currentColor;
+}
+
+.ql-snow .ql-picker-options {
+  @apply border-input bg-popover rounded-md border shadow-md;
+}
+
+.ql-snow .ql-picker-item:hover {
+  @apply bg-accent text-accent-foreground;
+}
+
+/* Quill content styles (for both editor and display) */
+.ql-editor h1,
+.prose h1 {
+  @apply text-2xl font-bold;
+}
+
+.ql-editor h2,
+.prose h2 {
+  @apply text-xl font-bold;
+}
+
+.ql-editor h3,
+.prose h3 {
+  @apply text-lg font-semibold;
+}
+
+.ql-editor p,
+.prose p {
+  @apply my-2;
+}
+
+.ql-editor ul,
+.prose ul {
+  @apply list-disc pl-6;
+}
+
+.ql-editor ol,
+.prose ol {
+  @apply list-decimal pl-6;
+}
+
+.ql-editor blockquote,
+.prose blockquote {
+  @apply border-primary border-l-4 pl-4 italic;
+}
+
+.ql-editor pre,
+.prose pre {
+  @apply bg-muted rounded-md p-4;
+}
+
+.ql-editor code,
+.prose code {
+  @apply bg-muted rounded px-1.5 py-0.5 font-mono text-sm;
+}
+
+.ql-editor a,
+.prose a {
+  @apply text-primary hover:text-primary/80 underline;
+}
+
+.ql-editor img,
+.prose img {
+  @apply max-w-full rounded-md;
+}
+
+/* Disabled state */
+.ql-container.ql-disabled .ql-editor {
+  @apply cursor-not-allowed opacity-50;
+}
+
+/* Focus state */
+.ql-container:focus-within {
+  @apply ring-ring ring-offset-background ring-2 ring-offset-2;
+}

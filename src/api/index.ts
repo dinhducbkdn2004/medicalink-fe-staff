@@ -1,10 +1,13 @@
-export { apiClient } from "./core/client";
-export { extractApiData, extractPaginatedData, apiCall } from "./core/utils";
-export { handleApiError } from "./core/errorHandler";
+/**
+ * API Module
+ * Central export point for all API-related functionality
+ */
 
-export * from "./auth";
-export * from "./staffs";
-export * from "./doctors";
-export * from "./specialties";
-export * from "./locations";
-export * from "./permissions";
+// Core
+export { apiClient } from './core/client'
+
+// Services
+export * from './services'
+
+// Types
+export * from './types'
