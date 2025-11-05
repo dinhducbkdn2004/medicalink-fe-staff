@@ -101,11 +101,42 @@ export interface DoctorWithProfile {
 }
 
 /**
- * Complete doctor data (account + full profile)
+ * Complete doctor data (account + profile merged - flat structure from API)
+ * API GET /api/doctors/:id/complete returns flat structure
  */
 export interface CompleteDoctorData {
-  account: DoctorAccount
-  profile: DoctorProfile
+  // From DoctorAccount (required fields)
+  id: string
+  fullName: string
+  email: string
+  role: string
+
+  // From DoctorAccount (optional fields)
+  phone?: string
+  isMale?: boolean
+  dateOfBirth?: string
+  createdAt?: string
+  updatedAt?: string
+
+  // From DoctorProfile (required fields)
+  profileId: string
+  isActive: boolean
+
+  // From DoctorProfile (optional fields)
+  degree?: string
+  position?: string[]
+  introduction?: string
+  memberships?: string[]
+  awards?: string[]
+  research?: string
+  trainingProcess?: string[]
+  experience?: string[]
+  avatarUrl?: string
+  portrait?: string
+  specialties?: Specialty[]
+  workLocations?: WorkLocation[]
+  profileCreatedAt?: string
+  profileUpdatedAt?: string
 }
 
 /**
