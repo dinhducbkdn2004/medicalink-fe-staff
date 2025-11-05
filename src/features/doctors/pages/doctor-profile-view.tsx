@@ -29,6 +29,7 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { RichTextDisplay } from '../components/rich-text-editor'
+import { ProfileAvatarCard, CollapsibleSection } from '../components/profile-view'
 import { useCompleteDoctor } from '../data/use-doctors'
 import { canEditOwnProfile } from '../utils/permissions'
 import { DoctorProfileForm } from './doctor-profile-form'
@@ -271,36 +272,19 @@ export function DoctorProfileView() {
             </Card>
 
             {/* Positions Card */}
-            <Collapsible defaultOpen={true}>
-              <Card>
-                <CardHeader>
-                  <div className='flex items-center justify-between'>
-                    <CardTitle className='text-sm'>Positions</CardTitle>
-                    <CollapsibleTrigger asChild>
-                      <Button variant='ghost' size='sm' className='h-6 w-6 p-0'>
-                        <ChevronDown className='h-3 w-3 transition-transform duration-200 data-[state=open]:rotate-180' />
-                        <span className='sr-only'>Toggle positions</span>
-                      </Button>
-                    </CollapsibleTrigger>
-                  </div>
-                </CardHeader>
-                <CollapsibleContent>
-                  <CardContent className='pt-0'>
-                    {doctor?.position && doctor.position.length > 0 ? (
-                      <ul className='space-y-2'>
-                        {doctor.position.map((pos: string, idx: number) => (
-                          <li key={idx} className='text-sm'>
-                            • {pos}
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <EmptyField text='No positions listed' />
-                    )}
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
+            <CollapsibleSection title='Positions'>
+              {doctor?.position && doctor.position.length > 0 ? (
+                <ul className='space-y-2'>
+                  {doctor.position.map((pos: string, idx: number) => (
+                    <li key={idx} className='text-sm'>
+                      • {pos}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <EmptyField text='No positions listed' />
+              )}
+            </CollapsibleSection>
 
             {/* Specialties Card */}
             <Collapsible defaultOpen={true}>
@@ -384,68 +368,29 @@ export function DoctorProfileView() {
           {/* Right Column - Detailed Information */}
           <div className='space-y-4 md:col-span-2'>
             {/* Introduction */}
-            <Collapsible defaultOpen={true}>
-              <Card>
-                <CardHeader>
-                  <div className='flex items-center justify-between'>
-                    <div className='flex-1'>
-                      <CardTitle className='text-base'>Introduction</CardTitle>
-                      <CardDescription className='text-xs'>
-                        Professional background and overview
-                      </CardDescription>
-                    </div>
-                    <CollapsibleTrigger asChild>
-                      <Button variant='ghost' size='sm' className='h-8 w-8 p-0'>
-                        <ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
-                        <span className='sr-only'>Toggle introduction</span>
-                      </Button>
-                    </CollapsibleTrigger>
-                  </div>
-                </CardHeader>
-                <CollapsibleContent>
-                  <CardContent className='pt-0'>
-                    {doctor?.introduction ? (
-                      <RichTextDisplay content={doctor.introduction} />
-                    ) : (
-                      <EmptyField text='No introduction provided' />
-                    )}
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
+            <CollapsibleSection
+              title='Introduction'
+              description='Professional background and overview'
+            >
+              {doctor?.introduction ? (
+                <RichTextDisplay content={doctor.introduction} />
+              ) : (
+                <EmptyField text='No introduction provided' />
+              )}
+            </CollapsibleSection>
 
             {/* Research & Publications */}
-            <Collapsible defaultOpen={false}>
-              <Card>
-                <CardHeader>
-                  <div className='flex items-center justify-between'>
-                    <div className='flex-1'>
-                      <CardTitle className='text-base'>
-                        Research & Publications
-                      </CardTitle>
-                      <CardDescription className='text-xs'>
-                        Scientific work and contributions
-                      </CardDescription>
-                    </div>
-                    <CollapsibleTrigger asChild>
-                      <Button variant='ghost' size='sm' className='h-8 w-8 p-0'>
-                        <ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
-                        <span className='sr-only'>Toggle research</span>
-                      </Button>
-                    </CollapsibleTrigger>
-                  </div>
-                </CardHeader>
-                <CollapsibleContent>
-                  <CardContent className='pt-0'>
-                    {doctor?.research ? (
-                      <RichTextDisplay content={doctor.research} />
-                    ) : (
-                      <EmptyField text='No research information provided' />
-                    )}
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
+            <CollapsibleSection
+              title='Research & Publications'
+              description='Scientific work and contributions'
+              defaultOpen={false}
+            >
+              {doctor?.research ? (
+                <RichTextDisplay content={doctor.research} />
+              ) : (
+                <EmptyField text='No research information provided' />
+              )}
+            </CollapsibleSection>
 
             {/* Training Process */}
             <Collapsible defaultOpen={false}>
@@ -493,46 +438,26 @@ export function DoctorProfileView() {
             </Collapsible>
 
             {/* Experience */}
-            <Collapsible defaultOpen={false}>
-              <Card>
-                <CardHeader>
-                  <div className='flex items-center justify-between'>
-                    <div className='flex-1'>
-                      <CardTitle className='text-base'>
-                        Professional Experience
-                      </CardTitle>
-                      <CardDescription className='text-xs'>
-                        Work history and career timeline
-                      </CardDescription>
-                    </div>
-                    <CollapsibleTrigger asChild>
-                      <Button variant='ghost' size='sm' className='h-8 w-8 p-0'>
-                        <ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
-                        <span className='sr-only'>Toggle experience</span>
-                      </Button>
-                    </CollapsibleTrigger>
-                  </div>
-                </CardHeader>
-                <CollapsibleContent>
-                  <CardContent className='pt-0'>
-                    {doctor?.experience && doctor.experience.length > 0 ? (
-                      <ul className='space-y-3'>
-                        {doctor.experience.map((exp: string, idx: number) => (
-                          <li key={idx} className='flex gap-3'>
-                            <div className='bg-primary/10 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full'>
-                              <div className='bg-primary h-2 w-2 rounded-full' />
-                            </div>
-                            <p className='text-sm'>{exp}</p>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <EmptyField text='No experience documented' />
-                    )}
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
+            <CollapsibleSection
+              title='Professional Experience'
+              description='Work history and career timeline'
+              defaultOpen={false}
+            >
+              {doctor?.experience && doctor.experience.length > 0 ? (
+                <ul className='space-y-3'>
+                  {doctor.experience.map((exp: string, idx: number) => (
+                    <li key={idx} className='flex gap-3'>
+                      <div className='bg-primary/10 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full'>
+                        <div className='bg-primary h-2 w-2 rounded-full' />
+                      </div>
+                      <p className='text-sm'>{exp}</p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <EmptyField text='No experience documented' />
+              )}
+            </CollapsibleSection>
 
             {/* Memberships */}
             <Collapsible defaultOpen={false}>
@@ -576,43 +501,23 @@ export function DoctorProfileView() {
             </Collapsible>
 
             {/* Awards */}
-            <Collapsible defaultOpen={false}>
-              <Card>
-                <CardHeader>
-                  <div className='flex items-center justify-between'>
-                    <div className='flex-1'>
-                      <CardTitle className='text-base'>
-                        Awards & Recognition
-                      </CardTitle>
-                      <CardDescription className='text-xs'>
-                        Honors and achievements
-                      </CardDescription>
-                    </div>
-                    <CollapsibleTrigger asChild>
-                      <Button variant='ghost' size='sm' className='h-8 w-8 p-0'>
-                        <ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
-                        <span className='sr-only'>Toggle awards</span>
-                      </Button>
-                    </CollapsibleTrigger>
-                  </div>
-                </CardHeader>
-                <CollapsibleContent>
-                  <CardContent className='pt-0'>
-                    {doctor?.awards && doctor.awards.length > 0 ? (
-                      <ul className='space-y-2'>
-                        {doctor.awards.map((award: string, idx: number) => (
-                          <li key={idx} className='text-sm'>
-                            🏆 {award}
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <EmptyField text='No awards listed' />
-                    )}
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
+            <CollapsibleSection
+              title='Awards & Recognition'
+              description='Honors and achievements'
+              defaultOpen={false}
+            >
+              {doctor?.awards && doctor.awards.length > 0 ? (
+                <ul className='space-y-2'>
+                  {doctor.awards.map((award: string, idx: number) => (
+                    <li key={idx} className='text-sm'>
+                      🏆 {award}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <EmptyField text='No awards listed' />
+              )}
+            </CollapsibleSection>
           </div>
         </div>
       </Main>
