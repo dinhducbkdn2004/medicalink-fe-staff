@@ -4,7 +4,6 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { staffRoles } from '../data/data'
 import { type Staff } from '../data/schema'
-import { DataTableRowActions } from './data-table-row-actions'
 
 export const staffsColumns: ColumnDef<Staff>[] = [
   {
@@ -179,17 +178,6 @@ export const staffsColumns: ColumnDef<Staff>[] = [
     enableSorting: true, // API supports sorting
     meta: {
       className: 'min-w-[130px]',
-    },
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => <DataTableRowActions row={row} />,
-    meta: {
-      className: 'w-[60px]',
-      thClassName:
-        'sticky right-0 z-20 bg-background shadow-[-2px_0_4px_-2px_rgba(0,0,0,0.1)]',
-      tdClassName:
-        'sticky right-0 z-10 bg-background shadow-[-2px_0_4px_-2px_rgba(0,0,0,0.1)] group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
     },
   },
 ]

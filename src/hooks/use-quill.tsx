@@ -1,151 +1,112 @@
-/**
- * Custom hook for managing Quill editor instance
- *
- * Triển khai theo hướng dẫn: docs/HUONG_DAN_SU_DUNG_QUILL.md
- *
- * Handles initialization, cleanup, and editor operations:
- * - Khởi tạo Quill instance với options
- * - Xử lý events (text-change, selection-change)
- * - Cleanup khi unmount
- * - TypeScript type safety
- */
 import { useEffect, useRef, useState } from 'react'
-import Quill, { type QuillOptions } from 'quill'
+import Quill from 'quill'
+import type { QuillOptions } from 'quill'
 
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface UseQuillOptions extends Omit<QuillOptions, 'theme'> {
-  theme?: 'snow' | 'bubble' | null
+interface UseQuillOptions {
+  theme?: QuillOptions['theme']
+  modules?: QuillOptions['modules']
+  placeholder?: string
+  readOnly?: boolean
   onTextChange?: (delta: any, oldDelta: any, source: string) => void
-  onSelectionChange?: (range: any, oldRange: any, source: string) => void
 }
 
-export interface UseQuillReturn {
+interface UseQuillReturn {
   quill: Quill | null
-  quillRef: React.RefObject<HTMLDivElement | null>
+  quillRef: React.RefObject<HTMLDivElement>
   isReady: boolean
 }
 
-// ============================================================================
-// Hook
-// ============================================================================
-
 /**
- * Hook to initialize and manage a Quill editor instance
- *
- * Theo hướng dẫn: Khởi Tạo Editor với custom options
- *
- * @example
- * ```tsx
- * const { quill, quillRef, isReady } = useQuill({
- *   theme: 'snow',
- *   placeholder: 'Enter text...',
- *   modules: {
- *     toolbar: [['bold', 'italic'], ['link', 'image']],
- *     history: {
- *       delay: 1000,
- *       maxStack: 100,
- *       userOnly: true
- *     }
- *   },
- *   onTextChange: (delta, oldDelta, source) => {
- *     console.log('Content changed', delta);
- *   }
- * });
- * ```
+ * Custom hook for Quill editor that prevents duplicate toolbar initialization
+ * @param options - Quill configuration options
+ * @returns Object containing quill instance, ref, and ready state
  */
-export function useQuill(options: UseQuillOptions = {}): UseQuillReturn {
-  const {
-    theme = 'snow',
-    onTextChange,
-    onSelectionChange,
-    ...quillOptions
-  } = options
-
-  const quillRef = useRef<HTMLDivElement>(null)
+export function useQuill(options: UseQuillOptions): UseQuillReturn {
+  const quillRef = useRef<HTMLDivElement | null>(null)
   const [quill, setQuill] = useState<Quill | null>(null)
   const [isReady, setIsReady] = useState(false)
 
-  // Initialize Quill instance
-  // Theo hướng dẫn: Khởi tạo Quill với container và options
-  useEffect(() => {
-    if (!quillRef.current) return
+  // Store initialization flag to prevent multiple inits
+  const isInitialized = useRef(false)
 
-    // Clear any existing content to prevent duplicate toolbars
-    const container = quillRef.current
-    
-    // Remove all existing child elements (toolbar and editor)
-    while (container.firstChild) {
-      container.removeChild(container.firstChild)
+  // Store callback ref to avoid stale closures
+  const onTextChangeRef = useRef(options.onTextChange)
+
+  // Update callback ref when it changes
+  useEffect(() => {
+    onTextChangeRef.current = options.onTextChange
+  }, [options.onTextChange])
+
+  // Initialize Quill editor only once
+  useEffect(() => {
+    if (!quillRef.current || isInitialized.current) {
+      return
     }
 
-    // Khởi tạo Quill instance
-    const quillInstance = new Quill(container, {
-      theme: theme ?? undefined,
-      ...quillOptions,
-    })
+    // Mark as initialized before creating instance
+    isInitialized.current = true
 
-    setQuill(quillInstance)
-    setIsReady(true)
+    try {
+      // Create Quill instance with provided options
+      const instance = new Quill(quillRef.current, {
+        theme: options.theme ?? 'snow',
+        modules: options.modules,
+        placeholder: options.placeholder ?? 'Start typing...',
+        readOnly: options.readOnly ?? false,
+      })
 
-    // Cleanup khi component unmount
-    return () => {
-      // Properly cleanup Quill instance
-      if (quillInstance) {
-        // Remove all event listeners
-        quillInstance.off('text-change')
-        quillInstance.off('selection-change')
-      }
-      
-      // Clear the container on cleanup
-      if (container) {
-        while (container.firstChild) {
-          container.removeChild(container.firstChild)
+      // Setup text-change listener with ref to avoid stale closure
+      const textChangeHandler = (delta: any, oldDelta: any, source: string) => {
+        if (onTextChangeRef.current) {
+          onTextChangeRef.current(delta, oldDelta, source)
         }
       }
-      setQuill(null)
-      setIsReady(false)
+
+      instance.on('text-change', textChangeHandler)
+
+      setQuill(instance)
+      setIsReady(true)
+
+      // Cleanup function
+      return () => {
+        try {
+          // Remove event listener
+          instance.off('text-change', textChangeHandler)
+
+          // Clear editor content
+          if (instance.root) {
+            instance.root.innerHTML = ''
+          }
+
+          // Remove toolbar if exists
+          const toolbar =
+            instance.root.parentElement?.querySelector('.ql-toolbar')
+          if (toolbar) {
+            toolbar.remove()
+          }
+
+          // Reset state
+          setIsReady(false)
+          setQuill(null)
+          isInitialized.current = false
+        } catch (error) {
+          console.error('Error cleaning up Quill editor:', error)
+        }
+      }
+    } catch (error) {
+      console.error('Error initializing Quill editor:', error)
+      isInitialized.current = false
+      return
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []) // ✅ Empty deps - initialize only once
 
-  // Text change handler
-  // Theo hướng dẫn: Lắng nghe sự kiện text-change
+  // Update readOnly state when it changes
   useEffect(() => {
-    if (!quill || !onTextChange) return
-
-    const handler = (delta: any, oldDelta: any, source: string) => {
-      onTextChange(delta, oldDelta, source)
+    if (quill && typeof options.readOnly === 'boolean') {
+      quill.enable(!options.readOnly)
     }
-
-    // Đăng ký event listener
-    quill.on('text-change', handler)
-
-    // Cleanup: Hủy đăng ký khi unmount
-    return () => {
-      quill.off('text-change', handler)
-    }
-  }, [quill, onTextChange])
-
-  // Selection change handler
-  // Theo hướng dẫn: Lắng nghe sự kiện selection-change
-  useEffect(() => {
-    if (!quill || !onSelectionChange) return
-
-    const handler = (range: any, oldRange: any, source: string) => {
-      onSelectionChange(range, oldRange, source)
-    }
-
-    // Đăng ký event listener
-    quill.on('selection-change', handler)
-
-    // Cleanup: Hủy đăng ký khi unmount
-    return () => {
-      quill.off('selection-change', handler)
-    }
-  }, [quill, onSelectionChange])
+  }, [quill, options.readOnly])
 
   return { quill, quillRef, isReady }
 }

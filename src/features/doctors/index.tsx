@@ -44,9 +44,21 @@ export function Doctors() {
     page: (search.page as number) || 1,
     limit: (search.pageSize as number) || 10,
     search: (search.search as string) || undefined,
-    isActive: search.isActive === 'true' ? true : search.isActive === 'false' ? false : undefined,
-    isMale: search.isMale === 'true' ? true : search.isMale === 'false' ? false : undefined,
-    sortBy: (search.sortBy as 'createdAt' | 'fullName' | 'email' | undefined) || undefined,
+    isActive:
+      search.isActive === 'true'
+        ? true
+        : search.isActive === 'false'
+          ? false
+          : undefined,
+    isMale:
+      search.isMale === 'true'
+        ? true
+        : search.isMale === 'false'
+          ? false
+          : undefined,
+    sortBy:
+      (search.sortBy as 'createdAt' | 'fullName' | 'email' | undefined) ||
+      undefined,
     sortOrder: (search.sortOrder as 'asc' | 'desc' | undefined) || undefined,
     createdFrom: (search.createdFrom as string | undefined) || undefined,
     createdTo: (search.createdTo as string | undefined) || undefined,

@@ -6,9 +6,8 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate, useParams } from '@tanstack/react-router'
+import { useParams } from '@tanstack/react-router'
 import {
-  ArrowLeft,
   Loader2,
   Save,
   X,
@@ -18,12 +17,19 @@ import {
   Stethoscope,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
 import { useAuth } from '@/hooks/use-auth'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Form } from '@/components/ui/form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ConfigDrawer } from '@/components/config-drawer'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
 import { ProfileSidebar } from '../components/profile-sidebar'
 import {
   AcademicTab,
@@ -40,6 +46,7 @@ import {
   type UpdateDoctorProfileFormData,
 } from '../types'
 import { canEditOwnProfile } from '../utils/permissions'
+import type { CompleteDoctorData } from '@/api/types/doctor.types'
 
 export interface DoctorProfileFormProps {
   onCancel?: () => void
@@ -49,27 +56,10 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
   const { doctorId } = useParams({
     from: '/_authenticated/doctors/$doctorId/profile',
   })
-  const navigate = useNavigate()
-  const { user, accessToken } = useAuth()
+  const { user } = useAuth()
+  const accessToken = useAuthStore((state) => state.accessToken)
 
-  // Check permissions
-  if (!canEditOwnProfile(user, doctorId)) {
-    return (
-      <div className='flex h-screen items-center justify-center'>
-        <div className='text-center'>
-          <h2 className='text-2xl font-bold'>Access Denied</h2>
-          <p className='text-muted-foreground mt-2'>
-            You do not have permission to edit this profile.
-          </p>
-          <Button onClick={() => navigate({ to: '/doctors' })} className='mt-4'>
-            Back to Doctors
-          </Button>
-        </div>
-      </div>
-    )
-  }
-
-  // Data fetching
+  // Data fetching - MUST be called before any early returns
   const { data: completeData, isLoading } = useCompleteDoctor(doctorId)
   const { data: specialties = [], isLoading: loadingSpecialties } =
     useActiveSpecialties()
@@ -78,8 +68,12 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
   const { mutate: updateProfile, isPending: isUpdating } =
     useUpdateDoctorProfile()
 
+  // Explicit type assertion to help TypeScript (flat structure from API)
+  const doctor = completeData as CompleteDoctorData | undefined
+
   // Form setup
   const form = useForm<UpdateDoctorProfileFormData>({
+    // @ts-expect-error Zod version mismatch with @hookform/resolvers (known issue)
     resolver: zodResolver(updateDoctorProfileSchema),
     defaultValues: {
       degree: '',
@@ -97,34 +91,49 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
     },
   })
 
-  // Load existing data
+  // Load existing data from flat structure (API returns merged account + profile)
   useEffect(() => {
-    if (completeData) {
+    if (doctor) {
       form.reset({
-        degree: completeData.degree || '',
-        position: completeData.position || [],
-        introduction: completeData.introduction || '',
-        memberships: completeData.memberships || [],
-        awards: completeData.awards || [],
-        research: completeData.research || '',
-        trainingProcess: completeData.trainingProcess || [],
-        experience: completeData.experience || [],
-        avatarUrl: completeData.avatarUrl || '',
-        portrait: completeData.portrait || '',
-        specialtyIds: completeData.specialties?.map((s) => s.id) || [],
-        locationIds: completeData.workLocations?.map((l) => l.id) || [],
+        degree: doctor.degree || '',
+        position: doctor.position || [],
+        introduction: doctor.introduction || '',
+        memberships: doctor.memberships || [],
+        awards: doctor.awards || [],
+        research: doctor.research || '',
+        trainingProcess: doctor.trainingProcess || [],
+        experience: doctor.experience || [],
+        avatarUrl: doctor.avatarUrl || '',
+        portrait: doctor.portrait || '',
+        specialtyIds: doctor.specialties?.map((s) => s.id) || [],
+        locationIds: doctor.workLocations?.map((l) => l.id) || [],
       })
     }
-  }, [completeData, form])
+  }, [doctor, form])
+
+  // Check permissions AFTER all hooks
+  const hasPermission = canEditOwnProfile(user, doctorId)
+  if (!hasPermission) {
+    return (
+      <div className='flex min-h-[400px] items-center justify-center'>
+        <div className='text-center'>
+          <h2 className='text-2xl font-bold'>Access Denied</h2>
+          <p className='text-muted-foreground mt-2'>
+            You do not have permission to edit this profile.
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   const onSubmit = (data: UpdateDoctorProfileFormData) => {
-    if (!completeData?.profileId) {
+    if (!doctor?.profileId) {
       toast.error('Profile ID not found')
       return
     }
 
     updateProfile(
-      { id: completeData.profileId, data },
+      { id: doctor.profileId, data },
       {
         onSuccess: () => {
           toast.success('Profile updated successfully')
@@ -136,50 +145,52 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
     )
   }
 
-  const handleBack = () => {
+  const handleCancel = () => {
     if (onCancel) {
       onCancel()
-    } else {
-      navigate({ to: '/doctors' })
     }
   }
 
-  // Loading state
   if (isLoading) {
     return (
-      <div className='flex h-screen items-center justify-center'>
-        <div className='text-center'>
-          <Loader2 className='text-primary mx-auto h-8 w-8 animate-spin' />
-          <p className='text-muted-foreground mt-4'>Loading profile...</p>
+      <div className='flex h-screen w-full items-center justify-center'>
+        <div className='flex flex-col items-center gap-2'>
+          <Loader2 className='h-8 w-8 animate-spin text-primary' />
+          <p className='text-muted-foreground text-sm'>Loading...</p>
         </div>
       </div>
     )
   }
 
   // Not found state
-  if (!completeData) {
+  if (!doctor) {
     return (
-      <div className='flex h-screen items-center justify-center'>
+      <div className='flex min-h-[400px] items-center justify-center'>
         <div className='text-center'>
           <p className='text-lg font-medium'>Doctor not found</p>
-          <Button onClick={handleBack} className='mt-4'>
-            Back to Doctors
-          </Button>
+          <p className='text-muted-foreground mt-2 text-sm'>
+            The requested doctor profile does not exist
+          </p>
         </div>
       </div>
     )
   }
 
-  const doctor = completeData
+  // API returns flat structure (account + profile merged) - already typed above
 
   return (
-    <div className='container mx-auto max-w-6xl py-6'>
-      {/* Header */}
-      <div className='mb-6'>
-        <Button variant='ghost' onClick={handleBack} className='mb-4'>
-          <ArrowLeft className='mr-2 h-4 w-4' />
-          Back to Profile
-        </Button>
+    <>
+      <Header fixed>
+        <Search />
+        <div className='ms-auto flex items-center space-x-4'>
+          <ThemeSwitch />
+          <ConfigDrawer />
+          <ProfileDropdown />
+        </div>
+      </Header>
+
+      <Main className='flex flex-1 flex-col gap-6'>
+        {/* Page Header */}
         <div className='flex items-start justify-between'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
@@ -193,130 +204,139 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
             {doctor.isActive ? 'Active' : 'Inactive'}
           </Badge>
         </div>
-      </div>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-          <div className='grid gap-4 md:grid-cols-[300px_1fr]'>
-            {/* LEFT COLUMN - Enhanced Profile Sidebar */}
-            <ProfileSidebar
-              form={form}
-              doctor={doctor}
-              accessToken={accessToken || ''}
-            />
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+            <div className='grid gap-4 md:grid-cols-[300px_1fr]'>
+              {/* LEFT COLUMN - Enhanced Profile Sidebar */}
+              <ProfileSidebar
+                form={form}
+                doctor={doctor}
+                accessToken={accessToken || ''}
+              />
 
-            {/* RIGHT COLUMN - Tabbed Profile Details */}
-            <div className='space-y-4'>
-              <Card>
-                <CardContent className='p-6'>
-                  <Tabs defaultValue='academic' className='flex flex-col gap-2 w-full'>
-                    <TabsList className='grid w-full grid-cols-4'>
-                      <TabsTrigger value='academic' className='gap-2 text-xs'>
-                        <Briefcase className='h-4 w-4' />
-                        <span className='hidden sm:inline'>Academic</span>
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value='professional'
-                        className='gap-2 text-xs'
-                      >
-                        <Stethoscope className='h-4 w-4' />
-                        <span className='hidden sm:inline'>Professional</span>
-                      </TabsTrigger>
-                      <TabsTrigger value='education' className='gap-2 text-xs'>
-                        <GraduationCap className='h-4 w-4' />
-                        <span className='hidden sm:inline'>Education</span>
-                      </TabsTrigger>
-                      <TabsTrigger value='locations' className='gap-2 text-xs'>
-                        <MapPin className='h-4 w-4' />
-                        <span className='hidden sm:inline'>Locations</span>
-                      </TabsTrigger>
-                    </TabsList>
+              {/* RIGHT COLUMN - Tabbed Profile Details */}
+              <div className='space-y-4'>
+                <Card>
+                  <CardContent className='p-6'>
+                    <Tabs
+                      defaultValue='academic'
+                      className='flex w-full flex-col gap-2'
+                    >
+                      <TabsList className='grid w-full grid-cols-4'>
+                        <TabsTrigger value='academic' className='gap-2 text-xs'>
+                          <Briefcase className='h-4 w-4' />
+                          <span className='hidden sm:inline'>Academic</span>
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value='professional'
+                          className='gap-2 text-xs'
+                        >
+                          <Stethoscope className='h-4 w-4' />
+                          <span className='hidden sm:inline'>Professional</span>
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value='education'
+                          className='gap-2 text-xs'
+                        >
+                          <GraduationCap className='h-4 w-4' />
+                          <span className='hidden sm:inline'>Education</span>
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value='locations'
+                          className='gap-2 text-xs'
+                        >
+                          <MapPin className='h-4 w-4' />
+                          <span className='hidden sm:inline'>Locations</span>
+                        </TabsTrigger>
+                      </TabsList>
 
-                    {/* Tab 1: Academic & Professional Titles */}
-                    <TabsContent value='academic' className='pt-4'>
-                      <AcademicTab form={form} />
-                    </TabsContent>
+                      {/* Tab 1: Academic & Professional Titles */}
+                      <TabsContent value='academic' className='pt-4'>
+                        <AcademicTab form={form} />
+                      </TabsContent>
 
-                    {/* Tab 2: Professional Info (Introduction & Research) */}
-                    <TabsContent value='professional' className='pt-4'>
-                      <ProfessionalTab
-                        form={form}
-                        accessToken={accessToken || ''}
-                      />
-                    </TabsContent>
+                      {/* Tab 2: Professional Info (Introduction & Research) */}
+                      <TabsContent value='professional' className='pt-4'>
+                        <ProfessionalTab
+                          form={form}
+                          accessToken={accessToken || ''}
+                        />
+                      </TabsContent>
 
-                    {/* Tab 3: Education & Experience */}
-                    <TabsContent value='education' className='pt-4'>
-                      <EducationTab form={form} />
-                    </TabsContent>
+                      {/* Tab 3: Education & Experience */}
+                      <TabsContent value='education' className='pt-4'>
+                        <EducationTab form={form} />
+                      </TabsContent>
 
-                    {/* Tab 4: Specialties & Work Locations */}
-                    <TabsContent value='locations' className='pt-4'>
-                      <LocationsTab
-                        form={form}
-                        specialties={specialties}
-                        workLocations={workLocations}
-                        loadingSpecialties={loadingSpecialties}
-                        loadingLocations={loadingLocations}
-                      />
-                    </TabsContent>
-                  </Tabs>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
-          {/* Enhanced Sticky Footer Actions */}
-          <div className='bg-background/95 sticky bottom-0 z-10 flex items-center justify-between gap-4 border-t px-6 py-4 shadow-lg backdrop-blur-sm'>
-            {/* Left side - Unsaved changes indicator */}
-            <div className='flex items-center gap-2'>
-              {form.formState.isDirty && !isUpdating && (
-                <div className='flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400'>
-                  <div className='h-2 w-2 animate-pulse rounded-full bg-amber-500' />
-                  <span className='font-medium'>Unsaved changes</span>
-                </div>
-              )}
-              {!form.formState.isDirty && !isUpdating && (
-                <div className='flex items-center gap-2 text-sm text-green-600 dark:text-green-400'>
-                  <div className='h-2 w-2 rounded-full bg-green-500' />
-                  <span className='font-medium'>All changes saved</span>
-                </div>
-              )}
+                      {/* Tab 4: Specialties & Work Locations */}
+                      <TabsContent value='locations' className='pt-4'>
+                        <LocationsTab
+                          form={form}
+                          specialties={specialties}
+                          workLocations={workLocations}
+                          loadingSpecialties={loadingSpecialties}
+                          loadingLocations={loadingLocations}
+                        />
+                      </TabsContent>
+                    </Tabs>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
 
-            {/* Right side - Action buttons */}
-            <div className='flex gap-3'>
-              <Button
-                type='button'
-                variant='outline'
-                onClick={handleBack}
-                disabled={isUpdating}
-                className='shadow-sm'
-              >
-                <X className='mr-2 h-4 w-4' />
-                Cancel
-              </Button>
-              <Button
-                type='submit'
-                disabled={isUpdating || !form.formState.isDirty}
-                className='shadow-sm'
-              >
-                {isUpdating ? (
-                  <>
-                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className='mr-2 h-4 w-4' />
-                    Save Changes
-                  </>
+            {/* Enhanced Sticky Footer Actions */}
+            <div className='bg-background/95 sticky bottom-0 z-10 flex items-center justify-between gap-4 border-t px-6 py-4 shadow-lg backdrop-blur-sm'>
+              {/* Left side - Unsaved changes indicator */}
+              <div className='flex items-center gap-2'>
+                {form.formState.isDirty && !isUpdating && (
+                  <div className='flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400'>
+                    <div className='h-2 w-2 animate-pulse rounded-full bg-amber-500' />
+                    <span className='font-medium'>Unsaved changes</span>
+                  </div>
                 )}
-              </Button>
+                {!form.formState.isDirty && !isUpdating && (
+                  <div className='flex items-center gap-2 text-sm text-green-600 dark:text-green-400'>
+                    <div className='h-2 w-2 rounded-full bg-green-500' />
+                    <span className='font-medium'>All changes saved</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Right side - Action buttons */}
+              <div className='flex gap-3'>
+                <Button
+                  type='button'
+                  variant='outline'
+                  onClick={handleCancel}
+                  disabled={isUpdating || !onCancel}
+                  className='shadow-sm'
+                >
+                  <X className='mr-2 h-4 w-4' />
+                  Cancel
+                </Button>
+                <Button
+                  type='submit'
+                  disabled={isUpdating || !form.formState.isDirty}
+                  className='shadow-sm'
+                >
+                  {isUpdating ? (
+                    <>
+                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className='mr-2 h-4 w-4' />
+                      Save Changes
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
-          </div>
-        </form>
-      </Form>
-    </div>
+          </form>
+        </Form>
+      </Main>
+    </>
   )
 }
