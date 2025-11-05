@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from '@tanstack/react-router'
 import { Edit, Mail, Phone, User, ChevronDown, Loader2 } from 'lucide-react'
+import type { CompleteDoctorData } from '@/api/types/doctor.types'
 import { useAuth } from '@/hooks/use-auth'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -31,7 +32,6 @@ import { RichTextDisplay } from '../components/rich-text-editor'
 import { useCompleteDoctor } from '../data/use-doctors'
 import { canEditOwnProfile } from '../utils/permissions'
 import { DoctorProfileForm } from './doctor-profile-form'
-import type { CompleteDoctorData } from '@/api/types/doctor.types'
 
 // ============================================================================
 // Empty Field Component
@@ -163,7 +163,7 @@ export function DoctorProfileView() {
         {/* Empty Profile Warning */}
         {!hasProfile && (
           <Card className='border-yellow-500/50 bg-yellow-500/10'>
-            <CardContent >
+            <CardContent>
               <div className='flex items-center gap-3'>
                 <div className='rounded-full bg-yellow-500/20 p-2'>
                   <User className='h-5 w-5 text-yellow-600' />
@@ -185,7 +185,7 @@ export function DoctorProfileView() {
           <div className='space-y-4'>
             {/* Avatar Card */}
             <Card>
-              <CardContent >
+              <CardContent>
                 <div className='flex flex-col items-center text-center'>
                   {/* Avatar with Image Preview */}
                   {doctor?.avatarUrl ? (
@@ -320,11 +320,13 @@ export function DoctorProfileView() {
                   <CardContent className='pt-0'>
                     {doctor?.specialties && doctor.specialties.length > 0 ? (
                       <div className='flex flex-wrap gap-2'>
-                        {doctor.specialties.map((specialty: { id: string; name: string }) => (
-                          <Badge key={specialty.id} variant='outline'>
-                            {specialty.name}
-                          </Badge>
-                        ))}
+                        {doctor.specialties.map(
+                          (specialty: { id: string; name: string }) => (
+                            <Badge key={specialty.id} variant='outline'>
+                              {specialty.name}
+                            </Badge>
+                          )
+                        )}
                       </div>
                     ) : (
                       <EmptyField text='No specialties assigned' />
@@ -353,16 +355,22 @@ export function DoctorProfileView() {
                     {doctor?.workLocations &&
                     doctor.workLocations.length > 0 ? (
                       <ul className='space-y-3'>
-                        {doctor.workLocations.map((location: { id: string; name: string; address?: string }) => (
-                          <li key={location.id} className='text-sm'>
-                            <div className='font-medium'>{location.name}</div>
-                            {location.address && (
-                              <div className='text-muted-foreground text-xs'>
-                                {location.address}
-                              </div>
-                            )}
-                          </li>
-                        ))}
+                        {doctor.workLocations.map(
+                          (location: {
+                            id: string
+                            name: string
+                            address?: string
+                          }) => (
+                            <li key={location.id} className='text-sm'>
+                              <div className='font-medium'>{location.name}</div>
+                              {location.address && (
+                                <div className='text-muted-foreground text-xs'>
+                                  {location.address}
+                                </div>
+                              )}
+                            </li>
+                          )
+                        )}
                       </ul>
                     ) : (
                       <EmptyField text='No work locations assigned' />
@@ -371,7 +379,6 @@ export function DoctorProfileView() {
                 </CollapsibleContent>
               </Card>
             </Collapsible>
-            
           </div>
 
           {/* Right Column - Detailed Information */}
@@ -466,14 +473,16 @@ export function DoctorProfileView() {
                     {doctor?.trainingProcess &&
                     doctor.trainingProcess.length > 0 ? (
                       <ul className='space-y-3'>
-                        {doctor.trainingProcess.map((training: string, idx: number) => (
-                          <li key={idx} className='flex gap-3'>
-                            <div className='bg-primary/10 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full'>
-                              <div className='bg-primary h-2 w-2 rounded-full' />
-                            </div>
-                            <p className='text-sm'>{training}</p>
-                          </li>
-                        ))}
+                        {doctor.trainingProcess.map(
+                          (training: string, idx: number) => (
+                            <li key={idx} className='flex gap-3'>
+                              <div className='bg-primary/10 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full'>
+                                <div className='bg-primary h-2 w-2 rounded-full' />
+                              </div>
+                              <p className='text-sm'>{training}</p>
+                            </li>
+                          )
+                        )}
                       </ul>
                     ) : (
                       <EmptyField text='No training process documented' />
@@ -550,11 +559,13 @@ export function DoctorProfileView() {
                   <CardContent className='pt-0'>
                     {doctor?.memberships && doctor.memberships.length > 0 ? (
                       <ul className='space-y-2'>
-                        {doctor.memberships.map((membership: string, idx: number) => (
-                          <li key={idx} className='text-sm'>
-                            • {membership}
-                          </li>
-                        ))}
+                        {doctor.memberships.map(
+                          (membership: string, idx: number) => (
+                            <li key={idx} className='text-sm'>
+                              • {membership}
+                            </li>
+                          )
+                        )}
                       </ul>
                     ) : (
                       <EmptyField text='No memberships listed' />
@@ -567,7 +578,7 @@ export function DoctorProfileView() {
             {/* Awards */}
             <Collapsible defaultOpen={false}>
               <Card>
-                  <CardHeader>
+                <CardHeader>
                   <div className='flex items-center justify-between'>
                     <div className='flex-1'>
                       <CardTitle className='text-base'>

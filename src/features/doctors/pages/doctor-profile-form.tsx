@@ -17,6 +17,7 @@ import {
   Stethoscope,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import type { CompleteDoctorData } from '@/api/types/doctor.types'
 import { useAuthStore } from '@/stores/auth-store'
 import { useAuth } from '@/hooks/use-auth'
 import { Badge } from '@/components/ui/badge'
@@ -46,7 +47,6 @@ import {
   type UpdateDoctorProfileFormData,
 } from '../types'
 import { canEditOwnProfile } from '../utils/permissions'
-import type { CompleteDoctorData } from '@/api/types/doctor.types'
 
 export interface DoctorProfileFormProps {
   onCancel?: () => void
@@ -155,7 +155,7 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
     return (
       <div className='flex h-screen w-full items-center justify-center'>
         <div className='flex flex-col items-center gap-2'>
-          <Loader2 className='h-8 w-8 animate-spin text-primary' />
+          <Loader2 className='text-primary h-8 w-8 animate-spin' />
           <p className='text-muted-foreground text-sm'>Loading...</p>
         </div>
       </div>
