@@ -9,6 +9,7 @@ import type {
   DoctorQueryParams,
   CreateDoctorRequest,
   UpdateDoctorAccountRequest,
+  CompleteDoctorData,
 } from '@/api/types/doctor.types'
 
 // ============================================================================
@@ -66,7 +67,7 @@ export function useDoctor(id: string | undefined) {
  * Hook to fetch complete doctor data (account + profile)
  */
 export function useCompleteDoctor(id: string | undefined, skipCache = true) {
-  return useQuery({
+  return useQuery<CompleteDoctorData>({
     queryKey: [...doctorKeys.complete(id!), skipCache] as const,
     queryFn: () => doctorService.getCompleteDoctorById(id!, skipCache),
     enabled: !!id,
