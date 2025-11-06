@@ -22,10 +22,13 @@ import { Route as authOtpRouteImport } from './routes/(auth)/otp'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
+import { Route as AuthenticatedUserPermissionIndexRouteImport } from './routes/_authenticated/user-permission/index'
+import { Route as AuthenticatedUserGroupIndexRouteImport } from './routes/_authenticated/user-group/index'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedStaffsIndexRouteImport } from './routes/_authenticated/staffs/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
+import { Route as AuthenticatedGroupManagerIndexRouteImport } from './routes/_authenticated/group-manager/index'
 import { Route as AuthenticatedDoctorsIndexRouteImport } from './routes/_authenticated/doctors.index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
@@ -101,6 +104,18 @@ const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
   path: '/users/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedUserPermissionIndexRoute =
+  AuthenticatedUserPermissionIndexRouteImport.update({
+    id: '/user-permission/',
+    path: '/user-permission/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedUserGroupIndexRoute =
+  AuthenticatedUserGroupIndexRouteImport.update({
+    id: '/user-group/',
+    path: '/user-group/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
   id: '/tasks/',
   path: '/tasks/',
@@ -122,6 +137,12 @@ const AuthenticatedHelpCenterIndexRoute =
   AuthenticatedHelpCenterIndexRouteImport.update({
     id: '/help-center/',
     path: '/help-center/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedGroupManagerIndexRoute =
+  AuthenticatedGroupManagerIndexRouteImport.update({
+    id: '/group-manager/',
+    path: '/group-manager/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDoctorsIndexRoute =
@@ -197,10 +218,13 @@ export interface FileRoutesByFullPath {
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/doctors': typeof AuthenticatedDoctorsIndexRoute
+  '/group-manager': typeof AuthenticatedGroupManagerIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/staffs': typeof AuthenticatedStaffsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
+  '/user-group': typeof AuthenticatedUserGroupIndexRoute
+  '/user-permission': typeof AuthenticatedUserPermissionIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
@@ -223,10 +247,13 @@ export interface FileRoutesByTo {
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/doctors': typeof AuthenticatedDoctorsIndexRoute
+  '/group-manager': typeof AuthenticatedGroupManagerIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/staffs': typeof AuthenticatedStaffsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
+  '/user-group': typeof AuthenticatedUserGroupIndexRoute
+  '/user-permission': typeof AuthenticatedUserPermissionIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
@@ -252,10 +279,13 @@ export interface FileRoutesById {
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/doctors/': typeof AuthenticatedDoctorsIndexRoute
+  '/_authenticated/group-manager/': typeof AuthenticatedGroupManagerIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/staffs/': typeof AuthenticatedStaffsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
+  '/_authenticated/user-group/': typeof AuthenticatedUserGroupIndexRoute
+  '/_authenticated/user-permission/': typeof AuthenticatedUserPermissionIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
@@ -281,10 +311,13 @@ export interface FileRouteTypes {
     | '/apps'
     | '/chats'
     | '/doctors'
+    | '/group-manager'
     | '/help-center'
     | '/settings/'
     | '/staffs'
     | '/tasks'
+    | '/user-group'
+    | '/user-permission'
     | '/users'
     | '/doctors/$doctorId/profile'
   fileRoutesByTo: FileRoutesByTo
@@ -307,10 +340,13 @@ export interface FileRouteTypes {
     | '/apps'
     | '/chats'
     | '/doctors'
+    | '/group-manager'
     | '/help-center'
     | '/settings'
     | '/staffs'
     | '/tasks'
+    | '/user-group'
+    | '/user-permission'
     | '/users'
     | '/doctors/$doctorId/profile'
   id:
@@ -335,10 +371,13 @@ export interface FileRouteTypes {
     | '/_authenticated/apps/'
     | '/_authenticated/chats/'
     | '/_authenticated/doctors/'
+    | '/_authenticated/group-manager/'
     | '/_authenticated/help-center/'
     | '/_authenticated/settings/'
     | '/_authenticated/staffs/'
     | '/_authenticated/tasks/'
+    | '/_authenticated/user-group/'
+    | '/_authenticated/user-permission/'
     | '/_authenticated/users/'
     | '/_authenticated/doctors/$doctorId/profile'
   fileRoutesById: FileRoutesById
@@ -449,6 +488,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUsersIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/user-permission/': {
+      id: '/_authenticated/user-permission/'
+      path: '/user-permission'
+      fullPath: '/user-permission'
+      preLoaderRoute: typeof AuthenticatedUserPermissionIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/user-group/': {
+      id: '/_authenticated/user-group/'
+      path: '/user-group'
+      fullPath: '/user-group'
+      preLoaderRoute: typeof AuthenticatedUserGroupIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/tasks/': {
       id: '/_authenticated/tasks/'
       path: '/tasks'
@@ -475,6 +528,13 @@ declare module '@tanstack/react-router' {
       path: '/help-center'
       fullPath: '/help-center'
       preLoaderRoute: typeof AuthenticatedHelpCenterIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/group-manager/': {
+      id: '/_authenticated/group-manager/'
+      path: '/group-manager'
+      fullPath: '/group-manager'
+      preLoaderRoute: typeof AuthenticatedGroupManagerIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/doctors/': {
@@ -573,9 +633,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedDoctorsIndexRoute: typeof AuthenticatedDoctorsIndexRoute
+  AuthenticatedGroupManagerIndexRoute: typeof AuthenticatedGroupManagerIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedStaffsIndexRoute: typeof AuthenticatedStaffsIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
+  AuthenticatedUserGroupIndexRoute: typeof AuthenticatedUserGroupIndexRoute
+  AuthenticatedUserPermissionIndexRoute: typeof AuthenticatedUserPermissionIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedDoctorsDoctorIdProfileRoute: typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
@@ -587,9 +650,12 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedDoctorsIndexRoute: AuthenticatedDoctorsIndexRoute,
+  AuthenticatedGroupManagerIndexRoute: AuthenticatedGroupManagerIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedStaffsIndexRoute: AuthenticatedStaffsIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
+  AuthenticatedUserGroupIndexRoute: AuthenticatedUserGroupIndexRoute,
+  AuthenticatedUserPermissionIndexRoute: AuthenticatedUserPermissionIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedDoctorsDoctorIdProfileRoute:
     AuthenticatedDoctorsDoctorIdProfileRoute,
