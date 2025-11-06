@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import type { DoctorWithProfile } from '../types'
+import { DataTableRowActions } from './data-table-row-actions'
 
 export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
   {
@@ -219,5 +220,12 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
       )
     },
     enableSorting: true, // API supports sorting
+  },
+  {
+    id: 'actions',
+    cell: DataTableRowActions,
+    meta: {
+      className: 'w-[50px]',
+    },
   },
 ]
