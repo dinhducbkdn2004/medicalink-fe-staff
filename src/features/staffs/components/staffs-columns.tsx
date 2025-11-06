@@ -4,6 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { staffRoles } from '../data/data'
 import { type Staff } from '../data/schema'
+import { DataTableRowActions } from './data-table-row-actions'
 
 export const staffsColumns: ColumnDef<Staff>[] = [
   {
@@ -178,6 +179,13 @@ export const staffsColumns: ColumnDef<Staff>[] = [
     enableSorting: true, // API supports sorting
     meta: {
       className: 'min-w-[130px]',
+    },
+  },
+  {
+    id: 'actions',
+    cell: DataTableRowActions,
+    meta: {
+      className: 'w-[50px]',
     },
   },
 ]
