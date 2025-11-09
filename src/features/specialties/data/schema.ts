@@ -10,8 +10,7 @@ import type {
 // Re-export API types
 export type { Specialty, SpecialtyInfoSection }
 
-// Extended types for UI components
-// Currently using base types, but can be extended with UI-specific fields later
+// Type aliases for UI components
+// These allow for future extension without breaking changes
 export type SpecialtyWithActions = Specialty
-
 export type InfoSectionWithActions = SpecialtyInfoSection
