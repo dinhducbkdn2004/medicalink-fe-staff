@@ -2,9 +2,16 @@
  * Work Locations Data Table Bulk Actions
  * Bulk actions for selected work locations
  */
+import { useState } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { DataTableBulkActions as BulkActionsToolbar } from '@/components/data-table'
 import { type WorkLocation } from '../data/schema'
 
 interface DataTableBulkActionsProps {
@@ -12,29 +19,40 @@ interface DataTableBulkActionsProps {
 }
 
 export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
-  const selectedRows = table.getFilteredSelectedRowModel().rows
-
-  if (selectedRows.length === 0) {
-    return null
-  }
+  const [showDeleteConfirm] = useState(false)
 
   return (
-    <div className='flex items-center gap-2'>
-      <Button
-        variant='outline'
-        size='sm'
-        className='text-destructive hover:text-destructive'
-        onClick={() => {
-          // TODO: Implement bulk delete functionality
-          const ids = selectedRows.map((row) => row.original.id)
-          console.log('Bulk delete:', ids)
-          // You can implement a bulk delete dialog here
-        }}
-      >
-        <Trash2 className='mr-2 size-4' />
-        Delete ({selectedRows.length})
-      </Button>
-    </div>
+    <>
+      <BulkActionsToolbar table={table} entityName='work location'>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant='destructive'
+              size='icon'
+              onClick={() => {
+                // TODO: Implement bulk delete dialog
+                const ids = table
+                  .getFilteredSelectedRowModel()
+                  .rows.map((row) => row.original.id)
+                console.log('Bulk delete work locations:', ids)
+              }}
+              className='size-8'
+              aria-label='Delete selected work locations'
+              title='Delete selected work locations'
+            >
+              <Trash2 />
+              <span className='sr-only'>Delete selected work locations</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Delete selected work locations</p>
+          </TooltipContent>
+        </Tooltip>
+      </BulkActionsToolbar>
+
+      {/* TODO: Add Multi-Delete Dialog */}
+      {showDeleteConfirm && <div>Multi-delete dialog placeholder</div>}
+    </>
   )
 }
 

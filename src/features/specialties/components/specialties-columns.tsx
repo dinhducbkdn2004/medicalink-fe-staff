@@ -114,7 +114,14 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
       const isActive = row.original.isActive
       return (
         <div className='flex justify-center'>
-          <Badge variant={isActive ? 'success' : 'secondary'}>
+          <Badge
+            variant={isActive ? 'default' : 'secondary'}
+            className={cn(
+              isActive
+                ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400'
+            )}
+          >
             {isActive ? 'Active' : 'Inactive'}
           </Badge>
         </div>

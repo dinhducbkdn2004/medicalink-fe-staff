@@ -27,13 +27,13 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { getUserTimezone } from '@/lib/timezones'
 import { type WorkLocation } from '../data/schema'
 import {
   useCreateWorkLocation,
   useUpdateWorkLocation,
 } from '../data/use-work-locations'
-import { AddressInput } from './address-input'
 import { GoogleMapsInput } from './google-maps-input'
 import { TimezoneCombobox } from './timezone-combobox'
 
@@ -195,7 +195,7 @@ export function WorkLocationsActionDialog({
               )}
             />
 
-            {/* Address with Search */}
+            {/* Address */}
             <FormField
               control={form.control}
               name='address'
@@ -203,13 +203,10 @@ export function WorkLocationsActionDialog({
                 <FormItem>
                   <FormLabel>Address</FormLabel>
                   <FormControl>
-                    <AddressInput
-                      value={field.value || ''}
-                      onChange={field.onChange}
-                      onAddressSelect={(address) => {
-                        field.onChange(address)
-                        // Could trigger geocoding here if needed
-                      }}
+                    <Textarea
+                      placeholder='123 Medical Center Dr, City, State ZIP'
+                      className='min-h-[80px] resize-none'
+                      {...field}
                       disabled={isLoading}
                     />
                   </FormControl>
