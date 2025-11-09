@@ -1,9 +1,9 @@
 /**
  * Work Locations Action Dialog
- * Create/Edit work location form dialog
+ * Create/Edit work location form dialog with enhanced UX
  */
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
@@ -27,12 +27,15 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { getUserTimezone } from '@/lib/timezones'
 import { type WorkLocation } from '../data/schema'
 import {
   useCreateWorkLocation,
   useUpdateWorkLocation,
 } from '../data/use-work-locations'
+import { AddressInput } from './address-input'
+import { GoogleMapsInput } from './google-maps-input'
+import { TimezoneCombobox } from './timezone-combobox'
 
 // ============================================================================
 // Types & Schema
@@ -93,9 +96,15 @@ export function WorkLocationsActionDialog({
       name: '',
       address: '',
       phone: '',
-      timezone: 'Asia/Ho_Chi_Minh',
+      timezone: getUserTimezone(), // Auto-detect user timezone
       googleMapUrl: '',
     },
+  })
+
+  // Watch address field for auto-generating Google Maps URL
+  const addressValue = useWatch({
+    control: form.control,
+    name: 'address',
   })
 
   // Load current row data in edit mode
@@ -105,7 +114,7 @@ export function WorkLocationsActionDialog({
         name: currentRow.name,
         address: currentRow.address || '',
         phone: currentRow.phone || '',
-        timezone: currentRow.timezone || 'Asia/Ho_Chi_Minh',
+        timezone: currentRow.timezone || getUserTimezone(),
         googleMapUrl: currentRow.googleMapUrl || '',
       })
     } else if (open && !isEditMode) {
@@ -113,7 +122,7 @@ export function WorkLocationsActionDialog({
         name: '',
         address: '',
         phone: '',
-        timezone: 'Asia/Ho_Chi_Minh',
+        timezone: getUserTimezone(), // Auto-detect on create
         googleMapUrl: '',
       })
     }
@@ -186,7 +195,7 @@ export function WorkLocationsActionDialog({
               )}
             />
 
-            {/* Address */}
+            {/* Address with Search */}
             <FormField
               control={form.control}
               name='address'
@@ -194,10 +203,13 @@ export function WorkLocationsActionDialog({
                 <FormItem>
                   <FormLabel>Address</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder='123 Medical Center Dr, City, State ZIP'
-                      className='min-h-[80px] resize-none'
-                      {...field}
+                    <AddressInput
+                      value={field.value || ''}
+                      onChange={field.onChange}
+                      onAddressSelect={(address) => {
+                        field.onChange(address)
+                        // Could trigger geocoding here if needed
+                      }}
                       disabled={isLoading}
                     />
                   </FormControl>
@@ -232,7 +244,7 @@ export function WorkLocationsActionDialog({
               )}
             />
 
-            {/* Timezone */}
+            {/* Timezone - Searchable Select */}
             <FormField
               control={form.control}
               name='timezone'
@@ -240,21 +252,21 @@ export function WorkLocationsActionDialog({
                 <FormItem>
                   <FormLabel>Timezone</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder='Asia/Ho_Chi_Minh'
-                      {...field}
+                    <TimezoneCombobox
+                      value={field.value || ''}
+                      onChange={field.onChange}
                       disabled={isLoading}
                     />
                   </FormControl>
                   <FormDescription>
-                    IANA timezone identifier (e.g., America/New_York)
+                    Select timezone for this location (auto-detected based on your current timezone)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {/* Google Map URL */}
+            {/* Google Maps URL with Open & Auto-generate */}
             <FormField
               control={form.control}
               name='googleMapUrl'
@@ -262,15 +274,15 @@ export function WorkLocationsActionDialog({
                 <FormItem>
                   <FormLabel>Google Maps URL</FormLabel>
                   <FormControl>
-                    <Input
-                      type='url'
-                      placeholder='https://maps.google.com/?q=Hospital+Name'
-                      {...field}
+                    <GoogleMapsInput
+                      value={field.value || ''}
+                      onChange={field.onChange}
+                      address={addressValue}
                       disabled={isLoading}
                     />
                   </FormControl>
                   <FormDescription>
-                    Optional link to Google Maps location
+                    Optional link to Google Maps location (can auto-generate from address)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

@@ -21,6 +21,7 @@ import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authOtpRouteImport } from './routes/(auth)/otp'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
+import { Route as AuthenticatedWorkLocationsIndexRouteImport } from './routes/_authenticated/work-locations/index'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedUserPermissionIndexRouteImport } from './routes/_authenticated/user-permission/index'
 import { Route as AuthenticatedUserGroupIndexRouteImport } from './routes/_authenticated/user-group/index'
@@ -98,6 +99,12 @@ const AuthenticatedSettingsRouteRoute =
   AuthenticatedSettingsRouteRouteImport.update({
     id: '/settings',
     path: '/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedWorkLocationsIndexRoute =
+  AuthenticatedWorkLocationsIndexRouteImport.update({
+    id: '/work-locations/',
+    path: '/work-locations/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
@@ -234,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/user-group': typeof AuthenticatedUserGroupIndexRoute
   '/user-permission': typeof AuthenticatedUserPermissionIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/work-locations': typeof AuthenticatedWorkLocationsIndexRoute
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
 export interface FileRoutesByTo {
@@ -264,6 +272,7 @@ export interface FileRoutesByTo {
   '/user-group': typeof AuthenticatedUserGroupIndexRoute
   '/user-permission': typeof AuthenticatedUserPermissionIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/work-locations': typeof AuthenticatedWorkLocationsIndexRoute
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
 export interface FileRoutesById {
@@ -297,6 +306,7 @@ export interface FileRoutesById {
   '/_authenticated/user-group/': typeof AuthenticatedUserGroupIndexRoute
   '/_authenticated/user-permission/': typeof AuthenticatedUserPermissionIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/work-locations/': typeof AuthenticatedWorkLocationsIndexRoute
   '/_authenticated/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
 export interface FileRouteTypes {
@@ -330,6 +340,7 @@ export interface FileRouteTypes {
     | '/user-group'
     | '/user-permission'
     | '/users'
+    | '/work-locations'
     | '/doctors/$doctorId/profile'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -360,6 +371,7 @@ export interface FileRouteTypes {
     | '/user-group'
     | '/user-permission'
     | '/users'
+    | '/work-locations'
     | '/doctors/$doctorId/profile'
   id:
     | '__root__'
@@ -392,6 +404,7 @@ export interface FileRouteTypes {
     | '/_authenticated/user-group/'
     | '/_authenticated/user-permission/'
     | '/_authenticated/users/'
+    | '/_authenticated/work-locations/'
     | '/_authenticated/doctors/$doctorId/profile'
   fileRoutesById: FileRoutesById
 }
@@ -492,6 +505,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/work-locations/': {
+      id: '/_authenticated/work-locations/'
+      path: '/work-locations'
+      fullPath: '/work-locations'
+      preLoaderRoute: typeof AuthenticatedWorkLocationsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/users/': {
@@ -661,6 +681,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedUserGroupIndexRoute: typeof AuthenticatedUserGroupIndexRoute
   AuthenticatedUserPermissionIndexRoute: typeof AuthenticatedUserPermissionIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedWorkLocationsIndexRoute: typeof AuthenticatedWorkLocationsIndexRoute
   AuthenticatedDoctorsDoctorIdProfileRoute: typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
 
@@ -679,6 +700,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedUserGroupIndexRoute: AuthenticatedUserGroupIndexRoute,
   AuthenticatedUserPermissionIndexRoute: AuthenticatedUserPermissionIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedWorkLocationsIndexRoute: AuthenticatedWorkLocationsIndexRoute,
   AuthenticatedDoctorsDoctorIdProfileRoute:
     AuthenticatedDoctorsDoctorIdProfileRoute,
 }
