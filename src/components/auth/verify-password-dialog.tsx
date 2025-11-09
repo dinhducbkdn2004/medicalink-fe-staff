@@ -49,7 +49,7 @@ export function VerifyPasswordDialog({
   const verifyPasswordMutation = useVerifyPassword()
 
   const form = useForm<VerifyPasswordFormData>({
-    resolver: zodResolver(verifyPasswordSchema),
+    resolver: zodResolver(verifyPasswordSchema) as never,
     defaultValues: {
       password: '',
     },

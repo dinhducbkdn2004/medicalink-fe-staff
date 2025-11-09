@@ -4,22 +4,18 @@
  */
 import { useMemo } from 'react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import {
-  Header,
-  HeaderActions,
-  HeaderContent,
-  Main,
-  Search,
-} from '@/components/layout'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { useQuestions as useQuestionsData } from './data/use-questions'
-import { QuestionsProvider } from './components/questions-provider'
-import { QuestionsTable } from './components/questions-table'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
 import { QuestionsDialogs } from './components/questions-dialogs'
 import { QuestionsPrimaryButtons } from './components/questions-primary-buttons'
+import { QuestionsProvider } from './components/questions-provider'
+import { QuestionsTable } from './components/questions-table'
 import type { QuestionQueryParams } from './data/schema'
+import { useQuestions as useQuestionsData } from './data/use-questions'
 
 // ============================================================================
 // Component
@@ -51,33 +47,30 @@ function QuestionsContent() {
 
   return (
     <>
-      <Header>
-        <HeaderContent>
-          <div className='flex w-full items-center justify-between gap-4'>
-            <div>
-              <h1 className='text-2xl font-bold tracking-tight'>
-                Questions & Answers
-              </h1>
-              <p className='text-muted-foreground'>
-                Manage patient questions and doctor answers
-              </p>
-            </div>
-
-            <HeaderActions>
-              <QuestionsPrimaryButtons
-                onRefresh={() => refetch()}
-                isRefreshing={isFetching}
-              />
-              <Search />
-              <ThemeSwitch />
-              <ConfigDrawer />
-              <ProfileDropdown />
-            </HeaderActions>
-          </div>
-        </HeaderContent>
+      <Header fixed>
+        <Search />
+        <div className='ms-auto flex items-center gap-2'>
+          <QuestionsPrimaryButtons
+            onRefresh={() => refetch()}
+            isRefreshing={isFetching}
+          />
+          <ThemeSwitch />
+          <ConfigDrawer />
+          <ProfileDropdown />
+        </div>
       </Header>
 
-      <Main>
+      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+        <div className='flex flex-wrap items-end justify-between gap-2'>
+          <div>
+            <h2 className='text-2xl font-bold tracking-tight'>
+              Questions & Answers
+            </h2>
+            <p className='text-muted-foreground'>
+              Manage patient questions and doctor answers
+            </p>
+          </div>
+        </div>
         <QuestionsTable
           data={data?.data || []}
           pageCount={data?.meta?.totalPages || 0}
@@ -103,4 +96,3 @@ export function Questions() {
     </QuestionsProvider>
   )
 }
-

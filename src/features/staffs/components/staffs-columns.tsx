@@ -17,7 +17,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label='Select all'
-        className='translate-y-[2px]'
+        className='translate-y-0.5'
       />
     ),
     cell: ({ row }) => (
@@ -25,7 +25,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label='Select row'
-        className='translate-y-[2px]'
+        className='translate-y-0.5'
       />
     ),
     enableSorting: false,
@@ -117,7 +117,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
       <DataTableColumnHeader column={column} title='Phone' />
     ),
     cell: ({ row }) => {
-      const phone = row.getValue('phone') as string | null
+      const phone = row.getValue<string | null>('phone')
       return (
         <span className='text-muted-foreground'>
           {phone || <span className='text-muted-foreground'>-</span>}
@@ -135,7 +135,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
       <DataTableColumnHeader column={column} title='Gender' />
     ),
     cell: ({ row }) => {
-      const isMale = row.getValue('isMale') as boolean | null
+      const isMale = row.getValue<boolean | null>('isMale')
       if (isMale === null || isMale === undefined) {
         return <span className='text-muted-foreground'>-</span>
       }
@@ -162,7 +162,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
       <DataTableColumnHeader column={column} title='Created At' />
     ),
     cell: ({ row }) => {
-      const dateString = row.getValue('createdAt') as string
+      const dateString = row.getValue<string>('createdAt')
       if (!dateString) return <span className='text-muted-foreground'>-</span>
 
       const date = new Date(dateString)
@@ -183,9 +183,10 @@ export const staffsColumns: ColumnDef<Staff>[] = [
   },
   {
     id: 'actions',
+    enablePinning: true,
     cell: DataTableRowActions,
     meta: {
-      className: 'w-[50px]',
+      className: 'w-[50px] sticky right-0 bg-background',
     },
   },
 ]

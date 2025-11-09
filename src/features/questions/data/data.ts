@@ -2,7 +2,7 @@
  * Questions Feature - Static Data
  * Filter options and static data for questions
  */
-import { CheckCircle2, Clock, XCircle, MessageCircle } from 'lucide-react'
+import { Clock, XCircle, MessageCircle } from 'lucide-react'
 
 export const statusOptions = [
   {
@@ -11,18 +11,13 @@ export const statusOptions = [
     icon: Clock,
   },
   {
-    label: 'Approved',
-    value: 'APPROVED',
-    icon: CheckCircle2,
-  },
-  {
     label: 'Answered',
     value: 'ANSWERED',
     icon: MessageCircle,
   },
   {
-    label: 'Rejected',
-    value: 'REJECTED',
+    label: 'Closed',
+    value: 'CLOSED',
     icon: XCircle,
   },
 ] as const

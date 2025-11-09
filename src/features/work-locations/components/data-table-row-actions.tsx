@@ -2,6 +2,7 @@
  * Work Locations Data Table Row Actions
  * Context menu for individual work location rows
  */
+import type { Row } from '@tanstack/react-table'
 import { Edit, MoreHorizontal, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,16 +12,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import type { WorkLocation } from '../data/schema'
 import { useWorkLocations } from './work-locations-provider'
 
 interface DataTableRowActionsProps {
-  row: {
-    original: {
-      id: string
-      name: string
-      [key: string]: unknown
-    }
-  }
+  row: Row<WorkLocation>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
@@ -38,7 +34,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <span className='sr-only'>Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className='w-[160px]'>
+      <DropdownMenuContent align='end' className='w-40'>
         <DropdownMenuItem
           onClick={() => {
             setCurrentRow(workLocation)
@@ -63,4 +59,3 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     </DropdownMenu>
   )
 }
-

@@ -3,14 +3,17 @@
  * Data table component for displaying questions
  */
 import type { UseNavigateResult } from '@tanstack/react-router'
-import { DataTable, type ColumnFilterConfig } from '@/components/data-table'
-import type { Question } from '../data/schema'
-import { columns } from './questions-columns'
-import { DataTableBulkActions } from './data-table-bulk-actions'
-import { useQuestions } from './questions-provider'
 import { Edit, Trash2, CheckCircle, XCircle, Eye } from 'lucide-react'
-import type { DataTableAction } from '@/components/data-table/data-table-row-actions'
+import {
+  DataTable,
+  type DataTableAction,
+  type ColumnFilterConfig,
+} from '@/components/data-table'
 import { statusOptions } from '../data/data'
+import type { Question } from '../data/schema'
+import { DataTableBulkActions } from './data-table-bulk-actions'
+import { columns } from './questions-columns'
+import { useQuestions } from './questions-provider'
 
 // ============================================================================
 // Types
@@ -31,8 +34,11 @@ interface QuestionsTableProps {
 const columnFilterConfigs: ColumnFilterConfig[] = [
   {
     columnId: 'status',
-    queryParam: 'status',
-    serialize: (value: string[]) => (value.length > 0 ? value[0] : undefined),
+    searchKey: 'status',
+    serialize: (value: unknown) => {
+      const arr = value as string[]
+      return arr.length > 0 ? arr[0] : undefined
+    },
     deserialize: (value: unknown) => (value ? [value] : []),
   },
 ]
@@ -72,22 +78,24 @@ export function QuestionsTable({
         },
       },
       {
-        label: 'Approve',
+        label: 'Mark as Answered',
         icon: CheckCircle,
         onClick: () => {
           setCurrentQuestion(question)
-          setOpen('approve')
+          setOpen('answer')
         },
-        disabled: question.status === 'APPROVED' || question.status === 'ANSWERED',
+        disabled:
+          question.status === 'ANSWERED' || question.status === 'CLOSED',
       },
       {
-        label: 'Reject',
+        label: 'Close Question',
         icon: XCircle,
         onClick: () => {
           setCurrentQuestion(question)
-          setOpen('reject')
+          setOpen('close')
         },
         variant: 'destructive',
+        disabled: question.status === 'CLOSED',
       },
       {
         label: 'Delete',
@@ -108,14 +116,14 @@ export function QuestionsTable({
       data={data}
       columns={columns}
       search={search}
-      navigate={navigate}
+      navigate={navigate as never}
       // Configuration
       pageCount={pageCount}
       isLoading={isLoading}
       entityName='question'
       // Toolbar
       searchPlaceholder='Search questions...'
-      searchKey='search'
+      searchKey='title'
       filters={[
         {
           columnId: 'status',
@@ -137,4 +145,3 @@ export function QuestionsTable({
     />
   )
 }
-

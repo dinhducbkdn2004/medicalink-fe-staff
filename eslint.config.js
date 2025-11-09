@@ -29,7 +29,10 @@ export default defineConfig(
         'warn',
         { allowConstantExport: true },
       ],
-      'no-console': 'error',
+      'no-console':
+        process.env.NODE_ENV === 'production'
+          ? 'error'
+          : ['warn', { allow: ['warn', 'error'] }],
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',

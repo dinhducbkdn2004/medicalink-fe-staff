@@ -1,18 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
-import Quill from 'quill'
-import type { QuillOptions } from 'quill'
+import Quill, { type QuillOptions } from 'quill'
 
 interface UseQuillOptions {
   theme?: QuillOptions['theme']
   modules?: QuillOptions['modules']
   placeholder?: string
   readOnly?: boolean
-  onTextChange?: (delta: any, oldDelta: any, source: string) => void
+  onTextChange?: (delta: unknown, oldDelta: unknown, source: string) => void
 }
 
 interface UseQuillReturn {
   quill: Quill | null
-  quillRef: React.RefObject<HTMLDivElement>
+  quillRef: React.RefObject<HTMLDivElement | null>
   isReady: boolean
 }
 
@@ -56,7 +55,7 @@ export function useQuill(options: UseQuillOptions): UseQuillReturn {
       })
 
       // Setup text-change listener with ref to avoid stale closure
-      const textChangeHandler = (delta: any, oldDelta: any, source: string) => {
+      const textChangeHandler = (delta: unknown, oldDelta: unknown, source: string) => {
         if (onTextChangeRef.current) {
           onTextChangeRef.current(delta, oldDelta, source)
         }

@@ -9,13 +9,7 @@ import type { Question, Answer } from '../data/schema'
 // Types
 // ============================================================================
 
-type DialogType =
-  | 'view'
-  | 'edit'
-  | 'delete'
-  | 'approve'
-  | 'reject'
-  | 'viewAnswers'
+type DialogType = 'view' | 'edit' | 'delete' | 'answer' | 'close' | 'answers'
 
 interface QuestionsContextValue {
   // Dialog state
@@ -52,9 +46,9 @@ export function QuestionsProvider({ children }: QuestionsProviderProps) {
     view: false,
     edit: false,
     delete: false,
-    approve: false,
-    reject: false,
-    viewAnswers: false,
+    answer: false,
+    close: false,
+    answers: false,
   })
 
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null)
@@ -72,9 +66,9 @@ export function QuestionsProvider({ children }: QuestionsProviderProps) {
       view: false,
       edit: false,
       delete: false,
-      approve: false,
-      reject: false,
-      viewAnswers: false,
+      answer: false,
+      close: false,
+      answers: false,
     })
   }
 
@@ -106,4 +100,3 @@ export function useQuestions() {
   }
   return context
 }
-

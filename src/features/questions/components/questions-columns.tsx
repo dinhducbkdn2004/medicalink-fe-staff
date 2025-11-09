@@ -3,13 +3,13 @@
  * Column definitions for the questions data table
  */
 import type { ColumnDef } from '@tanstack/react-table'
+import { Clock, XCircle, MessageCircle, Eye } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { formatDate } from '@/lib/utils'
-import { cn } from '@/lib/utils'
 import type { Question } from '../data/schema'
-import { CheckCircle2, Clock, XCircle, MessageCircle, Eye } from 'lucide-react'
+import { DataTableRowActions } from './data-table-row-actions'
 
 // ============================================================================
 // Column Definitions
@@ -27,7 +27,7 @@ export const columns: ColumnDef<Question>[] = [
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label='Select all'
-        className='translate-y-[2px]'
+        className='translate-y-0.5'
       />
     ),
     cell: ({ row }) => (
@@ -35,13 +35,17 @@ export const columns: ColumnDef<Question>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label='Select row'
-        className='translate-y-[2px]'
+        className='translate-y-0.5'
       />
     ),
     enableSorting: false,
     enableHiding: false,
     meta: {
-      className: 'w-[40px]',
+      className: 'w-[50px] max-w-[50px]',
+      thClassName:
+        'sticky left-0 z-20 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]',
+      tdClassName:
+        'sticky left-0 z-10 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
     },
   },
   // Title
@@ -56,7 +60,7 @@ export const columns: ColumnDef<Question>[] = [
         <div className='flex flex-col gap-1'>
           <div className='font-medium'>{title}</div>
           {row.original.authorName && (
-            <div className='text-xs text-muted-foreground'>
+            <div className='text-muted-foreground text-xs'>
               by {row.original.authorName}
             </div>
           )}
@@ -64,8 +68,12 @@ export const columns: ColumnDef<Question>[] = [
       )
     },
     enableSorting: false,
-    meta: {
+     meta: {
       className: 'min-w-[300px]',
+      thClassName:
+        'sticky left-[32px] z-20 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]',
+      tdClassName:
+        'sticky left-[32px] z-10 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
     },
   },
   // Specialty
@@ -100,7 +108,7 @@ export const columns: ColumnDef<Question>[] = [
       const acceptedCount = row.original.acceptedAnswerCount || 0
       return (
         <div className='flex items-center gap-2'>
-          <MessageCircle className='size-4 text-muted-foreground' />
+          <MessageCircle className='text-muted-foreground size-4' />
           <span className='font-medium'>{count}</span>
           {acceptedCount > 0 && (
             <Badge
@@ -127,7 +135,7 @@ export const columns: ColumnDef<Question>[] = [
       const count = row.original.viewCount
       return (
         <div className='flex items-center gap-2'>
-          <Eye className='size-4 text-muted-foreground' />
+          <Eye className='text-muted-foreground size-4' />
           <span>{count}</span>
         </div>
       )
@@ -144,30 +152,43 @@ export const columns: ColumnDef<Question>[] = [
     ),
     cell: ({ row }) => {
       const status = row.original.status
-      const statusConfig = {
+      const statusConfig: Record<
+        string,
+        { label: string; icon: typeof Clock; className: string }
+      > = {
         PENDING: {
           label: 'Pending',
           icon: Clock,
-          className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-        },
-        APPROVED: {
-          label: 'Approved',
-          icon: CheckCircle2,
-          className: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+          className:
+            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
         },
         ANSWERED: {
           label: 'Answered',
           icon: MessageCircle,
-          className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+          className:
+            'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
         },
-        REJECTED: {
-          label: 'Rejected',
+        CLOSED: {
+          label: 'Closed',
           icon: XCircle,
-          className: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+          className:
+            'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
         },
       }
 
       const config = statusConfig[status]
+
+      // Handle unknown status
+      if (!config) {
+        return (
+          <div className='flex justify-center'>
+            <Badge variant='outline' className='text-xs'>
+              {status || 'Unknown'}
+            </Badge>
+          </div>
+        )
+      }
+
       const Icon = config.icon
 
       return (
@@ -179,7 +200,7 @@ export const columns: ColumnDef<Question>[] = [
         </div>
       )
     },
-    filterFn: (row, id, value: string[]) => {
+    filterFn: (row, _id, value: string[]) => {
       if (!value || value.length === 0) return true
       return value.includes(row.original.status)
     },
@@ -194,10 +215,14 @@ export const columns: ColumnDef<Question>[] = [
       <DataTableColumnHeader column={column} title='Created' />
     ),
     cell: ({ row }) => {
-      const date = row.original.createdAt
+      const date = new Date(row.original.createdAt)
       return (
-        <div className='text-sm text-muted-foreground'>
-          {formatDate(date, 'MMM dd, yyyy')}
+        <div className='text-muted-foreground text-sm'>
+          {date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })}
         </div>
       )
     },
@@ -205,5 +230,13 @@ export const columns: ColumnDef<Question>[] = [
       className: 'w-[120px]',
     },
   },
+  // Actions
+  {
+    id: 'actions',
+    enablePinning: true,
+    cell: ({ row }) => <DataTableRowActions row={row} />,
+    meta: {
+      className: 'w-[60px] sticky right-0 bg-background',
+    },
+  },
 ]
-

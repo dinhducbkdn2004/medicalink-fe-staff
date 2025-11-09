@@ -54,7 +54,7 @@ export const groupColumns: ColumnDef<PermissionGroup>[] = [
       <DataTableColumnHeader column={column} title='Description' />
     ),
     cell: ({ row }) => {
-      const description = row.getValue('description') as string | undefined
+      const description = row.getValue<string | undefined>('description')
       return (
         <div className='max-w-md truncate'>
           {description || (
@@ -70,7 +70,7 @@ export const groupColumns: ColumnDef<PermissionGroup>[] = [
       <DataTableColumnHeader column={column} title='Members' />
     ),
     cell: ({ row }) => {
-      const count = row.getValue('memberCount') as number
+      const count = row.getValue<number>('memberCount')
       return (
         <Badge variant='secondary' className='font-mono'>
           {count || 0}
@@ -84,7 +84,7 @@ export const groupColumns: ColumnDef<PermissionGroup>[] = [
       <DataTableColumnHeader column={column} title='Permissions' />
     ),
     cell: ({ row }) => {
-      const count = row.getValue('permissionCount') as number
+      const count = row.getValue<number>('permissionCount')
       return (
         <Badge variant='secondary' className='font-mono'>
           {count || 0}
@@ -98,7 +98,7 @@ export const groupColumns: ColumnDef<PermissionGroup>[] = [
       <DataTableColumnHeader column={column} title='Status' />
     ),
     cell: ({ row }) => {
-      const isActive = row.getValue('isActive') as boolean
+      const isActive = row.getValue<boolean>('isActive')
       return <PermissionStatusBadge isActive={isActive} />
     },
     filterFn: (row, id, value) => {
@@ -125,9 +125,10 @@ export const groupColumns: ColumnDef<PermissionGroup>[] = [
   },
   {
     id: 'actions',
+    enablePinning: true,
     cell: DataTableRowActions,
     meta: {
-      className: 'w-[50px]',
+      className: 'w-[50px] sticky right-0 bg-background',
     },
   },
 ]

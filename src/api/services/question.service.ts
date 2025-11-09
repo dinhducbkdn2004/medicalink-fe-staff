@@ -29,7 +29,7 @@ export interface Question {
   answerCount: number
   acceptedAnswerCount?: number
   viewCount: number
-  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'ANSWERED'
+  status: 'PENDING' | 'ANSWERED' | 'CLOSED'
   createdAt: string
   updatedAt: string
 }
@@ -54,7 +54,7 @@ export interface CreateQuestionRequest {
 export interface UpdateQuestionRequest {
   title?: string
   body?: string
-  status?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'ANSWERED'
+  status?: 'PENDING' | 'ANSWERED' | 'CLOSED'
 }
 
 export type QuestionListResponse = PaginatedResponse<Question>

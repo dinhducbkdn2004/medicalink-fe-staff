@@ -50,7 +50,7 @@ export interface RichTextEditorProps {
   accessToken: string
   className?: string
   disabled?: boolean
-  toolbarOptions?: 'full' | 'basic' | 'minimal' | Array<any>
+  toolbarOptions?: 'full' | 'basic' | 'minimal' | unknown[]
   enableImageUpload?: boolean
   enableVideoUpload?: boolean
 }
@@ -292,16 +292,16 @@ export function RichTextEditor({
 
     // Filter out image/video if disabled
     if (!enableImageUpload || !enableVideoUpload) {
-      config = config.map((row: any) => {
+      config = config.map((row: unknown) => {
         if (Array.isArray(row)) {
-          return row.filter((item: any) => {
+          return row.filter((item: unknown) => {
             if (item === 'image' && !enableImageUpload) return false
             if (item === 'video' && !enableVideoUpload) return false
             return true
           })
         }
         return row
-      }) as any
+      }) as typeof config
     }
 
     return config
@@ -340,7 +340,7 @@ export function RichTextEditor({
    * Theo hướng dẫn: Sử dụng event text-change để theo dõi thay đổi
    */
   const handleTextChange = useCallback(
-    (_delta: any, _oldDelta: any, source: string) => {
+    (_delta: unknown, _oldDelta: unknown, source: string) => {
       const quill = quillInstanceRef.current
       if (!quill) return
 
@@ -382,7 +382,7 @@ export function RichTextEditor({
     try {
       // Kiểm tra nếu content là Delta JSON
       if (content.trim().startsWith('[') || content.trim().startsWith('{')) {
-        const delta = JSON.parse(content) as any
+        const delta = JSON.parse(content) as Record<string, unknown>
         // Sử dụng setContents cho Delta format
         quill.setContents(delta, 'silent')
         const html = quill.getSemanticHTML()
@@ -560,12 +560,12 @@ export function RichTextEditor({
       e.preventDefault()
     }
 
-    quill.root.addEventListener('drop', handleDrop as any)
-    quill.root.addEventListener('dragover', handleDragOver as any)
+    quill.root.addEventListener('drop', handleDrop as unknown as EventListener)
+    quill.root.addEventListener('dragover', handleDragOver as unknown as EventListener)
 
     return () => {
-      quill.root.removeEventListener('drop', handleDrop as any)
-      quill.root.removeEventListener('dragover', handleDragOver as any)
+      quill.root.removeEventListener('drop', handleDrop as unknown as EventListener)
+      quill.root.removeEventListener('dragover', handleDragOver as unknown as EventListener)
     }
   }, [quill, uploadMedia, accessToken, onChange, enableImageUpload])
 

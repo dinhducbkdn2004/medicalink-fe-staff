@@ -30,9 +30,8 @@ export interface Answer {
   updatedAt: string
 }
 
-export type AnswerQueryParams = PaginationParams & {
-  // Reserved for future filters
-}
+export type AnswerQueryParams = PaginationParams
+// Reserved for future filters - can extend with additional properties when needed
 
 export interface CreateAnswerRequest {
   body: string
@@ -113,10 +112,10 @@ class AnswerService {
 
   /**
    * Accept an answer (admin only)
-   * POST /api/questions/answers/:answerId/accept
+   * PATCH /api/questions/answers/:answerId/accept
    */
   async acceptAnswer(answerId: string): Promise<Answer> {
-    const response = await apiClient.post<Answer>(
+    const response = await apiClient.patch<Answer>(
       `/questions/answers/${answerId}/accept`
     )
     return response.data

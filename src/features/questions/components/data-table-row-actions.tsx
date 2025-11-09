@@ -2,7 +2,14 @@
  * Questions Data Table Row Actions
  * Dropdown menu actions for individual question rows
  */
-import { MoreHorizontal } from 'lucide-react'
+import {
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Eye,
+  CheckCircle,
+  XCircle,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -14,7 +21,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import type { Question } from '../data/schema'
 import { useQuestions } from './questions-provider'
-import { Edit, Trash2, Eye, CheckCircle, XCircle } from 'lucide-react'
 
 interface DataTableRowActionsProps {
   row: { original: Question }
@@ -29,13 +35,13 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
       <DropdownMenuTrigger asChild>
         <Button
           variant='ghost'
-          className='flex size-8 p-0 data-[state=open]:bg-muted'
+          className='data-[state=open]:bg-muted flex size-8 p-0'
         >
           <MoreHorizontal className='size-4' />
           <span className='sr-only'>Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className='w-[160px]'>
+      <DropdownMenuContent align='end' className='w-40'>
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem
           onClick={() => {
@@ -59,23 +65,24 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuItem
           onClick={() => {
             setCurrentQuestion(question)
-            setOpen('approve')
+            setOpen('answer')
           }}
           disabled={
-            question.status === 'APPROVED' || question.status === 'ANSWERED'
+            question.status === 'ANSWERED' || question.status === 'CLOSED'
           }
         >
           <CheckCircle className='mr-2 size-4' />
-          Approve
+          Mark as Answered
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
             setCurrentQuestion(question)
-            setOpen('reject')
+            setOpen('close')
           }}
+          disabled={question.status === 'CLOSED'}
         >
           <XCircle className='mr-2 size-4' />
-          Reject
+          Close Question
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -92,4 +99,3 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     </DropdownMenu>
   )
 }
-

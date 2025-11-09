@@ -61,6 +61,7 @@ export interface DataTableAction {
   onClick: () => void
   variant?: 'default' | 'destructive'
   separator?: boolean
+  disabled?: boolean
 }
 
 export interface DataTableFilter {

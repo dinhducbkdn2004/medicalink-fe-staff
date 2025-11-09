@@ -17,7 +17,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label='Select all'
-        className='translate-y-[2px]'
+        className='translate-y-0.5'
       />
     ),
     cell: ({ row }) => (
@@ -25,7 +25,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label='Select row'
-        className='translate-y-[2px]'
+        className='translate-y-0.5'
       />
     ),
     enableSorting: false,
@@ -36,7 +36,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Task' />
     ),
-    cell: ({ row }) => <div className='w-[80px]'>{row.getValue('id')}</div>,
+    cell: ({ row }) => <div className='w-20'>{row.getValue('id')}</div>,
     enableSorting: false,
     enableHiding: false,
   },
@@ -52,7 +52,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
       return (
         <div className='flex space-x-2'>
           {label && <Badge variant='outline'>{label.label}</Badge>}
-          <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
+          <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-124'>
             {row.getValue('title')}
           </span>
         </div>
@@ -117,6 +117,10 @@ export const tasksColumns: ColumnDef<Task>[] = [
   },
   {
     id: 'actions',
+    enablePinning: true,
     cell: ({ row }) => <DataTableRowActions row={row} />,
+    meta: {
+      className: 'w-[60px] sticky right-0 bg-background',
+    },
   },
 ]

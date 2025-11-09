@@ -4,6 +4,7 @@
  */
 import { type ColumnDef } from '@tanstack/react-table'
 import { MapPin, Phone, Clock } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
@@ -22,7 +23,7 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label='Select all'
-          className='translate-y-[2px]'
+          className='translate-y-0.5'
         />
       </div>
     ),
@@ -32,14 +33,18 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
           aria-label='Select row'
-          className='translate-y-[2px]'
+          className='translate-y-0.5'
         />
       </div>
     ),
     enableSorting: false,
     enableHiding: false,
     meta: {
-      className: 'w-[50px]',
+      className: 'w-[50px] max-w-[50px]',
+      thClassName:
+        'sticky left-0 z-20 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]',
+      tdClassName:
+        'sticky left-0 z-10 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
     },
   },
   {
@@ -61,6 +66,10 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
     },
     meta: {
       className: 'min-w-[200px]',
+      thClassName:
+        'sticky left-[32px] z-20 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]',
+      tdClassName:
+        'sticky left-[32px] z-10 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
     },
   },
   {
@@ -70,7 +79,9 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
       const address = row.original.address
       return (
         <div className='flex items-start gap-2'>
-          {address && <MapPin className='text-muted-foreground mt-0.5 size-4 shrink-0' />}
+          {address && (
+            <MapPin className='text-muted-foreground mt-0.5 size-4 shrink-0' />
+          )}
           <div className='max-w-[300px] truncate' title={address || ''}>
             {address || '—'}
           </div>
@@ -156,7 +167,7 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
         </div>
       )
     },
-    filterFn: (row, id, value: string[]) => {
+    filterFn: (row, _id, value: string[]) => {
       if (!value || value.length === 0) return true
       const isActive = row.original.isActive
       return value.includes(isActive ? 'true' : 'false')
@@ -188,10 +199,10 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
   },
   {
     id: 'actions',
+    enablePinning: true,
     cell: ({ row }) => <DataTableRowActions row={row} />,
     meta: {
-      className: 'w-[70px]',
+      className: 'w-[70px] sticky right-0 bg-background',
     },
   },
 ]
-

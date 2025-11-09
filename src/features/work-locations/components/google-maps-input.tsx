@@ -32,18 +32,18 @@ export function GoogleMapsInput({
     if (!address || address.trim().length === 0) {
       return
     }
-    
+
     const generatedUrl = generateGoogleMapsUrl(address)
     onChange(generatedUrl)
   }
-  
+
   const handleOpenMap = () => {
     if (!value) return
     openGoogleMaps(value)
   }
-  
+
   const canAutoGenerate = address && address.trim().length > 0 && !value
-  
+
   return (
     <div className='space-y-2'>
       <div className='flex gap-2'>
@@ -55,7 +55,7 @@ export function GoogleMapsInput({
           disabled={disabled}
           className={cn('flex-1', className)}
         />
-        
+
         {/* Auto-generate button */}
         {canAutoGenerate && (
           <Button
@@ -70,7 +70,7 @@ export function GoogleMapsInput({
             <Wand2 className='size-4' />
           </Button>
         )}
-        
+
         {/* Open map button */}
         {value && (
           <Button
@@ -86,13 +86,7 @@ export function GoogleMapsInput({
           </Button>
         )}
       </div>
-      
-      {/* Helper text */}
-      {canAutoGenerate && (
-        <p className='text-muted-foreground text-xs'>
-          💡 Click the magic wand to auto-generate URL from address
-        </p>
-      )}
+
     </div>
   )
 }

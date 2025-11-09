@@ -3,26 +3,13 @@
  * Based on /api/doctors API specification
  */
 import { z } from 'zod'
+import type { Specialty, WorkLocation } from '@/api/types/doctor.types'
 
 // ============================================================================
-// Base Types
+// Base Types - Re-export from API
 // ============================================================================
 
-export interface Specialty {
-  id: string
-  name: string
-  slug: string
-  description?: string
-}
-
-export interface WorkLocation {
-  id: string
-  name: string
-  slug: string
-  address?: string
-  city?: string
-  phone?: string
-}
+export type { Specialty, WorkLocation } from '@/api/types/doctor.types'
 
 // ============================================================================
 // Doctor Account Types
@@ -37,7 +24,7 @@ export interface DoctorAccount {
   isMale?: boolean
   dateOfBirth?: string
   createdAt: string
-  updatedAt: string
+  updatedAt?: string
 }
 
 export interface DoctorProfile {
@@ -62,8 +49,20 @@ export interface DoctorProfile {
 
 // Extended DoctorWithProfile type for GET /api/doctors endpoint
 // Backend returns flat structure with profile fields merged at root level
-export interface DoctorWithProfile extends DoctorAccount {
+export interface DoctorWithProfile {
+  // Account fields
+  id: string
+  fullName: string
+  email: string
+  role: 'DOCTOR'
+  phone?: string
+  isMale?: boolean
+  dateOfBirth?: string
+  createdAt: string
+
+  // Profile data (optional, may not exist)
   profile?: DoctorProfile
+
   // Profile fields at root level (merged by backend)
   profileId?: string
   isActive?: boolean
@@ -81,7 +80,6 @@ export interface DoctorWithProfile extends DoctorAccount {
   workLocations?: WorkLocation[]
   profileCreatedAt?: string
   profileUpdatedAt?: string
-  createdAt?: string
   accountUpdatedAt?: string
 }
 
