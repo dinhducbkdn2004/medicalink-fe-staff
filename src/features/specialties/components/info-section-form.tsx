@@ -1,0 +1,209 @@
+/**
+ * Info Section Form
+ * Create/Edit info section form dialog
+ */
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { Loader2 } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { type Specialty, type SpecialtyInfoSection } from '../data/schema'
+import {
+  useCreateInfoSection,
+  useUpdateInfoSection,
+} from '../data/use-specialties'
+
+// ============================================================================
+// Types & Schema
+// ============================================================================
+
+const formSchema = z.object({
+  name: z
+    .string()
+    .min(2, 'Name must be at least 2 characters')
+    .max(120, 'Name must be at most 120 characters'),
+  content: z.string().optional(),
+})
+
+type FormValues = z.infer<typeof formSchema>
+
+interface InfoSectionFormProps {
+  open: boolean
+  onOpenChange: () => void
+  specialty: Specialty
+  section?: SpecialtyInfoSection | null
+}
+
+// ============================================================================
+// Component
+// ============================================================================
+
+export function InfoSectionForm({
+  open,
+  onOpenChange,
+  specialty,
+  section,
+}: InfoSectionFormProps) {
+  const isEditMode = !!section
+  const createMutation = useCreateInfoSection()
+  const updateMutation = useUpdateInfoSection()
+
+  // Form setup
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      content: '',
+    },
+  })
+
+  // Load section data in edit mode
+  useEffect(() => {
+    if (open && isEditMode && section) {
+      form.reset({
+        name: section.name,
+        content: section.content || '',
+      })
+    } else if (open && !isEditMode) {
+      form.reset({
+        name: '',
+        content: '',
+      })
+    }
+  }, [open, isEditMode, section, form])
+
+  // Handle form submission
+  const onSubmit = async (values: FormValues) => {
+    try {
+      if (isEditMode && section) {
+        await updateMutation.mutateAsync({
+          id: section.id,
+          specialtyId: specialty.id,
+          data: {
+            name: values.name,
+            content: values.content || undefined,
+          },
+        })
+      } else {
+        await createMutation.mutateAsync({
+          specialtyId: specialty.id,
+          name: values.name,
+          content: values.content || undefined,
+        })
+      }
+
+      onOpenChange()
+      form.reset()
+    } catch (error) {
+      // Error handling is done in the mutation hooks
+      console.error('Form submission error:', error)
+    }
+  }
+
+  const isLoading = createMutation.isPending || updateMutation.isPending
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className='sm:max-w-[600px]'>
+        <DialogHeader>
+          <DialogTitle>
+            {isEditMode ? 'Edit Info Section' : 'Create Info Section'}
+          </DialogTitle>
+          <DialogDescription>
+            {isEditMode
+              ? 'Update the information section content below.'
+              : `Add a new information section for ${specialty.name}.`}
+          </DialogDescription>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+            {/* Name */}
+            <FormField
+              control={form.control}
+              name='name'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Section Name <span className='text-destructive'>*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='e.g., Overview, Common Conditions, Treatment Options'
+                      {...field}
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    The title of this information section (2-120 characters)
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Content */}
+            <FormField
+              control={form.control}
+              name='content'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Content</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder='Enter the detailed content for this section...'
+                      className='min-h-[200px] resize-y'
+                      {...field}
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    The content of this section (supports markdown/HTML)
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={onOpenChange}
+                disabled={isLoading}
+              >
+                Cancel
+              </Button>
+              <Button type='submit' disabled={isLoading}>
+                {isLoading && <Loader2 className='mr-2 size-4 animate-spin' />}
+                {isEditMode ? 'Update' : 'Create'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+

@@ -26,6 +26,7 @@ import { Route as AuthenticatedUserPermissionIndexRouteImport } from './routes/_
 import { Route as AuthenticatedUserGroupIndexRouteImport } from './routes/_authenticated/user-group/index'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedStaffsIndexRouteImport } from './routes/_authenticated/staffs/index'
+import { Route as AuthenticatedSpecialtiesIndexRouteImport } from './routes/_authenticated/specialties/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedGroupManagerIndexRouteImport } from './routes/_authenticated/group-manager/index'
@@ -127,6 +128,12 @@ const AuthenticatedStaffsIndexRoute =
     path: '/staffs/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSpecialtiesIndexRoute =
+  AuthenticatedSpecialtiesIndexRouteImport.update({
+    id: '/specialties/',
+    path: '/specialties/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/',
@@ -221,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/group-manager': typeof AuthenticatedGroupManagerIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/specialties': typeof AuthenticatedSpecialtiesIndexRoute
   '/staffs': typeof AuthenticatedStaffsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/user-group': typeof AuthenticatedUserGroupIndexRoute
@@ -250,6 +258,7 @@ export interface FileRoutesByTo {
   '/group-manager': typeof AuthenticatedGroupManagerIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/specialties': typeof AuthenticatedSpecialtiesIndexRoute
   '/staffs': typeof AuthenticatedStaffsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/user-group': typeof AuthenticatedUserGroupIndexRoute
@@ -282,6 +291,7 @@ export interface FileRoutesById {
   '/_authenticated/group-manager/': typeof AuthenticatedGroupManagerIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/specialties/': typeof AuthenticatedSpecialtiesIndexRoute
   '/_authenticated/staffs/': typeof AuthenticatedStaffsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/user-group/': typeof AuthenticatedUserGroupIndexRoute
@@ -314,6 +324,7 @@ export interface FileRouteTypes {
     | '/group-manager'
     | '/help-center'
     | '/settings/'
+    | '/specialties'
     | '/staffs'
     | '/tasks'
     | '/user-group'
@@ -343,6 +354,7 @@ export interface FileRouteTypes {
     | '/group-manager'
     | '/help-center'
     | '/settings'
+    | '/specialties'
     | '/staffs'
     | '/tasks'
     | '/user-group'
@@ -374,6 +386,7 @@ export interface FileRouteTypes {
     | '/_authenticated/group-manager/'
     | '/_authenticated/help-center/'
     | '/_authenticated/settings/'
+    | '/_authenticated/specialties/'
     | '/_authenticated/staffs/'
     | '/_authenticated/tasks/'
     | '/_authenticated/user-group/'
@@ -516,6 +529,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStaffsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/specialties/': {
+      id: '/_authenticated/specialties/'
+      path: '/specialties'
+      fullPath: '/specialties'
+      preLoaderRoute: typeof AuthenticatedSpecialtiesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/'
@@ -635,6 +655,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDoctorsIndexRoute: typeof AuthenticatedDoctorsIndexRoute
   AuthenticatedGroupManagerIndexRoute: typeof AuthenticatedGroupManagerIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedSpecialtiesIndexRoute: typeof AuthenticatedSpecialtiesIndexRoute
   AuthenticatedStaffsIndexRoute: typeof AuthenticatedStaffsIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUserGroupIndexRoute: typeof AuthenticatedUserGroupIndexRoute
@@ -652,6 +673,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDoctorsIndexRoute: AuthenticatedDoctorsIndexRoute,
   AuthenticatedGroupManagerIndexRoute: AuthenticatedGroupManagerIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedSpecialtiesIndexRoute: AuthenticatedSpecialtiesIndexRoute,
   AuthenticatedStaffsIndexRoute: AuthenticatedStaffsIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUserGroupIndexRoute: AuthenticatedUserGroupIndexRoute,
