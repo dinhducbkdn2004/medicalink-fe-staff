@@ -3,11 +3,11 @@
  * Create/Edit info section form dialog
  */
 import { useEffect } from 'react'
+import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
-
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -27,7 +27,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { RichTextEditor } from '@/features/doctors/components/rich-text-editor'
 import { type Specialty, type SpecialtyInfoSection } from '../data/schema'
 import {
   useCreateInfoSection,
@@ -64,14 +64,16 @@ export function InfoSectionForm({
   onOpenChange,
   specialty,
   section,
-}: InfoSectionFormProps) {
+}: Readonly<InfoSectionFormProps>) {
   const isEditMode = !!section
   const createMutation = useCreateInfoSection()
   const updateMutation = useUpdateInfoSection()
+  const accessToken = useAuthStore((state) => state.accessToken)
 
   // Form setup
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       name: '',
       content: '',
@@ -99,7 +101,7 @@ export function InfoSectionForm({
       if (isEditMode && section) {
         await updateMutation.mutateAsync({
           id: section.id,
-          specialtyId: specialty.id,
+          _specialtyId: specialty.id,
           data: {
             name: values.name,
             content: values.content || undefined,
@@ -125,7 +127,7 @@ export function InfoSectionForm({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[600px]'>
+      <DialogContent className='max-h-[90vh] max-w-4xl overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>
             {isEditMode ? 'Edit Info Section' : 'Create Info Section'}
@@ -171,15 +173,23 @@ export function InfoSectionForm({
                 <FormItem>
                   <FormLabel>Content</FormLabel>
                   <FormControl>
-                    <Textarea
+                    <RichTextEditor
+                      value={field.value || ''}
+                      onChange={field.onChange}
                       placeholder='Enter the detailed content for this section...'
-                      className='min-h-[200px] resize-y'
-                      {...field}
                       disabled={isLoading}
+                      toolbarOptions='full'
+                      accessToken={accessToken || ''}
+                      enableSyntax={true}
+                      enableFormula={true}
+                      enableImageUpload={true}
+                      enableVideoUpload={true}
+                      size='medium'
                     />
                   </FormControl>
                   <FormDescription>
-                    The content of this section (supports markdown/HTML)
+                    The content of this section (supports rich text formatting,
+                    code blocks, and formulas)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -206,4 +216,3 @@ export function InfoSectionForm({
     </Dialog>
   )
 }
-

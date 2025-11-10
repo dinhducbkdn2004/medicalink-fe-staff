@@ -44,31 +44,29 @@ export function Doctors() {
     page: (search.page as number) || 1,
     limit: (search.pageSize as number) || 10,
     search: (search.search as string) || undefined,
-    isActive:
-      search.isActive === 'true'
-        ? true
-        : search.isActive === 'false'
-          ? false
-          : undefined,
-    isMale:
-      search.isMale === 'true'
-        ? true
-        : search.isMale === 'false'
-          ? false
-          : undefined,
+    isActive: (() => {
+      if (search.isActive === 'true') return true
+      if (search.isActive === 'false') return false
+      return undefined
+    })(),
+    isMale: (() => {
+      if (search.isMale === 'true') return true
+      if (search.isMale === 'false') return false
+      return undefined
+    })(),
     sortBy:
       (search.sortBy as 'createdAt' | 'fullName' | 'email' | undefined) ||
       undefined,
-    sortOrder: (search.sortOrder as 'asc' | 'desc' | undefined) || undefined,
-    createdFrom: (search.createdFrom as string | undefined) || undefined,
-    createdTo: (search.createdTo as string | undefined) || undefined,
+    sortOrder: search.sortOrder || undefined,
+    createdFrom: search.createdFrom || undefined,
+    createdTo: search.createdTo || undefined,
   }
+
+  const { data, isLoading } = useDoctors(queryParams)
 
   // Debug: Log API params (remove in production)
   // eslint-disable-next-line no-console
   console.log('🔍 Doctors API Params:', queryParams)
-
-  const { data, isLoading } = useDoctors(queryParams)
 
   return (
     <DoctorsProvider>

@@ -22,7 +22,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label='Select all'
-        className='translate-y-[2px]'
+        className='translate-y-0.5'
       />
     ),
     cell: ({ row }) => (
@@ -30,7 +30,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label='Select row'
-        className='translate-y-[2px]'
+        className='translate-y-0.5'
       />
     ),
     enableSorting: false,
@@ -87,7 +87,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
       <DataTableColumnHeader column={column} title='Phone' />
     ),
     cell: ({ row }) => {
-      const phone = row.getValue('phone') as string | null
+      const phone = row.getValue<string | null>('phone')
       if (!phone) return <span className='text-muted-foreground'>-</span>
       return <span className='text-muted-foreground'>{phone}</span>
     },
@@ -158,7 +158,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
       <DataTableColumnHeader column={column} title='Gender' />
     ),
     cell: ({ row }) => {
-      const isMale = row.getValue('isMale') as boolean | null
+      const isMale = row.getValue<boolean | null>('isMale')
       if (isMale === null)
         return <span className='text-muted-foreground'>-</span>
       return (
@@ -181,7 +181,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
     ),
     cell: ({ row }) => {
       // Backend returns flat structure with isActive at root level
-      const isActive = row.getValue('isActive') as boolean
+      const isActive = row.getValue<boolean>('isActive')
       return (
         <Badge
           variant={isActive ? 'default' : 'secondary'}
@@ -210,7 +210,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
       <DataTableColumnHeader column={column} title='Created At' />
     ),
     cell: ({ row }) => {
-      const date = row.getValue('createdAt') as string
+      const date = row.getValue<string>('createdAt')
       if (!date) return <div className='text-muted-foreground text-sm'>-</div>
 
       return (
@@ -223,9 +223,10 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
   },
   {
     id: 'actions',
+    enablePinning: true,
     cell: DataTableRowActions,
     meta: {
-      className: 'w-[50px]',
+      className: 'w-[50px] sticky right-0 bg-background',
     },
   },
 ]

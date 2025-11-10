@@ -3,6 +3,7 @@
  * Column definitions for specialties data table
  */
 import { type ColumnDef } from '@tanstack/react-table'
+import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
@@ -21,7 +22,7 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label='Select all'
-          className='translate-y-[2px]'
+          className='translate-y-0.5'
         />
       </div>
     ),
@@ -31,7 +32,7 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
           aria-label='Select row'
-          className='translate-y-[2px]'
+          className='translate-y-0.5'
         />
       </div>
     ),
@@ -114,13 +115,20 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
       const isActive = row.original.isActive
       return (
         <div className='flex justify-center'>
-          <Badge variant={isActive ? 'success' : 'secondary'}>
+          <Badge
+            variant={isActive ? 'default' : 'secondary'}
+            className={cn(
+              isActive
+                ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400'
+            )}
+          >
             {isActive ? 'Active' : 'Inactive'}
           </Badge>
         </div>
       )
     },
-    filterFn: (row, id, value: string[]) => {
+    filterFn: (row, _id, value: string[]) => {
       if (!value || value.length === 0) return true
       const isActive = row.original.isActive
       return value.includes(isActive ? 'true' : 'false')
@@ -152,10 +160,10 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
   },
   {
     id: 'actions',
+    enablePinning: true,
     cell: ({ row }) => <DataTableRowActions row={row} />,
     meta: {
-      className: 'w-[70px]',
+      className: 'w-[70px] sticky right-0 bg-background',
     },
   },
 ]
-

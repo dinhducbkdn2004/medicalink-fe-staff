@@ -8,7 +8,7 @@
  * - Preview with hover actions
  * - Compact UI for better space usage
  */
-import { useState, useRef, DragEvent } from 'react'
+import { useState, useRef, type DragEvent } from 'react'
 import { Upload, X, Loader2, Image as ImageIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -36,7 +36,7 @@ export function ImageUploadField({
   accessToken,
   disabled = false,
   aspectRatio = 'square',
-  compact = false,
+  compact: _compact = false,
 }: Readonly<ImageUploadFieldProps>) {
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)

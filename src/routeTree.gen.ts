@@ -21,6 +21,7 @@ import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authOtpRouteImport } from './routes/(auth)/otp'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
+import { Route as AuthenticatedWorkLocationsIndexRouteImport } from './routes/_authenticated/work-locations/index'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedUserPermissionIndexRouteImport } from './routes/_authenticated/user-permission/index'
 import { Route as AuthenticatedUserGroupIndexRouteImport } from './routes/_authenticated/user-group/index'
@@ -28,6 +29,8 @@ import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedStaffsIndexRouteImport } from './routes/_authenticated/staffs/index'
 import { Route as AuthenticatedSpecialtiesIndexRouteImport } from './routes/_authenticated/specialties/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedReviewsIndexRouteImport } from './routes/_authenticated/reviews/index'
+import { Route as AuthenticatedQuestionsIndexRouteImport } from './routes/_authenticated/questions/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedGroupManagerIndexRouteImport } from './routes/_authenticated/group-manager/index'
 import { Route as AuthenticatedDoctorsIndexRouteImport } from './routes/_authenticated/doctors.index'
@@ -100,6 +103,12 @@ const AuthenticatedSettingsRouteRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedWorkLocationsIndexRoute =
+  AuthenticatedWorkLocationsIndexRouteImport.update({
+    id: '/work-locations/',
+    path: '/work-locations/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
@@ -139,6 +148,18 @@ const AuthenticatedSettingsIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedReviewsIndexRoute =
+  AuthenticatedReviewsIndexRouteImport.update({
+    id: '/reviews/',
+    path: '/reviews/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedQuestionsIndexRoute =
+  AuthenticatedQuestionsIndexRouteImport.update({
+    id: '/questions/',
+    path: '/questions/',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedHelpCenterIndexRoute =
   AuthenticatedHelpCenterIndexRouteImport.update({
@@ -227,6 +248,8 @@ export interface FileRoutesByFullPath {
   '/doctors': typeof AuthenticatedDoctorsIndexRoute
   '/group-manager': typeof AuthenticatedGroupManagerIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/questions': typeof AuthenticatedQuestionsIndexRoute
+  '/reviews': typeof AuthenticatedReviewsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/specialties': typeof AuthenticatedSpecialtiesIndexRoute
   '/staffs': typeof AuthenticatedStaffsIndexRoute
@@ -234,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/user-group': typeof AuthenticatedUserGroupIndexRoute
   '/user-permission': typeof AuthenticatedUserPermissionIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/work-locations': typeof AuthenticatedWorkLocationsIndexRoute
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
 export interface FileRoutesByTo {
@@ -257,6 +281,8 @@ export interface FileRoutesByTo {
   '/doctors': typeof AuthenticatedDoctorsIndexRoute
   '/group-manager': typeof AuthenticatedGroupManagerIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/questions': typeof AuthenticatedQuestionsIndexRoute
+  '/reviews': typeof AuthenticatedReviewsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/specialties': typeof AuthenticatedSpecialtiesIndexRoute
   '/staffs': typeof AuthenticatedStaffsIndexRoute
@@ -264,6 +290,7 @@ export interface FileRoutesByTo {
   '/user-group': typeof AuthenticatedUserGroupIndexRoute
   '/user-permission': typeof AuthenticatedUserPermissionIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/work-locations': typeof AuthenticatedWorkLocationsIndexRoute
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
 export interface FileRoutesById {
@@ -290,6 +317,8 @@ export interface FileRoutesById {
   '/_authenticated/doctors/': typeof AuthenticatedDoctorsIndexRoute
   '/_authenticated/group-manager/': typeof AuthenticatedGroupManagerIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/_authenticated/questions/': typeof AuthenticatedQuestionsIndexRoute
+  '/_authenticated/reviews/': typeof AuthenticatedReviewsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/specialties/': typeof AuthenticatedSpecialtiesIndexRoute
   '/_authenticated/staffs/': typeof AuthenticatedStaffsIndexRoute
@@ -297,6 +326,7 @@ export interface FileRoutesById {
   '/_authenticated/user-group/': typeof AuthenticatedUserGroupIndexRoute
   '/_authenticated/user-permission/': typeof AuthenticatedUserPermissionIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/work-locations/': typeof AuthenticatedWorkLocationsIndexRoute
   '/_authenticated/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
 export interface FileRouteTypes {
@@ -323,6 +353,8 @@ export interface FileRouteTypes {
     | '/doctors'
     | '/group-manager'
     | '/help-center'
+    | '/questions'
+    | '/reviews'
     | '/settings/'
     | '/specialties'
     | '/staffs'
@@ -330,6 +362,7 @@ export interface FileRouteTypes {
     | '/user-group'
     | '/user-permission'
     | '/users'
+    | '/work-locations'
     | '/doctors/$doctorId/profile'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -353,6 +386,8 @@ export interface FileRouteTypes {
     | '/doctors'
     | '/group-manager'
     | '/help-center'
+    | '/questions'
+    | '/reviews'
     | '/settings'
     | '/specialties'
     | '/staffs'
@@ -360,6 +395,7 @@ export interface FileRouteTypes {
     | '/user-group'
     | '/user-permission'
     | '/users'
+    | '/work-locations'
     | '/doctors/$doctorId/profile'
   id:
     | '__root__'
@@ -385,6 +421,8 @@ export interface FileRouteTypes {
     | '/_authenticated/doctors/'
     | '/_authenticated/group-manager/'
     | '/_authenticated/help-center/'
+    | '/_authenticated/questions/'
+    | '/_authenticated/reviews/'
     | '/_authenticated/settings/'
     | '/_authenticated/specialties/'
     | '/_authenticated/staffs/'
@@ -392,6 +430,7 @@ export interface FileRouteTypes {
     | '/_authenticated/user-group/'
     | '/_authenticated/user-permission/'
     | '/_authenticated/users/'
+    | '/_authenticated/work-locations/'
     | '/_authenticated/doctors/$doctorId/profile'
   fileRoutesById: FileRoutesById
 }
@@ -494,6 +533,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/work-locations/': {
+      id: '/_authenticated/work-locations/'
+      path: '/work-locations'
+      fullPath: '/work-locations'
+      preLoaderRoute: typeof AuthenticatedWorkLocationsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/users/': {
       id: '/_authenticated/users/'
       path: '/users'
@@ -542,6 +588,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings/'
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
+    '/_authenticated/reviews/': {
+      id: '/_authenticated/reviews/'
+      path: '/reviews'
+      fullPath: '/reviews'
+      preLoaderRoute: typeof AuthenticatedReviewsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/questions/': {
+      id: '/_authenticated/questions/'
+      path: '/questions'
+      fullPath: '/questions'
+      preLoaderRoute: typeof AuthenticatedQuestionsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/help-center/': {
       id: '/_authenticated/help-center/'
@@ -655,12 +715,15 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDoctorsIndexRoute: typeof AuthenticatedDoctorsIndexRoute
   AuthenticatedGroupManagerIndexRoute: typeof AuthenticatedGroupManagerIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedQuestionsIndexRoute: typeof AuthenticatedQuestionsIndexRoute
+  AuthenticatedReviewsIndexRoute: typeof AuthenticatedReviewsIndexRoute
   AuthenticatedSpecialtiesIndexRoute: typeof AuthenticatedSpecialtiesIndexRoute
   AuthenticatedStaffsIndexRoute: typeof AuthenticatedStaffsIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUserGroupIndexRoute: typeof AuthenticatedUserGroupIndexRoute
   AuthenticatedUserPermissionIndexRoute: typeof AuthenticatedUserPermissionIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedWorkLocationsIndexRoute: typeof AuthenticatedWorkLocationsIndexRoute
   AuthenticatedDoctorsDoctorIdProfileRoute: typeof AuthenticatedDoctorsDoctorIdProfileRoute
 }
 
@@ -673,12 +736,15 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDoctorsIndexRoute: AuthenticatedDoctorsIndexRoute,
   AuthenticatedGroupManagerIndexRoute: AuthenticatedGroupManagerIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedQuestionsIndexRoute: AuthenticatedQuestionsIndexRoute,
+  AuthenticatedReviewsIndexRoute: AuthenticatedReviewsIndexRoute,
   AuthenticatedSpecialtiesIndexRoute: AuthenticatedSpecialtiesIndexRoute,
   AuthenticatedStaffsIndexRoute: AuthenticatedStaffsIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUserGroupIndexRoute: AuthenticatedUserGroupIndexRoute,
   AuthenticatedUserPermissionIndexRoute: AuthenticatedUserPermissionIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedWorkLocationsIndexRoute: AuthenticatedWorkLocationsIndexRoute,
   AuthenticatedDoctorsDoctorIdProfileRoute:
     AuthenticatedDoctorsDoctorIdProfileRoute,
 }

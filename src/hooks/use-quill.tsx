@@ -1,23 +1,42 @@
 import { useEffect, useRef, useState } from 'react'
-import Quill from 'quill'
-import type { QuillOptions } from 'quill'
+import Quill, { type QuillOptions } from 'quill'
+
+// Declare global variables from CDN
+declare global {
+  interface Window {
+    hljs?: {
+      highlightBlock: (block: HTMLElement) => void
+      highlightAuto: (text: string) => { value: string; language: string }
+      configure: (options: { languages: string[] }) => void
+    }
+    katex?: {
+      render: (
+        math: string,
+        element: HTMLElement,
+        options?: { throwOnError: boolean; displayMode?: boolean }
+      ) => void
+    }
+  }
+}
 
 interface UseQuillOptions {
   theme?: QuillOptions['theme']
   modules?: QuillOptions['modules']
   placeholder?: string
   readOnly?: boolean
-  onTextChange?: (delta: any, oldDelta: any, source: string) => void
+  enableSyntax?: boolean
+  enableFormula?: boolean
+  onTextChange?: (delta: unknown, oldDelta: unknown, source: string) => void
 }
 
 interface UseQuillReturn {
   quill: Quill | null
-  quillRef: React.RefObject<HTMLDivElement>
+  quillRef: React.RefObject<HTMLDivElement | null>
   isReady: boolean
 }
 
 /**
- * Custom hook for Quill editor that prevents duplicate toolbar initialization
+ * Custom hook for Quill editor with syntax highlighting and formula support
  * @param options - Quill configuration options
  * @returns Object containing quill instance, ref, and ready state
  */
@@ -47,16 +66,63 @@ export function useQuill(options: UseQuillOptions): UseQuillReturn {
     isInitialized.current = true
 
     try {
+      // Configure syntax highlighting if enabled
+      const moduleConfig = { ...options.modules }
+
+      if (options.enableSyntax && globalThis.window?.hljs) {
+        // Configure highlight.js with common languages
+        globalThis.window.hljs.configure({
+          languages: [
+            'javascript',
+            'typescript',
+            'python',
+            'java',
+            'cpp',
+            'csharp',
+            'php',
+            'ruby',
+            'go',
+            'rust',
+            'sql',
+            'html',
+            'css',
+            'json',
+            'xml',
+            'yaml',
+            'markdown',
+            'bash',
+            'shell',
+          ],
+        })
+
+        // Add syntax module to Quill
+        moduleConfig.syntax = {
+          highlight: (text: string) => {
+            if (!globalThis.window?.hljs) return text
+            try {
+              return globalThis.window.hljs.highlightAuto(text).value
+            } catch (error) {
+              console.error('Syntax highlighting error:', error)
+              return text
+            }
+          },
+        }
+      }
+
       // Create Quill instance with provided options
       const instance = new Quill(quillRef.current, {
         theme: options.theme ?? 'snow',
-        modules: options.modules,
+        modules: moduleConfig,
         placeholder: options.placeholder ?? 'Start typing...',
         readOnly: options.readOnly ?? false,
       })
 
       // Setup text-change listener with ref to avoid stale closure
-      const textChangeHandler = (delta: any, oldDelta: any, source: string) => {
+      const textChangeHandler = (
+        delta: unknown,
+        oldDelta: unknown,
+        source: string
+      ) => {
         if (onTextChangeRef.current) {
           onTextChangeRef.current(delta, oldDelta, source)
         }

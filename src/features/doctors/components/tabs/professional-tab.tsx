@@ -13,8 +13,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Separator } from '@/components/ui/separator'
-import { RichTextEditor } from '../rich-text-editor'
 import type { UpdateDoctorProfileFormData } from '../../types'
+import { RichTextEditor } from '../rich-text-editor'
 
 interface ProfessionalTabProps {
   form: UseFormReturn<UpdateDoctorProfileFormData>
@@ -33,62 +33,71 @@ export function ProfessionalTab({
           Professional Information
         </h3>
         <div className='space-y-4'>
-        {/* Introduction */}
-        <FormField
-          control={form.control}
-          name='introduction'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='flex items-center gap-2'>
-                Introduction
-              </FormLabel>
-              <FormDescription className='mb-2 text-xs'>
-                Professional background and overview
-              </FormDescription>
-              <FormControl>
-                <RichTextEditor
-                  value={field.value || ''}
-                  onChange={field.onChange}
-                  accessToken={accessToken}
-                  placeholder='Write a professional introduction...'
-                  toolbarOptions='basic'
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          {/* Introduction */}
+          <FormField
+            control={form.control}
+            name='introduction'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='flex items-center gap-2'>
+                  Introduction
+                </FormLabel>
+                <FormDescription className='mb-2 text-xs'>
+                  Professional background and overview
+                </FormDescription>
+                <FormControl>
+                  <RichTextEditor
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    accessToken={accessToken}
+                    placeholder='Write a professional introduction...'
+                    toolbarOptions='basic'
+                    enableSyntax={true}
+                    enableFormula={true}
+                    enableImageUpload={true}
+                    enableVideoUpload={true}
+                    size='compact'
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <Separator />
+          <Separator />
 
-        {/* Research & Publications */}
-        <FormField
-          control={form.control}
-          name='research'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='flex items-center gap-2'>
-                Research & Publications
-              </FormLabel>
-              <FormDescription className='mb-2 text-xs'>
-                Research interests and published works
-              </FormDescription>
-              <FormControl>
-                <RichTextEditor
-                  value={field.value || ''}
-                  onChange={field.onChange}
-                  accessToken={accessToken}
-                  placeholder='Describe research work and publications...'
-                  toolbarOptions='basic'
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          {/* Research & Publications */}
+          <FormField
+            control={form.control}
+            name='research'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='flex items-center gap-2'>
+                  Research & Publications
+                </FormLabel>
+                <FormDescription className='mb-2 text-xs'>
+                  Research interests and published works
+                </FormDescription>
+                <FormControl>
+                  <RichTextEditor
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    accessToken={accessToken}
+                    placeholder='Describe research work and publications...'
+                    toolbarOptions='basic'
+                    enableSyntax={true}
+                    enableFormula={true}
+                    enableImageUpload={true}
+                    enableVideoUpload={true}
+                    size='compact'
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
       </div>
     </div>
   )
 }
-
