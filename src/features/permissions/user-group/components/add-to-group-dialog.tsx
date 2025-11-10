@@ -2,10 +2,9 @@
  * Add to Group Dialog Component
  * Dialog for adding a user to permission groups
  */
-import { useState } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -59,7 +58,7 @@ export function AddToGroupDialog({
     allGroups?.filter((group) => !existingGroupIds.includes(group.id)) || []
 
   const form = useForm<z.infer<typeof addToGroupSchema>>({
-    resolver: zodResolver(addToGroupSchema),
+    resolver: zodResolver(addToGroupSchema) as never,
     defaultValues: {
       groupId: '',
       tenantId: 'global',
@@ -111,7 +110,7 @@ export function AddToGroupDialog({
                     </FormControl>
                     <SelectContent>
                       {availableGroups.length === 0 ? (
-                        <div className='px-2 py-1.5 text-sm text-muted-foreground'>
+                        <div className='text-muted-foreground px-2 py-1.5 text-sm'>
                           No groups available
                         </div>
                       ) : (
@@ -120,7 +119,7 @@ export function AddToGroupDialog({
                             <div className='flex flex-col'>
                               <span className='font-medium'>{group.name}</span>
                               {group.description && (
-                                <span className='text-xs text-muted-foreground'>
+                                <span className='text-muted-foreground text-xs'>
                                   {group.description}
                                 </span>
                               )}
@@ -185,4 +184,3 @@ export function AddToGroupDialog({
     </Dialog>
   )
 }
-

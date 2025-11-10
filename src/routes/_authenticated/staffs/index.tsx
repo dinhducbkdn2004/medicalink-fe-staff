@@ -1,7 +1,6 @@
 import z from 'zod'
 import { createFileRoute } from '@tanstack/react-router'
 import { Staffs } from '@/features/staffs'
-import { staffRoles } from '@/features/staffs/data/data'
 
 const staffsSearchSchema = z.object({
   page: z.number().optional().catch(1),
@@ -24,4 +23,3 @@ export const Route = createFileRoute('/_authenticated/staffs/')({
   validateSearch: staffsSearchSchema,
   component: Staffs,
 })
-

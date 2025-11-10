@@ -81,15 +81,18 @@ export function GroupPermissionsDialog({
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className='flex max-h-[85vh] max-w-4xl flex-col overflow-hidden'>
-        <DialogHeader className='flex-shrink-0'>
+        <DialogHeader className='shrink-0'>
           <DialogTitle>Manage Permissions: {currentGroup?.name}</DialogTitle>
           <DialogDescription>
             View and modify permissions assigned to this group.
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue='permissions' className='flex min-h-0 flex-1 flex-col'>
-          <TabsList className='grid w-full flex-shrink-0 grid-cols-2'>
+        <Tabs
+          defaultValue='permissions'
+          className='flex min-h-0 flex-1 flex-col'
+        >
+          <TabsList className='grid w-full shrink-0 grid-cols-2'>
             <TabsTrigger value='permissions'>Permissions</TabsTrigger>
             <TabsTrigger value='assign'>Assign New</TabsTrigger>
           </TabsList>
@@ -98,7 +101,7 @@ export function GroupPermissionsDialog({
             value='permissions'
             className='mt-4 flex min-h-0 flex-1 flex-col space-y-4'
           >
-            <p className='text-muted-foreground flex-shrink-0 text-sm'>
+            <p className='text-muted-foreground shrink-0 text-sm'>
               Click checkboxes to grant or revoke permissions
             </p>
 
@@ -116,7 +119,10 @@ export function GroupPermissionsDialog({
             )}
           </TabsContent>
 
-          <TabsContent value='assign' className='mt-4 space-y-4 overflow-y-auto'>
+          <TabsContent
+            value='assign'
+            className='mt-4 space-y-4 overflow-y-auto'
+          >
             {currentGroup && (
               <AssignPermissionForm
                 groupId={currentGroup.id}

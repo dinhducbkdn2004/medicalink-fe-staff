@@ -21,7 +21,7 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
   const { setOpen, setCurrentRow } = useDoctors()
   const selectedRows = table.getFilteredSelectedRowModel().rows
 
-  const handleBulkToggleActive = (isActive: boolean) => {
+  const handleBulkToggleActive = (_isActive: boolean) => {
     // For now, just show the first selected doctor in dialog
     // You can enhance this to support bulk status update in the future
     const firstDoctor = selectedRows[0]?.original
@@ -82,4 +82,3 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
     </>
   )
 }
-

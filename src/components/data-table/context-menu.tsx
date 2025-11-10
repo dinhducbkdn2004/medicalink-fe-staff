@@ -2,9 +2,8 @@
  * Data Table Context Menu
  * Right-click context menu for table rows
  */
-
 import * as React from 'react'
-import { type Row } from '@tantml:react-table'
+import { type Row } from '@tanstack/react-table'
 import {
   ContextMenu,
   ContextMenuContent,
@@ -20,6 +19,7 @@ type Action = {
   onClick: () => void
   variant?: 'default' | 'destructive'
   separator?: boolean
+  disabled?: boolean
 }
 
 type DataTableContextMenuProps<TData> = {
@@ -30,7 +30,7 @@ type DataTableContextMenuProps<TData> = {
 
 /**
  * Context menu component for table rows
- * 
+ *
  * @example
  * ```tsx
  * <DataTableContextMenu
@@ -46,7 +46,7 @@ type DataTableContextMenuProps<TData> = {
  * ```
  */
 export function DataTableContextMenu<TData>({
-  row,
+  row: _row,
   actions,
   children,
 }: DataTableContextMenuProps<TData>) {
@@ -63,6 +63,7 @@ export function DataTableContextMenu<TData>({
                   e.preventDefault()
                   action.onClick()
                 }}
+                disabled={action.disabled}
                 className={
                   action.variant === 'destructive'
                     ? 'text-destructive focus:text-destructive'
@@ -79,4 +80,3 @@ export function DataTableContextMenu<TData>({
     </ContextMenu>
   )
 }
-

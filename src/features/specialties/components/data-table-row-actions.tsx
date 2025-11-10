@@ -2,9 +2,8 @@
  * Data Table Row Actions
  * Dropdown menu for individual row actions
  */
-import { Row } from '@tanstack/react-table'
+import type { Row } from '@tanstack/react-table'
 import { MoreHorizontal, Edit, Trash2, Info } from 'lucide-react'
-
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -35,7 +34,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <span className='sr-only'>Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className='w-[160px]'>
+      <DropdownMenuContent align='end' className='w-40'>
         <DropdownMenuItem
           onClick={() => {
             setCurrentRow(specialty)
@@ -69,4 +68,3 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     </DropdownMenu>
   )
 }
-

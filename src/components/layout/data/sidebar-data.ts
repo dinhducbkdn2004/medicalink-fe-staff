@@ -18,7 +18,6 @@ import {
   CalendarDays,
   Star,
   MessageCircleQuestion,
-  MessageCircle,
 } from 'lucide-react'
 import type { UserRole } from '@/api/types/auth.types'
 import type { NavGroupWithAccess } from '@/lib/sidebar-utils'
@@ -118,19 +117,8 @@ export const navGroups: NavGroupWithAccess[] = [
       },
       {
         title: 'Q&A',
+        url: '/questions',
         icon: MessageCircleQuestion,
-        items: [
-          {
-            title: 'Questions',
-            url: '/questions',
-            icon: MessageCircleQuestion,
-          },
-          {
-            title: 'Answers',
-            url: '/answers',
-            icon: MessageCircle,
-          },
-        ],
       },
     ],
   },

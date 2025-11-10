@@ -4,14 +4,8 @@
  */
 import { useState } from 'react'
 import { Plus, Edit, Trash2, Loader2 } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import {
   Card,
   CardContent,
@@ -19,13 +13,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { type Specialty, type SpecialtyInfoSection } from '../data/schema'
 import { useInfoSections } from '../data/use-specialties'
-import { InfoSectionForm } from './info-section-form'
 import { InfoSectionDeleteDialog } from './info-section-delete-dialog'
+import { InfoSectionForm } from './info-section-form'
 
 interface InfoSectionsDialogProps {
   open: boolean
@@ -94,7 +94,7 @@ export function InfoSectionsDialog({
 
           {isLoading ? (
             <div className='flex h-[300px] items-center justify-center'>
-              <Loader2 className='size-8 animate-spin text-muted-foreground' />
+              <Loader2 className='text-muted-foreground size-8 animate-spin' />
             </div>
           ) : !sections || sections.length === 0 ? (
             <div className='flex h-[300px] flex-col items-center justify-center gap-2'>
@@ -143,7 +143,7 @@ export function InfoSectionsDialog({
                             size='sm'
                             variant='ghost'
                             onClick={() => setDeletingSection(section)}
-                            className='size-8 p-0 text-destructive hover:text-destructive'
+                            className='text-destructive hover:text-destructive size-8 p-0'
                           >
                             <Trash2 className='size-4' />
                             <span className='sr-only'>Delete</span>
@@ -153,9 +153,10 @@ export function InfoSectionsDialog({
                     </CardHeader>
                     {section.content && (
                       <CardContent className='pt-0'>
-                        <div className='text-muted-foreground line-clamp-3 text-sm'>
-                          {section.content}
-                        </div>
+                        <div
+                          className='text-muted-foreground prose prose-sm line-clamp-3 max-w-none text-sm'
+                          dangerouslySetInnerHTML={{ __html: section.content }}
+                        />
                       </CardContent>
                     )}
                   </Card>
@@ -188,4 +189,3 @@ export function InfoSectionsDialog({
     </>
   )
 }
-
