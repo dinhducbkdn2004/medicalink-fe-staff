@@ -1,18 +1,36 @@
-import { Logo } from '@/assets/logo'
+import logoImage from '@/assets/images/rect-logo-xl.png'
 
 type AuthLayoutProps = {
   children: React.ReactNode
 }
 
-export function AuthLayout({ children }: AuthLayoutProps) {
+export function AuthLayout({ children }: Readonly<AuthLayoutProps>) {
   return (
-    <div className='container grid h-svh max-w-none items-center justify-center'>
-      <div className='mx-auto flex w-full flex-col justify-center space-y-2 py-8 sm:w-[480px] sm:p-8'>
-        <div className='mb-4 flex items-center justify-center'>
-          <Logo className='me-2' />
-          <h1 className='text-xl font-medium'>Shadcn Admin</h1>
+    <div className='relative min-h-svh w-full'>
+      <div
+        className='pointer-events-none absolute inset-0 z-0'
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(229,231,235,0.35) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(229,231,235,0.35) 1px, transparent 1px),
+            radial-gradient(125% 125% at 50% 10%, #fff 40%, #93c5fd 100%)
+          `,
+          backgroundSize: `
+            64px 64px,
+            64px 64px,
+            100% 100%
+          `,
+        }}
+      />
+      <div className='relative z-10 flex min-h-svh'>
+        <img
+          src={logoImage}
+          alt='MedicaLink Logo'
+          className='absolute top-6 left-6 h-12 w-auto md:top-8 md:left-11'
+        />
+        <div className='flex min-h-svh w-full items-center justify-center p-6 md:p-10'>
+          <div className='w-full max-w-sm'>{children}</div>
         </div>
-        {children}
       </div>
     </div>
   )
