@@ -3,11 +3,11 @@
  * Create/Edit work location form dialog with enhanced UX
  */
 import { useEffect } from 'react'
+import { z } from 'zod'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
-
+import { getUserTimezone } from '@/lib/timezones'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -28,7 +28,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { getUserTimezone } from '@/lib/timezones'
 import { type WorkLocation } from '../data/schema'
 import {
   useCreateWorkLocation,
@@ -187,9 +186,6 @@ export function WorkLocationsActionDialog({
                       disabled={isLoading}
                     />
                   </FormControl>
-                  <FormDescription>
-                    The name of the work location (2-160 characters)
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -210,9 +206,6 @@ export function WorkLocationsActionDialog({
                       disabled={isLoading}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Physical address of the location (max 255 characters)
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -233,9 +226,6 @@ export function WorkLocationsActionDialog({
                       disabled={isLoading}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Contact phone number (max 32 characters)
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -255,9 +245,6 @@ export function WorkLocationsActionDialog({
                       disabled={isLoading}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Select timezone for this location (auto-detected based on your current timezone)
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -279,7 +266,8 @@ export function WorkLocationsActionDialog({
                     />
                   </FormControl>
                   <FormDescription>
-                    Optional link to Google Maps location (can auto-generate from address)
+                    Optional link to Google Maps location (can auto-generate
+                    from address)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -306,4 +294,3 @@ export function WorkLocationsActionDialog({
     </Dialog>
   )
 }
-

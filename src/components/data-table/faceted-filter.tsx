@@ -36,7 +36,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
   if (!column) return null
-  
+
   // Safely get faceted values with fallback
   let facets: Map<unknown, number>
   try {
@@ -44,7 +44,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   } catch {
     facets = new Map()
   }
-  
+
   const selectedValues = new Set(column.getFilterValue() as string[])
 
   return (

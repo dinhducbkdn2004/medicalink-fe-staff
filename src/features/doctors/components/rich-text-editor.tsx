@@ -7,6 +7,8 @@
  * ✅ Upload ảnh lên Cloudinary (với custom handler)
  * ✅ Upload video lên Cloudinary (với custom handler)
  * ✅ Đầy đủ các công cụ định dạng văn bản (bold, italic, underline, etc.)
+ * ✅ Syntax Highlighting với highlight.js (code blocks)
+ * ✅ Math Formula với KaTeX
  * ✅ Drag & Drop support để upload ảnh
  * ✅ Paste image from clipboard
  * ✅ Progress tracking khi upload
@@ -27,8 +29,7 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { ImageIcon, Loader2, Video } from 'lucide-react'
 import type Quill from 'quill'
-// Import Quill styles
-import 'quill/dist/quill.snow.css'
+// Note: Quill loaded from CDN in index.html
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useQuill } from '@/hooks/use-quill'
@@ -53,15 +54,19 @@ export interface RichTextEditorProps {
   toolbarOptions?: 'full' | 'basic' | 'minimal' | unknown[]
   enableImageUpload?: boolean
   enableVideoUpload?: boolean
+  enableSyntax?: boolean // Enable syntax highlighting
+  enableFormula?: boolean // Enable math formulas
+  size?: 'compact' | 'medium' | 'large' // Editor size
 }
 
 // ============================================================================
 // Toolbar Configurations
 // Theo hướng dẫn: Toolbar Đầy Đủ với tất cả các tính năng
+// Bao gồm: syntax highlighting và formula
 // ============================================================================
 
 const TOOLBAR_CONFIGS = {
-  // Full toolbar với đầy đủ tính năng
+  // Full toolbar với đầy đủ tính năng (bao gồm code-block và formula)
   full: [
     // Headers (h1-h6)
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -91,11 +96,11 @@ const TOOLBAR_CONFIGS = {
     // Direction (RTL)
     [{ direction: 'rtl' }],
 
-    // Blockquote and code block
+    // Blockquote and code block (syntax highlighting)
     ['blockquote', 'code-block'],
 
-    // Links, images, videos
-    ['link', 'image', 'video'],
+    // Links, images, videos, formulas
+    ['link', 'image', 'video', 'formula'],
 
     // Clean formatting
     ['clean'],
@@ -109,7 +114,7 @@ const TOOLBAR_CONFIGS = {
     [{ align: [] }],
     ['blockquote', 'code-block'],
     [{ color: [] }, { background: [] }],
-    ['link', 'image', 'video'],
+    ['link', 'image', 'video', 'formula'],
     ['clean'],
   ],
 
@@ -137,6 +142,9 @@ export function RichTextEditor({
   toolbarOptions = 'basic',
   enableImageUpload = true,
   enableVideoUpload = true,
+  enableSyntax = true,
+  enableFormula = true,
+  size = 'medium',
 }: Readonly<RichTextEditorProps>) {
   const { uploadMedia, uploading, progress, uploadType } = useMediaUpload()
   const quillInstanceRef = useRef<Quill | null>(null)
@@ -288,7 +296,7 @@ export function RichTextEditor({
       return toolbarOptions
     }
 
-    let config = TOOLBAR_CONFIGS[toolbarOptions as keyof typeof TOOLBAR_CONFIGS]
+    let config = TOOLBAR_CONFIGS[toolbarOptions]
 
     // Filter out image/video if disabled
     if (!enableImageUpload || !enableVideoUpload) {
@@ -313,6 +321,7 @@ export function RichTextEditor({
    * - Toolbar: Custom handlers cho image/video
    * - Clipboard: Xử lý copy/paste
    * - History: Undo/Redo với delay 1s, max 100 actions
+   * - Syntax: Code syntax highlighting với highlight.js
    */
   const modules = useMemo(
     () => ({
@@ -363,6 +372,8 @@ export function RichTextEditor({
     modules,
     placeholder,
     readOnly: disabled || uploading,
+    enableSyntax,
+    enableFormula,
     onTextChange: handleTextChange,
   })
 
@@ -561,23 +572,32 @@ export function RichTextEditor({
     }
 
     quill.root.addEventListener('drop', handleDrop as unknown as EventListener)
-    quill.root.addEventListener('dragover', handleDragOver as unknown as EventListener)
+    quill.root.addEventListener(
+      'dragover',
+      handleDragOver as unknown as EventListener
+    )
 
     return () => {
-      quill.root.removeEventListener('drop', handleDrop as unknown as EventListener)
-      quill.root.removeEventListener('dragover', handleDragOver as unknown as EventListener)
+      quill.root.removeEventListener(
+        'drop',
+        handleDrop as unknown as EventListener
+      )
+      quill.root.removeEventListener(
+        'dragover',
+        handleDragOver as unknown as EventListener
+      )
     }
   }, [quill, uploadMedia, accessToken, onChange, enableImageUpload])
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={cn('rich-text-editor-wrapper relative', className)}>
       {/* Editor container */}
       <div
         ref={quillRef}
         className={cn(
-          'rich-text-editor quill-editor-wrapper',
-          disabled && 'opacity-50',
-          className
+          'rich-text-editor',
+          size && `ql-editor-${size}`,
+          disabled && 'opacity-50'
         )}
       />
 

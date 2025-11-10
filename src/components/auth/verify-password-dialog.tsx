@@ -2,7 +2,6 @@
  * Verify Password Dialog Component
  * Modal dialog for password verification before sensitive operations
  */
-
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -153,4 +152,3 @@ export function useVerifyPasswordDialog(onVerified: () => void) {
     },
   }
 }
-

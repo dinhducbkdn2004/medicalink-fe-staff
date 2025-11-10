@@ -27,13 +27,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { RichTextEditor } from '@/features/doctors/components/rich-text-editor'
+import { Textarea } from '@/components/ui/textarea'
 import { type Specialty } from '../data/schema'
 import {
   useCreateSpecialty,
   useUpdateSpecialty,
 } from '../data/use-specialties'
-import { useAuthStore } from '@/stores/auth-store'
 
 // ============================================================================
 // Types & Schema
@@ -68,11 +67,10 @@ export function SpecialtiesActionDialog({
   const isEditMode = !!currentRow
   const createMutation = useCreateSpecialty()
   const updateMutation = useUpdateSpecialty()
-  const accessToken = useAuthStore((state) => state.accessToken)
 
   // Form setup
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema) as never,
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
       description: '',
@@ -170,13 +168,11 @@ export function SpecialtiesActionDialog({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <RichTextEditor
-                      value={field.value || ''}
-                      onChange={field.onChange}
+                    <Textarea
                       placeholder='Brief description of the specialty...'
+                      className='min-h-[100px] resize-none'
+                      {...field}
                       disabled={isLoading}
-                      toolbarOptions='basic'
-                      accessToken={accessToken || ''}
                     />
                   </FormControl>
                   <FormDescription>
