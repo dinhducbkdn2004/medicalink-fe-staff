@@ -51,14 +51,14 @@ export function ProfileDropdown() {
             <DropdownMenuItem asChild>
               <Link to='/settings'>
                 Profile
-                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                <DropdownMenuShortcut>⇧P</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
 
             <DropdownMenuItem asChild>
               <Link to='/settings'>
                 Settings
-                <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                <DropdownMenuShortcut>S</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
@@ -66,7 +66,7 @@ export function ProfileDropdown() {
           <DropdownMenuItem variant='destructive' onClick={() => setOpen(true)}>
             Sign out
             <DropdownMenuShortcut className='text-current'>
-              ⇧⌘Q
+              ⇧Q
             </DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>
