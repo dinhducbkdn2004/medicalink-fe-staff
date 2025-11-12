@@ -58,19 +58,19 @@ export function useQuill(options: UseQuillOptions): UseQuillReturn {
 
   // Initialize Quill editor only once
   useEffect(() => {
-    if (!quillRef.current || isInitialized.current) {
-      return
-    }
+    if (!quillRef.current || isInitialized.current) return
 
-    // Mark as initialized before creating instance
     isInitialized.current = true
 
+    let instance: Quill | null = null
+    // Capture ref value for cleanup
+    const currentQuillRef = quillRef.current
+
     try {
-      // Configure syntax highlighting if enabled
       const moduleConfig = { ...options.modules }
 
+      // Syntax highlighting
       if (options.enableSyntax && globalThis.window?.hljs) {
-        // Configure highlight.js with common languages
         globalThis.window.hljs.configure({
           languages: [
             'javascript',
@@ -95,77 +95,68 @@ export function useQuill(options: UseQuillOptions): UseQuillReturn {
           ],
         })
 
-        // Add syntax module to Quill
         moduleConfig.syntax = {
           highlight: (text: string) => {
-            if (!globalThis.window?.hljs) return text
             try {
-              return globalThis.window.hljs.highlightAuto(text).value
-            } catch (error) {
-              console.error('Syntax highlighting error:', error)
+              return globalThis.window?.hljs
+                ? globalThis.window.hljs.highlightAuto(text).value
+                : text
+            } catch {
               return text
             }
           },
         }
       }
 
-      // Create Quill instance with provided options
-      const instance = new Quill(quillRef.current, {
+      // 💡 Dọn sạch mọi toolbar hoặc nội dung cũ trước khi init
+      const container = currentQuillRef.parentElement
+      if (container) {
+        container.querySelectorAll('.ql-toolbar').forEach((tb) => tb.remove())
+        currentQuillRef.innerHTML = ''
+      }
+
+      // Init Quill
+      instance = new Quill(currentQuillRef, {
         theme: options.theme ?? 'snow',
         modules: moduleConfig,
         placeholder: options.placeholder ?? 'Start typing...',
         readOnly: options.readOnly ?? false,
       })
 
-      // Setup text-change listener with ref to avoid stale closure
+      // Event listener
       const textChangeHandler = (
         delta: unknown,
         oldDelta: unknown,
         source: string
       ) => {
-        if (onTextChangeRef.current) {
-          onTextChangeRef.current(delta, oldDelta, source)
-        }
+        onTextChangeRef.current?.(delta, oldDelta, source)
       }
-
       instance.on('text-change', textChangeHandler)
 
       setQuill(instance)
       setIsReady(true)
 
-      // Cleanup function
+      // ✅ Cleanup
       return () => {
-        try {
-          // Remove event listener
-          instance.off('text-change', textChangeHandler)
-
-          // Clear editor content
-          if (instance.root) {
-            instance.root.innerHTML = ''
-          }
-
-          // Remove toolbar if exists
-          const toolbar =
-            instance.root.parentElement?.querySelector('.ql-toolbar')
-          if (toolbar) {
-            toolbar.remove()
-          }
-
-          // Reset state
-          setIsReady(false)
-          setQuill(null)
-          isInitialized.current = false
-        } catch (error) {
-          console.error('Error cleaning up Quill editor:', error)
+        instance?.off('text-change', textChangeHandler)
+        // Remove all toolbars linked to this container
+        const container = currentQuillRef?.parentElement
+        if (container) {
+          container.querySelectorAll('.ql-toolbar').forEach((tb) => tb.remove())
         }
+        if (currentQuillRef) {
+          currentQuillRef.innerHTML = ''
+        }
+        setQuill(null)
+        setIsReady(false)
+        isInitialized.current = false
       }
     } catch (error) {
       console.error('Error initializing Quill editor:', error)
       isInitialized.current = false
-      return
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // ✅ Empty deps - initialize only once
+  }, [])
 
   // Update readOnly state when it changes
   useEffect(() => {
