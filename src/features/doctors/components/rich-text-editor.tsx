@@ -135,7 +135,7 @@ export function RichTextEditor({
   value,
   defaultValue,
   onChange,
-  placeholder = 'Nhập nội dung...',
+  placeholder = 'Enter your content here...',
   accessToken,
   className = '',
   disabled = false,
