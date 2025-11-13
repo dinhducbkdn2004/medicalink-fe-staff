@@ -31,10 +31,6 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
               size='icon'
               onClick={() => {
                 // TODO: Implement bulk approve
-                const ids = table
-                  .getFilteredSelectedRowModel()
-                  .rows.map((row) => row.original.id)
-                console.log('Bulk approve questions:', ids)
               }}
               className='size-8'
               aria-label='Approve selected questions'
@@ -56,10 +52,6 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
               size='icon'
               onClick={() => {
                 // TODO: Implement bulk reject
-                const ids = table
-                  .getFilteredSelectedRowModel()
-                  .rows.map((row) => row.original.id)
-                console.log('Bulk reject questions:', ids)
               }}
               className='size-8'
               aria-label='Reject selected questions'
@@ -81,10 +73,6 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
               size='icon'
               onClick={() => {
                 // TODO: Implement bulk delete dialog
-                const ids = table
-                  .getFilteredSelectedRowModel()
-                  .rows.map((row) => row.original.id)
-                console.log('Bulk delete questions:', ids)
               }}
               className='size-8'
               aria-label='Delete selected questions'
@@ -105,4 +93,3 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
     </>
   )
 }
-
