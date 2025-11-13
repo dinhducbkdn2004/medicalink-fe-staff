@@ -38,14 +38,11 @@ export {
   useCreateDoctor,
   useUpdateDoctor,
   useDeleteDoctor,
-  usePublicDoctorProfiles,
-  useMyProfile,
+  useMyDoctorProfile,
   useDoctorProfile,
-  useCreateProfile,
+  useCreateDoctorProfile,
   useUpdateMyProfile,
-  useUpdateProfile,
-  useToggleActiveStatus,
-  useDeleteProfile,
+  useUpdateDoctorProfile,
 } from './data'
 
 // Components

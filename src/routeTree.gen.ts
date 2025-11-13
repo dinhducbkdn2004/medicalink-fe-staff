@@ -21,6 +21,7 @@ import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authOtpRouteImport } from './routes/(auth)/otp'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
+import { Route as AuthenticatedAppointmentsRouteRouteImport } from './routes/_authenticated/appointments/route'
 import { Route as AuthenticatedWorkLocationsIndexRouteImport } from './routes/_authenticated/work-locations/index'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedUserPermissionIndexRouteImport } from './routes/_authenticated/user-permission/index'
@@ -36,11 +37,17 @@ import { Route as AuthenticatedGroupManagerIndexRouteImport } from './routes/_au
 import { Route as AuthenticatedDoctorsIndexRouteImport } from './routes/_authenticated/doctors.index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
+import { Route as AuthenticatedAppointmentsIndexRouteImport } from './routes/_authenticated/appointments/index'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedAppointmentsYearViewRouteImport } from './routes/_authenticated/appointments/year-view'
+import { Route as AuthenticatedAppointmentsWeekViewRouteImport } from './routes/_authenticated/appointments/week-view'
+import { Route as AuthenticatedAppointmentsMonthViewRouteImport } from './routes/_authenticated/appointments/month-view'
+import { Route as AuthenticatedAppointmentsDayViewRouteImport } from './routes/_authenticated/appointments/day-view'
+import { Route as AuthenticatedAppointmentsAgendaViewRouteImport } from './routes/_authenticated/appointments/agenda-view'
 import { Route as AuthenticatedDoctorsDoctorIdProfileRouteImport } from './routes/_authenticated/doctors/$doctorId.profile'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -101,6 +108,12 @@ const AuthenticatedSettingsRouteRoute =
   AuthenticatedSettingsRouteRouteImport.update({
     id: '/settings',
     path: '/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAppointmentsRouteRoute =
+  AuthenticatedAppointmentsRouteRouteImport.update({
+    id: '/appointments',
+    path: '/appointments',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedWorkLocationsIndexRoute =
@@ -189,6 +202,12 @@ const AuthenticatedAppsIndexRoute = AuthenticatedAppsIndexRouteImport.update({
   path: '/apps/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAppointmentsIndexRoute =
+  AuthenticatedAppointmentsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAppointmentsRouteRoute,
+  } as any)
 const AuthenticatedSettingsNotificationsRoute =
   AuthenticatedSettingsNotificationsRouteImport.update({
     id: '/notifications',
@@ -219,6 +238,36 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAppointmentsYearViewRoute =
+  AuthenticatedAppointmentsYearViewRouteImport.update({
+    id: '/year-view',
+    path: '/year-view',
+    getParentRoute: () => AuthenticatedAppointmentsRouteRoute,
+  } as any)
+const AuthenticatedAppointmentsWeekViewRoute =
+  AuthenticatedAppointmentsWeekViewRouteImport.update({
+    id: '/week-view',
+    path: '/week-view',
+    getParentRoute: () => AuthenticatedAppointmentsRouteRoute,
+  } as any)
+const AuthenticatedAppointmentsMonthViewRoute =
+  AuthenticatedAppointmentsMonthViewRouteImport.update({
+    id: '/month-view',
+    path: '/month-view',
+    getParentRoute: () => AuthenticatedAppointmentsRouteRoute,
+  } as any)
+const AuthenticatedAppointmentsDayViewRoute =
+  AuthenticatedAppointmentsDayViewRouteImport.update({
+    id: '/day-view',
+    path: '/day-view',
+    getParentRoute: () => AuthenticatedAppointmentsRouteRoute,
+  } as any)
+const AuthenticatedAppointmentsAgendaViewRoute =
+  AuthenticatedAppointmentsAgendaViewRouteImport.update({
+    id: '/agenda-view',
+    path: '/agenda-view',
+    getParentRoute: () => AuthenticatedAppointmentsRouteRoute,
+  } as any)
 const AuthenticatedDoctorsDoctorIdProfileRoute =
   AuthenticatedDoctorsDoctorIdProfileRouteImport.update({
     id: '/doctors/$doctorId/profile',
@@ -227,6 +276,7 @@ const AuthenticatedDoctorsDoctorIdProfileRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/appointments': typeof AuthenticatedAppointmentsRouteRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
@@ -238,11 +288,17 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
+  '/appointments/agenda-view': typeof AuthenticatedAppointmentsAgendaViewRoute
+  '/appointments/day-view': typeof AuthenticatedAppointmentsDayViewRoute
+  '/appointments/month-view': typeof AuthenticatedAppointmentsMonthViewRoute
+  '/appointments/week-view': typeof AuthenticatedAppointmentsWeekViewRoute
+  '/appointments/year-view': typeof AuthenticatedAppointmentsYearViewRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/appointments/': typeof AuthenticatedAppointmentsIndexRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/doctors': typeof AuthenticatedDoctorsIndexRoute
@@ -271,11 +327,17 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
+  '/appointments/agenda-view': typeof AuthenticatedAppointmentsAgendaViewRoute
+  '/appointments/day-view': typeof AuthenticatedAppointmentsDayViewRoute
+  '/appointments/month-view': typeof AuthenticatedAppointmentsMonthViewRoute
+  '/appointments/week-view': typeof AuthenticatedAppointmentsWeekViewRoute
+  '/appointments/year-view': typeof AuthenticatedAppointmentsYearViewRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/appointments': typeof AuthenticatedAppointmentsIndexRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/doctors': typeof AuthenticatedDoctorsIndexRoute
@@ -296,6 +358,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_authenticated/appointments': typeof AuthenticatedAppointmentsRouteRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/otp': typeof authOtpRoute
@@ -307,11 +370,17 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/appointments/agenda-view': typeof AuthenticatedAppointmentsAgendaViewRoute
+  '/_authenticated/appointments/day-view': typeof AuthenticatedAppointmentsDayViewRoute
+  '/_authenticated/appointments/month-view': typeof AuthenticatedAppointmentsMonthViewRoute
+  '/_authenticated/appointments/week-view': typeof AuthenticatedAppointmentsWeekViewRoute
+  '/_authenticated/appointments/year-view': typeof AuthenticatedAppointmentsYearViewRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/_authenticated/appointments/': typeof AuthenticatedAppointmentsIndexRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/doctors/': typeof AuthenticatedDoctorsIndexRoute
@@ -332,6 +401,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/appointments'
     | '/settings'
     | '/forgot-password'
     | '/otp'
@@ -343,11 +413,17 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
+    | '/appointments/agenda-view'
+    | '/appointments/day-view'
+    | '/appointments/month-view'
+    | '/appointments/week-view'
+    | '/appointments/year-view'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/appointments/'
     | '/apps'
     | '/chats'
     | '/doctors'
@@ -376,11 +452,17 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
+    | '/appointments/agenda-view'
+    | '/appointments/day-view'
+    | '/appointments/month-view'
+    | '/appointments/week-view'
+    | '/appointments/year-view'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/appointments'
     | '/apps'
     | '/chats'
     | '/doctors'
@@ -400,6 +482,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_authenticated'
+    | '/_authenticated/appointments'
     | '/_authenticated/settings'
     | '/(auth)/forgot-password'
     | '/(auth)/otp'
@@ -411,11 +494,17 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/'
+    | '/_authenticated/appointments/agenda-view'
+    | '/_authenticated/appointments/day-view'
+    | '/_authenticated/appointments/month-view'
+    | '/_authenticated/appointments/week-view'
+    | '/_authenticated/appointments/year-view'
     | '/_authenticated/errors/$error'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
+    | '/_authenticated/appointments/'
     | '/_authenticated/apps/'
     | '/_authenticated/chats/'
     | '/_authenticated/doctors/'
@@ -533,6 +622,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/appointments': {
+      id: '/_authenticated/appointments'
+      path: '/appointments'
+      fullPath: '/appointments'
+      preLoaderRoute: typeof AuthenticatedAppointmentsRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/work-locations/': {
       id: '/_authenticated/work-locations/'
       path: '/work-locations'
@@ -638,6 +734,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/appointments/': {
+      id: '/_authenticated/appointments/'
+      path: '/'
+      fullPath: '/appointments/'
+      preLoaderRoute: typeof AuthenticatedAppointmentsIndexRouteImport
+      parentRoute: typeof AuthenticatedAppointmentsRouteRoute
+    }
     '/_authenticated/settings/notifications': {
       id: '/_authenticated/settings/notifications'
       path: '/notifications'
@@ -673,6 +776,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/appointments/year-view': {
+      id: '/_authenticated/appointments/year-view'
+      path: '/year-view'
+      fullPath: '/appointments/year-view'
+      preLoaderRoute: typeof AuthenticatedAppointmentsYearViewRouteImport
+      parentRoute: typeof AuthenticatedAppointmentsRouteRoute
+    }
+    '/_authenticated/appointments/week-view': {
+      id: '/_authenticated/appointments/week-view'
+      path: '/week-view'
+      fullPath: '/appointments/week-view'
+      preLoaderRoute: typeof AuthenticatedAppointmentsWeekViewRouteImport
+      parentRoute: typeof AuthenticatedAppointmentsRouteRoute
+    }
+    '/_authenticated/appointments/month-view': {
+      id: '/_authenticated/appointments/month-view'
+      path: '/month-view'
+      fullPath: '/appointments/month-view'
+      preLoaderRoute: typeof AuthenticatedAppointmentsMonthViewRouteImport
+      parentRoute: typeof AuthenticatedAppointmentsRouteRoute
+    }
+    '/_authenticated/appointments/day-view': {
+      id: '/_authenticated/appointments/day-view'
+      path: '/day-view'
+      fullPath: '/appointments/day-view'
+      preLoaderRoute: typeof AuthenticatedAppointmentsDayViewRouteImport
+      parentRoute: typeof AuthenticatedAppointmentsRouteRoute
+    }
+    '/_authenticated/appointments/agenda-view': {
+      id: '/_authenticated/appointments/agenda-view'
+      path: '/agenda-view'
+      fullPath: '/appointments/agenda-view'
+      preLoaderRoute: typeof AuthenticatedAppointmentsAgendaViewRouteImport
+      parentRoute: typeof AuthenticatedAppointmentsRouteRoute
+    }
     '/_authenticated/doctors/$doctorId/profile': {
       id: '/_authenticated/doctors/$doctorId/profile'
       path: '/doctors/$doctorId/profile'
@@ -682,6 +820,35 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedAppointmentsRouteRouteChildren {
+  AuthenticatedAppointmentsAgendaViewRoute: typeof AuthenticatedAppointmentsAgendaViewRoute
+  AuthenticatedAppointmentsDayViewRoute: typeof AuthenticatedAppointmentsDayViewRoute
+  AuthenticatedAppointmentsMonthViewRoute: typeof AuthenticatedAppointmentsMonthViewRoute
+  AuthenticatedAppointmentsWeekViewRoute: typeof AuthenticatedAppointmentsWeekViewRoute
+  AuthenticatedAppointmentsYearViewRoute: typeof AuthenticatedAppointmentsYearViewRoute
+  AuthenticatedAppointmentsIndexRoute: typeof AuthenticatedAppointmentsIndexRoute
+}
+
+const AuthenticatedAppointmentsRouteRouteChildren: AuthenticatedAppointmentsRouteRouteChildren =
+  {
+    AuthenticatedAppointmentsAgendaViewRoute:
+      AuthenticatedAppointmentsAgendaViewRoute,
+    AuthenticatedAppointmentsDayViewRoute:
+      AuthenticatedAppointmentsDayViewRoute,
+    AuthenticatedAppointmentsMonthViewRoute:
+      AuthenticatedAppointmentsMonthViewRoute,
+    AuthenticatedAppointmentsWeekViewRoute:
+      AuthenticatedAppointmentsWeekViewRoute,
+    AuthenticatedAppointmentsYearViewRoute:
+      AuthenticatedAppointmentsYearViewRoute,
+    AuthenticatedAppointmentsIndexRoute: AuthenticatedAppointmentsIndexRoute,
+  }
+
+const AuthenticatedAppointmentsRouteRouteWithChildren =
+  AuthenticatedAppointmentsRouteRoute._addFileChildren(
+    AuthenticatedAppointmentsRouteRouteChildren,
+  )
 
 interface AuthenticatedSettingsRouteRouteChildren {
   AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
@@ -707,6 +874,7 @@ const AuthenticatedSettingsRouteRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAppointmentsRouteRoute: typeof AuthenticatedAppointmentsRouteRouteWithChildren
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
@@ -728,6 +896,8 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAppointmentsRouteRoute:
+    AuthenticatedAppointmentsRouteRouteWithChildren,
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
