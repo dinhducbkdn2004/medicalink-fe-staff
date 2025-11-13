@@ -408,8 +408,7 @@ export function RichTextEditor({
         }
       }
     } catch (error) {
-      // Nếu parse JSON thất bại, xử lý như HTML
-      console.debug('Content is not Delta format, treating as HTML:', error)
+      // Content is not Delta format, treating as HTML
       const currentContent = quill.getSemanticHTML()
       if (currentContent !== content) {
         quill.root.innerHTML = content
@@ -428,7 +427,7 @@ export function RichTextEditor({
     if (initialValue) {
       setContent(initialValue)
     }
-  }, [quill, isReady, defaultValue, setContent])
+  }, [quill, isReady, defaultValue, value, setContent])
 
   /**
    * Update content when value prop changes (controlled mode)

@@ -25,20 +25,6 @@ export function Doctors() {
   const navigate = route.useNavigate()
   const { user } = useAuth()
 
-  // Check permissions
-  if (!canReadDoctors(user)) {
-    return (
-      <Main className='flex flex-1 items-center justify-center'>
-        <div className='text-center'>
-          <h2 className='text-2xl font-bold'>Access Denied</h2>
-          <p className='text-muted-foreground mt-2'>
-            You do not have permission to view doctor management.
-          </p>
-        </div>
-      </Main>
-    )
-  }
-
   // Fetch doctors with query params
   const queryParams = {
     page: (search.page as number) || 1,
@@ -64,9 +50,19 @@ export function Doctors() {
 
   const { data, isLoading } = useDoctors(queryParams)
 
-  // Debug: Log API params (remove in production)
-  // eslint-disable-next-line no-console
-  console.log('🔍 Doctors API Params:', queryParams)
+  // Check permissions
+  if (!canReadDoctors(user)) {
+    return (
+      <Main className='flex flex-1 items-center justify-center'>
+        <div className='text-center'>
+          <h2 className='text-2xl font-bold'>Access Denied</h2>
+          <p className='text-muted-foreground mt-2'>
+            You do not have permission to view doctor management.
+          </p>
+        </div>
+      </Main>
+    )
+  }
 
   return (
     <DoctorsProvider>

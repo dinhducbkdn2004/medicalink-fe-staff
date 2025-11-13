@@ -1,7 +1,3 @@
-/**
- * Specialties Data Table Bulk Actions
- * Bulk actions for selected specialties
- */
 import { useState } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { Trash2 } from 'lucide-react'
@@ -12,42 +8,44 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { DataTableBulkActions as BulkActionsToolbar } from '@/components/data-table'
-import { type Specialty } from '../data/schema'
+import type { Patient } from '../types'
+import { PatientsMultiDeleteDialog } from './patients-multi-delete-dialog'
 
-interface DataTableBulkActionsProps {
-  table: Table<Specialty>
+type DataTableBulkActionsProps = {
+  table: Table<Patient>
 }
 
 export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
-  const [showDeleteConfirm] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   return (
     <>
-      <BulkActionsToolbar table={table} entityName='specialty'>
+      <BulkActionsToolbar table={table} entityName='patient'>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               variant='destructive'
               size='icon'
-              onClick={() => {
-                // TODO: Implement bulk delete dialog
-              }}
+              onClick={() => setShowDeleteConfirm(true)}
               className='size-8'
-              aria-label='Delete selected specialties'
-              title='Delete selected specialties'
+              aria-label='Delete selected patients'
+              title='Delete selected patients'
             >
               <Trash2 />
-              <span className='sr-only'>Delete selected specialties</span>
+              <span className='sr-only'>Delete selected patients</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Delete selected specialties</p>
+            <p>Delete selected patients</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>
 
-      {/* TODO: Add Multi-Delete Dialog */}
-      {showDeleteConfirm && <div>Multi-delete dialog placeholder</div>}
+      <PatientsMultiDeleteDialog
+        table={table}
+        open={showDeleteConfirm}
+        onOpenChange={setShowDeleteConfirm}
+      />
     </>
   )
 }
