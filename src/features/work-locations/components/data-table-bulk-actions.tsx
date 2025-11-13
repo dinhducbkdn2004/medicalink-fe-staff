@@ -31,10 +31,6 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
               size='icon'
               onClick={() => {
                 // TODO: Implement bulk delete dialog
-                const ids = table
-                  .getFilteredSelectedRowModel()
-                  .rows.map((row) => row.original.id)
-                console.log('Bulk delete work locations:', ids)
               }}
               className='size-8'
               aria-label='Delete selected work locations'
@@ -55,4 +51,3 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
     </>
   )
 }
-

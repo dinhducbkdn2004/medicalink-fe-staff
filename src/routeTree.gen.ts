@@ -32,6 +32,7 @@ import { Route as AuthenticatedSpecialtiesIndexRouteImport } from './routes/_aut
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedReviewsIndexRouteImport } from './routes/_authenticated/reviews/index'
 import { Route as AuthenticatedQuestionsIndexRouteImport } from './routes/_authenticated/questions/index'
+import { Route as AuthenticatedPatientsIndexRouteImport } from './routes/_authenticated/patients.index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedGroupManagerIndexRouteImport } from './routes/_authenticated/group-manager/index'
 import { Route as AuthenticatedDoctorsIndexRouteImport } from './routes/_authenticated/doctors.index'
@@ -174,6 +175,12 @@ const AuthenticatedQuestionsIndexRoute =
     path: '/questions/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPatientsIndexRoute =
+  AuthenticatedPatientsIndexRouteImport.update({
+    id: '/patients/',
+    path: '/patients/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedHelpCenterIndexRoute =
   AuthenticatedHelpCenterIndexRouteImport.update({
     id: '/help-center/',
@@ -304,6 +311,7 @@ export interface FileRoutesByFullPath {
   '/doctors': typeof AuthenticatedDoctorsIndexRoute
   '/group-manager': typeof AuthenticatedGroupManagerIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/patients': typeof AuthenticatedPatientsIndexRoute
   '/questions': typeof AuthenticatedQuestionsIndexRoute
   '/reviews': typeof AuthenticatedReviewsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
@@ -343,6 +351,7 @@ export interface FileRoutesByTo {
   '/doctors': typeof AuthenticatedDoctorsIndexRoute
   '/group-manager': typeof AuthenticatedGroupManagerIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/patients': typeof AuthenticatedPatientsIndexRoute
   '/questions': typeof AuthenticatedQuestionsIndexRoute
   '/reviews': typeof AuthenticatedReviewsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
@@ -386,6 +395,7 @@ export interface FileRoutesById {
   '/_authenticated/doctors/': typeof AuthenticatedDoctorsIndexRoute
   '/_authenticated/group-manager/': typeof AuthenticatedGroupManagerIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/_authenticated/patients/': typeof AuthenticatedPatientsIndexRoute
   '/_authenticated/questions/': typeof AuthenticatedQuestionsIndexRoute
   '/_authenticated/reviews/': typeof AuthenticatedReviewsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
@@ -429,6 +439,7 @@ export interface FileRouteTypes {
     | '/doctors'
     | '/group-manager'
     | '/help-center'
+    | '/patients'
     | '/questions'
     | '/reviews'
     | '/settings/'
@@ -468,6 +479,7 @@ export interface FileRouteTypes {
     | '/doctors'
     | '/group-manager'
     | '/help-center'
+    | '/patients'
     | '/questions'
     | '/reviews'
     | '/settings'
@@ -510,6 +522,7 @@ export interface FileRouteTypes {
     | '/_authenticated/doctors/'
     | '/_authenticated/group-manager/'
     | '/_authenticated/help-center/'
+    | '/_authenticated/patients/'
     | '/_authenticated/questions/'
     | '/_authenticated/reviews/'
     | '/_authenticated/settings/'
@@ -699,6 +712,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedQuestionsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/patients/': {
+      id: '/_authenticated/patients/'
+      path: '/patients'
+      fullPath: '/patients'
+      preLoaderRoute: typeof AuthenticatedPatientsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/help-center/': {
       id: '/_authenticated/help-center/'
       path: '/help-center'
@@ -883,6 +903,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDoctorsIndexRoute: typeof AuthenticatedDoctorsIndexRoute
   AuthenticatedGroupManagerIndexRoute: typeof AuthenticatedGroupManagerIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedPatientsIndexRoute: typeof AuthenticatedPatientsIndexRoute
   AuthenticatedQuestionsIndexRoute: typeof AuthenticatedQuestionsIndexRoute
   AuthenticatedReviewsIndexRoute: typeof AuthenticatedReviewsIndexRoute
   AuthenticatedSpecialtiesIndexRoute: typeof AuthenticatedSpecialtiesIndexRoute
@@ -906,6 +927,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDoctorsIndexRoute: AuthenticatedDoctorsIndexRoute,
   AuthenticatedGroupManagerIndexRoute: AuthenticatedGroupManagerIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedPatientsIndexRoute: AuthenticatedPatientsIndexRoute,
   AuthenticatedQuestionsIndexRoute: AuthenticatedQuestionsIndexRoute,
   AuthenticatedReviewsIndexRoute: AuthenticatedReviewsIndexRoute,
   AuthenticatedSpecialtiesIndexRoute: AuthenticatedSpecialtiesIndexRoute,

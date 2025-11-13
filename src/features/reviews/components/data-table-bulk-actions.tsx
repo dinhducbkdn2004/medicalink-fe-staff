@@ -34,7 +34,7 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
         className='border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground'
         onClick={() => {
           // TODO: Implement bulk delete
-          console.log('Bulk delete reviews:', selectedRows.map((r) => r.original.id))
+          // Bulk delete reviews: selectedRows.map((r) => r.original.id)
         }}
       >
         <Trash2 className='mr-2 size-4' />
@@ -43,4 +43,3 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
     </div>
   )
 }
-

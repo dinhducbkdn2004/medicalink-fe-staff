@@ -18,6 +18,7 @@ import {
   CalendarDays,
   Star,
   MessageCircleQuestion,
+  UserRound,
 } from 'lucide-react'
 import type { UserRole } from '@/api/types/auth.types'
 import type { NavGroupWithAccess } from '@/lib/sidebar-utils'
@@ -109,6 +110,11 @@ export const navGroups: NavGroupWithAccess[] = [
         title: 'Appointments',
         url: '/appointments',
         icon: CalendarDays,
+      },
+      {
+        title: 'Patients',
+        url: '/patients',
+        icon: UserRound,
       },
       {
         title: 'Reviews',

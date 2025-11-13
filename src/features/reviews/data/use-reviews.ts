@@ -140,7 +140,7 @@ export function useUpdateReview() {
     }) => {
       // TODO: Replace with actual API call when endpoint is available
       // return reviewService.updateReview(id, { status })
-      console.log('Update review:', id, status)
+      // Update review: id, status
       return Promise.resolve({ id, status })
     },
     onSuccess: () => {
