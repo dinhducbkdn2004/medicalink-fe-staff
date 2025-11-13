@@ -1,7 +1,7 @@
 .rich-text-editor {
   height: fit-content;
   max-height: 300px;
-  overflow-y: auto;
+  overflow: hidden;
   border-bottom-right-radius: 8px;
   border-bottom-left-radius: 8px;
   border-color: var(--border) !important;
@@ -12,4 +12,45 @@
   border-top-left-radius: 8px;
   border-bottom: none;
   border-color: var(--border) !important;
+}
+
+.ql-container {
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: inherit;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.ql-editor {
+  overflow: visible !important;
+  max-height: none !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.rich-text-editor-wrapper {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.prose {
+  max-width: 100% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.prose img,
+.prose video {
+  max-width: 100%;
+  height: auto;
+}
+
+.prose pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
 }
