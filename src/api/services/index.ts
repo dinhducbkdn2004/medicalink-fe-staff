@@ -11,6 +11,7 @@ export * from './doctor-profile.service'
 export * from './specialty.service'
 export * from './work-location.service'
 export * from './permission.service'
+export * from './patient.service'
 
 // Question service - rename Specialty to QuestionSpecialty to avoid conflict with specialty.service
 export type {
