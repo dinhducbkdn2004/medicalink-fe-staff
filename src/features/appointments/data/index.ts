@@ -1,10 +1,8 @@
-/**
- * Appointments Data Module
- * Exports hooks and utilities for appointment data management
- */
-
 // Hooks
 export * from './hooks'
 
-// Utilities
+// Utils
 export * from './utils'
+
+// Schemas
+export * from './schemas'
