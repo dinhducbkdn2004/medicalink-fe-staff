@@ -25,12 +25,42 @@ import {
   isSameYear,
   isWithinInterval,
 } from 'date-fns'
-import type { ICalendarCell, IEvent } from '@/calendar/interfaces'
+import type { ICalendarCell, IAppointment } from '@/calendar/interfaces'
 import type {
   TCalendarView,
   TVisibleHours,
   TWorkingHours,
 } from '@/calendar/types'
+
+// ================ API Data Helpers ================ //
+
+/**
+ * Convert API appointment to calendar event format
+ * API returns time as full ISO datetime, we need just HH:mm
+ */
+export function formatAppointmentTime(isoTime: string): string {
+  return format(parseISO(isoTime), 'HH:mm')
+}
+
+/**
+ * Convert API appointment to display format
+ */
+export function normalizeAppointment(appointment: IAppointment): IAppointment {
+  if (!appointment.event) return appointment
+
+  return {
+    ...appointment,
+    event: {
+      ...appointment.event,
+      serviceDate: format(
+        parseISO(appointment.event.serviceDate),
+        'yyyy-MM-dd'
+      ),
+      timeStart: formatAppointmentTime(appointment.event.timeStart),
+      timeEnd: formatAppointmentTime(appointment.event.timeEnd),
+    },
+  }
+}
 
 // ================ Header helper functions ================ //
 

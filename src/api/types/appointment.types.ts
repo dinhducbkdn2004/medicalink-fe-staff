@@ -5,13 +5,16 @@
 
 /**
  * Appointment Status
+ * Based on API documentation
  */
 export type AppointmentStatus =
   | 'BOOKED'
   | 'CONFIRMED'
-  | 'CANCELLED'
-  | 'COMPLETED'
+  | 'RESCHEDULED'
+  | 'CANCELLED_BY_PATIENT'
+  | 'CANCELLED_BY_STAFF'
   | 'NO_SHOW'
+  | 'COMPLETED'
 
 /**
  * Patient Info in Appointment
@@ -105,4 +108,63 @@ export interface AppointmentListResponse {
   method: string
   statusCode: number
   meta: PaginationMeta
+}
+
+/**
+ * Create Appointment Request
+ * All fields required for creating a new appointment
+ */
+export interface CreateAppointmentRequest {
+  specialtyId: string // Valid CUID
+  patientId: string // Valid CUID
+  doctorId: string // Valid CUID
+  locationId: string // Valid CUID
+  serviceDate: string // Date string (YYYY-MM-DD)
+  timeStart: string // Time string (HH:mm)
+  timeEnd: string // Time string (HH:mm)
+  reason?: string // Optional, max 255 characters
+  notes?: string // Optional text
+  status?: AppointmentStatus // Optional, default: BOOKED
+  priceAmount?: number // Optional decimal
+  currency?: string // Optional, max 3 chars, default: VND
+}
+
+/**
+ * Update Appointment Request
+ * All fields optional for partial updates
+ */
+export interface UpdateAppointmentRequest {
+  status?: AppointmentStatus
+  notes?: string
+  priceAmount?: number
+  reason?: string
+}
+
+/**
+ * Reschedule Appointment Request
+ */
+export interface RescheduleAppointmentRequest {
+  doctorId?: string // Valid CUID
+  locationId?: string // Valid CUID
+  serviceDate?: string // Date string (YYYY-MM-DD)
+  timeStart?: string // Time string (HH:mm)
+  timeEnd?: string // Time string (HH:mm)
+  autoconfirm?: boolean // Auto-confirm after reschedule
+}
+
+/**
+ * Cancel Appointment Request
+ */
+export interface CancelAppointmentRequest {
+  reason?: string // Cancellation reason
+}
+
+/**
+ * Appointment Action Response
+ * Response for confirm, complete, cancel actions
+ */
+export interface AppointmentActionResponse {
+  success: boolean
+  message: string
+  data: Appointment
 }
