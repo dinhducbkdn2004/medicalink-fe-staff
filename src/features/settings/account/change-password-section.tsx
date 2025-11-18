@@ -75,36 +75,34 @@ export function ChangePasswordSection() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Current password</FormLabel>
-                  <FormControl>
-                    <div className='relative'>
+                  <div className='relative'>
+                    <FormControl>
                       <Input
                         type={showCurrentPassword ? 'text' : 'password'}
                         placeholder='Enter your current password'
                         autoComplete='current-password'
                         {...field}
                       />
-                      <Button
-                        type='button'
-                        variant='ghost'
-                        size='sm'
-                        className='absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent'
-                        onClick={() =>
-                          setShowCurrentPassword(!showCurrentPassword)
-                        }
-                        aria-label={
-                          showCurrentPassword
-                            ? 'Hide password'
-                            : 'Show password'
-                        }
-                      >
-                        {showCurrentPassword ? (
-                          <EyeOff className='h-4 w-4' />
-                        ) : (
-                          <Eye className='h-4 w-4' />
-                        )}
-                      </Button>
-                    </div>
-                  </FormControl>
+                    </FormControl>
+                    <Button
+                      type='button'
+                      variant='ghost'
+                      size='sm'
+                      className='absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent'
+                      onClick={() =>
+                        setShowCurrentPassword(!showCurrentPassword)
+                      }
+                      aria-label={
+                        showCurrentPassword ? 'Hide password' : 'Show password'
+                      }
+                    >
+                      {showCurrentPassword ? (
+                        <EyeOff className='h-4 w-4' />
+                      ) : (
+                        <Eye className='h-4 w-4' />
+                      )}
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -116,32 +114,32 @@ export function ChangePasswordSection() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>New password</FormLabel>
-                  <FormControl>
-                    <div className='relative'>
+                  <div className='relative'>
+                    <FormControl>
                       <Input
                         type={showNewPassword ? 'text' : 'password'}
                         placeholder='Enter your new password'
                         autoComplete='new-password'
                         {...field}
                       />
-                      <Button
-                        type='button'
-                        variant='ghost'
-                        size='sm'
-                        className='absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent'
-                        onClick={() => setShowNewPassword(!showNewPassword)}
-                        aria-label={
-                          showNewPassword ? 'Hide password' : 'Show password'
-                        }
-                      >
-                        {showNewPassword ? (
-                          <EyeOff className='h-4 w-4' />
-                        ) : (
-                          <Eye className='h-4 w-4' />
-                        )}
-                      </Button>
-                    </div>
-                  </FormControl>
+                    </FormControl>
+                    <Button
+                      type='button'
+                      variant='ghost'
+                      size='sm'
+                      className='absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent'
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      aria-label={
+                        showNewPassword ? 'Hide password' : 'Show password'
+                      }
+                    >
+                      {showNewPassword ? (
+                        <EyeOff className='h-4 w-4' />
+                      ) : (
+                        <Eye className='h-4 w-4' />
+                      )}
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -153,36 +151,34 @@ export function ChangePasswordSection() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Confirm new password</FormLabel>
-                  <FormControl>
-                    <div className='relative'>
+                  <div className='relative'>
+                    <FormControl>
                       <Input
                         type={showConfirmPassword ? 'text' : 'password'}
                         placeholder='Re-enter your new password'
                         autoComplete='new-password'
                         {...field}
                       />
-                      <Button
-                        type='button'
-                        variant='ghost'
-                        size='sm'
-                        className='absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent'
-                        onClick={() =>
-                          setShowConfirmPassword(!showConfirmPassword)
-                        }
-                        aria-label={
-                          showConfirmPassword
-                            ? 'Hide password'
-                            : 'Show password'
-                        }
-                      >
-                        {showConfirmPassword ? (
-                          <EyeOff className='h-4 w-4' />
-                        ) : (
-                          <Eye className='h-4 w-4' />
-                        )}
-                      </Button>
-                    </div>
-                  </FormControl>
+                    </FormControl>
+                    <Button
+                      type='button'
+                      variant='ghost'
+                      size='sm'
+                      className='absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent'
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      aria-label={
+                        showConfirmPassword ? 'Hide password' : 'Show password'
+                      }
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className='h-4 w-4' />
+                      ) : (
+                        <Eye className='h-4 w-4' />
+                      )}
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
