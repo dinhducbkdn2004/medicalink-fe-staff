@@ -147,14 +147,13 @@ export function InfoSectionForm({
               name='name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Section Name <span className='text-destructive'>*</span>
-                  </FormLabel>
+                  <FormLabel>Section Name</FormLabel>
                   <FormControl>
                     <Input
                       placeholder='e.g., Overview, Common Conditions, Treatment Options'
                       {...field}
                       disabled={isLoading}
+                      required
                     />
                   </FormControl>
                   <FormDescription>
