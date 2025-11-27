@@ -1,5 +1,3 @@
-'use client'
-
 import {
   createContext,
   useContext,
@@ -46,10 +44,14 @@ const VISIBLE_HOURS = { from: 7, to: 18 }
 
 export function CalendarProvider({
   children,
+  selectedDate: propsSelectedDate,
+  onDateChange,
   users,
   events,
 }: {
   children: React.ReactNode
+  selectedDate?: Date
+  onDateChange?: (date: Date) => void
   users: IUser[]
   events: IEvent[]
 }) {
@@ -57,20 +59,20 @@ export function CalendarProvider({
   const [visibleHours, setVisibleHours] = useState<TVisibleHours>(VISIBLE_HOURS)
   const [workingHours, setWorkingHours] = useState<TWorkingHours>(WORKING_HOURS)
 
-  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [internalSelectedDate, setInternalSelectedDate] = useState(new Date())
+  const selectedDate = propsSelectedDate ?? internalSelectedDate
+
   const [selectedUserId, setSelectedUserId] = useState<IUser['id'] | 'all'>(
     'all'
   )
 
-  // This localEvents doesn't need to exists in a real scenario.
-  // It's used here just to simulate the update of the events.
-  // In a real scenario, the events would be updated in the backend
-  // and the request that fetches the events should be refetched
-  const [localEvents, setLocalEvents] = useState<IEvent[]>(events)
-
   const handleSelectDate = (date: Date | undefined) => {
     if (!date) return
-    setSelectedDate(date)
+    if (onDateChange) {
+      onDateChange(date)
+    } else {
+      setInternalSelectedDate(date)
+    }
   }
 
   return (
@@ -87,9 +89,8 @@ export function CalendarProvider({
         setVisibleHours,
         workingHours,
         setWorkingHours,
-        // If you go to the refetch approach, you can remove the localEvents and pass the events directly
-        events: localEvents,
-        setLocalEvents,
+        events,
+        setLocalEvents: () => {}, // No-op since we use props directly
       }}
     >
       {children}

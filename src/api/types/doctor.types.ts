@@ -31,6 +31,7 @@ export interface Specialty {
 export interface WorkLocation {
   id: string
   name: string
+  slug: string
   address?: string
   phone?: string
   timezone?: string
@@ -176,6 +177,7 @@ export interface DoctorQueryParams extends PaginationParams {
   createdTo?: string
   sortBy?: 'createdAt' | 'fullName' | 'email'
   sortOrder?: 'asc' | 'desc'
+  specialtyId?: string
 }
 
 /**

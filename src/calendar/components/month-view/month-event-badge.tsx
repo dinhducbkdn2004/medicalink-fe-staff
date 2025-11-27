@@ -118,15 +118,48 @@ export function MonthEventBadge({
 
   return (
     <DraggableEvent event={event}>
-      <EventDetailsDialog event={event}>
-        <div
-          role='button'
-          tabIndex={0}
-          className={eventBadgeClasses}
-          onKeyDown={handleKeyDown}
-        >
+      {event.appointment ? (
+        <EventDetailsDialog appointment={event.appointment}>
+          <div
+            role='button'
+            tabIndex={0}
+            className={eventBadgeClasses}
+            onKeyDown={handleKeyDown}
+          >
+            <div className='flex items-center gap-1.5 truncate'>
+              {!['middle', 'last'].includes(position!) &&
+                ['mixed', 'dot'].includes(badgeVariant) && (
+                  <svg
+                    width='8'
+                    height='8'
+                    viewBox='0 0 8 8'
+                    className='event-dot shrink-0'
+                  >
+                    <circle cx='4' cy='4' r='4' />
+                  </svg>
+                )}
+
+              {renderBadgeText && (
+                <p className='flex-1 truncate font-semibold'>
+                  {eventCurrentDay && (
+                    <span className='text-xs'>
+                      Day {eventCurrentDay} of {eventTotalDays} •{' '}
+                    </span>
+                  )}
+                  {event.title}
+                </p>
+              )}
+            </div>
+
+            {renderBadgeText && (
+              <span>{format(new Date(event.startDate), 'h:mm a')}</span>
+            )}
+          </div>
+        </EventDetailsDialog>
+      ) : (
+        <div className={eventBadgeClasses}>
           <div className='flex items-center gap-1.5 truncate'>
-            {!['middle', 'last'].includes(position) &&
+            {!['middle', 'last'].includes(position!) &&
               ['mixed', 'dot'].includes(badgeVariant) && (
                 <svg
                   width='8'
@@ -154,7 +187,7 @@ export function MonthEventBadge({
             <span>{format(new Date(event.startDate), 'h:mm a')}</span>
           )}
         </div>
-      </EventDetailsDialog>
+      )}
     </DraggableEvent>
   )
 }

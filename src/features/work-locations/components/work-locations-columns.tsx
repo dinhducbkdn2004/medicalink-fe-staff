@@ -83,7 +83,7 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
             <MapPin className='text-muted-foreground mt-0.5 size-4 shrink-0' />
           )}
           <div className='max-w-[300px] truncate' title={address || ''}>
-            {address || '—'}
+            {address || '-'}
           </div>
         </div>
       )
@@ -100,7 +100,7 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
       return (
         <div className='flex items-center gap-2'>
           {phone && <Phone className='text-muted-foreground size-4' />}
-          <span className='text-sm'>{phone || '—'}</span>
+          <span className='text-sm'>{phone || '-'}</span>
         </div>
       )
     },

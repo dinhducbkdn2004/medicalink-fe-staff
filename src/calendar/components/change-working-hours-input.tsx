@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import { useCalendar } from '@/calendar/contexts/calendar-context'
 import { Info, Moon } from 'lucide-react'
@@ -93,7 +91,7 @@ export function ChangeWorkingHoursInput() {
             <TooltipContent className='max-w-80 text-center'>
               <p>
                 This will apply a dashed background to the hour cells that fall
-                outside the working hours — only for week and day views.
+                outside the working hours - only for week and day views.
               </p>
             </TooltipContent>
           </Tooltip>

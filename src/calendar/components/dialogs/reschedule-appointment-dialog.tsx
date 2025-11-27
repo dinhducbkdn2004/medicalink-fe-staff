@@ -1,16 +1,17 @@
-'use client'
-
+import { useEffect } from 'react'
 import { parseISO, format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  useDoctorsBySpecialty,
+  useLocationsByDoctor,
+} from '@/calendar/hooks/use-appointment-form-data'
 import type { IAppointment } from '@/calendar/interfaces'
 import {
   rescheduleAppointmentSchema,
   type TRescheduleAppointmentFormData,
 } from '@/calendar/schemas'
 import type { TimeValue } from 'react-aria-components'
-import { appointmentService } from '@/api/services/appointment.service'
 import type { RescheduleAppointmentRequest } from '@/api/types/appointment.types'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { Button } from '@/components/ui/button'
@@ -42,6 +43,7 @@ import {
 } from '@/components/ui/select'
 import { SingleDayPicker } from '@/components/ui/single-day-picker'
 import { TimeInput } from '@/components/ui/time-input'
+import { useRescheduleAppointment } from '@/features/appointments/data/hooks'
 
 interface IProps {
   children: React.ReactNode
@@ -53,9 +55,11 @@ export function RescheduleAppointmentDialog({
   appointment,
 }: Readonly<IProps>) {
   const { isOpen, onClose, onToggle } = useDisclosure()
-  const queryClient = useQueryClient()
 
-  // Extract default values before conditional return
+  const { mutate: rescheduleAppointment, isPending } =
+    useRescheduleAppointment()
+
+  // Extract default values
   const serviceDate = appointment?.event
     ? parseISO(appointment.event.serviceDate)
     : new Date()
@@ -66,7 +70,6 @@ export function RescheduleAppointmentDialog({
     ? appointment.event.timeEnd.split(':').map(Number)
     : [10, 0]
 
-  // Move useForm hook before conditional return
   const form = useForm<TRescheduleAppointmentFormData>({
     resolver: zodResolver(rescheduleAppointmentSchema),
     defaultValues: {
@@ -79,17 +82,29 @@ export function RescheduleAppointmentDialog({
     },
   })
 
-  const rescheduleMutation = useMutation({
-    mutationFn: (data: TRescheduleAppointmentFormData) =>
-      appointmentService.reschedule(appointment.id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] })
-      onClose()
-      form.reset()
-    },
-  })
+  // Watch doctorId to fetch locations
+  const selectedDoctorId = form.watch('doctorId')
 
-  // Now safe to do conditional return after all hooks
+  // Fetch doctors based on appointment specialty
+  const { doctors, isLoading: isLoadingDoctors } = useDoctorsBySpecialty(
+    appointment?.specialtyId
+  )
+
+  // Fetch locations based on selected doctor
+  const { locations, isLoading: isLoadingLocations } =
+    useLocationsByDoctor(selectedDoctorId)
+
+  // Reset location if doctor changes (optional, but good UX)
+  // However, initially we want to keep the existing location if doctor hasn't changed.
+  // We can skip this for now or handle it carefully.
+  // Let's just ensure if user changes doctor, they should pick a location.
+  useEffect(() => {
+    if (isOpen && selectedDoctorId !== appointment.doctorId) {
+      // If doctor changed from original, maybe reset location?
+      // But for now let's keep it simple.
+    }
+  }, [selectedDoctorId, isOpen, appointment.doctorId])
+
   if (!appointment?.event) {
     return null
   }
@@ -107,7 +122,16 @@ export function RescheduleAppointmentDialog({
         ? `${String(values.timeEnd.hour).padStart(2, '0')}:${String(values.timeEnd.minute).padStart(2, '0')}`
         : undefined,
     }
-    rescheduleMutation.mutate(requestData)
+
+    rescheduleAppointment(
+      { id: appointment.id, data: requestData },
+      {
+        onSuccess: () => {
+          onClose()
+          form.reset()
+        },
+      }
+    )
   }
 
   return (
@@ -135,15 +159,27 @@ export function RescheduleAppointmentDialog({
                 <FormItem>
                   <FormLabel>Doctor</FormLabel>
                   <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Select
+                      value={field.value}
+                      onValueChange={(val) => {
+                        field.onChange(val)
+                        form.setValue('locationId', '') // Reset location when doctor changes
+                      }}
+                      disabled={isLoadingDoctors}
+                    >
                       <SelectTrigger data-invalid={fieldState.invalid}>
-                        <SelectValue placeholder='Select a doctor' />
+                        <SelectValue
+                          placeholder={
+                            isLoadingDoctors ? 'Loading...' : 'Select a doctor'
+                          }
+                        />
                       </SelectTrigger>
                       <SelectContent>
-                        {/* TODO: Load doctors from API */}
-                        <SelectItem value={appointment.doctorId}>
-                          {appointment.doctor.name}
-                        </SelectItem>
+                        {doctors?.map((doctor) => (
+                          <SelectItem key={doctor.id} value={doctor.id}>
+                            {doctor.fullName}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -159,15 +195,26 @@ export function RescheduleAppointmentDialog({
                 <FormItem>
                   <FormLabel>Location</FormLabel>
                   <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      disabled={!selectedDoctorId || isLoadingLocations}
+                    >
                       <SelectTrigger data-invalid={fieldState.invalid}>
-                        <SelectValue placeholder='Select a location' />
+                        <SelectValue
+                          placeholder={
+                            isLoadingLocations
+                              ? 'Loading...'
+                              : 'Select a location'
+                          }
+                        />
                       </SelectTrigger>
                       <SelectContent>
-                        {/* TODO: Load locations from API */}
-                        <SelectItem value={appointment.locationId}>
-                          {appointment.location?.name || 'Current Location'}
-                        </SelectItem>
+                        {locations?.map((location) => (
+                          <SelectItem key={location.id} value={location.id}>
+                            {location.name}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -260,21 +307,13 @@ export function RescheduleAppointmentDialog({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button
-              type='button'
-              variant='outline'
-              disabled={rescheduleMutation.isPending}
-            >
+            <Button type='button' variant='outline' disabled={isPending}>
               Cancel
             </Button>
           </DialogClose>
 
-          <Button
-            form='reschedule-form'
-            type='submit'
-            disabled={rescheduleMutation.isPending}
-          >
-            {rescheduleMutation.isPending ? 'Rescheduling...' : 'Reschedule'}
+          <Button form='reschedule-form' type='submit' disabled={isPending}>
+            {isPending ? 'Rescheduling...' : 'Reschedule'}
           </Button>
         </DialogFooter>
       </DialogContent>

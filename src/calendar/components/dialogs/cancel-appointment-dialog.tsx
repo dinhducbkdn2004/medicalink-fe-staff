@@ -1,15 +1,11 @@
-'use client'
-
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { IAppointment } from '@/calendar/interfaces'
 import {
   cancelAppointmentSchema,
   type TCancelAppointmentFormData,
 } from '@/calendar/schemas'
 import { AlertTriangle } from 'lucide-react'
-import { appointmentService } from '@/api/services/appointment.service'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { Button } from '@/components/ui/button'
 import {
@@ -31,6 +27,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Textarea } from '@/components/ui/textarea'
+import { useCancelAppointment } from '@/features/appointments/data/hooks'
 
 interface IProps {
   children: React.ReactNode
@@ -39,17 +36,8 @@ interface IProps {
 
 export function CancelAppointmentDialog({ children, appointment }: IProps) {
   const { isOpen, onClose, onToggle } = useDisclosure()
-  const queryClient = useQueryClient()
 
-  const cancelMutation = useMutation({
-    mutationFn: (data: TCancelAppointmentFormData) =>
-      appointmentService.cancel(appointment.id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] })
-      onClose()
-      form.reset()
-    },
-  })
+  const { mutate: cancelAppointment, isPending } = useCancelAppointment()
 
   const form = useForm<TCancelAppointmentFormData>({
     resolver: zodResolver(cancelAppointmentSchema),
@@ -59,7 +47,15 @@ export function CancelAppointmentDialog({ children, appointment }: IProps) {
   })
 
   const onSubmit = (values: TCancelAppointmentFormData) => {
-    cancelMutation.mutate(values)
+    cancelAppointment(
+      { id: appointment.id, data: values },
+      {
+        onSuccess: () => {
+          onClose()
+          form.reset()
+        },
+      }
+    )
   }
 
   if (!appointment?.event) {
@@ -138,11 +134,7 @@ export function CancelAppointmentDialog({ children, appointment }: IProps) {
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button
-              type='button'
-              variant='outline'
-              disabled={cancelMutation.isPending}
-            >
+            <Button type='button' variant='outline' disabled={isPending}>
               Keep Appointment
             </Button>
           </DialogClose>
@@ -151,9 +143,9 @@ export function CancelAppointmentDialog({ children, appointment }: IProps) {
             form='cancel-form'
             type='submit'
             variant='destructive'
-            disabled={cancelMutation.isPending}
+            disabled={isPending}
           >
-            {cancelMutation.isPending ? 'Cancelling...' : 'Cancel Appointment'}
+            {isPending ? 'Cancelling...' : 'Cancel Appointment'}
           </Button>
         </DialogFooter>
       </DialogContent>

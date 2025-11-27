@@ -72,7 +72,7 @@ export function OfficeHoursActionDialog() {
   // Form setup
   const form = useForm<OfficeHourFormValues>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    resolver: zodResolver(officeHourFormSchema) as any,
+    resolver: zodResolver(officeHourFormSchema as any) as any,
     defaultValues: {
       doctorId: null,
       workLocationId: null,
@@ -145,11 +145,15 @@ export function OfficeHoursActionDialog() {
                 <FormItem>
                   <FormLabel>Doctor</FormLabel>
                   <Select
-                    onValueChange={(value) =>
+                    onValueChange={(value) => {
                       field.onChange(value === 'none' ? null : value)
-                    }
+                      // If doctor is selected, isGlobal must be false
+                      if (value !== 'none') {
+                        form.setValue('isGlobal', false)
+                      }
+                    }}
                     value={field.value || 'none'}
-                    disabled={isLoading}
+                    disabled={isLoading || form.watch('isGlobal')}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -299,14 +303,21 @@ export function OfficeHoursActionDialog() {
                   <FormControl>
                     <Checkbox
                       checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={isLoading}
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked)
+                        // If global is checked, doctor must be null
+                        if (checked) {
+                          form.setValue('doctorId', null)
+                        }
+                      }}
+                      disabled={isLoading || !!form.watch('doctorId')}
                     />
                   </FormControl>
                   <div className='space-y-1 leading-none'>
                     <FormLabel>Global Hours</FormLabel>
                     <FormDescription>
-                      Apply to all locations as fallback hours
+                      Apply to all locations as fallback hours (Cannot be used
+                      with specific doctor)
                     </FormDescription>
                   </div>
                 </FormItem>

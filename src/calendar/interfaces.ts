@@ -5,7 +5,7 @@ import type { AppointmentStatus } from '@/api/types'
  */
 export interface IAppointmentPatient {
   fullName: string
-  dateOfBirth: string
+  dateOfBirth: string | null
 }
 
 /**
@@ -76,4 +76,21 @@ export interface ICalendarCell {
   day: number
   currentMonth: boolean
   date: Date
+}
+
+export interface IUser {
+  id: string
+  name: string
+  picturePath: string | null
+}
+
+export interface IEvent {
+  id: string
+  startDate: string
+  endDate: string
+  title: string
+  color: import('./types').TEventColor
+  description: string
+  user: IUser
+  appointment?: IAppointment
 }

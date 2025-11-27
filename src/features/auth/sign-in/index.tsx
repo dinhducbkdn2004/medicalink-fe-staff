@@ -15,7 +15,7 @@ export function SignIn() {
 
   return (
     <AuthLayout>
-      <Card className='gap-4'>
+      <Card className='dark:bg-background/60 gap-4 dark:backdrop-blur-md'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>Sign in</CardTitle>
           <CardDescription>

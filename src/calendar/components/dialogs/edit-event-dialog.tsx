@@ -1,14 +1,10 @@
-'use client'
-
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { IAppointment } from '@/calendar/interfaces'
 import {
   updateAppointmentSchema,
   type TUpdateAppointmentFormData,
 } from '@/calendar/schemas'
-import { appointmentService } from '@/api/services/appointment.service'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { Button } from '@/components/ui/button'
 import {
@@ -38,6 +34,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { useUpdateAppointment } from '@/features/appointments/data/hooks'
 
 interface IProps {
   children: React.ReactNode
@@ -46,17 +43,8 @@ interface IProps {
 
 export function EditEventDialog({ children, appointment }: IProps) {
   const { isOpen, onClose, onToggle } = useDisclosure()
-  const queryClient = useQueryClient()
 
-  const updateMutation = useMutation({
-    mutationFn: (data: TUpdateAppointmentFormData) =>
-      appointmentService.update(appointment.id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] })
-      onClose()
-      form.reset()
-    },
-  })
+  const { mutate: updateAppointment, isPending } = useUpdateAppointment()
 
   const form = useForm<TUpdateAppointmentFormData>({
     resolver: zodResolver(updateAppointmentSchema),
@@ -69,8 +57,14 @@ export function EditEventDialog({ children, appointment }: IProps) {
   })
 
   const onSubmit = (values: TUpdateAppointmentFormData) => {
-    updateMutation.mutate(values)
-    onClose()
+    updateAppointment(
+      { id: appointment.id, data: values },
+      {
+        onSuccess: () => {
+          onClose()
+        },
+      }
+    )
   }
 
   return (
@@ -193,21 +187,13 @@ export function EditEventDialog({ children, appointment }: IProps) {
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button
-              type='button'
-              variant='outline'
-              disabled={updateMutation.isPending}
-            >
+            <Button type='button' variant='outline' disabled={isPending}>
               Cancel
             </Button>
           </DialogClose>
 
-          <Button
-            form='appointment-form'
-            type='submit'
-            disabled={updateMutation.isPending}
-          >
-            {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+          <Button form='appointment-form' type='submit' disabled={isPending}>
+            {isPending ? 'Saving...' : 'Save Changes'}
           </Button>
         </DialogFooter>
       </DialogContent>
