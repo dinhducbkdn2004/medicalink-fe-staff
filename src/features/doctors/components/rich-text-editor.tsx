@@ -66,7 +66,7 @@ export interface RichTextEditorProps {
 // ============================================================================
 
 const TOOLBAR_CONFIGS = {
-  // Full toolbar với đầy đủ tính năng (bao gồm code-block và formula)
+  // Full toolbar với đầy đủ tính năng (bao gồm code-block)
   full: [
     // Headers (h1-h6)
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -99,8 +99,8 @@ const TOOLBAR_CONFIGS = {
     // Blockquote and code block (syntax highlighting)
     ['blockquote', 'code-block'],
 
-    // Links, images, videos, formulas
-    ['link', 'image', 'video', 'formula'],
+    // Links, images, videos
+    ['link', 'image', 'video'],
 
     // Clean formatting
     ['clean'],
@@ -112,9 +112,9 @@ const TOOLBAR_CONFIGS = {
     ['bold', 'italic', 'underline', 'strike'],
     [{ list: 'ordered' }, { list: 'bullet' }],
     [{ align: [] }],
-    ['blockquote', 'code-block'],
+    ['blockquote'],
     [{ color: [] }, { background: [] }],
-    ['link', 'image', 'video', 'formula'],
+    ['link', 'image', 'video'],
     ['clean'],
   ],
 
@@ -407,7 +407,7 @@ export function RichTextEditor({
           lastValueRef.current = content
         }
       }
-    } catch (error) {
+    } catch (_error) {
       // Content is not Delta format, treating as HTML
       const currentContent = quill.getSemanticHTML()
       if (currentContent !== content) {

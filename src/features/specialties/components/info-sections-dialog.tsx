@@ -20,7 +20,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { type Specialty, type SpecialtyInfoSection } from '../data/schema'
 import { useInfoSections } from '../data/use-specialties'
@@ -84,7 +83,7 @@ export function InfoSectionsDialog({
             </DrawerDescription>
           </DrawerHeader>
 
-          <div className='flex flex-col gap-4 p-4'>
+          <div className='flex flex-1 flex-col gap-4 overflow-y-auto p-4'>
             <div className='flex items-center justify-between'>
               <p className='text-muted-foreground text-sm'>
                 {sections?.length || 0} section
@@ -113,62 +112,60 @@ export function InfoSectionsDialog({
                 </Button>
               </div>
             ) : (
-              <ScrollArea className='h-[calc(100vh-250px)] pr-4'>
-                <div className='space-y-3'>
-                  {sections.map((section) => (
-                    <Card key={section.id}>
-                      <CardHeader className='pb-3'>
-                        <div className='flex items-start justify-between gap-2'>
-                          <div className='flex-1'>
-                            <CardTitle className='text-base'>
-                              {section.name}
-                            </CardTitle>
-                            <CardDescription className='text-xs'>
-                              Created{' '}
-                              {new Date(section.createdAt).toLocaleDateString(
-                                'en-US',
-                                {
-                                  year: 'numeric',
-                                  month: 'short',
-                                  day: 'numeric',
-                                }
-                              )}
-                            </CardDescription>
-                          </div>
-                          <div className='flex gap-1'>
-                            <Button
-                              size='sm'
-                              variant='ghost'
-                              onClick={() => handleEdit(section)}
-                              className='size-8 p-0'
-                            >
-                              <Edit className='size-4' />
-                              <span className='sr-only'>Edit</span>
-                            </Button>
-                            <Button
-                              size='sm'
-                              variant='ghost'
-                              onClick={() => setDeletingSection(section)}
-                              className='text-destructive hover:text-destructive size-8 p-0'
-                            >
-                              <Trash2 className='size-4' />
-                              <span className='sr-only'>Delete</span>
-                            </Button>
-                          </div>
+              <div className='space-y-3'>
+                {sections.map((section) => (
+                  <Card key={section.id}>
+                    <CardHeader className='pb-3'>
+                      <div className='flex items-start justify-between gap-2'>
+                        <div className='flex-1'>
+                          <CardTitle className='text-base'>
+                            {section.name}
+                          </CardTitle>
+                          <CardDescription className='text-xs'>
+                            Created{' '}
+                            {new Date(section.createdAt).toLocaleDateString(
+                              'en-US',
+                              {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              }
+                            )}
+                          </CardDescription>
                         </div>
-                      </CardHeader>
-                      {section.content && (
-                        <CardContent className='pt-0'>
-                          <div
-                            className='text-muted-foreground prose prose-sm line-clamp-3 max-w-none text-sm'
-                            dangerouslySetInnerHTML={{ __html: section.content }}
-                          />
-                        </CardContent>
-                      )}
-                    </Card>
-                  ))}
-                </div>
-              </ScrollArea>
+                        <div className='flex gap-1'>
+                          <Button
+                            size='sm'
+                            variant='ghost'
+                            onClick={() => handleEdit(section)}
+                            className='size-8 p-0'
+                          >
+                            <Edit className='size-4' />
+                            <span className='sr-only'>Edit</span>
+                          </Button>
+                          <Button
+                            size='sm'
+                            variant='ghost'
+                            onClick={() => setDeletingSection(section)}
+                            className='text-destructive hover:text-destructive size-8 p-0'
+                          >
+                            <Trash2 className='size-4' />
+                            <span className='sr-only'>Delete</span>
+                          </Button>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    {section.content && (
+                      <CardContent className='pt-0'>
+                        <div
+                          className='text-muted-foreground prose prose-sm line-clamp-3 max-w-none text-sm'
+                          dangerouslySetInnerHTML={{ __html: section.content }}
+                        />
+                      </CardContent>
+                    )}
+                  </Card>
+                ))}
+              </div>
             )}
           </div>
         </DrawerContent>
