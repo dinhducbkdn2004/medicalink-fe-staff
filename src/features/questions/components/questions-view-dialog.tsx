@@ -14,7 +14,6 @@ import {
   DrawerTitle,
   DrawerDescription,
 } from '@/components/ui/drawer'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { useQuestions } from './questions-provider'
 
@@ -79,109 +78,102 @@ export function QuestionViewDialog() {
           </DrawerDescription>
         </DrawerHeader>
 
-        <div className='flex flex-col gap-4 p-4'>
-          <ScrollArea className='h-[calc(100vh-150px)] pr-4'>
-            <div className='space-y-6'>
-              {/* Author & Specialty */}
-              <div className='flex flex-wrap gap-4 text-sm'>
-                {currentQuestion.authorName && (
-                  <div className='text-muted-foreground flex items-center gap-2'>
-                    <span className='font-medium'>Asked by:</span>
-                    <span>{currentQuestion.authorName}</span>
-                  </div>
-                )}
-                {currentQuestion.specialty && (
-                  <div className='flex items-center gap-2'>
-                    <Badge variant='outline' className='font-normal'>
-                      {currentQuestion.specialty.name}
-                    </Badge>
-                  </div>
-                )}
-              </div>
-
-              <Separator />
-
-              {/* Question Body */}
-              <div>
-                <h3 className='text-muted-foreground mb-3 text-sm font-medium'>
-                  Question Details
-                </h3>
-                <div className='bg-muted rounded-lg p-4'>
-                  <p className='leading-relaxed whitespace-pre-wrap'>
-                    {currentQuestion.body}
-                  </p>
+        <div className='flex flex-1 flex-col overflow-y-auto p-4'>
+          <div className='space-y-6'>
+            {/* Author & Specialty */}
+            <div className='flex flex-wrap gap-4 text-sm'>
+              {currentQuestion.authorName && (
+                <div className='text-muted-foreground flex items-center gap-2'>
+                  <span className='font-medium'>Asked by:</span>
+                  <span>{currentQuestion.authorName}</span>
                 </div>
-              </div>
+              )}
+              {currentQuestion.specialty && (
+                <div className='flex items-center gap-2'>
+                  <Badge variant='outline' className='font-normal'>
+                    {currentQuestion.specialty.name}
+                  </Badge>
+                </div>
+              )}
+            </div>
 
-              <Separator />
+            <Separator />
 
-              {/* Statistics */}
-              <div className='grid grid-cols-3 gap-4'>
-                <div className='flex flex-col items-center gap-2 rounded-lg border p-4'>
-                  <MessageCircle className='text-muted-foreground size-5' />
-                  <div className='text-center'>
-                    <div className='text-2xl font-bold'>
-                      {currentQuestion.answerCount}
-                    </div>
-                    <div className='text-muted-foreground text-xs'>Answers</div>
-                  </div>
-                </div>
-                <div className='flex flex-col items-center gap-2 rounded-lg border p-4'>
-                  <CheckCircle className='size-5 text-green-600' />
-                  <div className='text-center'>
-                    <div className='text-2xl font-bold'>
-                      {currentQuestion.acceptedAnswerCount || 0}
-                    </div>
-                    <div className='text-muted-foreground text-xs'>
-                      Accepted
-                    </div>
-                  </div>
-                </div>
-                <div className='flex flex-col items-center gap-2 rounded-lg border p-4'>
-                  <Eye className='text-muted-foreground size-5' />
-                  <div className='text-center'>
-                    <div className='text-2xl font-bold'>
-                      {currentQuestion.viewCount}
-                    </div>
-                    <div className='text-muted-foreground text-xs'>Views</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Dates */}
-              <div className='text-muted-foreground flex justify-between text-sm'>
-                <div>
-                  Asked on{' '}
-                  {format(new Date(currentQuestion.createdAt), 'MMMM dd, yyyy')}
-                </div>
-                {currentQuestion.updatedAt !== currentQuestion.createdAt && (
-                  <div>
-                    Updated{' '}
-                    {format(
-                      new Date(currentQuestion.updatedAt),
-                      'MMMM dd, yyyy'
-                    )}
-                  </div>
-                )}
+            {/* Question Body */}
+            <div>
+              <h3 className='text-muted-foreground mb-3 text-sm font-medium'>
+                Question Details
+              </h3>
+              <div className='bg-muted rounded-lg p-4'>
+                <p className='leading-relaxed whitespace-pre-wrap'>
+                  {currentQuestion.body}
+                </p>
               </div>
             </div>
-          </ScrollArea>
 
-          <div className='mt-auto flex justify-end gap-2 pt-4'>
-            <Button variant='outline' onClick={() => setOpen('view')}>
-              <X className='mr-2 size-4' />
-              Close
-            </Button>
-            <Button
-              onClick={() => {
-                setOpen('view') // Close current
-                setOpen('answers') // Open answers
-              }}
-            >
-              <MessageCircle className='mr-2 size-4' />
-              Manage Answers
-            </Button>
+            <Separator />
+
+            {/* Statistics */}
+            <div className='grid grid-cols-3 gap-4'>
+              <div className='flex flex-col items-center gap-2 rounded-lg border p-4'>
+                <MessageCircle className='text-muted-foreground size-5' />
+                <div className='text-center'>
+                  <div className='text-2xl font-bold'>
+                    {currentQuestion.answerCount}
+                  </div>
+                  <div className='text-muted-foreground text-xs'>Answers</div>
+                </div>
+              </div>
+              <div className='flex flex-col items-center gap-2 rounded-lg border p-4'>
+                <CheckCircle className='size-5 text-green-600' />
+                <div className='text-center'>
+                  <div className='text-2xl font-bold'>
+                    {currentQuestion.acceptedAnswerCount || 0}
+                  </div>
+                  <div className='text-muted-foreground text-xs'>Accepted</div>
+                </div>
+              </div>
+              <div className='flex flex-col items-center gap-2 rounded-lg border p-4'>
+                <Eye className='text-muted-foreground size-5' />
+                <div className='text-center'>
+                  <div className='text-2xl font-bold'>
+                    {currentQuestion.viewCount}
+                  </div>
+                  <div className='text-muted-foreground text-xs'>Views</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Dates */}
+            <div className='text-muted-foreground flex justify-between text-sm'>
+              <div>
+                Asked on{' '}
+                {format(new Date(currentQuestion.createdAt), 'MMMM dd, yyyy')}
+              </div>
+              {currentQuestion.updatedAt !== currentQuestion.createdAt && (
+                <div>
+                  Updated{' '}
+                  {format(new Date(currentQuestion.updatedAt), 'MMMM dd, yyyy')}
+                </div>
+              )}
+            </div>
           </div>
+        </div>
+
+        <div className='flex justify-end gap-2 p-4 pt-0'>
+          <Button variant='outline' onClick={() => setOpen('view')}>
+            <X className='mr-2 size-4' />
+            Close
+          </Button>
+          <Button
+            onClick={() => {
+              setOpen('view') // Close current
+              setOpen('answers') // Open answers
+            }}
+          >
+            <MessageCircle className='mr-2 size-4' />
+            Manage Answers
+          </Button>
         </div>
       </DrawerContent>
     </Drawer>
