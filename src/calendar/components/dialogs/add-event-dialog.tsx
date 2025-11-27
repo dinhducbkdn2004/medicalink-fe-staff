@@ -1,10 +1,7 @@
-'use client'
-
 import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   useSpecialties,
   useDoctorsBySpecialty,
@@ -16,7 +13,6 @@ import {
   type TCreateAppointmentFormData,
 } from '@/calendar/schemas'
 import type { TimeValue } from 'react-aria-components'
-import { appointmentService } from '@/api/services/appointment.service'
 import type { CreateAppointmentRequest } from '@/api/types/appointment.types'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { Button } from '@/components/ui/button'
@@ -51,6 +47,7 @@ import {
 import { SingleDayPicker } from '@/components/ui/single-day-picker'
 import { Textarea } from '@/components/ui/textarea'
 import { TimeInput } from '@/components/ui/time-input'
+import { useCreateAppointment } from '@/features/appointments/data/hooks'
 
 interface IProps {
   children: React.ReactNode
@@ -61,16 +58,8 @@ interface IProps {
 export function AddEventDialog({ children, startDate, startTime }: IProps) {
   const { isOpen, onClose, onToggle } = useDisclosure()
   const [patientSearch, setPatientSearch] = useState('')
-  const queryClient = useQueryClient()
 
-  const createMutation = useMutation({
-    mutationFn: appointmentService.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] })
-      onClose()
-      form.reset()
-    },
-  })
+  const { mutate: createAppointment, isPending } = useCreateAppointment()
 
   const form = useForm<TCreateAppointmentFormData>({
     resolver: zodResolver(createAppointmentSchema),
@@ -134,7 +123,13 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
       timeStart: `${String(values.timeStart.hour).padStart(2, '0')}:${String(values.timeStart.minute).padStart(2, '0')}`,
       timeEnd: `${String(values.timeEnd.hour).padStart(2, '0')}:${String(values.timeEnd.minute).padStart(2, '0')}`,
     }
-    createMutation.mutate(requestData)
+
+    createAppointment(requestData, {
+      onSuccess: () => {
+        onClose()
+        form.reset()
+      },
+    })
   }
 
   useEffect(() => {
@@ -142,6 +137,14 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
       form.reset({
         serviceDate: startDate,
         timeStart: startTime,
+        specialtyId: '',
+        patientId: '',
+        doctorId: '',
+        locationId: '',
+        reason: '',
+        notes: '',
+        status: 'BOOKED',
+        currency: 'VND',
       })
     }
   }, [startDate, startTime, form, isOpen])
@@ -475,21 +478,13 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button
-              type='button'
-              variant='outline'
-              disabled={createMutation.isPending}
-            >
+            <Button type='button' variant='outline' disabled={isPending}>
               Cancel
             </Button>
           </DialogClose>
 
-          <Button
-            form='appointment-form'
-            type='submit'
-            disabled={createMutation.isPending}
-          >
-            {createMutation.isPending ? 'Creating...' : 'Create Appointment'}
+          <Button form='appointment-form' type='submit' disabled={isPending}>
+            {isPending ? 'Creating...' : 'Create Appointment'}
           </Button>
         </DialogFooter>
       </DialogContent>

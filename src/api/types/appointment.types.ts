@@ -21,7 +21,7 @@ export type AppointmentStatus =
  */
 export interface AppointmentPatient {
   fullName: string
-  dateOfBirth: string
+  dateOfBirth: string | null
 }
 
 /**

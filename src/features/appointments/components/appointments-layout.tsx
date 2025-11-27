@@ -1,8 +1,10 @@
-import { Outlet } from '@tanstack/react-router'
+import { useState, useMemo } from 'react'
+import { Outlet, useLocation } from '@tanstack/react-router'
 import { ChangeBadgeVariantInput } from '@/calendar/components/change-badge-variant-input'
 import { ChangeVisibleHoursInput } from '@/calendar/components/change-visible-hours-input'
 import { ChangeWorkingHoursInput } from '@/calendar/components/change-working-hours-input'
 import { CalendarProvider } from '@/calendar/contexts/calendar-context'
+import type { TCalendarView } from '@/calendar/types'
 import { Settings, AlertCircle, Loader2 } from 'lucide-react'
 import {
   Accordion,
@@ -21,13 +23,33 @@ import { useAppointments } from '../data/hooks'
 import {
   transformAppointmentsToEvents,
   extractUsersFromAppointments,
+  getDateRangeForView,
 } from '../data/utils'
 
 export function AppointmentsLayout() {
-  // Fetch appointments with a large limit to get all appointments for the calendar
+  const location = useLocation()
+  const [selectedDate, setSelectedDate] = useState(new Date())
+
+  const view = useMemo((): TCalendarView => {
+    const path = location.pathname
+    if (path.includes('week-view')) return 'week'
+    if (path.includes('day-view')) return 'day'
+    if (path.includes('year-view')) return 'year'
+    if (path.includes('agenda-view')) return 'agenda'
+    return 'month'
+  }, [location.pathname])
+
+  const { fromDate, toDate } = useMemo(
+    () => getDateRangeForView(view, selectedDate),
+    [view, selectedDate]
+  )
+
+  // Fetch appointments with date range filtering
   const { data, isLoading, isError, error } = useAppointments({
     page: 1,
     limit: 100,
+    fromDate,
+    toDate,
   })
 
   // Loading state
@@ -66,7 +88,12 @@ export function AppointmentsLayout() {
   const users = extractUsersFromAppointments(appointments)
 
   return (
-    <CalendarProvider users={users} events={events}>
+    <CalendarProvider
+      users={users}
+      events={events}
+      selectedDate={selectedDate}
+      onDateChange={setSelectedDate}
+    >
       <Header fixed>
         <Search />
         <div className='ms-auto flex items-center space-x-4'>

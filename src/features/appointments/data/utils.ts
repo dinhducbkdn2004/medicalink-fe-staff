@@ -15,9 +15,11 @@ export const getEventColorByStatus = (
   const statusColorMap: Record<Appointment['status'], TEventColor> = {
     BOOKED: 'blue',
     CONFIRMED: 'green',
-    CANCELLED: 'red',
+    CANCELLED_BY_PATIENT: 'red',
+    CANCELLED_BY_STAFF: 'red',
     COMPLETED: 'gray',
     NO_SHOW: 'orange',
+    RESCHEDULED: 'blue',
   }
   return statusColorMap[status] || 'blue'
 }
@@ -31,19 +33,37 @@ export const transformAppointmentToEvent = (
   const { event, doctor, patient, status, reason } = appointment
 
   // Combine service date with time
+  // Combine service date with time
   const serviceDate = new Date(event.serviceDate)
-  const startTime = new Date(event.timeStart)
-  const endTime = new Date(event.timeEnd)
+
+  // Parse HH:mm time strings
+  // Parse HH:mm time strings or ISO strings
+  let startHour: number, startMinute: number
+  let endHour: number, endMinute: number
+
+  if (event.timeStart.includes('T')) {
+    const timePart = event.timeStart.split('T')[1]
+    ;[startHour, startMinute] = timePart.split(':').map(Number)
+  } else {
+    ;[startHour, startMinute] = event.timeStart.split(':').map(Number)
+  }
+
+  if (event.timeEnd.includes('T')) {
+    const timePart = event.timeEnd.split('T')[1]
+    ;[endHour, endMinute] = timePart.split(':').map(Number)
+  } else {
+    ;[endHour, endMinute] = event.timeEnd.split(':').map(Number)
+  }
 
   // Create full datetime by combining date and time
   const startDate = new Date(serviceDate)
-  startDate.setHours(startTime.getHours(), startTime.getMinutes(), 0, 0)
+  startDate.setHours(startHour, startMinute, 0, 0)
 
   const endDate = new Date(serviceDate)
-  endDate.setHours(endTime.getHours(), endTime.getMinutes(), 0, 0)
+  endDate.setHours(endHour, endMinute, 0, 0)
 
   return {
-    id: Number.parseInt(appointment.id.slice(-8), 16), // Convert string ID to number for calendar
+    id: appointment.id,
     startDate: startDate.toISOString(),
     endDate: endDate.toISOString(),
     title: `${patient.fullName} - ${reason}`,
@@ -60,6 +80,14 @@ ${appointment.notes ? `Notes: ${appointment.notes}` : ''}
       name: doctor.name,
       picturePath: doctor.avatarUrl,
     },
+    appointment: {
+      ...appointment,
+      // Ensure nested objects match IAppointment interface if needed
+      // The API Appointment type seems compatible with IAppointment for the most part
+      // except maybe for some optional fields or date strings vs Date objects
+      // But looking at interfaces.ts, IAppointment uses strings for dates, same as API
+      // So we can just pass the appointment object
+    } as unknown as import('@/calendar/interfaces').IAppointment,
   }
 }
 

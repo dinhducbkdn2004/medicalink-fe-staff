@@ -79,7 +79,7 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
       const description = row.original.description
       return (
         <div className='max-w-[300px] truncate' title={description || ''}>
-          {description || '—'}
+          {description || '-'}
         </div>
       )
     },

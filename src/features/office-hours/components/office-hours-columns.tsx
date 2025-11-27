@@ -109,7 +109,7 @@ export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
       const doctorId = row.original.doctorId
 
       if (!doctorId) {
-        return <span className='text-muted-foreground text-sm'>—</span>
+        return <span className='text-muted-foreground text-sm'>-</span>
       }
 
       return (

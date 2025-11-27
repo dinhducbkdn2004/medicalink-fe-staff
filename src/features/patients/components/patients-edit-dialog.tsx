@@ -3,9 +3,13 @@
  * Modal for updating an existing patient record
  */
 import { useEffect } from 'react'
+import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { CalendarIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Dialog,
   DialogContent,
@@ -24,6 +28,11 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -33,6 +42,7 @@ import {
 import { useUpdatePatient } from '../data/use-patients'
 import { updatePatientSchema, type UpdatePatientFormData } from '../types'
 import { usePatients } from './patients-provider'
+import { DatePickerInput } from '@/components/ui/date-picker-input'
 
 export function PatientsEditDialog() {
   const { open, setOpen, currentRow } = usePatients()
@@ -173,9 +183,7 @@ export function PatientsEditDialog() {
                       onValueChange={(value) =>
                         field.onChange(value === 'true')
                       }
-                      value={
-                        field.value === undefined ? '' : String(field.value)
-                      }
+                      value={String(field.value ?? true)}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -196,12 +204,19 @@ export function PatientsEditDialog() {
                 control={form.control}
                 name='dateOfBirth'
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date of Birth</FormLabel>
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-end'>
+                      Date of Birth
+                    </FormLabel>
                     <FormControl>
-                      <Input type='date' {...field} />
+                      <DatePickerInput
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder='Select date of birth'
+                        className='col-span-4'
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className='col-span-4 col-start-3' />
                   </FormItem>
                 )}
               />

@@ -32,6 +32,20 @@ export function useOfficeHours(params: OfficeHourQueryParams = {}) {
   return useQuery({
     queryKey: officeHourKeys.list(params),
     queryFn: () => officeHourService.getOfficeHours(params),
+    select: (response) => {
+      // Flatten the grouped response into a single array for the table
+      const { global, workLocation, doctor, doctorInLocation } = response.data
+      const allOfficeHours = [
+        ...global,
+        ...workLocation,
+        ...doctor,
+        ...doctorInLocation,
+      ]
+      return {
+        ...response,
+        data: allOfficeHours,
+      }
+    },
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: (failureCount, error: unknown) => {
       // Don't retry on 401/403 (permission errors)

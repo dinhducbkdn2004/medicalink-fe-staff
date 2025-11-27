@@ -5,14 +5,14 @@
 import { useState, useEffect, useCallback } from 'react'
 import {
   doctorService,
-  workLocationService,
   patientService,
   specialtyService,
+  officeHourService,
   type Doctor,
 } from '@/api/services'
 import type { Specialty } from '@/api/services/specialty.service'
-import type { WorkLocation } from '@/api/services/work-location.service'
 import type { Patient } from '@/api/types'
+import type { WorkLocation } from '@/api/types/doctor.types'
 
 // ============================================================================
 // Hook: Fetch Specialties
@@ -61,7 +61,7 @@ export function useDoctorsBySpecialty(specialtyId?: string) {
     const fetchDoctors = async () => {
       setIsLoading(true)
       try {
-        const response = await doctorService.getList({
+        const response = await doctorService.getDoctors({
           page: 1,
           limit: 100,
           specialtyId,
@@ -97,14 +97,15 @@ export function useLocationsByDoctor(doctorId?: string) {
     const fetchLocations = async () => {
       setIsLoading(true)
       try {
-        const response = await workLocationService.getList({
-          page: 1,
-          limit: 100,
-          doctorId,
-        })
-        setLocations(response.data)
+        const response = await doctorService.getCompleteDoctorById(doctorId)
+        if (response.workLocations) {
+          setLocations(response.workLocations)
+        } else {
+          setLocations([])
+        }
       } catch (error) {
         console.error('Failed to fetch locations:', error)
+        setLocations([])
       } finally {
         setIsLoading(false)
       }
@@ -181,7 +182,8 @@ export function useOfficeHours(
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    if (!doctorId || !locationId) {
+    // We need at least doctor or location to fetch relevant hours
+    if (!doctorId && !locationId) {
       setOfficeHours([])
       return
     }
@@ -189,16 +191,51 @@ export function useOfficeHours(
     const fetchOfficeHours = async () => {
       setIsLoading(true)
       try {
-        // TODO: Implement office hours API call
-        // const response = await officeHoursService.getList({
-        //   doctorId,
-        //   workLocationId: locationId,
-        //   dayOfWeek: date?.getDay(),
-        // })
-        // setOfficeHours(response.data)
+        const response = await officeHourService.getOfficeHours({
+          doctorId,
+          workLocationId: locationId,
+        })
 
-        // Mock data for now
-        setOfficeHours([])
+        // Flatten the response to get all relevant hours
+        const { global, workLocation, doctor, doctorInLocation } = response.data
+        const allHours = [
+          ...global,
+          ...workLocation,
+          ...doctor,
+          ...doctorInLocation,
+        ]
+
+        // Filter by day of week if date is provided
+        if (date) {
+          const dayOfWeek = date.getDay()
+          const relevantHours = allHours.filter(
+            (h) => h.dayOfWeek === dayOfWeek
+          )
+
+          setOfficeHours(
+            relevantHours.map((h) => ({
+              id: h.id,
+              doctorId: h.doctorId || '',
+              workLocationId: h.workLocationId || '',
+              dayOfWeek: h.dayOfWeek,
+              timeStart: h.startTime, // Map startTime to timeStart
+              timeEnd: h.endTime, // Map endTime to timeEnd
+              isActive: true,
+            }))
+          )
+        } else {
+          setOfficeHours(
+            allHours.map((h) => ({
+              id: h.id,
+              doctorId: h.doctorId || '',
+              workLocationId: h.workLocationId || '',
+              dayOfWeek: h.dayOfWeek,
+              timeStart: h.startTime,
+              timeEnd: h.endTime,
+              isActive: true,
+            }))
+          )
+        }
       } catch (error) {
         console.error('Failed to fetch office hours:', error)
       } finally {

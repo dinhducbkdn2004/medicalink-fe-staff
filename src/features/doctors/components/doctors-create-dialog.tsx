@@ -2,10 +2,10 @@
  * Create Doctor Dialog
  * Modal for creating a new doctor account
  */
-
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@/components/ui/button'
+import { DatePickerInput } from '@/components/ui/date-picker-input'
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -21,17 +21,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { createDoctorSchema, type CreateDoctorFormData } from '../types'
+} from '@/components/ui/select'
 import { useCreateDoctor } from '../data/use-doctors'
+import { createDoctorSchema, type CreateDoctorFormData } from '../types'
 import { useDoctors } from './doctors-provider'
 
 export function DoctorsCreateDialog() {
@@ -49,43 +49,46 @@ export function DoctorsCreateDialog() {
       isMale: undefined,
       dateOfBirth: '',
     },
-  });
+  })
 
   const onSubmit = (data: CreateDoctorFormData) => {
     createDoctor(data, {
       onSuccess: () => {
-        form.reset();
-        setOpen(null);
+        form.reset()
+        setOpen(null)
       },
-    });
-  };
+    })
+  }
 
   const handleClose = () => {
-    form.reset();
-    setOpen(null);
-  };
+    form.reset()
+    setOpen(null)
+  }
 
   return (
-    <Dialog open={open === 'create'} onOpenChange={(isOpen) => !isOpen && handleClose()}>
-      <DialogContent className="sm:max-w-[500px]">
+    <Dialog
+      open={open === 'create'}
+      onOpenChange={(isOpen) => !isOpen && handleClose()}
+    >
+      <DialogContent className='sm:max-w-[500px]'>
         <DialogHeader>
-          <DialogTitle>Create New Doctor</DialogTitle>
+          <DialogTitle>Add New Doctor</DialogTitle>
           <DialogDescription>
-            Add a new doctor account to the system. An email will be sent with login
-            credentials.
+            Add a new doctor account to the system. An email will be sent with
+            login credentials.
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
             <FormField
               control={form.control}
-              name="fullName"
+              name='fullName'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Full Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Dr. John Smith" {...field} />
+                    <Input placeholder='Dr. John Smith' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -94,14 +97,14 @@ export function DoctorsCreateDialog() {
 
             <FormField
               control={form.control}
-              name="email"
+              name='email'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email *</FormLabel>
                   <FormControl>
                     <Input
-                      type="email"
-                      placeholder="john.smith@example.com"
+                      type='email'
+                      placeholder='john.smith@example.com'
                       {...field}
                     />
                   </FormControl>
@@ -112,12 +115,12 @@ export function DoctorsCreateDialog() {
 
             <FormField
               control={form.control}
-              name="password"
+              name='password'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password *</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="••••••••" {...field} />
+                    <Input type='password' placeholder='••••••••' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -126,22 +129,22 @@ export function DoctorsCreateDialog() {
 
             <FormField
               control={form.control}
-              name="phone"
+              name='phone'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="+1234567890" {...field} />
+                    <Input placeholder='+1234567890' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name="isMale"
+                name='isMale'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Gender</FormLabel>
@@ -149,16 +152,18 @@ export function DoctorsCreateDialog() {
                       onValueChange={(value) =>
                         field.onChange(value === 'true' ? true : false)
                       }
-                      value={field.value === undefined ? '' : String(field.value)}
+                      value={
+                        field.value === undefined ? '' : String(field.value)
+                      }
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select gender" />
+                          <SelectValue placeholder='Select gender' />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="true">Male</SelectItem>
-                        <SelectItem value="false">Female</SelectItem>
+                        <SelectItem value='true'>Male</SelectItem>
+                        <SelectItem value='false'>Female</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -168,14 +173,21 @@ export function DoctorsCreateDialog() {
 
               <FormField
                 control={form.control}
-                name="dateOfBirth"
+                name='dateOfBirth'
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date of Birth</FormLabel>
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-end'>
+                      Date of Birth
+                    </FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <DatePickerInput
+                        value={field.value}
+                        onChange={field.onChange} 
+                        placeholder='Select date of birth'
+                        className='col-span-4'
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className='col-span-4 col-start-3' />
                   </FormItem>
                 )}
               />
@@ -183,14 +195,14 @@ export function DoctorsCreateDialog() {
 
             <DialogFooter>
               <Button
-                type="button"
-                variant="outline"
+                type='button'
+                variant='outline'
                 onClick={handleClose}
                 disabled={isPending}
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isPending}>
+              <Button type='submit' disabled={isPending}>
                 {isPending ? 'Creating...' : 'Create Doctor'}
               </Button>
             </DialogFooter>
@@ -198,6 +210,5 @@ export function DoctorsCreateDialog() {
         </Form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
-

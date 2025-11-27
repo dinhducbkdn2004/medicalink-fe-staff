@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from '@tanstack/react-router'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { useNavigate, useSearch } from '@tanstack/react-router'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { verifyResetCode } from '@/api/services/auth.service'
 import {
   Form,
   FormControl,
@@ -32,6 +33,7 @@ type OtpFormProps = React.HTMLAttributes<HTMLFormElement>
 
 export function OtpForm({ className, ...props }: OtpFormProps) {
   const navigate = useNavigate()
+  const search = useSearch({ from: '/(auth)/otp' })
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -41,14 +43,26 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
 
   const otp = form.watch('otp')
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    setIsLoading(true)
-    showSubmittedData(data)
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    if (!search.email) {
+      toast.error('Missing email. Please restart the process.')
+      navigate({ to: '/forgot-password' })
+      return
+    }
 
-    setTimeout(() => {
+    setIsLoading(true)
+    try {
+      await verifyResetCode({ email: search.email, code: data.otp })
+      toast.success('Code verified successfully.')
+      navigate({
+        to: '/reset-password',
+        search: { email: search.email, code: data.otp }
+      })
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Invalid or expired code')
+    } finally {
       setIsLoading(false)
-      navigate({ to: '/' })
-    }, 1000)
+    }
   }
 
   return (

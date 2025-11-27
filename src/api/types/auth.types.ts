@@ -201,3 +201,86 @@ export const loginResponseSchema = z.object({
   refresh_token: z.string(),
   user: userSchema,
 })
+
+// ============================================
+// Password Reset Types & Schemas
+// ============================================
+
+/**
+ * Request password reset body
+ */
+export interface RequestPasswordResetRequest {
+  email: string
+}
+
+/**
+ * Verify reset code body
+ */
+export interface VerifyResetCodeRequest {
+  email: string
+  code: string
+}
+
+/**
+ * Confirm password reset body
+ */
+export interface ConfirmPasswordResetRequest {
+  email: string
+  code: string
+  newPassword: string
+}
+
+/**
+ * Request password reset schema
+ */
+export const requestPasswordResetSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Please enter your email')
+    .email('Please provide a valid email address')
+    .toLowerCase(),
+})
+
+export type RequestPasswordResetFormData = z.infer<
+  typeof requestPasswordResetSchema
+>
+
+/**
+ * Verify reset code schema
+ */
+export const verifyResetCodeSchema = z.object({
+  email: z.string().email(),
+  code: z
+    .string()
+    .min(6, 'Code must be 6 digits')
+    .max(6, 'Code must be 6 digits')
+    .regex(/^\d+$/, 'Code must be numeric'),
+})
+
+export type VerifyResetCodeFormData = z.infer<typeof verifyResetCodeSchema>
+
+/**
+ * Confirm password reset schema
+ */
+export const confirmPasswordResetSchema = z
+  .object({
+    email: z.string().email(),
+    code: z.string().min(6).max(6),
+    newPassword: z
+      .string()
+      .min(8, 'Password must be at least 8 characters')
+      .max(50, 'Password must not exceed 50 characters')
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        'Password must contain at least one lowercase letter, one uppercase letter, and one number'
+      ),
+    confirmPassword: z.string().min(1, 'Please confirm your new password'),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  })
+
+export type ConfirmPasswordResetFormData = z.infer<
+  typeof confirmPasswordResetSchema
+>
