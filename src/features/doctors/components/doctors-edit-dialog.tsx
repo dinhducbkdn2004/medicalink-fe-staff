@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
+import { DatePickerInput } from '@/components/ui/date-picker-input'
 import {
   Dialog,
   DialogContent,
@@ -193,11 +194,9 @@ export function DoctorsEditDialog() {
                     <FormLabel>Gender</FormLabel>
                     <Select
                       onValueChange={(value) =>
-                        field.onChange(value === 'true' ? true : false)
+                        field.onChange(value === 'true')
                       }
-                      value={
-                        field.value === undefined ? '' : String(field.value)
-                      }
+                      value={String(field.value ?? true)}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -218,12 +217,19 @@ export function DoctorsEditDialog() {
                 control={form.control}
                 name='dateOfBirth'
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date of Birth</FormLabel>
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-end'>
+                      Date of Birth
+                    </FormLabel>
                     <FormControl>
-                      <Input type='date' {...field} />
+                      <DatePickerInput
+                        value={field.value}
+                        onChange={field.onChange} 
+                        placeholder='Select date of birth'
+                        className='col-span-4'
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className='col-span-4 col-start-3' />
                   </FormItem>
                 )}
               />

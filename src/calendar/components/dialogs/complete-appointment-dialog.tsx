@@ -1,9 +1,5 @@
-'use client'
-
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { IAppointment } from '@/calendar/interfaces'
 import { CheckCircle2 } from 'lucide-react'
-import { appointmentService } from '@/api/services/appointment.service'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,6 +12,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog'
+import { useCompleteAppointment } from '@/features/appointments/data/hooks'
 
 interface IProps {
   children: React.ReactNode
@@ -27,18 +24,15 @@ export function CompleteAppointmentDialog({
   appointment,
 }: Readonly<IProps>) {
   const { isOpen, onClose, onToggle } = useDisclosure()
-  const queryClient = useQueryClient()
 
-  const completeMutation = useMutation({
-    mutationFn: () => appointmentService.complete(appointment.id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] })
-      onClose()
-    },
-  })
+  const { mutate: completeAppointment, isPending } = useCompleteAppointment()
 
   const handleComplete = () => {
-    completeMutation.mutate()
+    completeAppointment(appointment.id, {
+      onSuccess: () => {
+        onClose()
+      },
+    })
   }
 
   if (!appointment?.event) {
@@ -97,21 +91,13 @@ export function CompleteAppointmentDialog({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button
-              type='button'
-              variant='outline'
-              disabled={completeMutation.isPending}
-            >
+            <Button type='button' variant='outline' disabled={isPending}>
               Cancel
             </Button>
           </DialogClose>
 
-          <Button
-            type='button'
-            onClick={handleComplete}
-            disabled={completeMutation.isPending}
-          >
-            {completeMutation.isPending ? 'Completing...' : 'Mark as Completed'}
+          <Button type='button' onClick={handleComplete} disabled={isPending}>
+            {isPending ? 'Completing...' : 'Mark as Completed'}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -60,9 +58,9 @@ export function StaffsDeleteDialog({
             Are you sure you want to delete{' '}
             <span className='font-bold'>{currentRow.fullName}</span>?
             <br />
-            This action will permanently remove the staff member with the role of{' '}
-            <span className='font-bold'>{currentRow.role}</span> from the system.
-            This cannot be undone.
+            This action will permanently remove the staff member with the role
+            of <span className='font-bold'>{currentRow.role}</span> from the
+            system. This cannot be undone.
           </p>
 
           <Label className='my-2'>
@@ -88,4 +86,3 @@ export function StaffsDeleteDialog({
     />
   )
 }
-

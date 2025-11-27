@@ -80,13 +80,41 @@ export function EventBlock({ event, className }: IProps) {
 
   return (
     <DraggableEvent event={event}>
-      <EventDetailsDialog event={event}>
+      {event.appointment ? (
+        <EventDetailsDialog appointment={event.appointment}>
+          <div
+            role='button'
+            tabIndex={0}
+            className={calendarWeekEventCardClasses}
+            style={{ height: `${heightInPixels}px` }}
+            onKeyDown={handleKeyDown}
+          >
+            <div className='flex items-center gap-1.5 truncate'>
+              {['mixed', 'dot'].includes(badgeVariant) && (
+                <svg
+                  width='8'
+                  height='8'
+                  viewBox='0 0 8 8'
+                  className='event-dot shrink-0'
+                >
+                  <circle cx='4' cy='4' r='4' />
+                </svg>
+              )}
+
+              <p className='truncate font-semibold'>{event.title}</p>
+            </div>
+
+            {durationInMinutes > 25 && (
+              <p>
+                {format(start, 'h:mm a')} - {format(end, 'h:mm a')}
+              </p>
+            )}
+          </div>
+        </EventDetailsDialog>
+      ) : (
         <div
-          role='button'
-          tabIndex={0}
           className={calendarWeekEventCardClasses}
           style={{ height: `${heightInPixels}px` }}
-          onKeyDown={handleKeyDown}
         >
           <div className='flex items-center gap-1.5 truncate'>
             {['mixed', 'dot'].includes(badgeVariant) && (
@@ -109,7 +137,7 @@ export function EventBlock({ event, className }: IProps) {
             </p>
           )}
         </div>
-      </EventDetailsDialog>
+      )}
     </DraggableEvent>
   )
 }

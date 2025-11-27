@@ -123,6 +123,7 @@ export interface DataTableProps<TData> {
 
   // Styling
   className?: string
+  hideToolbar?: boolean
 }
 
 // ============================================================================
@@ -146,6 +147,7 @@ export function DataTable<TData>({
   columnFilterConfigs = [],
   emptyMessage,
   className,
+  hideToolbar = false,
 }: DataTableProps<TData>) {
   // ============================================================================
   // State Management
@@ -282,12 +284,14 @@ export function DataTable<TData>({
       )}
     >
       {/* Toolbar */}
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder={searchPlaceholder}
-        searchKey={searchKey}
-        filters={filters}
-      />
+      {!hideToolbar && (
+        <DataTableToolbar
+          table={table}
+          searchPlaceholder={searchPlaceholder}
+          searchKey={searchKey}
+          filters={filters}
+        />
+      )}
 
       {/* Table */}
       <div className='overflow-hidden rounded-md border'>

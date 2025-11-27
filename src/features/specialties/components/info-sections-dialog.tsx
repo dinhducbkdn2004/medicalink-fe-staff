@@ -14,12 +14,12 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { type Specialty, type SpecialtyInfoSection } from '../data/schema'
@@ -65,107 +65,114 @@ export function InfoSectionsDialog({
 
   return (
     <>
-      <Dialog open={open && !showForm} onOpenChange={onOpenChange}>
-        <DialogContent className='max-w-3xl'>
-          <DialogHeader>
-            <DialogTitle className='flex items-center gap-2'>
+      <Drawer
+        direction='right'
+        open={open && !showForm}
+        onOpenChange={onOpenChange}
+      >
+        <DrawerContent className='h-full w-full sm:w-[600px]'>
+          <DrawerHeader>
+            <DrawerTitle className='flex items-center gap-2'>
               Info Sections
               <Badge variant='secondary' className='font-mono'>
                 {specialty.name}
               </Badge>
-            </DialogTitle>
-            <DialogDescription>
+            </DrawerTitle>
+            <DrawerDescription>
               Manage information sections for this specialty. These sections
               will be displayed on the specialty detail page.
-            </DialogDescription>
-          </DialogHeader>
+            </DrawerDescription>
+          </DrawerHeader>
 
-          <div className='flex items-center justify-between'>
-            <p className='text-muted-foreground text-sm'>
-              {sections?.length || 0} section{sections?.length !== 1 ? 's' : ''}
-            </p>
-            <Button onClick={handleAdd} size='sm'>
-              <Plus className='mr-2 size-4' />
-              Add Section
-            </Button>
-          </div>
-
-          <Separator />
-
-          {isLoading ? (
-            <div className='flex h-[300px] items-center justify-center'>
-              <Loader2 className='text-muted-foreground size-8 animate-spin' />
-            </div>
-          ) : !sections || sections.length === 0 ? (
-            <div className='flex h-[300px] flex-col items-center justify-center gap-2'>
+          <div className='flex flex-col gap-4 p-4'>
+            <div className='flex items-center justify-between'>
               <p className='text-muted-foreground text-sm'>
-                No info sections yet
+                {sections?.length || 0} section
+                {sections?.length !== 1 ? 's' : ''}
               </p>
-              <Button onClick={handleAdd} size='sm' variant='outline'>
+              <Button onClick={handleAdd} size='sm'>
                 <Plus className='mr-2 size-4' />
-                Create First Section
+                Add Section
               </Button>
             </div>
-          ) : (
-            <ScrollArea className='h-[400px] pr-4'>
-              <div className='space-y-3'>
-                {sections.map((section) => (
-                  <Card key={section.id}>
-                    <CardHeader className='pb-3'>
-                      <div className='flex items-start justify-between gap-2'>
-                        <div className='flex-1'>
-                          <CardTitle className='text-base'>
-                            {section.name}
-                          </CardTitle>
-                          <CardDescription className='text-xs'>
-                            Created{' '}
-                            {new Date(section.createdAt).toLocaleDateString(
-                              'en-US',
-                              {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                              }
-                            )}
-                          </CardDescription>
-                        </div>
-                        <div className='flex gap-1'>
-                          <Button
-                            size='sm'
-                            variant='ghost'
-                            onClick={() => handleEdit(section)}
-                            className='size-8 p-0'
-                          >
-                            <Edit className='size-4' />
-                            <span className='sr-only'>Edit</span>
-                          </Button>
-                          <Button
-                            size='sm'
-                            variant='ghost'
-                            onClick={() => setDeletingSection(section)}
-                            className='text-destructive hover:text-destructive size-8 p-0'
-                          >
-                            <Trash2 className='size-4' />
-                            <span className='sr-only'>Delete</span>
-                          </Button>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    {section.content && (
-                      <CardContent className='pt-0'>
-                        <div
-                          className='text-muted-foreground prose prose-sm line-clamp-3 max-w-none text-sm'
-                          dangerouslySetInnerHTML={{ __html: section.content }}
-                        />
-                      </CardContent>
-                    )}
-                  </Card>
-                ))}
+
+            <Separator />
+
+            {isLoading ? (
+              <div className='flex h-[300px] items-center justify-center'>
+                <Loader2 className='text-muted-foreground size-8 animate-spin' />
               </div>
-            </ScrollArea>
-          )}
-        </DialogContent>
-      </Dialog>
+            ) : !sections || sections.length === 0 ? (
+              <div className='flex h-[300px] flex-col items-center justify-center gap-2'>
+                <p className='text-muted-foreground text-sm'>
+                  No info sections yet
+                </p>
+                <Button onClick={handleAdd} size='sm' variant='outline'>
+                  <Plus className='mr-2 size-4' />
+                  Create First Section
+                </Button>
+              </div>
+            ) : (
+              <ScrollArea className='h-[calc(100vh-250px)] pr-4'>
+                <div className='space-y-3'>
+                  {sections.map((section) => (
+                    <Card key={section.id}>
+                      <CardHeader className='pb-3'>
+                        <div className='flex items-start justify-between gap-2'>
+                          <div className='flex-1'>
+                            <CardTitle className='text-base'>
+                              {section.name}
+                            </CardTitle>
+                            <CardDescription className='text-xs'>
+                              Created{' '}
+                              {new Date(section.createdAt).toLocaleDateString(
+                                'en-US',
+                                {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric',
+                                }
+                              )}
+                            </CardDescription>
+                          </div>
+                          <div className='flex gap-1'>
+                            <Button
+                              size='sm'
+                              variant='ghost'
+                              onClick={() => handleEdit(section)}
+                              className='size-8 p-0'
+                            >
+                              <Edit className='size-4' />
+                              <span className='sr-only'>Edit</span>
+                            </Button>
+                            <Button
+                              size='sm'
+                              variant='ghost'
+                              onClick={() => setDeletingSection(section)}
+                              className='text-destructive hover:text-destructive size-8 p-0'
+                            >
+                              <Trash2 className='size-4' />
+                              <span className='sr-only'>Delete</span>
+                            </Button>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      {section.content && (
+                        <CardContent className='pt-0'>
+                          <div
+                            className='text-muted-foreground prose prose-sm line-clamp-3 max-w-none text-sm'
+                            dangerouslySetInnerHTML={{ __html: section.content }}
+                          />
+                        </CardContent>
+                      )}
+                    </Card>
+                  ))}
+                </div>
+              </ScrollArea>
+            )}
+          </div>
+        </DrawerContent>
+      </Drawer>
 
       {/* Info Section Form Dialog */}
       {showForm && (

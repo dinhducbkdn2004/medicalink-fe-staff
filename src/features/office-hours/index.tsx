@@ -32,18 +32,19 @@ export function OfficeHours() {
   const { data, isLoading, error } = useOfficeHours(queryParams)
 
   // Extract grouped data (safely handle undefined/null)
-  const globalHours = data?.data?.global || []
-  const workLocationHours = data?.data?.workLocation || []
-  const doctorHours = data?.data?.doctor || []
-  const doctorInLocationHours = data?.data?.doctorInLocation || []
+  // Extract grouped data from flat list
+  const allHours = data?.data || []
 
-  // Combine all for "All" tab
-  const allHours = [
-    ...doctorInLocationHours,
-    ...doctorHours,
-    ...workLocationHours,
-    ...globalHours,
-  ]
+  const globalHours = allHours.filter((h) => h.isGlobal)
+  const workLocationHours = allHours.filter(
+    (h) => !h.isGlobal && h.workLocationId && !h.doctorId
+  )
+  const doctorHours = allHours.filter(
+    (h) => !h.isGlobal && h.doctorId && !h.workLocationId
+  )
+  const doctorInLocationHours = allHours.filter(
+    (h) => !h.isGlobal && h.doctorId && h.workLocationId
+  )
 
   // Check for permission errors
   const isPermissionError =

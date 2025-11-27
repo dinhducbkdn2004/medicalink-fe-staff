@@ -13,6 +13,9 @@ import type {
   ChangePasswordRequest,
   VerifyPasswordRequest,
   SuccessResponse,
+  RequestPasswordResetRequest,
+  VerifyResetCodeRequest,
+  ConfirmPasswordResetRequest,
 } from '../types/auth.types'
 
 /**
@@ -78,6 +81,48 @@ export async function verifyPassword(
   return response.data
 }
 
+/**
+ * POST /api/auth/password-reset/request
+ * Request a password reset code
+ */
+export async function requestPasswordReset(
+  data: RequestPasswordResetRequest
+): Promise<SuccessResponse> {
+  const response = await apiClient.post<SuccessResponse>(
+    '/auth/password-reset/request',
+    data
+  )
+  return response.data
+}
+
+/**
+ * POST /api/auth/password-reset/verify-code
+ * Verify the reset code
+ */
+export async function verifyResetCode(
+  data: VerifyResetCodeRequest
+): Promise<SuccessResponse> {
+  const response = await apiClient.post<SuccessResponse>(
+    '/auth/password-reset/verify-code',
+    data
+  )
+  return response.data
+}
+
+/**
+ * POST /api/auth/password-reset/confirm
+ * Confirm password reset with new password
+ */
+export async function confirmPasswordReset(
+  data: ConfirmPasswordResetRequest
+): Promise<SuccessResponse> {
+  const response = await apiClient.post<SuccessResponse>(
+    '/auth/password-reset/confirm',
+    data
+  )
+  return response.data
+}
+
 // Export all auth services as a single object for convenience
 export const authService = {
   login,
@@ -85,6 +130,9 @@ export const authService = {
   getProfile,
   changePassword,
   verifyPassword,
+  requestPasswordReset,
+  verifyResetCode,
+  confirmPasswordReset,
 }
 
 export default authService

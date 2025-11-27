@@ -11,9 +11,9 @@ export function AuthLayout({ children }: Readonly<AuthLayoutProps>) {
         className='pointer-events-none absolute inset-0 z-0'
         style={{
           backgroundImage: `
-            linear-gradient(to right, rgba(229,231,235,0.35) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(229,231,235,0.35) 1px, transparent 1px),
-            radial-gradient(125% 125% at 50% 10%, #fff 40%, #93c5fd 100%)
+            linear-gradient(to right, var(--auth-grid-color) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--auth-grid-color) 1px, transparent 1px),
+            radial-gradient(125% 125% at 50% 10%, var(--auth-gradient-start) 40%, var(--auth-gradient-end) 100%)
           `,
           backgroundSize: `
             64px 64px,

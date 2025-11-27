@@ -10,13 +10,12 @@ import { Loader2 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
 import {
   Form,
   FormControl,
@@ -126,92 +125,98 @@ export function InfoSectionForm({
   const isLoading = createMutation.isPending || updateMutation.isPending
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-h-[90vh] max-w-4xl overflow-y-auto'>
-        <DialogHeader>
-          <DialogTitle>
+    <Drawer
+      direction='right'
+      open={open}
+      onOpenChange={onOpenChange}
+    >
+      <DrawerContent className='h-full w-full sm:w-[600px]'>
+        <DrawerHeader>
+          <DrawerTitle>
             {isEditMode ? 'Edit Info Section' : 'Create Info Section'}
-          </DialogTitle>
-          <DialogDescription>
+          </DrawerTitle>
+          <DrawerDescription>
             {isEditMode
               ? 'Update the information section content below.'
               : `Add a new information section for ${specialty.name}.`}
-          </DialogDescription>
-        </DialogHeader>
+          </DrawerDescription>
+        </DrawerHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-            {/* Name */}
-            <FormField
-              control={form.control}
-              name='name'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Section Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='e.g., Overview, Common Conditions, Treatment Options'
-                      {...field}
-                      disabled={isLoading}
-                      required
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    The title of this information section (2-120 characters)
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <div className='flex flex-col gap-4 p-4'>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+              {/* Name */}
+              <FormField
+                control={form.control}
+                name='name'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Section Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='e.g., Overview, Common Conditions, Treatment Options'
+                        {...field}
+                        disabled={isLoading}
+                        required
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      The title of this information section (2-120 characters)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/* Content */}
-            <FormField
-              control={form.control}
-              name='content'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Content</FormLabel>
-                  <FormControl>
-                    <RichTextEditor
-                      value={field.value || ''}
-                      onChange={field.onChange}
-                      placeholder='Enter the detailed content for this section...'
-                      disabled={isLoading}
-                      toolbarOptions='full'
-                      accessToken={accessToken || ''}
-                      enableSyntax={true}
-                      enableFormula={true}
-                      enableImageUpload={true}
-                      enableVideoUpload={true}
-                      size='medium'
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    The content of this section (supports rich text formatting,
-                    code blocks, and formulas)
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              {/* Content */}
+              <FormField
+                control={form.control}
+                name='content'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Content</FormLabel>
+                    <FormControl>
+                      <RichTextEditor
+                        value={field.value || ''}
+                        onChange={field.onChange}
+                        placeholder='Enter the detailed content for this section...'
+                        disabled={isLoading}
+                        toolbarOptions='full'
+                        accessToken={accessToken || ''}
+                        enableSyntax={true}
+                        enableFormula={true}
+                        enableImageUpload={true}
+                        enableVideoUpload={true}
+                        size='medium'
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      The content of this section (supports rich text formatting,
+                      code blocks, and formulas)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <DialogFooter>
-              <Button
-                type='button'
-                variant='outline'
-                onClick={onOpenChange}
-                disabled={isLoading}
-              >
-                Cancel
-              </Button>
-              <Button type='submit' disabled={isLoading}>
-                {isLoading && <Loader2 className='mr-2 size-4 animate-spin' />}
-                {isEditMode ? 'Update' : 'Create'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+              <div className='flex justify-end gap-2'>
+                <Button
+                  type='button'
+                  variant='outline'
+                  onClick={onOpenChange}
+                  disabled={isLoading}
+                >
+                  Cancel
+                </Button>
+                <Button type='submit' disabled={isLoading}>
+                  {isLoading && <Loader2 className='mr-2 size-4 animate-spin' />}
+                  {isEditMode ? 'Update' : 'Create'}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </div>
+      </DrawerContent>
+    </Drawer>
   )
 }

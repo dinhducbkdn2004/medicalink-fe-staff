@@ -1,5 +1,3 @@
-'use client'
-
 import { format, parseISO } from 'date-fns'
 import { CancelAppointmentDialog } from '@/calendar/components/dialogs/cancel-appointment-dialog'
 import { CompleteAppointmentDialog } from '@/calendar/components/dialogs/complete-appointment-dialog'
@@ -18,13 +16,14 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetDescription,
+} from '@/components/ui/sheet'
 
 interface IProps {
   appointment: IAppointment
@@ -75,44 +74,45 @@ export function EventDetailsDialog({
   ].includes(appointment.status)
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Sheet>
+      <SheetTrigger asChild>{children}</SheetTrigger>
 
-      <DialogContent className='max-w-2xl'>
-        <DialogHeader>
+      <SheetContent className='w-full sm:max-w-xl'>
+        <SheetHeader>
           <div className='flex items-center justify-between'>
-            <DialogTitle>Appointment Details</DialogTitle>
+            <SheetTitle>Appointment Details</SheetTitle>
             <Badge variant={STATUS_VARIANTS[appointment.status]}>
               {STATUS_LABELS[appointment.status]}
             </Badge>
           </div>
-        </DialogHeader>
+          <SheetDescription>
+            View and manage appointment details.
+          </SheetDescription>
+        </SheetHeader>
 
-        <div className='space-y-4'>
-          <div className='flex items-start gap-2'>
-            <User className='mt-1 size-4 shrink-0' />
-            <div>
+        <div className='space-y-6 py-6'>
+          <div className='flex items-start gap-3'>
+            <User className='text-muted-foreground mt-1 size-5 shrink-0' />
+            <div className='space-y-1'>
               <p className='text-sm font-medium'>Patient</p>
-              <p className='text-muted-foreground text-sm'>
-                {appointment.patient.fullName}
-              </p>
+              <p className='text-sm'>{appointment.patient.fullName}</p>
               <p className='text-muted-foreground text-xs'>
                 DOB:{' '}
-                {format(
-                  parseISO(appointment.patient.dateOfBirth),
-                  'MMM d, yyyy'
-                )}
+                {appointment.patient.dateOfBirth
+                  ? format(
+                      parseISO(appointment.patient.dateOfBirth),
+                      'MMM d, yyyy'
+                    )
+                  : 'N/A'}
               </p>
             </div>
           </div>
 
-          <div className='flex items-start gap-2'>
-            <Stethoscope className='mt-1 size-4 shrink-0' />
-            <div>
+          <div className='flex items-start gap-3'>
+            <Stethoscope className='text-muted-foreground mt-1 size-5 shrink-0' />
+            <div className='space-y-1'>
               <p className='text-sm font-medium'>Doctor</p>
-              <p className='text-muted-foreground text-sm'>
-                {appointment.doctor.name}
-              </p>
+              <p className='text-sm'>{appointment.doctor.name}</p>
               {appointment.specialty && (
                 <p className='text-muted-foreground text-xs'>
                   Specialty: {appointment.specialty.name}
@@ -122,13 +122,11 @@ export function EventDetailsDialog({
           </div>
 
           {appointment.location && (
-            <div className='flex items-start gap-2'>
-              <MapPin className='mt-1 size-4 shrink-0' />
-              <div>
+            <div className='flex items-start gap-3'>
+              <MapPin className='text-muted-foreground mt-1 size-5 shrink-0' />
+              <div className='space-y-1'>
                 <p className='text-sm font-medium'>Location</p>
-                <p className='text-muted-foreground text-sm'>
-                  {appointment.location.name}
-                </p>
+                <p className='text-sm'>{appointment.location.name}</p>
                 <p className='text-muted-foreground text-xs'>
                   {appointment.location.address}
                 </p>
@@ -136,25 +134,25 @@ export function EventDetailsDialog({
             </div>
           )}
 
-          <div className='flex items-start gap-2'>
-            <Calendar className='mt-1 size-4 shrink-0' />
-            <div>
+          <div className='flex items-start gap-3'>
+            <Calendar className='text-muted-foreground mt-1 size-5 shrink-0' />
+            <div className='space-y-1'>
               <p className='text-sm font-medium'>Date & Time</p>
-              <p className='text-muted-foreground text-sm'>
+              <p className='text-sm'>
                 {format(serviceDate, 'EEEE, MMMM d, yyyy')}
               </p>
-              <p className='text-muted-foreground text-sm'>
+              <p className='text-sm'>
                 {appointment.event.timeStart} - {appointment.event.timeEnd}
               </p>
             </div>
           </div>
 
           {appointment.priceAmount && (
-            <div className='flex items-start gap-2'>
-              <DollarSign className='mt-1 size-4 shrink-0' />
-              <div>
+            <div className='flex items-start gap-3'>
+              <DollarSign className='text-muted-foreground mt-1 size-5 shrink-0' />
+              <div className='space-y-1'>
                 <p className='text-sm font-medium'>Price</p>
-                <p className='text-muted-foreground text-sm'>
+                <p className='text-sm'>
                   {appointment.priceAmount.toLocaleString()}{' '}
                   {appointment.currency}
                 </p>
@@ -163,45 +161,41 @@ export function EventDetailsDialog({
           )}
 
           {appointment.reason && (
-            <div className='flex items-start gap-2'>
-              <FileText className='mt-1 size-4 shrink-0' />
-              <div>
+            <div className='flex items-start gap-3'>
+              <FileText className='text-muted-foreground mt-1 size-5 shrink-0' />
+              <div className='space-y-1'>
                 <p className='text-sm font-medium'>Reason</p>
-                <p className='text-muted-foreground text-sm'>
-                  {appointment.reason}
-                </p>
+                <p className='text-sm'>{appointment.reason}</p>
               </div>
             </div>
           )}
 
           {appointment.notes && (
-            <div className='flex items-start gap-2'>
-              <FileText className='mt-1 size-4 shrink-0' />
-              <div>
+            <div className='flex items-start gap-3'>
+              <FileText className='text-muted-foreground mt-1 size-5 shrink-0' />
+              <div className='space-y-1'>
                 <p className='text-sm font-medium'>Notes</p>
-                <p className='text-muted-foreground text-sm'>
-                  {appointment.notes}
-                </p>
+                <p className='text-sm'>{appointment.notes}</p>
               </div>
             </div>
           )}
 
-          <div className='text-muted-foreground grid grid-cols-2 gap-2 border-t pt-2 text-xs'>
+          <div className='text-muted-foreground grid grid-cols-2 gap-4 border-t pt-4 text-xs'>
             <div>
-              <p className='font-medium'>Created</p>
+              <p className='text-foreground font-medium'>Created</p>
               <p>
                 {format(parseISO(appointment.createdAt), 'MMM d, yyyy h:mm a')}
               </p>
             </div>
             <div>
-              <p className='font-medium'>Updated</p>
+              <p className='text-foreground font-medium'>Updated</p>
               <p>
                 {format(parseISO(appointment.updatedAt), 'MMM d, yyyy h:mm a')}
               </p>
             </div>
             {appointment.completedAt && (
               <div>
-                <p className='font-medium'>Completed</p>
+                <p className='text-foreground font-medium'>Completed</p>
                 <p>
                   {format(
                     parseISO(appointment.completedAt),
@@ -212,7 +206,7 @@ export function EventDetailsDialog({
             )}
             {appointment.cancelledAt && (
               <div>
-                <p className='font-medium'>Cancelled</p>
+                <p className='text-foreground font-medium'>Cancelled</p>
                 <p>
                   {format(
                     parseISO(appointment.cancelledAt),
@@ -224,16 +218,26 @@ export function EventDetailsDialog({
           </div>
         </div>
 
-        <DialogFooter className='flex-wrap gap-2'>
+        <SheetFooter className='flex-col gap-2 sm:flex-row'>
           <EditEventDialog appointment={appointment}>
-            <Button type='button' variant='outline' size='sm'>
+            <Button
+              type='button'
+              variant='outline'
+              size='sm'
+              className='w-full sm:w-auto'
+            >
               Update
             </Button>
           </EditEventDialog>
 
           {canReschedule && (
             <RescheduleAppointmentDialog appointment={appointment}>
-              <Button type='button' variant='outline' size='sm'>
+              <Button
+                type='button'
+                variant='outline'
+                size='sm'
+                className='w-full sm:w-auto'
+              >
                 Reschedule
               </Button>
             </RescheduleAppointmentDialog>
@@ -241,7 +245,12 @@ export function EventDetailsDialog({
 
           {canConfirm && (
             <ConfirmAppointmentDialog appointment={appointment}>
-              <Button type='button' variant='default' size='sm'>
+              <Button
+                type='button'
+                variant='default'
+                size='sm'
+                className='w-full sm:w-auto'
+              >
                 Confirm
               </Button>
             </ConfirmAppointmentDialog>
@@ -249,7 +258,12 @@ export function EventDetailsDialog({
 
           {canComplete && (
             <CompleteAppointmentDialog appointment={appointment}>
-              <Button type='button' variant='default' size='sm'>
+              <Button
+                type='button'
+                variant='default'
+                size='sm'
+                className='w-full sm:w-auto'
+              >
                 Complete
               </Button>
             </CompleteAppointmentDialog>
@@ -257,13 +271,18 @@ export function EventDetailsDialog({
 
           {canCancel && (
             <CancelAppointmentDialog appointment={appointment}>
-              <Button type='button' variant='destructive' size='sm'>
+              <Button
+                type='button'
+                variant='destructive'
+                size='sm'
+                className='w-full sm:w-auto'
+              >
                 Cancel
               </Button>
             </CancelAppointmentDialog>
           )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   )
 }

@@ -8,12 +8,12 @@ import { CheckCircle, Trash2, X, ThumbsUp, User } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog'
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+} from '@/components/ui/drawer'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -75,144 +75,150 @@ export function QuestionAnswersDialog() {
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={() => setOpen('answers')}>
-        <DialogContent className='max-w-4xl max-h-[90vh]'>
-          <DialogHeader>
-            <DialogTitle className='text-xl'>Manage Answers</DialogTitle>
-            <DialogDescription className='line-clamp-2'>
+      <Drawer
+        direction='right'
+        open={isOpen}
+        onOpenChange={() => setOpen('answers')}
+      >
+        <DrawerContent className='h-full w-full sm:w-[600px]'>
+          <DrawerHeader>
+            <DrawerTitle className='text-xl'>Manage Answers</DrawerTitle>
+            <DrawerDescription className='line-clamp-2'>
               {currentQuestion.title}
-            </DialogDescription>
-          </DialogHeader>
+            </DrawerDescription>
+          </DrawerHeader>
 
-          <ScrollArea className='max-h-[calc(90vh-200px)] pr-4'>
-            {isLoading ? (
-              <div className='space-y-4'>
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className='space-y-3 rounded-lg border p-4'>
-                    <div className='flex items-center gap-3'>
-                      <Skeleton className='size-10 rounded-full' />
-                      <div className='space-y-2'>
-                        <Skeleton className='h-4 w-32' />
-                        <Skeleton className='h-3 w-24' />
-                      </div>
-                    </div>
-                    <Skeleton className='h-20 w-full' />
-                  </div>
-                ))}
-              </div>
-            ) : answers.length === 0 ? (
-              <div className='flex flex-col items-center justify-center py-12 text-center'>
-                <div className='text-muted-foreground mb-4 rounded-full bg-muted p-4'>
-                  <User className='size-8' />
-                </div>
-                <h3 className='mb-2 font-semibold'>No answers yet</h3>
-                <p className='text-muted-foreground text-sm'>
-                  This question hasn't received any answers from doctors.
-                </p>
-              </div>
-            ) : (
-              <div className='space-y-4'>
-                {answers.map((answer: Answer) => (
-                  <div
-                    key={answer.id}
-                    className='rounded-lg border p-4 transition-colors hover:bg-muted/50'
-                  >
-                    {/* Doctor Info */}
-                    <div className='mb-3 flex items-start justify-between'>
+          <div className='flex flex-col gap-4 p-4'>
+            <ScrollArea className='h-[calc(100vh-150px)] pr-4'>
+              {isLoading ? (
+                <div className='space-y-4'>
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className='space-y-3 rounded-lg border p-4'>
                       <div className='flex items-center gap-3'>
-                        <Avatar className='size-10'>
-                          <AvatarImage
-                            src={answer.doctor?.avatarUrl || undefined}
-                            alt={answer.doctor?.fullName || 'Doctor'}
-                          />
-                          <AvatarFallback>
-                            {answer.doctor?.fullName
-                              ? answer.doctor.fullName
-                                  .split(' ')
-                                  .map((n) => n[0])
-                                  .join('')
-                                  .toUpperCase()
-                                  .slice(0, 2)
-                              : 'DR'}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className='font-semibold'>
-                            {answer.doctor?.fullName || 'Unknown Doctor'}
-                          </div>
-                          {answer.doctor?.specialty && (
-                            <div className='text-muted-foreground text-xs'>
-                              {answer.doctor.specialty}
+                        <Skeleton className='size-10 rounded-full' />
+                        <div className='space-y-2'>
+                          <Skeleton className='h-4 w-32' />
+                          <Skeleton className='h-3 w-24' />
+                        </div>
+                      </div>
+                      <Skeleton className='h-20 w-full' />
+                    </div>
+                  ))}
+                </div>
+              ) : answers.length === 0 ? (
+                <div className='flex flex-col items-center justify-center py-12 text-center'>
+                  <div className='text-muted-foreground mb-4 rounded-full bg-muted p-4'>
+                    <User className='size-8' />
+                  </div>
+                  <h3 className='mb-2 font-semibold'>No answers yet</h3>
+                  <p className='text-muted-foreground text-sm'>
+                    This question hasn't received any answers from doctors.
+                  </p>
+                </div>
+              ) : (
+                <div className='space-y-4'>
+                  {answers.map((answer: Answer) => (
+                    <div
+                      key={answer.id}
+                      className='rounded-lg border p-4 transition-colors hover:bg-muted/50'
+                    >
+                      {/* Doctor Info */}
+                      <div className='mb-3 flex items-start justify-between'>
+                        <div className='flex items-center gap-3'>
+                          <Avatar className='size-10'>
+                            <AvatarImage
+                              src={answer.doctor?.avatarUrl || undefined}
+                              alt={answer.doctor?.fullName || 'Doctor'}
+                            />
+                            <AvatarFallback>
+                              {answer.doctor?.fullName
+                                ? answer.doctor.fullName
+                                    .split(' ')
+                                    .map((n) => n[0])
+                                    .join('')
+                                    .toUpperCase()
+                                    .slice(0, 2)
+                                : 'DR'}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className='font-semibold'>
+                              {answer.doctor?.fullName || 'Unknown Doctor'}
                             </div>
+                            {answer.doctor?.specialty && (
+                              <div className='text-muted-foreground text-xs'>
+                                {answer.doctor.specialty}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        {answer.accepted && (
+                          <Badge className='bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'>
+                            <CheckCircle className='mr-1 size-3' />
+                            Accepted
+                          </Badge>
+                        )}
+                      </div>
+
+                      {/* Answer Body */}
+                      <div className='mb-3 rounded-md bg-muted/50 p-3'>
+                        <p className='whitespace-pre-wrap text-sm leading-relaxed'>
+                          {answer.body}
+                        </p>
+                      </div>
+
+                      {/* Meta & Actions */}
+                      <div className='flex items-center justify-between'>
+                        <div className='flex items-center gap-4 text-muted-foreground text-xs'>
+                          <div className='flex items-center gap-1'>
+                            <ThumbsUp className='size-3' />
+                            <span>{answer.upvotes} upvotes</span>
+                          </div>
+                          <div>
+                            {format(new Date(answer.createdAt), 'MMM dd, yyyy')}
+                          </div>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                          {!answer.accepted && (
+                            <Button
+                              size='sm'
+                              variant='outline'
+                              onClick={() => handleAcceptAnswer(answer.id)}
+                              disabled={acceptAnswerMutation.isPending}
+                              className='border-green-600 text-green-600 hover:bg-green-50'
+                            >
+                              <CheckCircle className='mr-1 size-3' />
+                              Accept
+                            </Button>
                           )}
-                        </div>
-                      </div>
-                      {answer.accepted && (
-                        <Badge className='bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'>
-                          <CheckCircle className='mr-1 size-3' />
-                          Accepted
-                        </Badge>
-                      )}
-                    </div>
-
-                    {/* Answer Body */}
-                    <div className='mb-3 rounded-md bg-muted/50 p-3'>
-                      <p className='whitespace-pre-wrap text-sm leading-relaxed'>
-                        {answer.body}
-                      </p>
-                    </div>
-
-                    {/* Meta & Actions */}
-                    <div className='flex items-center justify-between'>
-                      <div className='flex items-center gap-4 text-muted-foreground text-xs'>
-                        <div className='flex items-center gap-1'>
-                          <ThumbsUp className='size-3' />
-                          <span>{answer.upvotes} upvotes</span>
-                        </div>
-                        <div>
-                          {format(new Date(answer.createdAt), 'MMM dd, yyyy')}
-                        </div>
-                      </div>
-                      <div className='flex items-center gap-2'>
-                        {!answer.accepted && (
                           <Button
                             size='sm'
-                            variant='outline'
-                            onClick={() => handleAcceptAnswer(answer.id)}
-                            disabled={acceptAnswerMutation.isPending}
-                            className='border-green-600 text-green-600 hover:bg-green-50'
+                            variant='ghost'
+                            onClick={() => setDeleteAnswerId(answer.id)}
+                            disabled={deleteAnswerMutation.isPending}
+                            className='text-destructive hover:bg-destructive/10 hover:text-destructive'
                           >
-                            <CheckCircle className='mr-1 size-3' />
-                            Accept
+                            <Trash2 className='size-3' />
                           </Button>
-                        )}
-                        <Button
-                          size='sm'
-                          variant='ghost'
-                          onClick={() => setDeleteAnswerId(answer.id)}
-                          disabled={deleteAnswerMutation.isPending}
-                          className='text-destructive hover:bg-destructive/10 hover:text-destructive'
-                        >
-                          <Trash2 className='size-3' />
-                        </Button>
+                        </div>
                       </div>
+
+                      <Separator className='mt-3' />
                     </div>
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
 
-                    <Separator className='mt-3' />
-                  </div>
-                ))}
-              </div>
-            )}
-          </ScrollArea>
-
-          <div className='mt-4 flex justify-end'>
-            <Button variant='outline' onClick={() => setOpen('answers')}>
-              <X className='mr-2 size-4' />
-              Close
-            </Button>
+            <div className='mt-4 flex justify-end'>
+              <Button variant='outline' onClick={() => setOpen('answers')}>
+                <X className='mr-2 size-4' />
+                Close
+              </Button>
+            </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </DrawerContent>
+      </Drawer>
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog

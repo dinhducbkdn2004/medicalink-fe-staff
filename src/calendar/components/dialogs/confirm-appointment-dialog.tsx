@@ -1,9 +1,5 @@
-'use client'
-
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { IAppointment } from '@/calendar/interfaces'
 import { CheckCircle } from 'lucide-react'
-import { appointmentService } from '@/api/services/appointment.service'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,6 +12,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog'
+import { useConfirmAppointment } from '@/features/appointments/data/hooks'
 
 interface IProps {
   children: React.ReactNode
@@ -27,18 +24,15 @@ export function ConfirmAppointmentDialog({
   appointment,
 }: Readonly<IProps>) {
   const { isOpen, onClose, onToggle } = useDisclosure()
-  const queryClient = useQueryClient()
 
-  const confirmMutation = useMutation({
-    mutationFn: () => appointmentService.confirm(appointment.id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] })
-      onClose()
-    },
-  })
+  const { mutate: confirmAppointment, isPending } = useConfirmAppointment()
 
   const handleConfirm = () => {
-    confirmMutation.mutate()
+    confirmAppointment(appointment.id, {
+      onSuccess: () => {
+        onClose()
+      },
+    })
   }
 
   if (!appointment?.event) {
@@ -89,23 +83,13 @@ export function ConfirmAppointmentDialog({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button
-              type='button'
-              variant='outline'
-              disabled={confirmMutation.isPending}
-            >
+            <Button type='button' variant='outline' disabled={isPending}>
               Cancel
             </Button>
           </DialogClose>
 
-          <Button
-            type='button'
-            onClick={handleConfirm}
-            disabled={confirmMutation.isPending}
-          >
-            {confirmMutation.isPending
-              ? 'Confirming...'
-              : 'Confirm Appointment'}
+          <Button type='button' onClick={handleConfirm} disabled={isPending}>
+            {isPending ? 'Confirming...' : 'Confirm Appointment'}
           </Button>
         </DialogFooter>
       </DialogContent>

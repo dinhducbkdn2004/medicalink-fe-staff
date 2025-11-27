@@ -8,9 +8,7 @@ import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { Badge } from '@/components/ui/badge'
 import { usePermissionGroups, usePermissionStats } from '../hooks'
 import { GroupDialogs } from './components/group-dialogs'
 import { GroupManagerProvider } from './components/group-manager-provider'
@@ -23,14 +21,13 @@ const route = getRouteApi('/_authenticated/group-manager/')
 export function GroupManager() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
-  
+
   const { data: groups, isLoading: groupsLoading } = usePermissionGroups()
   const { data: stats, isLoading: statsLoading } = usePermissionStats()
 
   return (
     <GroupManagerProvider>
       <Header fixed>
-        <Search />
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />
@@ -46,14 +43,10 @@ export function GroupManager() {
               <h2 className='text-2xl font-bold tracking-tight'>
                 Permission Groups
               </h2>
-              {!groupsLoading && groups && (
-                <Badge variant='secondary' className='text-sm'>
-                  {groups.length} {groups.length === 1 ? 'group' : 'groups'}
-                </Badge>
-              )}
             </div>
             <p className='text-muted-foreground'>
-              Create and manage permission groups. Assign permissions to groups, then add users to groups.
+              Create and manage permission groups. Assign permissions to groups,
+              then add users to groups.
             </p>
           </div>
           <RoleGate roles={['SUPER_ADMIN']}>
@@ -65,11 +58,11 @@ export function GroupManager() {
         <PermissionStatsCards stats={stats} isLoading={statsLoading} />
 
         {/* Groups Table */}
-        <GroupsTable 
-          data={groups || []} 
+        <GroupsTable
+          data={groups || []}
           search={search}
           navigate={navigate}
-          isLoading={groupsLoading} 
+          isLoading={groupsLoading}
         />
       </Main>
 

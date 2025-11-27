@@ -6,9 +6,9 @@ import { Edit, Trash2, Shield } from 'lucide-react'
 import type { PermissionGroup } from '@/api/types/permission.types'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
 import { DataTable, type DataTableAction } from '@/components/data-table'
+import { DataTableBulkActions } from './data-table-bulk-actions'
 import { groupColumns } from './group-columns'
 import { useGroupManager } from './group-manager-provider'
-import { DataTableBulkActions } from './data-table-bulk-actions'
 
 type GroupsTableProps = {
   data: PermissionGroup[]
@@ -72,24 +72,13 @@ export function GroupsTable({
       isLoading={isLoading}
       entityName='permission group'
       // Toolbar
-      searchPlaceholder='Filter groups...'
-      searchKey='name'
-      filters={[
-        {
-          columnId: 'isActive',
-          title: 'Status',
-          options: [
-            { label: 'Active', value: 'true' },
-            { label: 'Inactive', value: 'false' },
-          ],
-        },
-      ]}
       // Actions
       getRowActions={getRowActions}
       renderBulkActions={(table) => <DataTableBulkActions table={table} />}
       // Advanced
       enableRowSelection={true}
       emptyMessage='No permission groups found.'
+      hideToolbar={true}
     />
   )
 }
