@@ -44,6 +44,7 @@ export function DoctorsCreateDialog() {
       fullName: '',
       email: '',
       password: '',
+      confirmPassword: '',
       role: 'DOCTOR',
       phone: '',
       isMale: undefined,
@@ -51,15 +52,22 @@ export function DoctorsCreateDialog() {
     },
   })
 
-  const onSubmit = (data: CreateDoctorFormData) => {
-    createDoctor(data, {
+  const onSubmit = (values: CreateDoctorFormData) => {
+    const { confirmPassword, ...data } = values
+
+    // Sanitize dateOfBirth: convert empty string to undefined
+    const payload = {
+      ...data,
+      dateOfBirth: data.dateOfBirth || undefined,
+    }
+
+    createDoctor(payload, {
       onSuccess: () => {
         form.reset()
         setOpen(null)
       },
     })
   }
-
   const handleClose = () => {
     form.reset()
     setOpen(null)
@@ -129,6 +137,20 @@ export function DoctorsCreateDialog() {
 
             <FormField
               control={form.control}
+              name='confirmPassword'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password *</FormLabel>
+                  <FormControl>
+                    <Input type='password' placeholder='••••••••' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name='phone'
               render={({ field }) => (
                 <FormItem>
@@ -146,7 +168,7 @@ export function DoctorsCreateDialog() {
                 control={form.control}
                 name='isMale'
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className='flex flex-col'>
                     <FormLabel>Gender</FormLabel>
                     <Select
                       onValueChange={(value) =>
@@ -175,19 +197,17 @@ export function DoctorsCreateDialog() {
                 control={form.control}
                 name='dateOfBirth'
                 render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Date of Birth
-                    </FormLabel>
+                  <FormItem className='flex flex-col'>
+                    <FormLabel>Date of Birth</FormLabel>
                     <FormControl>
                       <DatePickerInput
                         value={field.value}
-                        onChange={field.onChange} 
+                        onChange={field.onChange}
                         placeholder='Select date of birth'
                         className='col-span-4'
                       />
                     </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
+                    <FormMessage />
                   </FormItem>
                 )}
               />

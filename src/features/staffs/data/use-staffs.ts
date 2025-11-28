@@ -78,9 +78,6 @@ export function useCreateStaff() {
       queryClient.invalidateQueries({ queryKey: staffKeys.stats() })
       toast.success('Staff account created successfully')
     },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to create staff account')
-    },
   })
 }
 
@@ -101,9 +98,6 @@ export function useUpdateStaff() {
       queryClient.invalidateQueries({ queryKey: staffKeys.stats() })
       toast.success('Staff account updated successfully')
     },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update staff account')
-    },
   })
 }
 
@@ -119,9 +113,6 @@ export function useDeleteStaff() {
       queryClient.invalidateQueries({ queryKey: staffKeys.lists() })
       queryClient.invalidateQueries({ queryKey: staffKeys.stats() })
       toast.success('Staff account deleted successfully')
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to delete staff account')
     },
   })
 }

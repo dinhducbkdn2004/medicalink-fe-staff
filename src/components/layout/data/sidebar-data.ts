@@ -46,6 +46,7 @@ export const navGroups: NavGroupWithAccess[] = [
       {
         title: 'User Management',
         icon: Users,
+        allowedRoles: ['SUPER_ADMIN', 'ADMIN'],
         items: [
           {
             title: 'Staff Accounts',
@@ -85,6 +86,7 @@ export const navGroups: NavGroupWithAccess[] = [
   },
   {
     title: 'Hospital Configuration',
+    allowedRoles: ['SUPER_ADMIN', 'ADMIN'],
     items: [
       {
         title: 'Specialties',

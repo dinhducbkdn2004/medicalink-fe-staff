@@ -237,37 +237,64 @@ export interface ToggleActiveRequest {
 // Zod Validation Schemas
 // ============================================================================
 
-export const createDoctorSchema = z.object({
-  fullName: z.string().min(2).max(100),
-  email: z.string().email().toLowerCase(),
-  password: z
-    .string()
-    .min(8)
-    .max(50)
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {
-      message: 'Password must contain uppercase, lowercase, and number',
-    }),
-  role: z.literal('DOCTOR').optional(),
-  phone: z.string().optional(),
-  isMale: z.boolean().optional(),
-  dateOfBirth: z.string().optional(),
-})
+export const createDoctorSchema = z
+  .object({
+    fullName: z.string().min(2).max(100),
+    email: z.string().email().toLowerCase(),
+    password: z
+      .string()
+      .min(8)
+      .max(50)
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {
+        message: 'Password must contain uppercase, lowercase, and number',
+      }),
+    confirmPassword: z.string(),
+    role: z.literal('DOCTOR').optional(),
+    phone: z
+      .string()
+      .regex(/^\+?[0-9]{10,15}$/, 'Invalid phone number')
+      .optional()
+      .or(z.literal('')),
+    isMale: z.boolean().optional(),
+    dateOfBirth: z.string().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  })
 
-export const updateDoctorAccountSchema = z.object({
-  fullName: z.string().min(2).max(100).optional(),
-  email: z.string().email().toLowerCase().optional(),
-  password: z
-    .string()
-    .min(8)
-    .max(50)
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {
-      message: 'Password must contain uppercase, lowercase, and number',
-    })
-    .optional(),
-  phone: z.string().optional(),
-  isMale: z.boolean().optional(),
-  dateOfBirth: z.string().optional(),
-})
+export const updateDoctorAccountSchema = z
+  .object({
+    fullName: z.string().min(2).max(100).optional(),
+    email: z.string().email().toLowerCase().optional(),
+    password: z
+      .string()
+      .min(8)
+      .max(50)
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {
+        message: 'Password must contain uppercase, lowercase, and number',
+      })
+      .optional()
+      .or(z.literal('')),
+    confirmPassword: z.string().optional().or(z.literal('')),
+    phone: z
+      .string()
+      .regex(/^\+?[0-9]{10,15}$/, 'Invalid phone number')
+      .optional()
+      .or(z.literal('')),
+    isMale: z.boolean().optional(),
+    dateOfBirth: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (!data.password) return true
+      return data.password === data.confirmPassword
+    },
+    {
+      message: "Passwords don't match",
+      path: ['confirmPassword'],
+    }
+  )
 
 export const updateDoctorProfileSchema = z.object({
   degree: z.string().max(100).optional(),

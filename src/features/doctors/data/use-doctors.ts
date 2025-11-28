@@ -102,9 +102,6 @@ export function useCreateDoctor() {
       queryClient.invalidateQueries({ queryKey: doctorKeys.stats() })
       toast.success('Doctor created successfully')
     },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to create doctor')
-    },
   })
 }
 
@@ -132,9 +129,6 @@ export function useUpdateDoctor() {
       })
       toast.success('Doctor updated successfully')
     },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update doctor')
-    },
   })
 }
 
@@ -150,9 +144,6 @@ export function useDeleteDoctor() {
       queryClient.invalidateQueries({ queryKey: doctorKeys.lists() })
       queryClient.invalidateQueries({ queryKey: doctorKeys.stats() })
       toast.success('Doctor deleted successfully')
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to delete doctor')
     },
   })
 }
