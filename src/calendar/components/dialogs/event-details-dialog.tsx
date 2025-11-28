@@ -104,7 +104,7 @@ export function EventDetailsDialog({
 
       <SheetContent className='flex w-full flex-col sm:max-w-xl'>
         <SheetHeader>
-          <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-2'>
             <div className='flex items-center gap-2'>
               {isActionView && (
                 <Button
@@ -127,7 +127,7 @@ export function EventDetailsDialog({
           <SheetDescription>{getDescription()}</SheetDescription>
         </SheetHeader>
 
-        <div className='flex-1 overflow-y-auto px-6 py-6'>
+        <div className='flex-1 overflow-y-auto px-6'>
           {isEditing ? (
             <AppointmentUpdateForm
               appointment={appointment}

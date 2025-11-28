@@ -15,24 +15,28 @@ export const statsKeys = {
 /**
  * Hook to fetch staff statistics
  */
-export function useStaffStats() {
+/**
+ * Hook to fetch staff statistics
+ */
+export function useStaffStats(enabled = true) {
   return useQuery({
     queryKey: statsKeys.staffs(),
     queryFn: statsService.getStaffStats,
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 1,
+    enabled,
   })
 }
 
 /**
  * Hook to fetch doctor statistics
  */
-export function useDoctorStats() {
+export function useDoctorStats(enabled = true) {
   return useQuery({
     queryKey: statsKeys.doctors(),
     queryFn: statsService.getDoctorStats,
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 1,
+    enabled,
   })
 }
-

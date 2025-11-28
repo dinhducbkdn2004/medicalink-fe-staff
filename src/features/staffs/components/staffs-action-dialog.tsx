@@ -38,7 +38,11 @@ const formSchema = z
     role: z.enum(['SUPER_ADMIN', 'ADMIN'], {
       required_error: 'Please select a role.',
     }),
-    phone: z.string().optional(),
+    phone: z
+      .string()
+      .regex(/^\+?[0-9]{10,15}$/, 'Invalid phone number')
+      .optional()
+      .or(z.literal('')),
     isMale: z.string().optional(),
     dateOfBirth: z.string().optional(),
     isEdit: z.boolean(),

@@ -1,15 +1,8 @@
-/**
- * Edit Patient Dialog
- * Modal for updating an existing patient record
- */
 import { useEffect } from 'react'
-import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CalendarIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
+import { DatePickerInput } from '@/components/ui/date-picker-input'
 import {
   Dialog,
   DialogContent,
@@ -28,11 +21,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -42,7 +30,6 @@ import {
 import { useUpdatePatient } from '../data/use-patients'
 import { updatePatientSchema, type UpdatePatientFormData } from '../types'
 import { usePatients } from './patients-provider'
-import { DatePickerInput } from '@/components/ui/date-picker-input'
 
 export function PatientsEditDialog() {
   const { open, setOpen, currentRow } = usePatients()
@@ -177,13 +164,17 @@ export function PatientsEditDialog() {
                 control={form.control}
                 name='isMale'
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className='flex flex-col'>
                     <FormLabel>Gender</FormLabel>
                     <Select
                       onValueChange={(value) =>
-                        field.onChange(value === 'true')
+                        field.onChange(value === 'true' ? true : false)
                       }
-                      value={String(field.value ?? true)}
+                      value={
+                        field.value === undefined || field.value === null
+                          ? undefined
+                          : String(field.value)
+                      }
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -204,10 +195,8 @@ export function PatientsEditDialog() {
                 control={form.control}
                 name='dateOfBirth'
                 render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Date of Birth
-                    </FormLabel>
+                  <FormItem className='flex flex-col'>
+                    <FormLabel>Date of Birth</FormLabel>
                     <FormControl>
                       <DatePickerInput
                         value={field.value}
@@ -216,7 +205,7 @@ export function PatientsEditDialog() {
                         className='col-span-4'
                       />
                     </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
+                    <FormMessage />
                   </FormItem>
                 )}
               />

@@ -174,10 +174,8 @@ export function PatientsCreateDialog() {
                 control={form.control}
                 name='dateOfBirth'
                 render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Date of Birth
-                    </FormLabel>
+                  <FormItem className='flex flex-col'>
+                    <FormLabel>Date of Birth</FormLabel>
                     <FormControl>
                       <DatePickerInput
                         value={field.value}
@@ -186,7 +184,7 @@ export function PatientsCreateDialog() {
                         className='col-span-4'
                       />
                     </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
+                    <FormMessage />
                   </FormItem>
                 )}
               />

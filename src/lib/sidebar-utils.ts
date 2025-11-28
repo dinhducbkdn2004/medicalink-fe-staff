@@ -106,6 +106,11 @@ export function filterNavGroups(
 ): NavGroupWithAccess[] {
   return groups
     .map((group) => {
+      // Check if user has access to the group itself
+      if (!canAccessItem(userRole, group.allowedRoles)) {
+        return null
+      }
+
       const filteredItems = filterNavItems(group.items, userRole)
 
       // Only include group if it has accessible items
