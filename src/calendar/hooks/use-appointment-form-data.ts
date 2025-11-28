@@ -64,7 +64,7 @@ export function useDoctorsBySpecialty(specialtyId?: string) {
         const response = await doctorService.getDoctors({
           page: 1,
           limit: 100,
-          specialtyId,
+          specialtyIds: specialtyId,
           isActive: true,
         })
         setDoctors(response.data)

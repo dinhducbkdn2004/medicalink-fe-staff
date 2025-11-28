@@ -1,7 +1,3 @@
-/**
- * Info Sections Dialog
- * Manage info sections for a specialty
- */
 import { useState } from 'react'
 import { Plus, Edit, Trash2, Loader2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'

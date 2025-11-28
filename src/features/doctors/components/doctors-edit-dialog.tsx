@@ -1,7 +1,3 @@
-/**
- * Edit Doctor Account Dialog
- * Modal for editing doctor account information
- */
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -35,6 +31,7 @@ import { useUpdateDoctor } from '../data/use-doctors'
 import {
   updateDoctorAccountSchema,
   type UpdateDoctorAccountFormData,
+  type UpdateDoctorAccountRequest,
 } from '../types'
 import { useDoctors } from './doctors-provider'
 
@@ -48,6 +45,7 @@ export function DoctorsEditDialog() {
       fullName: '',
       email: '',
       password: '',
+      confirmPassword: '',
       phone: '',
       isMale: undefined,
       dateOfBirth: '',
@@ -60,6 +58,7 @@ export function DoctorsEditDialog() {
         fullName: currentRow.fullName || '',
         email: currentRow.email || '',
         password: '',
+        confirmPassword: '',
         phone: currentRow.phone || '',
         isMale: currentRow.isMale,
         dateOfBirth: currentRow.dateOfBirth
@@ -73,7 +72,7 @@ export function DoctorsEditDialog() {
     if (!currentRow) return
 
     // Remove empty/unchanged fields
-    const updateData: UpdateDoctorAccountFormData = {}
+    const updateData: UpdateDoctorAccountRequest = {}
     if (data.fullName && data.fullName !== currentRow.fullName) {
       updateData.fullName = data.fullName
     }
@@ -173,6 +172,25 @@ export function DoctorsEditDialog() {
 
             <FormField
               control={form.control}
+              name='confirmPassword'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm New Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type='password'
+                      placeholder='••••••••'
+                      disabled={!form.watch('password')}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name='phone'
               render={({ field }) => (
                 <FormItem>
@@ -190,13 +208,17 @@ export function DoctorsEditDialog() {
                 control={form.control}
                 name='isMale'
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className='flex flex-col'>
                     <FormLabel>Gender</FormLabel>
                     <Select
                       onValueChange={(value) =>
-                        field.onChange(value === 'true')
+                        field.onChange(value === 'true' ? true : false)
                       }
-                      value={String(field.value ?? true)}
+                      value={
+                        field.value === undefined || field.value === null
+                          ? undefined
+                          : String(field.value)
+                      }
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -217,19 +239,17 @@ export function DoctorsEditDialog() {
                 control={form.control}
                 name='dateOfBirth'
                 render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Date of Birth
-                    </FormLabel>
+                  <FormItem className='flex flex-col'>
+                    <FormLabel>Date of Birth</FormLabel>
                     <FormControl>
                       <DatePickerInput
                         value={field.value}
-                        onChange={field.onChange} 
+                        onChange={field.onChange}
                         placeholder='Select date of birth'
                         className='col-span-4'
                       />
                     </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
+                    <FormMessage />
                   </FormItem>
                 )}
               />

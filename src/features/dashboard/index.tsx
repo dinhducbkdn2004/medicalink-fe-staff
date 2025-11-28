@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores/auth-store'
 import { useStaffStats, useDoctorStats } from '@/hooks/use-stats'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,8 +22,12 @@ import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 
 export function Dashboard() {
-  const { data: staffStats, isLoading: isLoadingStaff } = useStaffStats()
-  const { data: doctorStats, isLoading: isLoadingDoctor } = useDoctorStats()
+  const { user } = useAuthStore()
+  const isAdmin = user?.role === 'SUPER_ADMIN' || user?.role === 'ADMIN'
+
+  const { data: staffStats, isLoading: isLoadingStaff } = useStaffStats(isAdmin)
+  const { data: doctorStats, isLoading: isLoadingDoctor } =
+    useDoctorStats(isAdmin)
   return (
     <>
       {/* ===== Top Heading ===== */}

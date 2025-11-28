@@ -177,7 +177,7 @@ export interface DoctorQueryParams extends PaginationParams {
   createdTo?: string
   sortBy?: 'createdAt' | 'fullName' | 'email'
   sortOrder?: 'asc' | 'desc'
-  specialtyId?: string
+  specialtyIds?: string
 }
 
 /**
