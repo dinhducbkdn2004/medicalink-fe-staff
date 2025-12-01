@@ -20,13 +20,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import type { Question } from '../data/schema'
-import { useQuestions } from './questions-provider'
+import { useQuestions } from './use-questions'
 
 interface DataTableRowActionsProps {
   row: { original: Question }
 }
 
-export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+export function DataTableRowActions({
+  row,
+}: Readonly<DataTableRowActionsProps>) {
   const question = row.original
   const { setOpen, setCurrentQuestion } = useQuestions()
 

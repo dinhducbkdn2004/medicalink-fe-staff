@@ -1,0 +1,22 @@
+import { createContext } from 'react'
+import type { Question, Answer } from '../data/schema'
+
+type DialogType = 'view' | 'edit' | 'delete' | 'answer' | 'close' | 'answers'
+
+export interface QuestionsContextValue {
+  // Dialog state
+  open: Record<DialogType, boolean>
+  setOpen: (type: DialogType) => void
+  closeAll: () => void
+
+  // Selected items
+  currentQuestion: Question | null
+  setCurrentQuestion: (question: Question | null) => void
+
+  currentAnswer: Answer | null
+  setCurrentAnswer: (answer: Answer | null) => void
+}
+
+export const QuestionsContext = createContext<
+  QuestionsContextValue | undefined
+>(undefined)

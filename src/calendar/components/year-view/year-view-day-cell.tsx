@@ -1,6 +1,6 @@
 import { isToday } from 'date-fns'
 import { useNavigate } from '@tanstack/react-router'
-import { useCalendar } from '@/calendar/contexts/calendar-context'
+import { useCalendar } from '@/calendar/contexts/use-calendar'
 import type { IEvent } from '@/calendar/interfaces'
 import { cn } from '@/lib/utils'
 
@@ -10,7 +10,7 @@ interface IProps {
   events: IEvent[]
 }
 
-export function YearViewDayCell({ day, date, events }: IProps) {
+export function YearViewDayCell({ day, date, events }: Readonly<IProps>) {
   const navigate = useNavigate()
   const { setSelectedDate } = useCalendar()
 

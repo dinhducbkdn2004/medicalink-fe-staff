@@ -13,6 +13,7 @@ export * from './work-location.service'
 export * from './office-hour.service'
 export * from './permission.service'
 export * from './patient.service'
+export * from './appointment.service'
 
 // Question service - rename Specialty to QuestionSpecialty to avoid conflict with specialty.service
 export type {

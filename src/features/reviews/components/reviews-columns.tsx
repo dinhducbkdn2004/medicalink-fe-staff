@@ -3,36 +3,14 @@
  * Column definitions for the reviews data table
  */
 import type { ColumnDef } from '@tanstack/react-table'
-import { CheckCircle2, Clock, XCircle, Star, User, ThumbsUp } from 'lucide-react'
+import { CheckCircle2, Clock, XCircle, User, ThumbsUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import type { Review } from '../data/schema'
-
-// ============================================================================
-// Helper Components
-// ============================================================================
-
-function RatingStars({ rating }: { rating: number }) {
-  return (
-    <div className='flex items-center gap-0.5'>
-      {[1, 2, 3, 4, 5].map((star) => (
-        <Star
-          key={star}
-          className={cn(
-            'size-4',
-            star <= rating
-              ? 'fill-yellow-400 text-yellow-400'
-              : 'text-muted-foreground'
-          )}
-        />
-      ))}
-      <span className='ml-1.5 font-medium'>{rating}</span>
-    </div>
-  )
-}
+import { RatingStars } from './rating-stars'
 
 // ============================================================================
 // Column Definitions
@@ -75,12 +53,16 @@ export const columns: ColumnDef<Review>[] = [
     ),
     cell: ({ row }) => {
       const doctor = row.original.doctor
-      if (!doctor) return <span className='text-muted-foreground text-sm'>-</span>
-      
+      if (!doctor)
+        return <span className='text-muted-foreground text-sm'>-</span>
+
       return (
         <div className='flex items-center gap-3'>
           <Avatar className='size-9'>
-            <AvatarImage src={doctor.avatarUrl || undefined} alt={doctor.fullName || 'Doctor'} />
+            <AvatarImage
+              src={doctor.avatarUrl || undefined}
+              alt={doctor.fullName || 'Doctor'}
+            />
             <AvatarFallback>
               {doctor.fullName
                 ? doctor.fullName
@@ -93,7 +75,9 @@ export const columns: ColumnDef<Review>[] = [
             </AvatarFallback>
           </Avatar>
           <div className='flex flex-col'>
-            <div className='font-medium'>{doctor.fullName || 'Unknown Doctor'}</div>
+            <div className='font-medium'>
+              {doctor.fullName || 'Unknown Doctor'}
+            </div>
             {doctor.specialty && (
               <div className='text-muted-foreground text-xs'>
                 {doctor.specialty}
@@ -151,7 +135,8 @@ export const columns: ColumnDef<Review>[] = [
     ),
     cell: ({ row }) => {
       const comment = row.original.comment
-      const preview = comment.length > 80 ? comment.slice(0, 80) + '...' : comment
+      const preview =
+        comment.length > 80 ? comment.slice(0, 80) + '...' : comment
       return (
         <div className='max-w-[300px] text-sm'>
           <p className='line-clamp-2'>{preview}</p>
@@ -269,4 +254,3 @@ export const columns: ColumnDef<Review>[] = [
     },
   },
 ]
-

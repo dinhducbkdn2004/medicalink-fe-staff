@@ -1,4 +1,4 @@
-import { useCalendar } from '@/calendar/contexts/calendar-context'
+import { useCalendar } from '@/calendar/contexts/use-calendar'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { AvatarGroup } from '@/components/ui/avatar-group'
 import {
@@ -19,7 +19,7 @@ export function UserSelect() {
       </SelectTrigger>
 
       <SelectContent align='end'>
-        <SelectItem value='all' key='all'>
+        <SelectItem value='all'>
           <div className='flex items-center gap-1'>
             <AvatarGroup max={2}>
               {users.map((user) => (

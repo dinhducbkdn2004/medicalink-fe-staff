@@ -1,34 +1,13 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import type { IEvent, IUser } from '@/calendar/interfaces'
 import type {
   TBadgeVariant,
   TVisibleHours,
   TWorkingHours,
 } from '@/calendar/types'
+import { CalendarContext } from './calendar-context-types'
 
-interface ICalendarContext {
-  selectedDate: Date
-  setSelectedDate: (date: Date | undefined) => void
-  selectedUserId: IUser['id'] | 'all'
-  setSelectedUserId: (userId: IUser['id'] | 'all') => void
-  badgeVariant: TBadgeVariant
-  setBadgeVariant: (variant: TBadgeVariant) => void
-  users: IUser[]
-  workingHours: TWorkingHours
-  setWorkingHours: Dispatch<SetStateAction<TWorkingHours>>
-  visibleHours: TVisibleHours
-  setVisibleHours: Dispatch<SetStateAction<TVisibleHours>>
-  events: IEvent[]
-  setLocalEvents: Dispatch<SetStateAction<IEvent[]>>
-}
-
-const CalendarContext = createContext({} as ICalendarContext)
+export type { ICalendarContext } from './calendar-context-types'
 
 const WORKING_HOURS = {
   0: { from: 0, to: 0 },
@@ -48,13 +27,13 @@ export function CalendarProvider({
   onDateChange,
   users,
   events,
-}: {
+}: Readonly<{
   children: React.ReactNode
   selectedDate?: Date
   onDateChange?: (date: Date) => void
   users: IUser[]
   events: IEvent[]
-}) {
+}>) {
   const [badgeVariant, setBadgeVariant] = useState<TBadgeVariant>('colored')
   const [visibleHours, setVisibleHours] = useState<TVisibleHours>(VISIBLE_HOURS)
   const [workingHours, setWorkingHours] = useState<TWorkingHours>(WORKING_HOURS)
@@ -66,41 +45,49 @@ export function CalendarProvider({
     'all'
   )
 
-  const handleSelectDate = (date: Date | undefined) => {
-    if (!date) return
-    if (onDateChange) {
-      onDateChange(date)
-    } else {
-      setInternalSelectedDate(date)
-    }
-  }
+  const handleSelectDate = useCallback(
+    (date: Date | undefined) => {
+      if (!date) return
+      if (onDateChange) {
+        onDateChange(date)
+      } else {
+        setInternalSelectedDate(date)
+      }
+    },
+    [onDateChange]
+  )
+
+  const value = useMemo(
+    () => ({
+      selectedDate,
+      setSelectedDate: handleSelectDate,
+      selectedUserId,
+      setSelectedUserId,
+      badgeVariant,
+      setBadgeVariant,
+      users,
+      visibleHours,
+      setVisibleHours,
+      workingHours,
+      setWorkingHours,
+      events,
+      setLocalEvents: () => {}, // No-op since we use props directly
+    }),
+    [
+      selectedDate,
+      handleSelectDate,
+      selectedUserId,
+      badgeVariant,
+      users,
+      visibleHours,
+      workingHours,
+      events,
+    ]
+  )
 
   return (
-    <CalendarContext.Provider
-      value={{
-        selectedDate,
-        setSelectedDate: handleSelectDate,
-        selectedUserId,
-        setSelectedUserId,
-        badgeVariant,
-        setBadgeVariant,
-        users,
-        visibleHours,
-        setVisibleHours,
-        workingHours,
-        setWorkingHours,
-        events,
-        setLocalEvents: () => {}, // No-op since we use props directly
-      }}
-    >
+    <CalendarContext.Provider value={value}>
       {children}
     </CalendarContext.Provider>
   )
-}
-
-export function useCalendar(): ICalendarContext {
-  const context = useContext(CalendarContext)
-  if (!context)
-    throw new Error('useCalendar must be used within a CalendarProvider.')
-  return context
 }

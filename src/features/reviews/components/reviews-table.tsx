@@ -13,7 +13,7 @@ import { statusOptions, ratingOptions } from '../data/data'
 import type { Review } from '../data/schema'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { columns } from './reviews-columns'
-import { useReviews } from './reviews-provider'
+import { useReviews } from './use-reviews'
 
 // ============================================================================
 // Types
@@ -56,7 +56,7 @@ export function ReviewsTable({
   search,
   navigate,
   isLoading = false,
-}: ReviewsTableProps) {
+}: Readonly<ReviewsTableProps>) {
   const { setOpen, setCurrentReview } = useReviews()
 
   // Define row actions (context menu)
@@ -138,4 +138,3 @@ export function ReviewsTable({
     />
   )
 }
-

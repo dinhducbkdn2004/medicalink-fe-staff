@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { ArrowRight, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { requestPasswordReset } from '@/api/services/auth.service'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,7 +17,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { requestPasswordReset } from '@/api/services/auth.service'
 
 const formSchema = z.object({
   email: z.email({
@@ -27,7 +27,7 @@ const formSchema = z.object({
 export function ForgotPasswordForm({
   className,
   ...props
-}: React.HTMLAttributes<HTMLFormElement>) {
+}: Readonly<React.HTMLAttributes<HTMLFormElement>>) {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -42,13 +42,14 @@ export function ForgotPasswordForm({
       await requestPasswordReset({ email: data.email })
       toast.success('If an account exists, a reset code has been sent.')
       navigate({ to: '/otp', search: { email: data.email } })
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Always show success message for security, or handle specific errors if needed
       // But the API guide says "Always returns success message for security"
       // However, if it's a network error or 500, we might want to show it.
       // For now, let's assume the API handles it as per guide.
       // If the API throws an error for rate limiting, we show it.
-      toast.error(error.response?.data?.message || 'Failed to send reset email')
+      const err = error as { response?: { data?: { message?: string } } }
+      toast.error(err.response?.data?.message || 'Failed to send reset email')
     } finally {
       setIsLoading(false)
     }

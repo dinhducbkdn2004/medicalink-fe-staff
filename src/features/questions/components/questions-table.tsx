@@ -13,7 +13,7 @@ import { statusOptions } from '../data/data'
 import type { Question } from '../data/schema'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { columns } from './questions-columns'
-import { useQuestions } from './questions-provider'
+import { useQuestions } from './use-questions'
 
 // ============================================================================
 // Types
@@ -53,7 +53,7 @@ export function QuestionsTable({
   search,
   navigate,
   isLoading = false,
-}: QuestionsTableProps) {
+}: Readonly<QuestionsTableProps>) {
   const { setOpen, setCurrentQuestion } = useQuestions()
 
   // Define row actions (context menu)

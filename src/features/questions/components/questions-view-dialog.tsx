@@ -15,7 +15,7 @@ import {
   DrawerDescription,
 } from '@/components/ui/drawer'
 import { Separator } from '@/components/ui/separator'
-import { useQuestions } from './questions-provider'
+import { useQuestions } from './use-questions'
 
 // ============================================================================
 // Component

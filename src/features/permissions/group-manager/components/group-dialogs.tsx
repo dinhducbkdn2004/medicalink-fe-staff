@@ -4,8 +4,8 @@
  */
 import { GroupDeleteDialog } from './group-delete-dialog'
 import { GroupFormDialog } from './group-form-dialog'
-import { useGroupManager } from './group-manager-provider'
 import { GroupPermissionsDialog } from './group-permissions-dialog'
+import { useGroupManager } from './use-group-manager'
 
 export function GroupDialogs() {
   const { open, setOpen } = useGroupManager()

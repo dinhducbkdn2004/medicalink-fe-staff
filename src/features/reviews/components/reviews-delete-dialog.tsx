@@ -3,6 +3,7 @@
  * Dialog for deleting a review with confirmation
  */
 import { AlertTriangle, Loader2, Trash2 } from 'lucide-react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -12,9 +13,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useDeleteReview } from '../data/use-reviews'
-import { useReviews } from './reviews-provider'
+import { useReviews } from './use-reviews'
 
 // ============================================================================
 // Component
@@ -40,7 +40,7 @@ export function ReviewDeleteDialog() {
     <Dialog open={isOpen} onOpenChange={(open) => !open && setOpen(null)}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className='flex items-center gap-2 text-destructive'>
+          <DialogTitle className='text-destructive flex items-center gap-2'>
             <AlertTriangle className='size-5' />
             Delete Review
           </DialogTitle>
@@ -60,11 +60,11 @@ export function ReviewDeleteDialog() {
         <div className='rounded-lg border p-4'>
           <div className='mb-2 flex items-center justify-between'>
             <span className='font-medium'>{currentReview.patientName}</span>
-            <span className='text-sm text-muted-foreground'>
+            <span className='text-muted-foreground text-sm'>
               Rating: {currentReview.rating}/5 ⭐
             </span>
           </div>
-          <div className='mb-2 text-sm text-muted-foreground'>
+          <div className='text-muted-foreground mb-2 text-sm'>
             For: {currentReview.doctor.fullName}
           </div>
           <p className='line-clamp-2 text-sm'>{currentReview.comment}</p>
@@ -100,4 +100,3 @@ export function ReviewDeleteDialog() {
     </Dialog>
   )
 }
-

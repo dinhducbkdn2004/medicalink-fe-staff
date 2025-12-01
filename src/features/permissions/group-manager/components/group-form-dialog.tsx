@@ -27,7 +27,7 @@ import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { useCreatePermissionGroup, useUpdatePermissionGroup } from '../../hooks'
-import { useGroupManager } from './group-manager-provider'
+import { useGroupManager } from './use-group-manager'
 
 const groupFormSchema = z.object({
   name: z
@@ -49,7 +49,10 @@ type GroupFormDialogProps = {
   onOpenChange: (open: boolean) => void
 }
 
-export function GroupFormDialog({ open, onOpenChange }: GroupFormDialogProps) {
+export function GroupFormDialog({
+  open,
+  onOpenChange,
+}: Readonly<GroupFormDialogProps>) {
   const { currentGroup, setCurrentGroup } = useGroupManager()
   const isEditMode = !!currentGroup
 
@@ -179,13 +182,12 @@ export function GroupFormDialog({ open, onOpenChange }: GroupFormDialogProps) {
                 Cancel
               </Button>
               <Button type='submit' disabled={isPending}>
-                {isPending
-                  ? isEditMode
-                    ? 'Updating...'
-                    : 'Creating...'
-                  : isEditMode
-                    ? 'Update Group'
-                    : 'Create Group'}
+                {(() => {
+                  if (isPending) {
+                    return isEditMode ? 'Updating...' : 'Creating...'
+                  }
+                  return isEditMode ? 'Update Group' : 'Create Group'
+                })()}
               </Button>
             </DialogFooter>
           </form>

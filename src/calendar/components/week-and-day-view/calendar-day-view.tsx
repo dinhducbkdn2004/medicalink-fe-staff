@@ -4,7 +4,7 @@ import { DroppableTimeBlock } from '@/calendar/components/dnd/droppable-time-blo
 import { CalendarTimeline } from '@/calendar/components/week-and-day-view/calendar-time-line'
 import { DayViewMultiDayEventsRow } from '@/calendar/components/week-and-day-view/day-view-multi-day-events-row'
 import { EventBlock } from '@/calendar/components/week-and-day-view/event-block'
-import { useCalendar } from '@/calendar/contexts/calendar-context'
+import { useCalendar } from '@/calendar/contexts/use-calendar'
 import {
   groupEvents,
   getEventBlockStyle,
@@ -23,7 +23,10 @@ interface IProps {
   multiDayEvents: IEvent[]
 }
 
-export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
+export function CalendarDayView({
+  singleDayEvents,
+  multiDayEvents,
+}: Readonly<IProps>) {
   const { selectedDate, setSelectedDate, users, visibleHours, workingHours } =
     useCalendar()
 

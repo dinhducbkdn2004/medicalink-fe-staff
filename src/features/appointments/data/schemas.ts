@@ -27,17 +27,6 @@ export const createAppointmentSchema = z
       .max(255, 'Reason cannot exceed 255 characters')
       .optional(),
     notes: z.string().optional(),
-    status: z
-      .enum([
-        'BOOKED',
-        'CONFIRMED',
-        'RESCHEDULED',
-        'CANCELLED_BY_PATIENT',
-        'CANCELLED_BY_STAFF',
-        'NO_SHOW',
-        'COMPLETED',
-      ])
-      .optional(),
     priceAmount: z.number().min(0, 'Price cannot be negative').optional(),
     currency: z.string().max(3).optional(),
   })

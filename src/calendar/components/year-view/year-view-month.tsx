@@ -8,7 +8,7 @@ import {
 } from 'date-fns'
 import { useNavigate } from '@tanstack/react-router'
 import { YearViewDayCell } from '@/calendar/components/year-view/year-view-day-cell'
-import { useCalendar } from '@/calendar/contexts/calendar-context'
+import { useCalendar } from '@/calendar/contexts/use-calendar'
 import type { IEvent } from '@/calendar/interfaces'
 
 interface IProps {
@@ -16,7 +16,7 @@ interface IProps {
   events: IEvent[]
 }
 
-export function YearViewMonth({ month, events }: IProps) {
+export function YearViewMonth({ month, events }: Readonly<IProps>) {
   const navigate = useNavigate()
   const { setSelectedDate } = useCalendar()
 
@@ -27,7 +27,7 @@ export function YearViewMonth({ month, events }: IProps) {
     const firstDay = startOfMonth(month).getDay()
 
     const days = Array.from({ length: totalDays }, (_, i) => i + 1)
-    const blanks = Array(firstDay).fill(null)
+    const blanks = new Array(firstDay).fill(null)
 
     return [...blanks, ...days]
   }, [month])
@@ -51,9 +51,9 @@ export function YearViewMonth({ month, events }: IProps) {
 
       <div className='flex-1 space-y-2 rounded-b-lg border border-t-0 p-3'>
         <div className='grid grid-cols-7 gap-x-0.5 text-center'>
-          {weekDays.map((day, index) => (
+          {weekDays.map((day) => (
             <div
-              key={index}
+              key={day}
               className='text-muted-foreground text-xs font-medium'
             >
               {day}
@@ -64,7 +64,12 @@ export function YearViewMonth({ month, events }: IProps) {
         <div className='grid grid-cols-7 gap-x-0.5 gap-y-2'>
           {daysInMonth.map((day, index) => {
             if (day === null)
-              return <div key={`blank-${index}`} className='h-10' />
+              return (
+                <div
+                  key={`blank-${month.getMonth()}-${index}`}
+                  className='h-10'
+                />
+              )
 
             const date = new Date(month.getFullYear(), month.getMonth(), day)
             const dayEvents = events.filter(

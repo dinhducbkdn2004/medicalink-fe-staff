@@ -1,121 +1,20 @@
 /**
  * Hooks for appointment form data fetching
- * Flow: Specialty → Doctor → Office Hours → Available slots
+ * Correct Flow: Patient → Location → Specialty → Doctor → Date → Time Slots
  */
 import { useState, useEffect, useCallback } from 'react'
+import { format } from 'date-fns'
 import {
-  doctorService,
   patientService,
+  workLocationService,
   specialtyService,
-  officeHourService,
-  type Doctor,
+  doctorProfileService,
 } from '@/api/services'
+import type { TimeSlot } from '@/api/services/doctor-profile.service'
 import type { Specialty } from '@/api/services/specialty.service'
+import type { WorkLocation } from '@/api/services/work-location.service'
 import type { Patient } from '@/api/types'
-import type { WorkLocation } from '@/api/types/doctor.types'
-
-// ============================================================================
-// Hook: Fetch Specialties
-// ============================================================================
-export function useSpecialties(search?: string) {
-  const [specialties, setSpecialties] = useState<Specialty[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    const fetchSpecialties = async () => {
-      setIsLoading(true)
-      try {
-        const response = await specialtyService.getSpecialties({
-          page: 1,
-          limit: 100,
-          isActive: true,
-          search,
-        })
-        setSpecialties(response.data)
-      } catch (error) {
-        console.error('Failed to fetch specialties:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchSpecialties()
-  }, [search])
-
-  return { specialties, isLoading }
-}
-
-// ============================================================================
-// Hook: Fetch Doctors by Specialty
-// ============================================================================
-export function useDoctorsBySpecialty(specialtyId?: string) {
-  const [doctors, setDoctors] = useState<Doctor[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    if (!specialtyId) {
-      setDoctors([])
-      return
-    }
-
-    const fetchDoctors = async () => {
-      setIsLoading(true)
-      try {
-        const response = await doctorService.getDoctors({
-          page: 1,
-          limit: 100,
-          specialtyIds: specialtyId,
-          isActive: true,
-        })
-        setDoctors(response.data)
-      } catch (error) {
-        console.error('Failed to fetch doctors:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchDoctors()
-  }, [specialtyId])
-
-  return { doctors, isLoading }
-}
-
-// ============================================================================
-// Hook: Fetch Work Locations by Doctor
-// ============================================================================
-export function useLocationsByDoctor(doctorId?: string) {
-  const [locations, setLocations] = useState<WorkLocation[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    if (!doctorId) {
-      setLocations([])
-      return
-    }
-
-    const fetchLocations = async () => {
-      setIsLoading(true)
-      try {
-        const response = await doctorService.getCompleteDoctorById(doctorId)
-        if (response.workLocations) {
-          setLocations(response.workLocations)
-        } else {
-          setLocations([])
-        }
-      } catch (error) {
-        console.error('Failed to fetch locations:', error)
-        setLocations([])
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchLocations()
-  }, [doctorId])
-
-  return { locations, isLoading }
-}
+import type { PublicDoctorProfile } from '@/api/types/doctor.types'
 
 // ============================================================================
 // Hook: Search Patients
@@ -146,10 +45,10 @@ export function usePatients(search?: string) {
   }, [])
 
   useEffect(() => {
-    if (search) {
+    if (search && search.length >= 2) {
       const timeoutId = setTimeout(() => {
         searchPatients(search)
-      }, 300)
+      }, 500)
 
       return () => clearTimeout(timeoutId)
     } else {
@@ -161,90 +60,260 @@ export function usePatients(search?: string) {
 }
 
 // ============================================================================
-// Hook: Fetch Office Hours
+// Hook: Fetch Public Work Locations (Step 1)
 // ============================================================================
-export interface OfficeHour {
-  id: string
-  doctorId: string
-  workLocationId: string
-  dayOfWeek: number
-  timeStart: string
-  timeEnd: string
-  isActive: boolean
-}
-
-export function useOfficeHours(
-  doctorId?: string,
-  locationId?: string,
-  date?: Date
-) {
-  const [officeHours, setOfficeHours] = useState<OfficeHour[]>([])
+export function useWorkLocations() {
+  const [locations, setLocations] = useState<WorkLocation[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    // We need at least doctor or location to fetch relevant hours
-    if (!doctorId && !locationId) {
-      setOfficeHours([])
-      return
-    }
-
-    const fetchOfficeHours = async () => {
+    const fetchLocations = async () => {
       setIsLoading(true)
       try {
-        const response = await officeHourService.getOfficeHours({
-          doctorId,
-          workLocationId: locationId,
+        const response = await workLocationService.getPublicWorkLocations({
+          page: 1,
+          limit: 100,
         })
-
-        // Flatten the response to get all relevant hours
-        const { global, workLocation, doctor, doctorInLocation } = response.data
-        const allHours = [
-          ...global,
-          ...workLocation,
-          ...doctor,
-          ...doctorInLocation,
-        ]
-
-        // Filter by day of week if date is provided
-        if (date) {
-          const dayOfWeek = date.getDay()
-          const relevantHours = allHours.filter(
-            (h) => h.dayOfWeek === dayOfWeek
-          )
-
-          setOfficeHours(
-            relevantHours.map((h) => ({
-              id: h.id,
-              doctorId: h.doctorId || '',
-              workLocationId: h.workLocationId || '',
-              dayOfWeek: h.dayOfWeek,
-              timeStart: h.startTime, // Map startTime to timeStart
-              timeEnd: h.endTime, // Map endTime to timeEnd
-              isActive: true,
-            }))
-          )
-        } else {
-          setOfficeHours(
-            allHours.map((h) => ({
-              id: h.id,
-              doctorId: h.doctorId || '',
-              workLocationId: h.workLocationId || '',
-              dayOfWeek: h.dayOfWeek,
-              timeStart: h.startTime,
-              timeEnd: h.endTime,
-              isActive: true,
-            }))
-          )
-        }
+        setLocations(response.data)
       } catch (error) {
-        console.error('Failed to fetch office hours:', error)
+        console.error('Failed to fetch work locations:', error)
       } finally {
         setIsLoading(false)
       }
     }
 
-    fetchOfficeHours()
-  }, [doctorId, locationId, date])
+    fetchLocations()
+  }, [])
 
-  return { officeHours, isLoading }
+  return { locations, isLoading }
+}
+
+// ============================================================================
+// Hook: Fetch Public Specialties (Step 2)
+// ============================================================================
+export function useSpecialties() {
+  const [specialties, setSpecialties] = useState<Specialty[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchSpecialties = async () => {
+      setIsLoading(true)
+      try {
+        const response = await specialtyService.getPublicSpecialties({
+          page: 1,
+          limit: 100,
+        })
+        setSpecialties(response.data)
+      } catch (error) {
+        console.error('Failed to fetch specialties:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchSpecialties()
+  }, [])
+
+  return { specialties, isLoading }
+}
+
+// ============================================================================
+// Hook: Fetch Doctors by Location AND Specialty (Step 3)
+// ============================================================================
+export function useDoctorsByLocationAndSpecialty(
+  locationId?: string,
+  specialtyId?: string
+) {
+  const [doctors, setDoctors] = useState<PublicDoctorProfile[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    // Both location and specialty must be selected
+    if (!locationId || !specialtyId) {
+      setDoctors([])
+      return
+    }
+
+    const fetchDoctors = async () => {
+      setIsLoading(true)
+      try {
+        const response = await doctorProfileService.getPublicDoctorProfiles({
+          page: 1,
+          limit: 100,
+          workLocationIds: locationId,
+          specialtyIds: specialtyId,
+        })
+        setDoctors(response.data)
+      } catch (error) {
+        console.error('Failed to fetch doctors:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchDoctors()
+  }, [locationId, specialtyId])
+
+  return { doctors, isLoading }
+}
+
+// ============================================================================
+// Hook: Fetch Available Dates (Step 3.5)
+// ============================================================================
+export function useDoctorAvailableDates(
+  profileId?: string,
+  locationId?: string
+) {
+  const [availableDates, setAvailableDates] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    // Both profile and location must be selected
+    if (!profileId || !locationId) {
+      setAvailableDates([])
+      return
+    }
+
+    const fetchAvailableDates = async () => {
+      setIsLoading(true)
+      try {
+        const dates = await doctorProfileService.getDoctorAvailableDates(
+          profileId,
+          locationId
+        )
+        setAvailableDates(dates)
+      } catch (error) {
+        console.error('Failed to fetch available dates:', error)
+        setAvailableDates([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchAvailableDates()
+  }, [profileId, locationId])
+
+  return { availableDates, isLoading }
+}
+
+// ============================================================================
+// Hook: Fetch Available Time Slots (Step 4)
+// ============================================================================
+export function useAvailableSlots(
+  profileId?: string,
+  locationId?: string,
+  serviceDate?: Date
+) {
+  const [slots, setSlots] = useState<TimeSlot[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    // All parameters must be provided
+    if (!profileId || !locationId || !serviceDate) {
+      setSlots([])
+      return
+    }
+
+    const fetchSlots = async () => {
+      setIsLoading(true)
+      try {
+        const formattedDate = format(serviceDate, 'yyyy-MM-dd')
+        const response = await doctorProfileService.getDoctorAvailableSlots(
+          profileId,
+          locationId,
+          formattedDate,
+          true // allowPast for staff
+        )
+        setSlots(response)
+      } catch (error) {
+        console.error('Failed to fetch available slots:', error)
+        setSlots([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchSlots()
+  }, [profileId, locationId, serviceDate])
+
+  return { slots, isLoading }
+}
+
+// ============================================================================
+// DEPRECATED HOOKS (For backward compatibility with reschedule form)
+// ============================================================================
+
+/**
+ * @deprecated Use useDoctorsByLocationAndSpecialty instead
+ * This hook is kept for backward compatibility with the reschedule form
+ */
+export function useDoctorsBySpecialty(specialtyId?: string) {
+  const [doctors, setDoctors] = useState<PublicDoctorProfile[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    if (!specialtyId) {
+      setDoctors([])
+      return
+    }
+
+    const fetchDoctors = async () => {
+      setIsLoading(true)
+      try {
+        const response = await doctorProfileService.getPublicDoctorProfiles({
+          page: 1,
+          limit: 100,
+          specialtyIds: specialtyId,
+        })
+        setDoctors(response.data)
+      } catch (error) {
+        console.error('Failed to fetch doctors:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchDoctors()
+  }, [specialtyId])
+
+  return { doctors, isLoading }
+}
+
+/**
+ * @deprecated Use useWorkLocations instead
+ * This hook is kept for backward compatibility with the reschedule form
+ */
+export function useLocationsByDoctor(doctorId?: string) {
+  const [locations, setLocations] = useState<WorkLocation[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    if (!doctorId) {
+      setLocations([])
+      return
+    }
+
+    const fetchLocations = async () => {
+      setIsLoading(true)
+      try {
+        // Return all public work locations
+        // In a real scenario, we would filter by doctor's associated locations
+        const locationsResponse =
+          await workLocationService.getPublicWorkLocations({
+            page: 1,
+            limit: 100,
+          })
+        setLocations(locationsResponse.data)
+      } catch (error) {
+        console.error('Failed to fetch locations:', error)
+        setLocations([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchLocations()
+  }, [doctorId])
+
+  return { locations, isLoading }
 }

@@ -4,7 +4,7 @@
  */
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useGroupManager } from './group-manager-provider'
+import { useGroupManager } from './use-group-manager'
 
 export function GroupPrimaryButtons() {
   const { setOpen, setCurrentGroup } = useGroupManager()
