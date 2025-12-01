@@ -8,7 +8,8 @@ export { Reviews } from './index'
 
 // Components
 export { ReviewsTable } from './components/reviews-table'
-export { ReviewsProvider, useReviews } from './components/reviews-provider'
+export { ReviewsProvider } from './components/reviews-provider'
+export { useReviews } from './components/use-reviews'
 export { ReviewsDialogs } from './components/reviews-dialogs'
 export { ReviewsPrimaryButtons } from './components/reviews-primary-buttons'
 

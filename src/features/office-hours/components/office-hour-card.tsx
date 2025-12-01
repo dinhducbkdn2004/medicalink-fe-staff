@@ -3,13 +3,7 @@ import { Trash2, Clock, MapPin, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { type OfficeHour } from '../data/schema'
 import { useOfficeHoursContext } from './office-hours-provider'
 
@@ -17,7 +11,7 @@ interface OfficeHourCardProps {
   officeHour: OfficeHour
 }
 
-export function OfficeHourCard({ officeHour }: OfficeHourCardProps) {
+export function OfficeHourCard({ officeHour }: Readonly<OfficeHourCardProps>) {
   const { setOpen, setCurrentRow } = useOfficeHoursContext()
 
   const handleDelete = () => {
@@ -29,7 +23,7 @@ export function OfficeHourCard({ officeHour }: OfficeHourCardProps) {
   const formatTime = (time: string) => {
     const [hours, minutes] = time.split(':')
     const date = new Date()
-    date.setHours(parseInt(hours), parseInt(minutes))
+    date.setHours(Number.parseInt(hours), Number.parseInt(minutes))
     return format(date, 'h:mm a')
   }
 
@@ -70,13 +64,12 @@ export function OfficeHourCard({ officeHour }: OfficeHourCardProps) {
                 'border-green-200 text-green-700 dark:border-green-800 dark:text-green-300'
             )}
           >
-            {isGlobal
-              ? 'Global'
-              : isDoctorSpecific && isLocationSpecific
-                ? 'Dr. & Loc'
-                : isDoctorSpecific
-                  ? 'Doctor'
-                  : 'Location'}
+            {(() => {
+              if (isGlobal) return 'Global'
+              if (isDoctorSpecific && isLocationSpecific) return 'Dr. & Loc'
+              if (isDoctorSpecific) return 'Doctor'
+              return 'Location'
+            })()}
           </Badge>
           <Button
             variant='ghost'

@@ -17,7 +17,7 @@ import {
   useRevokeGroupPermission,
 } from '../../hooks'
 import { AssignPermissionForm } from './assign-permission-form'
-import { useGroupManager } from './group-manager-provider'
+import { useGroupManager } from './use-group-manager'
 
 type GroupPermissionsDialogProps = {
   open: boolean
@@ -27,7 +27,7 @@ type GroupPermissionsDialogProps = {
 export function GroupPermissionsDialog({
   open,
   onOpenChange,
-}: GroupPermissionsDialogProps) {
+}: Readonly<GroupPermissionsDialogProps>) {
   const { currentGroup, setCurrentGroup } = useGroupManager()
 
   const { data: permissions, isLoading } = useGroupPermissions(

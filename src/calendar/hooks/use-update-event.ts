@@ -1,4 +1,4 @@
-import { useCalendar } from '@/calendar/contexts/calendar-context'
+import { useCalendar } from '@/calendar/contexts/use-calendar'
 import type { IEvent } from '@/calendar/interfaces'
 
 export function useUpdateEvent() {

@@ -2,46 +2,33 @@
  * Group Manager Provider
  * Context provider for managing group state and dialogs
  */
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import type { PermissionGroup } from '@/api/types/permission.types'
+import { GroupManagerContext } from './group-manager-context'
+
+export type { GroupManagerContextType } from './group-manager-context'
 
 type DialogType = 'create' | 'edit' | 'delete' | 'permissions' | null
 
-type GroupManagerContextType = {
-  open: DialogType
-  setOpen: (open: DialogType) => void
-  currentGroup: PermissionGroup | null
-  setCurrentGroup: (group: PermissionGroup | null) => void
-}
-
-const GroupManagerContext = createContext<GroupManagerContextType | undefined>(
-  undefined
-)
-
-export function GroupManagerProvider({ children }: { children: ReactNode }) {
+export function GroupManagerProvider({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   const [open, setOpen] = useState<DialogType>(null)
   const [currentGroup, setCurrentGroup] = useState<PermissionGroup | null>(null)
 
+  const value = useMemo(
+    () => ({
+      open,
+      setOpen,
+      currentGroup,
+      setCurrentGroup,
+    }),
+    [open, currentGroup]
+  )
+
   return (
-    <GroupManagerContext.Provider
-      value={{
-        open,
-        setOpen,
-        currentGroup,
-        setCurrentGroup,
-      }}
-    >
+    <GroupManagerContext.Provider value={value}>
       {children}
     </GroupManagerContext.Provider>
   )
-}
-
-export function useGroupManager() {
-  const context = useContext(GroupManagerContext)
-  if (context === undefined) {
-    throw new Error(
-      'useGroupManager must be used within a GroupManagerProvider'
-    )
-  }
-  return context
 }

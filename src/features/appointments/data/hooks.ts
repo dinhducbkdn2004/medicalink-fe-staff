@@ -6,6 +6,7 @@ import {
   useQuery,
   useMutation,
   useQueryClient,
+  keepPreviousData,
   type UseQueryResult,
   type UseMutationResult,
 } from '@tanstack/react-query'
@@ -49,6 +50,7 @@ export const useAppointments = (
     enabled: options?.enabled ?? true,
     refetchInterval: options?.refetchInterval,
     staleTime: 1000 * 60 * 5, // 5 minutes
+    placeholderData: keepPreviousData,
   })
 }
 

@@ -1,13 +1,13 @@
 import { endOfDay, format, isSameDay, parseISO, startOfDay } from 'date-fns'
 import { EventDetailsDialog } from '@/calendar/components/dialogs/event-details-dialog'
 import { DraggableEvent } from '@/calendar/components/dnd/draggable-event'
-import { useCalendar } from '@/calendar/contexts/calendar-context'
+import { useCalendar } from '@/calendar/contexts/use-calendar'
 import type { IEvent } from '@/calendar/interfaces'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const eventBadgeVariants = cva(
-  'focus-visible:ring-ring mx-1 flex size-auto h-6.5 items-center justify-between gap-1.5 truncate rounded-md border px-2 text-xs whitespace-nowrap select-none focus-visible:ring-1 focus-visible:outline-none',
+  'focus-visible:ring-ring flex size-auto h-6.5 min-w-0 items-center gap-1 truncate rounded-md border px-1.5 text-xs whitespace-nowrap select-none focus-visible:ring-1 focus-visible:outline-none',
   {
     variants: {
       color: {
@@ -42,11 +42,10 @@ const eventBadgeVariants = cva(
       },
       multiDayPosition: {
         first:
-          'relative z-10 mr-0 w-[calc(100%_-_3px)] rounded-r-none border-r-0 [&>span]:mr-2.5',
-        middle:
-          'relative z-10 mx-0 w-[calc(100%_+_1px)] rounded-none border-x-0',
-        last: 'ml-0 rounded-l-none border-l-0',
-        none: '',
+          'relative z-10 mr-0 max-w-[calc(100%_-_2px)] rounded-r-none border-r-0',
+        middle: 'relative z-10 mx-0 max-w-full rounded-none border-x-0',
+        last: 'ml-0 max-w-[calc(100%_-_2px)] rounded-l-none border-l-0',
+        none: 'max-w-full',
       },
     },
     defaultVariants: {
@@ -75,7 +74,7 @@ export function MonthEventBadge({
   eventTotalDays,
   className,
   position: propPosition,
-}: IProps) {
+}: Readonly<IProps>) {
   const { badgeVariant } = useCalendar()
 
   const itemStart = startOfDay(parseISO(event.startDate))
@@ -120,14 +119,15 @@ export function MonthEventBadge({
     <DraggableEvent event={event}>
       {event.appointment ? (
         <EventDetailsDialog appointment={event.appointment}>
-          <div
-            role='button'
-            tabIndex={0}
+          <button
+            type='button'
             className={eventBadgeClasses}
             onKeyDown={handleKeyDown}
           >
-            <div className='flex items-center gap-1.5 truncate'>
-              {!['middle', 'last'].includes(position!) &&
+            <div className='flex min-w-0 flex-1 items-center gap-1'>
+              {position !== 'middle' &&
+                position !== 'last' &&
+                renderBadgeText &&
                 ['mixed', 'dot'].includes(badgeVariant) && (
                   <svg
                     width='8'
@@ -140,26 +140,25 @@ export function MonthEventBadge({
                 )}
 
               {renderBadgeText && (
-                <p className='flex-1 truncate font-semibold'>
-                  {eventCurrentDay && (
-                    <span className='text-xs'>
-                      Day {eventCurrentDay} of {eventTotalDays} •{' '}
-                    </span>
-                  )}
+                <p className='min-w-0 flex-1 truncate font-semibold'>
                   {event.title}
                 </p>
               )}
             </div>
 
             {renderBadgeText && (
-              <span>{format(new Date(event.startDate), 'h:mm a')}</span>
+              <span className='shrink-0 text-xs'>
+                {format(new Date(event.startDate), 'h:mm a')}
+              </span>
             )}
-          </div>
+          </button>
         </EventDetailsDialog>
       ) : (
         <div className={eventBadgeClasses}>
-          <div className='flex items-center gap-1.5 truncate'>
-            {!['middle', 'last'].includes(position!) &&
+          <div className='flex min-w-0 flex-1 items-center gap-1'>
+            {position !== 'middle' &&
+              position !== 'last' &&
+              renderBadgeText &&
               ['mixed', 'dot'].includes(badgeVariant) && (
                 <svg
                   width='8'
@@ -172,19 +171,16 @@ export function MonthEventBadge({
               )}
 
             {renderBadgeText && (
-              <p className='flex-1 truncate font-semibold'>
-                {eventCurrentDay && (
-                  <span className='text-xs'>
-                    Day {eventCurrentDay} of {eventTotalDays} •{' '}
-                  </span>
-                )}
+              <p className='min-w-0 flex-1 truncate font-semibold'>
                 {event.title}
               </p>
             )}
           </div>
 
           {renderBadgeText && (
-            <span>{format(new Date(event.startDate), 'h:mm a')}</span>
+            <span className='shrink-0 text-xs'>
+              {format(new Date(event.startDate), 'h:mm a')}
+            </span>
           )}
         </div>
       )}

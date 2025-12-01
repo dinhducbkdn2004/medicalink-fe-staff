@@ -2,7 +2,6 @@
  * Verify Password Dialog Component
  * Modal dialog for password verification before sensitive operations
  */
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, ShieldCheck } from 'lucide-react'
@@ -44,7 +43,7 @@ export function VerifyPasswordDialog({
   onVerified,
   title = 'Verify your password',
   description = 'Please enter your password to confirm this action.',
-}: VerifyPasswordDialogProps) {
+}: Readonly<VerifyPasswordDialogProps>) {
   const verifyPasswordMutation = useVerifyPassword()
 
   const form = useForm<VerifyPasswordFormData>({
@@ -132,23 +131,4 @@ export function VerifyPasswordDialog({
       </DialogContent>
     </Dialog>
   )
-}
-
-/**
- * Hook to manage verify password dialog state
- * Returns state and handlers for the dialog
- */
-export function useVerifyPasswordDialog(onVerified: () => void) {
-  const [open, setOpen] = useState(false)
-
-  return {
-    open,
-    openDialog: () => setOpen(true),
-    closeDialog: () => setOpen(false),
-    setOpen,
-    onVerified: () => {
-      setOpen(false)
-      onVerified()
-    },
-  }
 }

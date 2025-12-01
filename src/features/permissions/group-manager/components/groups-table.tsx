@@ -8,7 +8,7 @@ import type { NavigateFn } from '@/hooks/use-table-url-state'
 import { DataTable, type DataTableAction } from '@/components/data-table'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { groupColumns } from './group-columns'
-import { useGroupManager } from './group-manager-provider'
+import { useGroupManager } from './use-group-manager'
 
 type GroupsTableProps = {
   data: PermissionGroup[]
@@ -22,7 +22,7 @@ export function GroupsTable({
   search,
   navigate,
   isLoading = false,
-}: GroupsTableProps) {
+}: Readonly<GroupsTableProps>) {
   const { setOpen, setCurrentGroup } = useGroupManager()
 
   // Define row actions (context menu)

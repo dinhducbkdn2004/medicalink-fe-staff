@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useUpdateReview } from '../data/use-reviews'
-import { useReviews } from './reviews-provider'
+import { useReviews } from './use-reviews'
 
 // ============================================================================
 // Component
@@ -53,10 +53,10 @@ export function ReviewApproveDialog() {
           </DialogDescription>
         </DialogHeader>
 
-        <div className='rounded-lg bg-muted p-4'>
+        <div className='bg-muted rounded-lg p-4'>
           <div className='mb-2 flex items-center justify-between'>
             <span className='font-medium'>{currentReview.patientName}</span>
-            <span className='text-sm text-muted-foreground'>
+            <span className='text-muted-foreground text-sm'>
               Rating: {currentReview.rating}/5 ⭐
             </span>
           </div>
@@ -93,4 +93,3 @@ export function ReviewApproveDialog() {
     </Dialog>
   )
 }
-

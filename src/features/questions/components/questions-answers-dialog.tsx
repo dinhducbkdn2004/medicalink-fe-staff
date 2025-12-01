@@ -33,7 +33,7 @@ import {
   useAcceptAnswer,
   useDeleteAnswer,
 } from '../data/use-answers'
-import { useQuestions } from './questions-provider'
+import { useQuestions } from './use-questions'
 
 // ============================================================================
 // Component
@@ -107,108 +107,115 @@ export function QuestionAnswersDialog() {
                   </div>
                 ))}
               </div>
-            ) : answers.length === 0 ? (
-              <div className='flex flex-col items-center justify-center py-12 text-center'>
-                <div className='text-muted-foreground bg-muted mb-4 rounded-full p-4'>
-                  <User className='size-8' />
-                </div>
-                <h3 className='mb-2 font-semibold'>No answers yet</h3>
-                <p className='text-muted-foreground text-sm'>
-                  This question hasn't received any answers from doctors.
-                </p>
-              </div>
             ) : (
-              <div className='space-y-4'>
-                {answers.map((answer: Answer) => (
-                  <div
-                    key={answer.id}
-                    className='hover:bg-muted/50 rounded-lg border p-4 transition-colors'
-                  >
-                    {/* Doctor Info */}
-                    <div className='mb-3 flex items-start justify-between'>
-                      <div className='flex items-center gap-3'>
-                        <Avatar className='size-10'>
-                          <AvatarImage
-                            src={answer.doctor?.avatarUrl || undefined}
-                            alt={answer.doctor?.fullName || 'Doctor'}
-                          />
-                          <AvatarFallback>
-                            {answer.doctor?.fullName
-                              ? answer.doctor.fullName
-                                  .split(' ')
-                                  .map((n) => n[0])
-                                  .join('')
-                                  .toUpperCase()
-                                  .slice(0, 2)
-                              : 'DR'}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className='font-semibold'>
-                            {answer.doctor?.fullName || 'Unknown Doctor'}
-                          </div>
-                          {answer.doctor?.specialty && (
-                            <div className='text-muted-foreground text-xs'>
-                              {answer.doctor.specialty}
+              <>
+                {answers.length === 0 ? (
+                  <div className='flex flex-col items-center justify-center py-12 text-center'>
+                    <div className='text-muted-foreground bg-muted mb-4 rounded-full p-4'>
+                      <User className='size-8' />
+                    </div>
+                    <h3 className='mb-2 font-semibold'>No answers yet</h3>
+                    <p className='text-muted-foreground text-sm'>
+                      This question hasn't received any answers from doctors.
+                    </p>
+                  </div>
+                ) : (
+                  <div className='space-y-4'>
+                    {answers.map((answer: Answer) => (
+                      <div
+                        key={answer.id}
+                        className='hover:bg-muted/50 rounded-lg border p-4 transition-colors'
+                      >
+                        {/* Doctor Info */}
+                        <div className='mb-3 flex items-start justify-between'>
+                          <div className='flex items-center gap-3'>
+                            <Avatar className='size-10'>
+                              <AvatarImage
+                                src={answer.doctor?.avatarUrl || undefined}
+                                alt={answer.doctor?.fullName || 'Doctor'}
+                              />
+                              <AvatarFallback>
+                                {answer.doctor?.fullName
+                                  ? answer.doctor.fullName
+                                      .split(' ')
+                                      .map((n) => n[0])
+                                      .join('')
+                                      .toUpperCase()
+                                      .slice(0, 2)
+                                  : 'DR'}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className='font-semibold'>
+                                {answer.doctor?.fullName || 'Unknown Doctor'}
+                              </div>
+                              {answer.doctor?.specialty && (
+                                <div className='text-muted-foreground text-xs'>
+                                  {answer.doctor.specialty}
+                                </div>
+                              )}
                             </div>
+                          </div>
+                          {answer.accepted && (
+                            <Badge className='bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'>
+                              <CheckCircle className='mr-1 size-3' />
+                              Accepted
+                            </Badge>
                           )}
                         </div>
-                      </div>
-                      {answer.accepted && (
-                        <Badge className='bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'>
-                          <CheckCircle className='mr-1 size-3' />
-                          Accepted
-                        </Badge>
-                      )}
-                    </div>
 
-                    {/* Answer Body */}
-                    <div className='bg-muted/50 mb-3 rounded-md p-3'>
-                      <p className='text-sm leading-relaxed whitespace-pre-wrap'>
-                        {answer.body}
-                      </p>
-                    </div>
-
-                    {/* Meta & Actions */}
-                    <div className='flex items-center justify-between'>
-                      <div className='text-muted-foreground flex items-center gap-4 text-xs'>
-                        <div className='flex items-center gap-1'>
-                          <ThumbsUp className='size-3' />
-                          <span>{answer.upvotes} upvotes</span>
+                        {/* Answer Body */}
+                        <div className='bg-muted/50 mb-3 rounded-md p-3'>
+                          <p className='text-sm leading-relaxed whitespace-pre-wrap'>
+                            {answer.body}
+                          </p>
                         </div>
-                        <div>
-                          {format(new Date(answer.createdAt), 'MMM dd, yyyy')}
-                        </div>
-                      </div>
-                      <div className='flex items-center gap-2'>
-                        {!answer.accepted && (
-                          <Button
-                            size='sm'
-                            variant='outline'
-                            onClick={() => handleAcceptAnswer(answer.id)}
-                            disabled={acceptAnswerMutation.isPending}
-                            className='border-green-600 text-green-600 hover:bg-green-50'
-                          >
-                            <CheckCircle className='mr-1 size-3' />
-                            Accept
-                          </Button>
-                        )}
-                        <Button
-                          size='sm'
-                          variant='ghost'
-                          onClick={() => setDeleteAnswerId(answer.id)}
-                          disabled={deleteAnswerMutation.isPending}
-                          className='text-destructive hover:bg-destructive/10 hover:text-destructive'
-                        >
-                          <Trash2 className='size-3' />
-                        </Button>
-                      </div>
-                    </div>
 
-                    <Separator className='mt-3' />
+                        {/* Meta & Actions */}
+                        <div className='flex items-center justify-between'>
+                          <div className='text-muted-foreground flex items-center gap-4 text-xs'>
+                            <div className='flex items-center gap-1'>
+                              <ThumbsUp className='size-3' />
+                              <span>{answer.upvotes} upvotes</span>
+                            </div>
+                            <div>
+                              {format(
+                                new Date(answer.createdAt),
+                                'MMM dd, yyyy'
+                              )}
+                            </div>
+                          </div>
+                          <div className='flex items-center gap-2'>
+                            {!answer.accepted && (
+                              <Button
+                                size='sm'
+                                variant='outline'
+                                onClick={() => handleAcceptAnswer(answer.id)}
+                                disabled={acceptAnswerMutation.isPending}
+                                className='border-green-600 text-green-600 hover:bg-green-50'
+                              >
+                                <CheckCircle className='mr-1 size-3' />
+                                Accept
+                              </Button>
+                            )}
+                            <Button
+                              size='sm'
+                              variant='ghost'
+                              onClick={() => setDeleteAnswerId(answer.id)}
+                              disabled={deleteAnswerMutation.isPending}
+                              className='text-destructive hover:bg-destructive/10 hover:text-destructive'
+                            >
+                              <Trash2 className='size-3' />
+                            </Button>
+                          </div>
+                        </div>
+
+                        <Separator className='mt-3' />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                )}
+              </>
             )}
           </div>
           <div className='mt-4 flex justify-end'>

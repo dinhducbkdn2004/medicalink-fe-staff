@@ -4,6 +4,8 @@
  */
 import { format } from 'date-fns'
 import { X, Star, User, Calendar, ThumbsUp } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,16 +15,14 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
-import { cn } from '@/lib/utils'
-import { useReviews } from './reviews-provider'
+import { useReviews } from './use-reviews'
 
 // ============================================================================
 // Helper Components
 // ============================================================================
 
-function RatingStars({ rating }: { rating: number }) {
+function RatingStars({ rating }: Readonly<{ rating: number }>) {
   return (
     <div className='flex items-center gap-0.5'>
       {[1, 2, 3, 4, 5].map((star) => (
@@ -51,10 +51,7 @@ export function ReviewViewDialog() {
 
   if (!currentReview) return null
 
-  const statusConfig: Record<
-    string,
-    { label: string; className: string }
-  > = {
+  const statusConfig: Record<string, { label: string; className: string }> = {
     PENDING: {
       label: 'Pending',
       className:
@@ -67,8 +64,7 @@ export function ReviewViewDialog() {
     },
     REJECTED: {
       label: 'Rejected',
-      className:
-        'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+      className: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
     },
   }
 
@@ -87,14 +83,15 @@ export function ReviewViewDialog() {
             )}
           </div>
           <DialogDescription className='sr-only'>
-            View detailed information about this review including doctor info, patient feedback, rating, and comments
+            View detailed information about this review including doctor info,
+            patient feedback, rating, and comments
           </DialogDescription>
         </DialogHeader>
 
         <div className='space-y-6'>
           {/* Doctor Info */}
           <div>
-            <h3 className='mb-3 text-sm font-medium text-muted-foreground'>
+            <h3 className='text-muted-foreground mb-3 text-sm font-medium'>
               Doctor
             </h3>
             <div className='flex items-center gap-4'>
@@ -129,7 +126,7 @@ export function ReviewViewDialog() {
 
           {/* Patient Info */}
           <div>
-            <h3 className='mb-3 text-sm font-medium text-muted-foreground'>
+            <h3 className='text-muted-foreground mb-3 text-sm font-medium'>
               Patient Information
             </h3>
             <div className='space-y-2'>
@@ -156,7 +153,7 @@ export function ReviewViewDialog() {
 
           {/* Rating */}
           <div>
-            <h3 className='mb-3 text-sm font-medium text-muted-foreground'>
+            <h3 className='text-muted-foreground mb-3 text-sm font-medium'>
               Rating
             </h3>
             <RatingStars rating={currentReview.rating} />
@@ -166,21 +163,23 @@ export function ReviewViewDialog() {
 
           {/* Comment */}
           <div>
-            <h3 className='mb-3 text-sm font-medium text-muted-foreground'>
+            <h3 className='text-muted-foreground mb-3 text-sm font-medium'>
               Review Comment
             </h3>
-            <div className='rounded-lg bg-muted p-4'>
-              <p className='whitespace-pre-wrap text-sm leading-relaxed'>
+            <div className='bg-muted rounded-lg p-4'>
+              <p className='text-sm leading-relaxed whitespace-pre-wrap'>
                 {currentReview.comment}
               </p>
             </div>
           </div>
 
           {/* Meta Info */}
-          <div className='flex items-center justify-between text-muted-foreground text-sm'>
+          <div className='text-muted-foreground flex items-center justify-between text-sm'>
             <div className='flex items-center gap-2'>
               <ThumbsUp className='size-4' />
-              <span>{currentReview.helpfulCount} people found this helpful</span>
+              <span>
+                {currentReview.helpfulCount} people found this helpful
+              </span>
             </div>
             <div>
               Submitted on{' '}
@@ -199,4 +198,3 @@ export function ReviewViewDialog() {
     </Dialog>
   )
 }
-

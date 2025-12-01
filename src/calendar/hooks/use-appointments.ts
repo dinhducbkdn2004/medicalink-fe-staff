@@ -27,6 +27,7 @@ export function useAppointments(params?: AppointmentListParams) {
     }
 
     fetchAppointments()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(params)])
 
   return { appointments, isLoading, error }

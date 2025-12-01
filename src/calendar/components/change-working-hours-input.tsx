@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useCalendar } from '@/calendar/contexts/calendar-context'
+import { useCalendar } from '@/calendar/contexts/use-calendar'
 import { Info, Moon } from 'lucide-react'
 import type { TimeValue } from 'react-aria-components'
 import { Button } from '@/components/ui/button'
@@ -58,10 +58,10 @@ export function ChangeWorkingHoursInput() {
     const updatedWorkingHours = { ...localWorkingHours }
 
     for (const dayId in updatedWorkingHours) {
-      const day = updatedWorkingHours[parseInt(dayId)]
+      const day = updatedWorkingHours[Number.parseInt(dayId)]
       const isDayActive =
-        localWorkingHours[parseInt(dayId)].from > 0 ||
-        localWorkingHours[parseInt(dayId)].to > 0
+        localWorkingHours[Number.parseInt(dayId)].from > 0 ||
+        localWorkingHours[Number.parseInt(dayId)].to > 0
 
       if (isDayActive) {
         if (day.from === 0 && day.to === 0) {

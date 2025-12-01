@@ -4,7 +4,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { DroppableDayCell } from '@/calendar/components/dnd/droppable-day-cell'
 import { EventBullet } from '@/calendar/components/month-view/event-bullet'
 import { MonthEventBadge } from '@/calendar/components/month-view/month-event-badge'
-import { useCalendar } from '@/calendar/contexts/calendar-context'
+import { useCalendar } from '@/calendar/contexts/use-calendar'
 import { getMonthCellEvents } from '@/calendar/helpers'
 import type { ICalendarCell, IEvent } from '@/calendar/interfaces'
 import { cn } from '@/lib/utils'
@@ -17,7 +17,7 @@ interface IProps {
 
 const MAX_VISIBLE_EVENTS = 3
 
-export function DayCell({ cell, events, eventPositions }: IProps) {
+export function DayCell({ cell, events, eventPositions }: Readonly<IProps>) {
   const navigate = useNavigate()
   const { setSelectedDate } = useCalendar()
 
@@ -56,7 +56,7 @@ export function DayCell({ cell, events, eventPositions }: IProps) {
 
         <div
           className={cn(
-            'flex h-6 gap-1 px-2 lg:h-[94px] lg:flex-col lg:gap-2 lg:px-0',
+            'flex h-6 gap-1 overflow-hidden px-2 lg:h-[94px] lg:flex-col lg:gap-2 lg:px-0',
             !currentMonth && 'opacity-50'
           )}
         >
