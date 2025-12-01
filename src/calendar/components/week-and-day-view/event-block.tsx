@@ -2,7 +2,7 @@ import type { HTMLAttributes } from 'react'
 import { format, differenceInMinutes, parseISO } from 'date-fns'
 import { EventDetailsDialog } from '@/calendar/components/dialogs/event-details-dialog'
 import { DraggableEvent } from '@/calendar/components/dnd/draggable-event'
-import { useCalendar } from '@/calendar/contexts/calendar-context'
+import { useCalendar } from '@/calendar/contexts/use-calendar'
 import type { IEvent } from '@/calendar/interfaces'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
@@ -54,7 +54,7 @@ interface IProps
   event: IEvent
 }
 
-export function EventBlock({ event, className }: IProps) {
+export function EventBlock({ event, className }: Readonly<IProps>) {
   const { badgeVariant } = useCalendar()
 
   const start = parseISO(event.startDate)
@@ -82,9 +82,8 @@ export function EventBlock({ event, className }: IProps) {
     <DraggableEvent event={event}>
       {event.appointment ? (
         <EventDetailsDialog appointment={event.appointment}>
-          <div
-            role='button'
-            tabIndex={0}
+          <button
+            type='button'
             className={calendarWeekEventCardClasses}
             style={{ height: `${heightInPixels}px` }}
             onKeyDown={handleKeyDown}
@@ -109,7 +108,7 @@ export function EventBlock({ event, className }: IProps) {
                 {format(start, 'h:mm a')} - {format(end, 'h:mm a')}
               </p>
             )}
-          </div>
+          </button>
         </EventDetailsDialog>
       ) : (
         <div

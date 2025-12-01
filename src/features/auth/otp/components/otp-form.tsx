@@ -4,9 +4,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { toast } from 'sonner'
+import { verifyResetCode } from '@/api/services/auth.service'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { verifyResetCode } from '@/api/services/auth.service'
 import {
   Form,
   FormControl,
@@ -19,7 +19,6 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-  InputOTPSeparator,
 } from '@/components/ui/input-otp'
 
 const formSchema = z.object({
@@ -31,7 +30,7 @@ const formSchema = z.object({
 
 type OtpFormProps = React.HTMLAttributes<HTMLFormElement>
 
-export function OtpForm({ className, ...props }: OtpFormProps) {
+export function OtpForm({ className, ...props }: Readonly<OtpFormProps>) {
   const navigate = useNavigate()
   const search = useSearch({ from: '/(auth)/otp' })
   const [isLoading, setIsLoading] = useState(false)
@@ -56,10 +55,11 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
       toast.success('Code verified successfully.')
       navigate({
         to: '/reset-password',
-        search: { email: search.email, code: data.otp }
+        search: { email: search.email, code: data.otp },
       })
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Invalid or expired code')
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } }
+      toast.error(err.response?.data?.message || 'Invalid or expired code')
     } finally {
       setIsLoading(false)
     }
@@ -79,22 +79,12 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
             <FormItem>
               <FormLabel className='sr-only'>One-Time Password</FormLabel>
               <FormControl>
-                <InputOTP
-                  maxLength={6}
-                  {...field}
-                  containerClassName='justify-between sm:[&>[data-slot="input-otp-group"]>div]:w-12'
-                >
+                <InputOTP maxLength={6} {...field}>
                   <InputOTPGroup>
                     <InputOTPSlot index={0} />
                     <InputOTPSlot index={1} />
-                  </InputOTPGroup>
-                  <InputOTPSeparator />
-                  <InputOTPGroup>
                     <InputOTPSlot index={2} />
                     <InputOTPSlot index={3} />
-                  </InputOTPGroup>
-                  <InputOTPSeparator />
-                  <InputOTPGroup>
                     <InputOTPSlot index={4} />
                     <InputOTPSlot index={5} />
                   </InputOTPGroup>

@@ -1,6 +1,6 @@
 import { format, parseISO } from 'date-fns'
 import { EventDetailsDialog } from '@/calendar/components/dialogs/event-details-dialog'
-import { useCalendar } from '@/calendar/contexts/calendar-context'
+import { useCalendar } from '@/calendar/contexts/use-calendar'
 import type { IEvent } from '@/calendar/interfaces'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { Clock, Text, User } from 'lucide-react'

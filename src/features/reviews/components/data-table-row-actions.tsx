@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import type { Review } from '../data/schema'
-import { useReviews } from './reviews-provider'
+import { useReviews } from './use-reviews'
 
 // ============================================================================
 // Types
@@ -27,7 +27,9 @@ interface DataTableRowActionsProps {
 // Component
 // ============================================================================
 
-export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+export function DataTableRowActions({
+  row,
+}: Readonly<DataTableRowActionsProps>) {
   const review = row.original
   const { setOpen, setCurrentReview } = useReviews()
 
@@ -77,4 +79,3 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     </DropdownMenu>
   )
 }
-

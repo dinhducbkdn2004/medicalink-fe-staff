@@ -177,6 +177,20 @@ class WorkLocationService {
     }>(`/work-locations/${id}`)
     return response.data
   }
+
+  /**
+   * Get public work locations (no authentication required)
+   * GET /api/work-locations/public
+   */
+  async getPublicWorkLocations(
+    params: WorkLocationQueryParams = {}
+  ): Promise<WorkLocationListResponse> {
+    const response = await apiClient.get<WorkLocationListResponse>(
+      '/work-locations/public',
+      { params }
+    )
+    return response.data
+  }
 }
 
 export const workLocationService = new WorkLocationService()

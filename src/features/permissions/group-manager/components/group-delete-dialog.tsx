@@ -13,7 +13,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { useDeletePermissionGroup } from '../../hooks'
-import { useGroupManager } from './group-manager-provider'
+import { useGroupManager } from './use-group-manager'
 
 type GroupDeleteDialogProps = {
   open: boolean

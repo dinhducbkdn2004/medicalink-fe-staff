@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'sonner'
+import { confirmPasswordReset } from '@/api/services/auth.service'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,8 +17,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { confirmPasswordReset } from '@/api/services/auth.service'
-import { z } from 'zod'
 
 // We only need newPassword and confirmPassword in the form
 const formSchema = z
@@ -39,7 +39,7 @@ const formSchema = z
 export function ResetPasswordForm({
   className,
   ...props
-}: React.HTMLAttributes<HTMLFormElement>) {
+}: Readonly<React.HTMLAttributes<HTMLFormElement>>) {
   const navigate = useNavigate()
   const search = useSearch({ from: '/(auth)/reset-password' })
   const [isLoading, setIsLoading] = useState(false)
@@ -66,8 +66,9 @@ export function ResetPasswordForm({
       })
       toast.success('Password reset successfully. Please log in.')
       navigate({ to: '/sign-in' })
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to reset password')
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } }
+      toast.error(err.response?.data?.message || 'Failed to reset password')
     } finally {
       setIsLoading(false)
     }
@@ -87,23 +88,23 @@ export function ResetPasswordForm({
             <FormItem>
               <FormLabel>New Password</FormLabel>
               <FormControl>
-                <div className="relative">
+                <div className='relative'>
                   <Input
                     type={showPassword ? 'text' : 'password'}
                     placeholder='********'
                     {...field}
                   />
                   <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    type='button'
+                    variant='ghost'
+                    size='sm'
+                    className='absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent'
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      <EyeOff className='text-muted-foreground h-4 w-4' />
                     ) : (
-                      <Eye className="h-4 w-4 text-muted-foreground" />
+                      <Eye className='text-muted-foreground h-4 w-4' />
                     )}
                   </Button>
                 </div>
@@ -119,23 +120,23 @@ export function ResetPasswordForm({
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <div className="relative">
+                <div className='relative'>
                   <Input
                     type={showConfirmPassword ? 'text' : 'password'}
                     placeholder='********'
                     {...field}
                   />
                   <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    type='button'
+                    variant='ghost'
+                    size='sm'
+                    className='absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent'
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      <EyeOff className='text-muted-foreground h-4 w-4' />
                     ) : (
-                      <Eye className="h-4 w-4 text-muted-foreground" />
+                      <Eye className='text-muted-foreground h-4 w-4' />
                     )}
                   </Button>
                 </div>

@@ -244,6 +244,20 @@ class SpecialtyService {
     }>(`/specialties/info-sections/${id}`)
     return response.data
   }
+
+  /**
+   * Get public specialties (no authentication required)
+   * GET /api/specialties/public
+   */
+  async getPublicSpecialties(
+    params: SpecialtyQueryParams = {}
+  ): Promise<SpecialtyListResponse> {
+    const response = await apiClient.get<SpecialtyListResponse>(
+      '/specialties/public',
+      { params }
+    )
+    return response.data
+  }
 }
 
 export const specialtyService = new SpecialtyService()

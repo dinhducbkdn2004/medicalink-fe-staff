@@ -1,6 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
 import { Edit, Trash2, Shield } from 'lucide-react'
+import { type PermissionGroup } from '@/api/types/permission.types'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -10,8 +11,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { type PermissionGroup } from '@/api/types/permission.types'
-import { useGroupManager } from './group-manager-provider'
+import { useGroupManager } from './use-group-manager'
 
 type DataTableRowActionsProps = {
   row: Row<PermissionGroup>
@@ -72,4 +72,3 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     </DropdownMenu>
   )
 }
-

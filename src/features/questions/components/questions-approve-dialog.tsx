@@ -13,7 +13,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { useUpdateQuestion } from '../data/use-questions'
-import { useQuestions } from './questions-provider'
+import { useQuestions } from './use-questions'
 
 export function QuestionsApproveDialog() {
   const { open, setOpen, currentQuestion } = useQuestions()
@@ -45,10 +45,10 @@ export function QuestionsApproveDialog() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         {currentQuestion && (
-          <div className='rounded-md bg-muted p-3'>
+          <div className='bg-muted rounded-md p-3'>
             <p className='text-sm font-medium'>{currentQuestion.title}</p>
             {currentQuestion.authorName && (
-              <p className='mt-1 text-xs text-muted-foreground'>
+              <p className='text-muted-foreground mt-1 text-xs'>
                 by {currentQuestion.authorName}
               </p>
             )}
@@ -69,4 +69,3 @@ export function QuestionsApproveDialog() {
     </AlertDialog>
   )
 }
-
