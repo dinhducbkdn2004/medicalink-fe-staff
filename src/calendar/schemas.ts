@@ -34,8 +34,8 @@ export const createAppointmentSchema = z
     ),
     reason: z
       .string()
-      .max(255, 'Reason must be less than 255 characters')
-      .optional(),
+      .min(1, 'Reason is required')
+      .max(255, 'Reason must be less than 255 characters'),
     notes: z.string().optional(),
     status: appointmentStatusSchema.optional(),
     priceAmount: z.number().optional(),

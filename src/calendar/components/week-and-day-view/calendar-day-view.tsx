@@ -218,7 +218,7 @@ export function CalendarDayView({
       </div>
 
       <div className='hidden w-80 flex-col divide-y border-l md:flex'>
-        <div className='p-4'>
+        <div className='p-4 flex justify-center'>
           <Calendar
             mode='single'
             selected={selectedDate}

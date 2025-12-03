@@ -8,7 +8,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const calendarWeekEventCardVariants = cva(
-  'focus-visible:ring-ring flex flex-col gap-0.5 truncate rounded-md border px-2 py-1.5 text-xs whitespace-nowrap select-none focus-visible:ring-1 focus-visible:outline-none',
+  'focus-visible:ring-ring flex flex-col gap-0.5 overflow-hidden rounded-md border px-2 py-1.5 text-xs select-none focus-visible:ring-1 focus-visible:outline-none',
   {
     variants: {
       color: {
@@ -88,7 +88,7 @@ export function EventBlock({ event, className }: Readonly<IProps>) {
             style={{ height: `${heightInPixels}px` }}
             onKeyDown={handleKeyDown}
           >
-            <div className='flex items-center gap-1.5 truncate'>
+            <div className='flex min-w-0 items-center gap-1.5'>
               {['mixed', 'dot'].includes(badgeVariant) && (
                 <svg
                   width='8'
@@ -100,11 +100,11 @@ export function EventBlock({ event, className }: Readonly<IProps>) {
                 </svg>
               )}
 
-              <p className='truncate font-semibold'>{event.title}</p>
+              <p className='min-w-0 truncate font-semibold'>{event.title}</p>
             </div>
 
             {durationInMinutes > 25 && (
-              <p>
+              <p className='truncate text-[10px]'>
                 {format(start, 'h:mm a')} - {format(end, 'h:mm a')}
               </p>
             )}
@@ -115,7 +115,7 @@ export function EventBlock({ event, className }: Readonly<IProps>) {
           className={calendarWeekEventCardClasses}
           style={{ height: `${heightInPixels}px` }}
         >
-          <div className='flex items-center gap-1.5 truncate'>
+          <div className='flex min-w-0 items-center gap-1.5'>
             {['mixed', 'dot'].includes(badgeVariant) && (
               <svg
                 width='8'
@@ -127,11 +127,11 @@ export function EventBlock({ event, className }: Readonly<IProps>) {
               </svg>
             )}
 
-            <p className='truncate font-semibold'>{event.title}</p>
+            <p className='min-w-0 truncate font-semibold'>{event.title}</p>
           </div>
 
           {durationInMinutes > 25 && (
-            <p>
+            <p className='truncate text-[10px]'>
               {format(start, 'h:mm a')} - {format(end, 'h:mm a')}
             </p>
           )}
