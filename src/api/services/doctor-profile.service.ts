@@ -199,11 +199,11 @@ export const doctorProfileService = {
     startDate?: string,
     endDate?: string
   ): Promise<string[]> {
-    // Generate date range (default: next 30 days from today)
+    // Generate date range (default: next 14 days from today for better performance)
     const start = startDate ? new Date(startDate) : new Date()
     const end = endDate
       ? new Date(endDate)
-      : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000) // Reduced from 30 to 14 days
 
     const dates: string[] = []
     const currentDate = new Date(start)
@@ -217,8 +217,8 @@ export const doctorProfileService = {
     // Query slots for each date and filter dates with available slots
     const availableDates: string[] = []
 
-    // Process in batches of 7 days to avoid too many parallel requests
-    const batchSize = 7
+    // Process in smaller batches of 3 days to reduce concurrent requests
+    const batchSize = 3
     for (let i = 0; i < dates.length; i += batchSize) {
       const batch = dates.slice(i, i + batchSize)
       const results = await Promise.allSettled(
@@ -233,8 +233,8 @@ export const doctorProfileService = {
             // If there are any slots available for this date, include it
             const hasAvailableSlots = slots.length > 0
             return hasAvailableSlots ? date : null
-          } catch (error) {
-            console.error(`Failed to fetch slots for ${date}:`, error)
+          } catch {
+            // Silently handle errors (CORS, 404) - expected when checking availability
             return null
           }
         })
@@ -245,6 +245,11 @@ export const doctorProfileService = {
         if (result.status === 'fulfilled' && result.value) {
           availableDates.push(result.value)
         }
+      }
+
+      // Add a small delay between batches to avoid overwhelming the server
+      if (i + batchSize < dates.length) {
+        await new Promise((resolve) => setTimeout(resolve, 100))
       }
     }
 

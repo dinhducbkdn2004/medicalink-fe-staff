@@ -17,6 +17,16 @@ import type { Patient } from '@/api/types'
 import type { PublicDoctorProfile } from '@/api/types/doctor.types'
 
 // ============================================================================
+// Global Cache for static data to prevent repeated API calls
+// ============================================================================
+let workLocationsCache: { data: WorkLocation[]; timestamp: number } | null =
+  null
+let specialtiesCache: { data: Specialty[]; timestamp: number } | null = null
+let isFetchingLocations = false
+let isFetchingSpecialties = false
+const CACHE_DURATION = 10 * 60 * 1000 // 10 minutes
+
+// ============================================================================
 // Hook: Search Patients
 // ============================================================================
 export function usePatients(search?: string) {
@@ -63,27 +73,57 @@ export function usePatients(search?: string) {
 // Hook: Fetch Public Work Locations (Step 1)
 // ============================================================================
 export function useWorkLocations() {
-  const [locations, setLocations] = useState<WorkLocation[]>([])
+  const [locations, setLocations] = useState<WorkLocation[]>(() => {
+    // Initialize with cached data if available and fresh
+    if (
+      workLocationsCache &&
+      Date.now() - workLocationsCache.timestamp < CACHE_DURATION
+    ) {
+      return workLocationsCache.data
+    }
+    return []
+  })
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchLocations = async () => {
+      // Check cache first
+      if (
+        workLocationsCache &&
+        Date.now() - workLocationsCache.timestamp < CACHE_DURATION
+      ) {
+        setLocations(workLocationsCache.data)
+        return
+      }
+
+      // Prevent multiple simultaneous fetches
+      if (isFetchingLocations) {
+        return
+      }
+
+      isFetchingLocations = true
       setIsLoading(true)
       try {
         const response = await workLocationService.getPublicWorkLocations({
           page: 1,
           limit: 100,
         })
+        // Update cache
+        workLocationsCache = {
+          data: response.data,
+          timestamp: Date.now(),
+        }
         setLocations(response.data)
       } catch (error) {
         console.error('Failed to fetch work locations:', error)
       } finally {
         setIsLoading(false)
+        isFetchingLocations = false
       }
     }
 
     fetchLocations()
-  }, [])
+  }, []) // Empty deps - only fetch once on mount
 
   return { locations, isLoading }
 }
@@ -92,27 +132,57 @@ export function useWorkLocations() {
 // Hook: Fetch Public Specialties (Step 2)
 // ============================================================================
 export function useSpecialties() {
-  const [specialties, setSpecialties] = useState<Specialty[]>([])
+  const [specialties, setSpecialties] = useState<Specialty[]>(() => {
+    // Initialize with cached data if available and fresh
+    if (
+      specialtiesCache &&
+      Date.now() - specialtiesCache.timestamp < CACHE_DURATION
+    ) {
+      return specialtiesCache.data
+    }
+    return []
+  })
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchSpecialties = async () => {
+      // Check cache first
+      if (
+        specialtiesCache &&
+        Date.now() - specialtiesCache.timestamp < CACHE_DURATION
+      ) {
+        setSpecialties(specialtiesCache.data)
+        return
+      }
+
+      // Prevent multiple simultaneous fetches
+      if (isFetchingSpecialties) {
+        return
+      }
+
+      isFetchingSpecialties = true
       setIsLoading(true)
       try {
         const response = await specialtyService.getPublicSpecialties({
           page: 1,
           limit: 100,
         })
+        // Update cache
+        specialtiesCache = {
+          data: response.data,
+          timestamp: Date.now(),
+        }
         setSpecialties(response.data)
       } catch (error) {
         console.error('Failed to fetch specialties:', error)
       } finally {
         setIsLoading(false)
+        isFetchingSpecialties = false
       }
     }
 
     fetchSpecialties()
-  }, [])
+  }, []) // Empty deps - only fetch once on mount
 
   return { specialties, isLoading }
 }
