@@ -13,7 +13,13 @@ import {
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog'
 
 interface TimeSlot {
   timeStart: string
@@ -91,8 +97,14 @@ export function AppointmentSchedulerDialog({
         {children}
       </DialogTrigger>
 
-      <DialogContent className='max-w-md p-0'>
-        <div className='p-4'>
+      <DialogContent className='flex max-h-[90vh] max-w-md flex-col p-0'>
+        <DialogTitle className='sr-only'>
+          Select Appointment Date and Time
+        </DialogTitle>
+        <DialogDescription className='sr-only'>
+          Choose an available date from the calendar and then select a time slot
+        </DialogDescription>
+        <div className='flex-1 overflow-y-auto p-4'>
           {/* Calendar Header */}
           <div className='mb-4 grid grid-cols-3 items-center gap-2'>
             <Button
@@ -199,7 +211,7 @@ export function AppointmentSchedulerDialog({
 
                 {!isLoadingSlots && slots.length > 0 && (
                   <>
-                    <div className='grid max-h-48 grid-cols-3 gap-2 overflow-y-auto rounded-md border p-3'>
+                    <div className='grid max-h-[160px] grid-cols-3 gap-2 overflow-y-auto rounded-md border p-3'>
                       {slots.map((slot, index) => {
                         const isSelected =
                           selectedSlot?.timeStart === slot.timeStart &&

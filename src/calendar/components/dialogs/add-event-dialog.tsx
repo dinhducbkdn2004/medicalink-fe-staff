@@ -35,7 +35,6 @@ import {
   FormItem,
   FormControl,
   FormMessage,
-  FormDescription,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { SearchableSelect } from '@/components/ui/searchable-select'
@@ -66,6 +65,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
   const { mutate: createAppointment, isPending } = useCreateAppointment()
 
   const form = useForm<TCreateAppointmentFormData>({
+    // @ts-expect-error - Zod v4 type compatibility issue with zodResolver
     resolver: zodResolver(createAppointmentSchema),
     defaultValues: {
       patientId: '',
@@ -226,25 +226,6 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     return 'Select date & time slot'
   }, [isLoadingDates, selectedServiceDate, selectedSlot])
 
-  // Memoized description for scheduler
-  const schedulerDescription = useMemo(() => {
-    if (!selectedDoctorId || !selectedLocationId) {
-      return 'Please select a doctor first'
-    }
-    if (isLoadingDates) {
-      return 'Loading appointment dates...'
-    }
-    if (availableDates.length > 0) {
-      return `${availableDates.length} available appointment dates`
-    }
-    return 'No available appointment dates'
-  }, [
-    selectedDoctorId,
-    selectedLocationId,
-    isLoadingDates,
-    availableDates.length,
-  ])
-
   const onSubmit = useCallback(
     (values: TCreateAppointmentFormData) => {
       const requestData: CreateAppointmentRequest = {
@@ -285,13 +266,12 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     <Dialog open={isOpen} onOpenChange={onToggle}>
       <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <DialogContent className='max-h-[90vh] overflow-y-auto'>
+      <DialogContent className='max-h-[85vh] max-w-2xl overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle>Create New Appointment</DialogTitle>
+          <DialogTitle>Add New Appointment</DialogTitle>
           <DialogDescription>
-            Fill in the details to create a new appointment. Location and
-            Specialty are independent. Doctors will be filtered by both Location
-            AND Specialty.
+            Create a new appointment by selecting patient, location, specialty,
+            doctor, and time slot.
           </DialogDescription>
         </DialogHeader>
 
@@ -299,7 +279,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
           <form
             id='appointment-form'
             onSubmit={form.handleSubmit(onSubmit)}
-            className='grid gap-4 py-4'
+            className='grid gap-3 py-3'
           >
             {/* Step 0: Patient Selection */}
             <FormField
@@ -320,91 +300,85 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                       className={fieldState.invalid ? 'border-destructive' : ''}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Search and select a patient for this appointment
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {/* Step 1: Location Selection (Independent from Specialty) */}
-            <FormField
-              control={form.control}
-              name='locationId'
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Location *</FormLabel>
-                  <FormControl>
-                    <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      disabled={isLoadingLocations}
-                    >
-                      <SelectTrigger data-invalid={fieldState.invalid}>
-                        <SelectValue
-                          placeholder={
-                            isLoadingLocations
-                              ? 'Loading...'
-                              : 'Select a location'
-                          }
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {locationOptions.map((location) => (
-                          <SelectItem
-                            key={location.value}
-                            value={location.value}
-                          >
-                            {location.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormDescription>
-                    Select work location (independent selection)
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Step 1 & 2: Location and Specialty in 2 columns */}
+            <div className='grid grid-cols-2 gap-3'>
+              <FormField
+                control={form.control}
+                name='locationId'
+                render={({ field, fieldState }) => (
+                  <FormItem>
+                    <FormLabel>Location *</FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={isLoadingLocations}
+                      >
+                        <SelectTrigger data-invalid={fieldState.invalid}>
+                          <SelectValue
+                            placeholder={
+                              isLoadingLocations
+                                ? 'Loading...'
+                                : 'Select a location'
+                            }
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {locationOptions.map((location) => (
+                            <SelectItem
+                              key={location.value}
+                              value={location.value}
+                            >
+                              {location.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/* Step 2: Specialty Selection (Independent from Location) */}
-            <FormField
-              control={form.control}
-              name='specialtyId'
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Specialty *</FormLabel>
-                  <FormControl>
-                    <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      disabled={isLoadingSpecialties}
-                    >
-                      <SelectTrigger data-invalid={fieldState.invalid}>
-                        <SelectValue placeholder={getSpecialtyPlaceholder()} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {specialtyOptions.map((specialty) => (
-                          <SelectItem
-                            key={specialty.value}
-                            value={specialty.value}
-                          >
-                            {specialty.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormDescription>
-                    Select a specialty (independent selection)
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name='specialtyId'
+                render={({ field, fieldState }) => (
+                  <FormItem>
+                    <FormLabel>Specialty *</FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={isLoadingSpecialties}
+                      >
+                        <SelectTrigger data-invalid={fieldState.invalid}>
+                          <SelectValue
+                            placeholder={getSpecialtyPlaceholder()}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {specialtyOptions.map((specialty) => (
+                            <SelectItem
+                              key={specialty.value}
+                              value={specialty.value}
+                            >
+                              {specialty.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {/* Step 3: Doctor Selection (Requires BOTH Location AND Specialty) */}
             <FormField
@@ -435,18 +409,14 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormDescription>
-                    Doctors available at selected location with selected
-                    specialty
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
             {/* Step 4 & 5: Date and Time Selection via Scheduler Dialog */}
-            <div className='space-y-2'>
-              <FormLabel>Select date & time slot *</FormLabel>
+            <div className='space-y-1'>
+              <FormLabel>Date & Time *</FormLabel>
               <AppointmentSchedulerDialog
                 availableDates={availableDates}
                 slots={slots}
@@ -494,7 +464,6 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                   {schedulerButtonText}
                 </Button>
               </AppointmentSchedulerDialog>
-              <FormDescription>{schedulerDescription}</FormDescription>
             </div>
 
             {/* Step 6: Reason, Notes, and Price */}
@@ -503,19 +472,16 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               name='reason'
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel htmlFor='reason'>Reason</FormLabel>
+                  <FormLabel htmlFor='reason'>Reason *</FormLabel>
                   <FormControl>
                     <Input
                       id='reason'
-                      placeholder='Reason for appointment (max 255 characters)'
+                      placeholder='Reason for appointment'
                       maxLength={255}
                       data-invalid={fieldState.invalid}
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Optional, max 255 characters
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -533,12 +499,9 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                       value={field.value}
                       placeholder='Additional notes'
                       data-invalid={fieldState.invalid}
-                      rows={3}
+                      rows={2}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Optional additional information
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
