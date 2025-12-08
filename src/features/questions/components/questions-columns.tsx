@@ -10,6 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import type { Question } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { SpecialtyCell } from './specialty-cell'
 
 // ============================================================================
 // Column Definitions
@@ -68,7 +69,7 @@ export const columns: ColumnDef<Question>[] = [
       )
     },
     enableSorting: false,
-     meta: {
+    meta: {
       className: 'min-w-[300px]',
       thClassName:
         'sticky left-[32px] z-20 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]',
@@ -76,23 +77,35 @@ export const columns: ColumnDef<Question>[] = [
         'sticky left-[32px] z-10 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
     },
   },
+  // Author Email (Hidden, for search)
+  {
+    accessorKey: 'authorEmail',
+    enableHiding: true,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Author Email' />
+    ),
+    filterFn: (row, id, value: string) => {
+      return value === row.getValue(id)
+    },
+  },
   // Specialty
   {
-    accessorKey: 'specialty',
+    accessorKey: 'specialtyId',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Specialty' />
     ),
-    cell: ({ row }) => {
-      const specialty = row.original.specialty
-      if (!specialty)
-        return <span className='text-muted-foreground text-sm'>-</span>
-      return (
-        <Badge variant='outline' className='font-normal'>
-          {specialty.name}
-        </Badge>
-      )
+    cell: ({ row }) => (
+      <SpecialtyCell
+        specialtyId={row.original.specialtyId}
+        specialty={row.original.specialty}
+      />
+    ),
+    filterFn: (row, id, value) => {
+      const rowValue = row.getValue(id)
+      if (typeof value === 'string') return rowValue === value
+      if (Array.isArray(value)) return value.includes(rowValue)
+      return false
     },
-    enableSorting: false,
     meta: {
       className: 'min-w-[140px]',
     },

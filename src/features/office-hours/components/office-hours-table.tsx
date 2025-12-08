@@ -67,6 +67,7 @@ export function OfficeHoursTable({
       // Bulk actions disabled - API doesn't support bulk delete
       enableRowSelection={false}
       emptyMessage='No office hours found. Add office hours to define working schedules.'
+      hideToolbar={true}
     />
   )
 }

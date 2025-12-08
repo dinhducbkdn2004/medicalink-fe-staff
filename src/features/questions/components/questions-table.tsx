@@ -3,7 +3,7 @@
  * Data table component for displaying questions
  */
 import type { UseNavigateResult } from '@tanstack/react-router'
-import { Edit, Trash2, CheckCircle, XCircle, Eye } from 'lucide-react'
+import { Edit, Trash2, Eye } from 'lucide-react'
 import {
   DataTable,
   type DataTableAction,
@@ -11,6 +11,7 @@ import {
 } from '@/components/data-table'
 import { statusOptions } from '../data/data'
 import type { Question } from '../data/schema'
+import { useSpecialties } from '../data/use-specialties'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { columns } from './questions-columns'
 import { useQuestions } from './use-questions'
@@ -41,6 +42,22 @@ const columnFilterConfigs: ColumnFilterConfig[] = [
     },
     deserialize: (value: unknown) => (value ? [value] : []),
   },
+  {
+    columnId: 'specialtyId',
+    searchKey: 'specialtyId',
+    serialize: (value: unknown) => {
+      const arr = value as string[]
+      return arr.length > 0 ? arr[0] : undefined
+    },
+    deserialize: (value: unknown) => (value ? [value] : []),
+  },
+  {
+    columnId: 'authorEmail',
+    searchKey: 'search',
+    type: 'string',
+    serialize: (value: unknown) => value as string,
+    deserialize: (value: unknown) => value as string,
+  },
 ]
 
 // ============================================================================
@@ -55,10 +72,13 @@ export function QuestionsTable({
   isLoading = false,
 }: Readonly<QuestionsTableProps>) {
   const { setOpen, setCurrentQuestion } = useQuestions()
+  const { data: specialtiesData } = useSpecialties({ limit: 100 })
+  const specialties = specialtiesData?.data || []
 
   // Define row actions (context menu)
   const getRowActions = (row: { original: Question }): DataTableAction[] => {
     const question = row.original
+    const hasAnswers = (question.answerCount || 0) > 0
 
     return [
       {
@@ -78,26 +98,6 @@ export function QuestionsTable({
         },
       },
       {
-        label: 'Mark as Answered',
-        icon: CheckCircle,
-        onClick: () => {
-          setCurrentQuestion(question)
-          setOpen('answer')
-        },
-        disabled:
-          question.status === 'ANSWERED' || question.status === 'CLOSED',
-      },
-      {
-        label: 'Close Question',
-        icon: XCircle,
-        onClick: () => {
-          setCurrentQuestion(question)
-          setOpen('close')
-        },
-        variant: 'destructive',
-        disabled: question.status === 'CLOSED',
-      },
-      {
         label: 'Delete',
         icon: Trash2,
         onClick: () => {
@@ -106,6 +106,7 @@ export function QuestionsTable({
         },
         variant: 'destructive',
         separator: true,
+        disabled: hasAnswers, // Disable if there are answers to prevent FK error
       },
     ]
   }
@@ -122,8 +123,8 @@ export function QuestionsTable({
       isLoading={isLoading}
       entityName='question'
       // Toolbar
-      searchPlaceholder='Search questions...'
-      searchKey='title'
+      searchPlaceholder='Search by author email...'
+      searchKey='authorEmail'
       filters={[
         {
           columnId: 'status',
@@ -132,6 +133,14 @@ export function QuestionsTable({
             label: status.label,
             value: status.value,
             icon: status.icon,
+          })),
+        },
+        {
+          columnId: 'specialtyId',
+          title: 'Specialty',
+          options: specialties.map((s) => ({
+            label: s.name,
+            value: s.id,
           })),
         },
       ]}

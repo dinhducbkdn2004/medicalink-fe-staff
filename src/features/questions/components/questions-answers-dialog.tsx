@@ -33,6 +33,7 @@ import {
   useAcceptAnswer,
   useDeleteAnswer,
 } from '../data/use-answers'
+import { QuestionsAnswerForm } from './questions-answer-form'
 import { useQuestions } from './use-questions'
 
 // ============================================================================
@@ -43,6 +44,8 @@ export function QuestionAnswersDialog() {
   const { open, setOpen, currentQuestion } = useQuestions()
   const isOpen = open.answers
 
+  const [editingAnswerId, setEditingAnswerId] = useState<string | null>(null)
+  const [isCreating, setIsCreating] = useState(false)
   const [deleteAnswerId, setDeleteAnswerId] = useState<string | null>(null)
 
   // Fetch answers
@@ -81,7 +84,11 @@ export function QuestionAnswersDialog() {
       <Drawer
         direction='right'
         open={isOpen}
-        onOpenChange={() => setOpen('answers')}
+        onOpenChange={() => {
+          setOpen('answers')
+          setIsCreating(false)
+          setEditingAnswerId(null)
+        }}
       >
         <DrawerContent className='h-full w-full sm:w-[600px]'>
           <DrawerHeader>
@@ -92,6 +99,28 @@ export function QuestionAnswersDialog() {
           </DrawerHeader>
 
           <div className='flex flex-1 flex-col gap-4 overflow-y-auto p-4'>
+            {/* Create Answer Section */}
+            {!isCreating && !editingAnswerId ? (
+              <Button
+                onClick={() => setIsCreating(true)}
+                className='w-full'
+                variant='outline'
+              >
+                Write an Answer
+              </Button>
+            ) : isCreating ? (
+              <div className='bg-muted/30 rounded-lg border p-4'>
+                <h4 className='mb-3 font-semibold'>Write your answer</h4>
+                <QuestionsAnswerForm
+                  questionId={currentQuestion.id}
+                  onSuccess={() => setIsCreating(false)}
+                  onCancel={() => setIsCreating(false)}
+                />
+              </div>
+            ) : null}
+
+            <Separator />
+
             {isLoading ? (
               <div className='space-y-4'>
                 {[1, 2, 3].map((i) => (
@@ -111,7 +140,7 @@ export function QuestionAnswersDialog() {
               <>
                 {answers.length === 0 ? (
                   <div className='flex flex-col items-center justify-center py-12 text-center'>
-                    <div className='text-muted-foreground bg-muted mb-4 rounded-full p-4'>
+                    <div className='bg-muted text-muted-foreground mb-4 rounded-full p-4'>
                       <User className='size-8' />
                     </div>
                     <h3 className='mb-2 font-semibold'>No answers yet</h3>
@@ -126,90 +155,148 @@ export function QuestionAnswersDialog() {
                         key={answer.id}
                         className='hover:bg-muted/50 rounded-lg border p-4 transition-colors'
                       >
-                        {/* Doctor Info */}
-                        <div className='mb-3 flex items-start justify-between'>
-                          <div className='flex items-center gap-3'>
-                            <Avatar className='size-10'>
-                              <AvatarImage
-                                src={answer.doctor?.avatarUrl || undefined}
-                                alt={answer.doctor?.fullName || 'Doctor'}
-                              />
-                              <AvatarFallback>
-                                {answer.doctor?.fullName
-                                  ? answer.doctor.fullName
-                                      .split(' ')
-                                      .map((n) => n[0])
-                                      .join('')
-                                      .toUpperCase()
-                                      .slice(0, 2)
-                                  : 'DR'}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <div className='font-semibold'>
-                                {answer.doctor?.fullName || 'Unknown Doctor'}
-                              </div>
-                              {answer.doctor?.specialty && (
-                                <div className='text-muted-foreground text-xs'>
-                                  {answer.doctor.specialty}
+                        {editingAnswerId === answer.id ? (
+                          <QuestionsAnswerForm
+                            questionId={currentQuestion.id}
+                            answerToEdit={answer}
+                            onSuccess={() => setEditingAnswerId(null)}
+                            onCancel={() => setEditingAnswerId(null)}
+                          />
+                        ) : (
+                          <>
+                            {/* Doctor Info */}
+                            <div className='mb-3 flex items-start justify-between'>
+                              <div className='flex items-center gap-3'>
+                                <Avatar className='size-10'>
+                                  <AvatarImage
+                                    src={answer.doctor?.avatarUrl || undefined}
+                                    alt={
+                                      answer.doctor?.fullName ||
+                                      answer.authorName ||
+                                      'Doctor'
+                                    }
+                                  />
+                                  <AvatarFallback>
+                                    {answer.doctor?.fullName ||
+                                    answer.authorName
+                                      ? (
+                                          answer.doctor?.fullName ||
+                                          answer.authorName ||
+                                          'Doctor'
+                                        )
+                                          .split(' ')
+                                          .map((n) => n[0])
+                                          .join('')
+                                          .toUpperCase()
+                                          .slice(0, 2)
+                                      : 'DR'}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <div className='font-semibold'>
+                                    {answer.doctor?.fullName ||
+                                      answer.authorName ||
+                                      'Unknown Doctor'}
+                                  </div>
+                                  {answer.doctor?.specialty && (
+                                    <div className='text-muted-foreground text-xs'>
+                                      {answer.doctor.specialty}
+                                    </div>
+                                  )}
                                 </div>
+                              </div>
+                              {(answer.isAccepted ||
+                                (
+                                  answer as {
+                                    is_accepted?: boolean
+                                    accepted?: boolean
+                                  }
+                                ).is_accepted ||
+                                (
+                                  answer as {
+                                    is_accepted?: boolean
+                                    accepted?: boolean
+                                  }
+                                ).accepted) && (
+                                <Badge className='bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'>
+                                  <CheckCircle className='mr-1 size-3' />
+                                  Accepted
+                                </Badge>
                               )}
                             </div>
-                          </div>
-                          {answer.accepted && (
-                            <Badge className='bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'>
-                              <CheckCircle className='mr-1 size-3' />
-                              Accepted
-                            </Badge>
-                          )}
-                        </div>
 
-                        {/* Answer Body */}
-                        <div className='bg-muted/50 mb-3 rounded-md p-3'>
-                          <p className='text-sm leading-relaxed whitespace-pre-wrap'>
-                            {answer.body}
-                          </p>
-                        </div>
-
-                        {/* Meta & Actions */}
-                        <div className='flex items-center justify-between'>
-                          <div className='text-muted-foreground flex items-center gap-4 text-xs'>
-                            <div className='flex items-center gap-1'>
-                              <ThumbsUp className='size-3' />
-                              <span>{answer.upvotes} upvotes</span>
+                            {/* Answer Body */}
+                            <div className='bg-muted/50 mb-3 rounded-md p-3'>
+                              <p className='text-sm leading-relaxed whitespace-pre-wrap'>
+                                {answer.body}
+                              </p>
                             </div>
-                            <div>
-                              {format(
-                                new Date(answer.createdAt),
-                                'MMM dd, yyyy'
-                              )}
-                            </div>
-                          </div>
-                          <div className='flex items-center gap-2'>
-                            {!answer.accepted && (
-                              <Button
-                                size='sm'
-                                variant='outline'
-                                onClick={() => handleAcceptAnswer(answer.id)}
-                                disabled={acceptAnswerMutation.isPending}
-                                className='border-green-600 text-green-600 hover:bg-green-50'
-                              >
-                                <CheckCircle className='mr-1 size-3' />
-                                Accept
-                              </Button>
-                            )}
-                            <Button
-                              size='sm'
-                              variant='ghost'
-                              onClick={() => setDeleteAnswerId(answer.id)}
-                              disabled={deleteAnswerMutation.isPending}
-                              className='text-destructive hover:bg-destructive/10 hover:text-destructive'
-                            >
-                              <Trash2 className='size-3' />
-                            </Button>
-                          </div>
-                        </div>
 
+                            {/* Meta & Actions */}
+                            <div className='flex items-center justify-between'>
+                              <div className='text-muted-foreground flex items-center gap-4 text-xs'>
+                                <div className='flex items-center gap-1'>
+                                  <ThumbsUp className='size-3' />
+                                  <span>{answer.upvotes || 0} upvotes</span>
+                                </div>
+                                <div>
+                                  {format(
+                                    new Date(answer.createdAt),
+                                    'MMM dd, yyyy'
+                                  )}
+                                </div>
+                              </div>
+                              <div className='flex items-center gap-2'>
+                                <Button
+                                  size='sm'
+                                  variant='ghost'
+                                  onClick={() => {
+                                    setEditingAnswerId(answer.id)
+                                    setIsCreating(false)
+                                  }}
+                                  disabled={!!editingAnswerId || isCreating}
+                                >
+                                  Edit
+                                </Button>
+                                {!answer.isAccepted &&
+                                  !(
+                                    answer as {
+                                      is_accepted?: boolean
+                                      accepted?: boolean
+                                    }
+                                  ).is_accepted &&
+                                  !(
+                                    answer as {
+                                      is_accepted?: boolean
+                                      accepted?: boolean
+                                    }
+                                  ).accepted && (
+                                    <Button
+                                      size='sm'
+                                      variant='outline'
+                                      onClick={() =>
+                                        handleAcceptAnswer(answer.id)
+                                      }
+                                      disabled={acceptAnswerMutation.isPending}
+                                      className='border-green-600 text-green-600 hover:bg-green-50'
+                                    >
+                                      <CheckCircle className='mr-1 size-3' />
+                                      Accept
+                                    </Button>
+                                  )}
+                                <Button
+                                  size='sm'
+                                  variant='ghost'
+                                  onClick={() => setDeleteAnswerId(answer.id)}
+                                  disabled={deleteAnswerMutation.isPending}
+                                  className='text-destructive hover:bg-destructive/10 hover:text-destructive'
+                                >
+                                  <Trash2 className='size-3' />
+                                </Button>
+                              </div>
+                            </div>
+                          </>
+                        )}
                         <Separator className='mt-3' />
                       </div>
                     ))}

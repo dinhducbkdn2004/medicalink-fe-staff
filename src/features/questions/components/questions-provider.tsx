@@ -37,10 +37,10 @@ export function QuestionsProvider({
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null)
   const [currentAnswer, setCurrentAnswer] = useState<Answer | null>(null)
 
-  const setOpen = useCallback((type: DialogType) => {
+  const setOpen = useCallback((type: DialogType, isOpen?: boolean) => {
     setOpenDialogs((prev) => ({
       ...prev,
-      [type]: !prev[type],
+      [type]: isOpen ?? !prev[type],
     }))
   }, [])
 
