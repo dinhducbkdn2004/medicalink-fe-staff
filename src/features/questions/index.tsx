@@ -11,7 +11,6 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { QuestionsDialogs } from './components/questions-dialogs'
-import { QuestionsPrimaryButtons } from './components/questions-primary-buttons'
 import { QuestionsProvider } from './components/questions-provider'
 import { QuestionsTable } from './components/questions-table'
 import type { QuestionQueryParams } from './data/schema'
@@ -34,6 +33,8 @@ function QuestionsContent() {
 
     if (search.search) params.search = search.search
     if (search.status) params.status = search.status
+    if (search.authorEmail) params.authorEmail = search.authorEmail
+    if (search.specialtyId) params.specialtyId = search.specialtyId
     if (search.sortBy && search.sortOrder) {
       params.sortBy = search.sortBy
       params.sortOrder = search.sortOrder
@@ -43,17 +44,13 @@ function QuestionsContent() {
   }, [search])
 
   // Fetch questions
-  const { data, isLoading, refetch, isFetching } = useQuestionsData(queryParams)
+  const { data, isLoading } = useQuestionsData(queryParams)
 
   return (
     <>
       <Header fixed>
         <Search />
         <div className='ms-auto flex items-center gap-2'>
-          <QuestionsPrimaryButtons
-            onRefresh={() => refetch()}
-            isRefreshing={isFetching}
-          />
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />

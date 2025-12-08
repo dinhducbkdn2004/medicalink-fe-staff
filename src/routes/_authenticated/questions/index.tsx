@@ -15,6 +15,8 @@ const questionsSearchSchema = z.object({
   pageSize: z.number().int().positive().max(100).catch(10),
   search: z.string().optional(),
   status: z.enum(['PENDING', 'ANSWERED', 'CLOSED']).optional().catch(undefined),
+  authorEmail: z.string().optional(),
+  specialtyId: z.string().optional(),
   sortBy: z.enum(['createdAt', 'viewCount', 'answerCount']).optional(),
   sortOrder: z.enum(['asc', 'desc']).optional().catch('desc'),
 })

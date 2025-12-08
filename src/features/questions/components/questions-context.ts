@@ -6,7 +6,7 @@ type DialogType = 'view' | 'edit' | 'delete' | 'answer' | 'close' | 'answers'
 export interface QuestionsContextValue {
   // Dialog state
   open: Record<DialogType, boolean>
-  setOpen: (type: DialogType) => void
+  setOpen: (type: DialogType, isOpen?: boolean) => void
   closeAll: () => void
 
   // Selected items

@@ -21,11 +21,12 @@ export interface Answer {
   id: string
   questionId: string
   body: string
-  doctorId: string
-  doctor: Doctor
+  authorId: string
+  authorName?: string // Optional, might be populated by UI or if API changes
+  doctor?: Doctor // Optional, if we fetch it separately
   publicIds?: string[]
-  accepted: boolean
-  upvotes: number
+  isAccepted: boolean // API says isAccepted, service said accepted
+  upvotes?: number // API didn't show this in some examples, keeping optional
   createdAt: string
   updatedAt: string
 }
@@ -40,7 +41,7 @@ export interface CreateAnswerRequest {
 
 export interface UpdateAnswerRequest {
   body?: string
-  accepted?: boolean
+  isAccepted?: boolean
 }
 
 export type AnswerListResponse = PaginatedResponse<Answer>
