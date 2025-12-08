@@ -37,6 +37,7 @@ export interface Question {
 export interface QuestionQueryParams extends PaginationParams {
   search?: string
   specialtyId?: string
+  authorEmail?: string
   status?: string
   sortBy?: string
   sortOrder?: 'asc' | 'desc'
@@ -55,6 +56,7 @@ export interface UpdateQuestionRequest {
   title?: string
   body?: string
   status?: 'PENDING' | 'ANSWERED' | 'CLOSED'
+  specialtyId?: string | null
 }
 
 export type QuestionListResponse = PaginatedResponse<Question>

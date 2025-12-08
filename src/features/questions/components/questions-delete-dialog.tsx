@@ -24,7 +24,7 @@ export function QuestionsDeleteDialog() {
 
     deleteQuestion.mutate(currentQuestion.id, {
       onSuccess: () => {
-        setOpen('delete')
+        setOpen('delete', false)
       },
     })
   }
@@ -54,7 +54,10 @@ export function QuestionsDeleteDialog() {
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            onClick={(e) => {
+              e.preventDefault()
+              handleDelete()
+            }}
             disabled={deleteQuestion.isPending}
             className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
           >

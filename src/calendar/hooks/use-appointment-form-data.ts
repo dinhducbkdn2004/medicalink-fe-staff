@@ -163,7 +163,7 @@ export function useSpecialties() {
       isFetchingSpecialties = true
       setIsLoading(true)
       try {
-        const response = await specialtyService.getPublicSpecialties({
+        const response = await specialtyService.getSpecialties({
           page: 1,
           limit: 100,
         })
