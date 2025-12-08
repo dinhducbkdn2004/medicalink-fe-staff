@@ -82,7 +82,8 @@ const timeValidator = z.string().regex(timeRegex, {
 })
 
 /**
- * Schema for creating/editing office hours
+ * Schema for creating office hours
+ * Note: API does not support editing, only create and delete
  */
 export const officeHourFormSchema = z
   .object({
@@ -99,12 +100,36 @@ export const officeHourFormSchema = z
   })
   .refine(
     (data) => {
-      // At least one of doctorId or workLocationId must be set
+      // Validation based on API Office Hours Types:
+      // 1. Doctor at location: doctorId + workLocationId
+      // 2. Doctor (all locations): doctorId only
+      // 3. Work location: workLocationId only, isGlobal can be true
+      // 4. Global: isGlobal=true, both can be null
+
+      // If isGlobal is true, it's always valid (type 3 or 4)
+      if (data.isGlobal) {
+        return true
+      }
+
+      // If not global, at least one of doctorId or workLocationId must be set
       return data.doctorId || data.workLocationId
     },
     {
-      message: 'Either Doctor or Work Location must be selected',
+      message: 'Either Doctor, Work Location, or Global must be selected',
       path: ['doctorId'],
+    }
+  )
+  .refine(
+    (data) => {
+      // If isGlobal is true and doctorId is set, that's invalid
+      if (data.isGlobal && data.doctorId) {
+        return false
+      }
+      return true
+    },
+    {
+      message: 'Global hours cannot be assigned to a specific doctor',
+      path: ['isGlobal'],
     }
   )
   .refine(

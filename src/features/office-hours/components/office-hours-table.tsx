@@ -1,12 +1,12 @@
 /**
  * Office Hours Table Component
  * Table view for office hours management with API integration
+ * Simplified to match API capabilities: GET, POST, DELETE only
  */
 import { Trash2 } from 'lucide-react'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
 import { DataTable, type DataTableAction } from '@/components/data-table'
-import { type OfficeHour, DAYS_OF_WEEK } from '../data/schema'
-import { DataTableBulkActions } from './data-table-bulk-actions'
+import { type OfficeHour } from '../data/schema'
 import { officeHoursColumns as columns } from './office-hours-columns'
 import { useOfficeHoursContext } from './office-hours-provider'
 
@@ -34,6 +34,7 @@ export function OfficeHoursTable({
   const { setOpen, setCurrentRow } = useOfficeHoursContext()
 
   // Define row actions (context menu)
+  // API only supports DELETE, no edit/update endpoint
   const getRowActions = (row: { original: OfficeHour }): DataTableAction[] => {
     const officeHour = row.original
 
@@ -61,23 +62,10 @@ export function OfficeHoursTable({
       pageCount={1} // Office hours API doesn't use pagination
       isLoading={isLoading}
       entityName='office hour'
-      // Toolbar
-      searchPlaceholder='Search office hours...'
-      filters={[
-        {
-          columnId: 'dayOfWeek',
-          title: 'Day',
-          options: DAYS_OF_WEEK.map((day) => ({
-            label: day.label,
-            value: String(day.value),
-          })),
-        },
-      ]}
       // Actions
       getRowActions={getRowActions}
-      renderBulkActions={(table) => <DataTableBulkActions table={table} />}
-      // Advanced
-      enableRowSelection={true}
+      // Bulk actions disabled - API doesn't support bulk delete
+      enableRowSelection={false}
       emptyMessage='No office hours found. Add office hours to define working schedules.'
     />
   )

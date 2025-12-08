@@ -55,8 +55,13 @@ export function OfficeHoursActionDialog() {
   const isOpen = open === 'add'
 
   // Fetch doctors and work locations for dropdowns
-  const { data: workLocations } = useActiveWorkLocations()
-  const { data: doctorsData } = useQuery({
+  const { data: workLocations, isLoading: isLoadingLocations } =
+    useActiveWorkLocations()
+  const {
+    data: doctorsData,
+    isLoading: isLoadingDoctors,
+    error: doctorsError,
+  } = useQuery({
     queryKey: ['doctors', 'active'],
     queryFn: () =>
       doctorService.getDoctors({
@@ -68,6 +73,7 @@ export function OfficeHoursActionDialog() {
   })
 
   const doctors = doctorsData?.data || []
+  const isLoadingData = isLoadingDoctors || isLoadingLocations
 
   // Form setup
   const form = useForm<OfficeHourFormValues>({
@@ -106,14 +112,39 @@ export function OfficeHoursActionDialog() {
   // Handle form submission
   const onSubmit = async (values: OfficeHourFormValues) => {
     try {
-      await createMutation.mutateAsync({
-        doctorId: values.doctorId || null,
-        workLocationId: values.workLocationId || null,
+      // Validate that doctorId exists if provided
+      if (values.doctorId && !doctors.find((d) => d.id === values.doctorId)) {
+        form.setError('doctorId', {
+          type: 'manual',
+          message: 'Selected doctor not found. Please select a valid doctor.',
+        })
+        return
+      }
+
+      // Validate that workLocationId exists if provided
+      if (
+        values.workLocationId &&
+        !workLocations?.find((l) => l.id === values.workLocationId)
+      ) {
+        form.setError('workLocationId', {
+          type: 'manual',
+          message:
+            'Selected location not found. Please select a valid location.',
+        })
+        return
+      }
+
+      // Prepare request data - ensure null values when global
+      const requestData = {
+        doctorId: values.isGlobal ? null : values.doctorId || null,
+        workLocationId: values.isGlobal ? null : values.workLocationId || null,
         dayOfWeek: values.dayOfWeek,
         startTime: values.startTime,
         endTime: values.endTime,
         isGlobal: values.isGlobal || false,
-      })
+      }
+
+      await createMutation.mutateAsync(requestData)
 
       handleClose()
     } catch (error) {
@@ -124,26 +155,115 @@ export function OfficeHoursActionDialog() {
 
   const isLoading = createMutation.isPending
 
+  // Watch form values to determine office hours type
+  const watchedDoctorId = form.watch('doctorId')
+  const watchedWorkLocationId = form.watch('workLocationId')
+  const watchedIsGlobal = form.watch('isGlobal')
+
+  // Determine office hours type for user feedback
+  let officeHoursType = ''
+  let officeHoursTypeDescription = ''
+
+  if (watchedIsGlobal) {
+    officeHoursType = 'Global Hours'
+    officeHoursTypeDescription =
+      'These hours apply to all locations as fallback when no specific hours are defined. Lowest priority.'
+  } else if (watchedDoctorId && watchedWorkLocationId) {
+    officeHoursType = 'Doctor at Specific Location'
+    officeHoursTypeDescription =
+      'These hours apply to a specific doctor at a specific location. Highest priority.'
+  } else if (watchedDoctorId && !watchedWorkLocationId) {
+    officeHoursType = 'Doctor (All Locations)'
+    officeHoursTypeDescription =
+      'These hours apply to a specific doctor across all locations.'
+  } else if (!watchedDoctorId && watchedWorkLocationId) {
+    officeHoursType = 'Work Location Hours'
+    officeHoursTypeDescription =
+      'These hours apply to a specific location for all doctors working there.'
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className='sm:max-w-[600px]'>
         <DialogHeader>
           <DialogTitle>Create Office Hours</DialogTitle>
           <DialogDescription>
-            Define working hours for a doctor at a specific location, for all
-            locations, or set global location hours.
+            Define working hours for doctors and locations. The system supports
+            4 types of office hours with different priority levels.
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+            {/* Office Hours Type Indicator */}
+            {officeHoursType && (
+              <div className='bg-muted rounded-lg border p-3'>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm font-medium'>{officeHoursType}</span>
+                  <span className='text-muted-foreground text-xs'>
+                    {watchedIsGlobal && 'Priority: Lowest'}
+                    {!watchedIsGlobal &&
+                      !watchedDoctorId &&
+                      watchedWorkLocationId &&
+                      'Priority: Low'}
+                    {!watchedIsGlobal &&
+                      watchedDoctorId &&
+                      !watchedWorkLocationId &&
+                      'Priority: Medium'}
+                    {!watchedIsGlobal &&
+                      watchedDoctorId &&
+                      watchedWorkLocationId &&
+                      'Priority: Highest'}
+                  </span>
+                </div>
+                <p className='text-muted-foreground mt-1 text-xs'>
+                  {officeHoursTypeDescription}
+                </p>
+              </div>
+            )}
+
+            {/* Is Global Checkbox - Moved to top for better UX */}
+            <FormField
+              control={form.control}
+              name='isGlobal'
+              render={({ field }) => (
+                <FormItem className='flex flex-row items-start space-y-0 space-x-3 rounded-md border p-4'>
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked)
+                        // If global is checked, doctor must be null
+                        if (checked) {
+                          form.setValue('doctorId', null)
+                        }
+                      }}
+                      disabled={isLoading || !!form.watch('doctorId')}
+                    />
+                  </FormControl>
+                  <div className='space-y-1 leading-none'>
+                    <FormLabel>Global Hours</FormLabel>
+                    <FormDescription>
+                      Apply to all locations as fallback hours. Cannot be used
+                      with a specific doctor. Uncheck to create location or
+                      doctor-specific hours.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
             {/* Doctor Selection */}
             <FormField
               control={form.control}
               name='doctorId'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Doctor</FormLabel>
+                  <FormLabel>
+                    Doctor{' '}
+                    <span className='text-muted-foreground text-xs font-normal'>
+                      (Optional)
+                    </span>
+                  </FormLabel>
                   <Select
                     onValueChange={(value) => {
                       field.onChange(value === 'none' ? null : value)
@@ -157,13 +277,13 @@ export function OfficeHoursActionDialog() {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder='Select a doctor (optional)' />
+                        <SelectValue placeholder='Select a doctor or leave empty' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       <SelectItem value='none'>
                         <span className='text-muted-foreground'>
-                          No specific doctor
+                          No specific doctor (for location-wide hours)
                         </span>
                       </SelectItem>
                       {doctors.map((doctor) => (
@@ -180,7 +300,7 @@ export function OfficeHoursActionDialog() {
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    Leave empty for location-wide hours
+                    Leave empty to create location-wide hours for all doctors
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -193,7 +313,12 @@ export function OfficeHoursActionDialog() {
               name='workLocationId'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Work Location</FormLabel>
+                  <FormLabel>
+                    Work Location{' '}
+                    <span className='text-muted-foreground text-xs font-normal'>
+                      (Optional)
+                    </span>
+                  </FormLabel>
                   <Select
                     onValueChange={(value) =>
                       field.onChange(value === 'none' ? null : value)
@@ -203,13 +328,13 @@ export function OfficeHoursActionDialog() {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder='Select a location (optional)' />
+                        <SelectValue placeholder='Select a location or leave empty' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       <SelectItem value='none'>
                         <span className='text-muted-foreground'>
-                          All locations
+                          All locations (doctor's default hours)
                         </span>
                       </SelectItem>
                       {workLocations?.map((location) => (
@@ -220,7 +345,7 @@ export function OfficeHoursActionDialog() {
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    Leave empty for doctor's default hours
+                    Leave empty for doctor's hours across all locations
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -270,7 +395,12 @@ export function OfficeHoursActionDialog() {
                       Start Time <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input type='time' {...field} disabled={isLoading} />
+                      <Input
+                        type='time'
+                        {...field}
+                        disabled={isLoading}
+                        className='font-mono'
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -286,43 +416,18 @@ export function OfficeHoursActionDialog() {
                       End Time <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input type='time' {...field} disabled={isLoading} />
+                      <Input
+                        type='time'
+                        {...field}
+                        disabled={isLoading}
+                        className='font-mono'
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-
-            {/* Is Global */}
-            <FormField
-              control={form.control}
-              name='isGlobal'
-              render={({ field }) => (
-                <FormItem className='flex flex-row items-start space-y-0 space-x-3 rounded-md border p-4'>
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={(checked) => {
-                        field.onChange(checked)
-                        // If global is checked, doctor must be null
-                        if (checked) {
-                          form.setValue('doctorId', null)
-                        }
-                      }}
-                      disabled={isLoading || !!form.watch('doctorId')}
-                    />
-                  </FormControl>
-                  <div className='space-y-1 leading-none'>
-                    <FormLabel>Global Hours</FormLabel>
-                    <FormDescription>
-                      Apply to all locations as fallback hours (Cannot be used
-                      with specific doctor)
-                    </FormDescription>
-                  </div>
-                </FormItem>
-              )}
-            />
 
             <DialogFooter>
               <Button
@@ -333,9 +438,14 @@ export function OfficeHoursActionDialog() {
               >
                 Cancel
               </Button>
-              <Button type='submit' disabled={isLoading}>
-                {isLoading && <Loader2 className='mr-2 size-4 animate-spin' />}
-                Create Office Hours
+              <Button
+                type='submit'
+                disabled={isLoading || isLoadingData || doctorsError !== null}
+              >
+                {(isLoading || isLoadingData) && (
+                  <Loader2 className='mr-2 size-4 animate-spin' />
+                )}
+                {isLoadingData ? 'Loading...' : 'Create Office Hours'}
               </Button>
             </DialogFooter>
           </form>
