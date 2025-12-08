@@ -1,6 +1,7 @@
 /**
  * Office Hours API Hooks
  * TanStack Query hooks for Office Hours management
+ * Only includes hooks for API endpoints that exist: GET, POST, DELETE
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
@@ -27,25 +28,13 @@ export const officeHourKeys = {
 
 /**
  * Hook to fetch office hours with filtering
+ * Returns grouped office hours data as per API specification
  */
 export function useOfficeHours(params: OfficeHourQueryParams = {}) {
   return useQuery({
     queryKey: officeHourKeys.list(params),
     queryFn: () => officeHourService.getOfficeHours(params),
-    select: (response) => {
-      // Flatten the grouped response into a single array for the table
-      const { global, workLocation, doctor, doctorInLocation } = response.data
-      const allOfficeHours = [
-        ...global,
-        ...workLocation,
-        ...doctor,
-        ...doctorInLocation,
-      ]
-      return {
-        ...response,
-        data: allOfficeHours,
-      }
-    },
+    // Keep the grouped structure from API
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: (failureCount, error: unknown) => {
       // Don't retry on 401/403 (permission errors)
@@ -67,6 +56,7 @@ export function useOfficeHours(params: OfficeHourQueryParams = {}) {
 
 /**
  * Hook to create a new office hour entry
+ * POST /api/office-hours
  */
 export function useCreateOfficeHour() {
   const queryClient = useQueryClient()
@@ -78,14 +68,46 @@ export function useCreateOfficeHour() {
       queryClient.invalidateQueries({ queryKey: officeHourKeys.lists() })
       toast.success('Office hours created successfully')
     },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to create office hours')
+    onError: (error: unknown) => {
+      // Handle specific error cases
+      const axiosError = error as {
+        response?: {
+          status?: number
+          data?: { message?: string; error?: string }
+        }
+        message?: string
+      }
+
+      if (axiosError?.response?.status === 404) {
+        // Doctor or Work Location not found
+        const errorMessage =
+          axiosError.response.data?.message || 'Record not found'
+        if (errorMessage.includes('Doctor')) {
+          toast.error(
+            'Selected doctor not found. Please refresh and try again.'
+          )
+        } else if (errorMessage.includes('WorkLocation')) {
+          toast.error(
+            'Selected work location not found. Please refresh and try again.'
+          )
+        } else {
+          toast.error(errorMessage)
+        }
+      } else if (axiosError?.response?.status === 400) {
+        toast.error(
+          axiosError.response.data?.message ||
+            'Invalid data. Please check your input.'
+        )
+      } else {
+        toast.error(axiosError?.message || 'Failed to create office hours')
+      }
     },
   })
 }
 
 /**
  * Hook to delete an office hour entry
+ * DELETE /api/office-hours/:id
  */
 export function useDeleteOfficeHour() {
   const queryClient = useQueryClient()
@@ -95,27 +117,6 @@ export function useDeleteOfficeHour() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: officeHourKeys.lists() })
       toast.success('Office hours deleted successfully')
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to delete office hours')
-    },
-  })
-}
-
-/**
- * Hook to bulk delete office hour entries
- */
-export function useBulkDeleteOfficeHours() {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: async (ids: string[]) => {
-      // Delete all in parallel
-      await Promise.all(ids.map((id) => officeHourService.deleteOfficeHour(id)))
-    },
-    onSuccess: (_data, ids) => {
-      queryClient.invalidateQueries({ queryKey: officeHourKeys.lists() })
-      toast.success(`${ids.length} office hour(s) deleted successfully`)
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to delete office hours')

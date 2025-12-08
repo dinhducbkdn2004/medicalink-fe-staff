@@ -31,20 +31,50 @@ export function OfficeHours() {
 
   const { data, isLoading, error } = useOfficeHours(queryParams)
 
-  // Extract grouped data (safely handle undefined/null)
-  // Extract grouped data from flat list
-  const allHours = data?.data || []
+  // Extract and categorize office hours data
+  // Note: Backend may return all records in 'global' array, so we categorize client-side
+  const categorizeOfficeHours = (apiData: typeof data) => {
+    if (!apiData) {
+      return {
+        global: [],
+        workLocation: [],
+        doctor: [],
+        doctorInLocation: [],
+      }
+    }
 
-  const globalHours = allHours.filter((h) => h.isGlobal)
-  const workLocationHours = allHours.filter(
-    (h) => !h.isGlobal && h.workLocationId && !h.doctorId
-  )
-  const doctorHours = allHours.filter(
-    (h) => !h.isGlobal && h.doctorId && !h.workLocationId
-  )
-  const doctorInLocationHours = allHours.filter(
-    (h) => !h.isGlobal && h.doctorId && h.workLocationId
-  )
+    // Collect all office hours from API response (might be in wrong categories)
+    const allOfficeHours = [
+      ...(apiData.global || []),
+      ...(apiData.workLocation || []),
+      ...(apiData.doctor || []),
+      ...(apiData.doctorInLocation || []),
+    ]
+
+    // Re-categorize based on actual field values
+    return {
+      global: allOfficeHours.filter(
+        (oh) =>
+          (oh.isGlobal && !oh.doctorId) || (!oh.doctorId && !oh.workLocationId)
+      ),
+      workLocation: allOfficeHours.filter(
+        (oh) => oh.workLocationId && !oh.doctorId && !oh.isGlobal
+      ),
+      doctor: allOfficeHours.filter((oh) => oh.doctorId && !oh.workLocationId),
+      doctorInLocation: allOfficeHours.filter(
+        (oh) => oh.doctorId && oh.workLocationId
+      ),
+    }
+  }
+
+  const groupedData = categorizeOfficeHours(data)
+
+  // Calculate totals for badges
+  const totalAll =
+    groupedData.global.length +
+    groupedData.workLocation.length +
+    groupedData.doctor.length +
+    groupedData.doctorInLocation.length
 
   // Check for permission errors
   const isPermissionError =
@@ -100,74 +130,44 @@ export function OfficeHours() {
               <TabsTrigger value='all'>
                 All
                 <Badge variant='secondary' className='ml-2'>
-                  {allHours.length}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger value='doctor-at-location'>
-                Doctor at Location
-                <Badge variant='secondary' className='ml-2'>
-                  {doctorInLocationHours.length}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger value='doctor-all'>
-                Doctor (All Locations)
-                <Badge variant='secondary' className='ml-2'>
-                  {doctorHours.length}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger value='location'>
-                Work Location
-                <Badge variant='secondary' className='ml-2'>
-                  {workLocationHours.length}
+                  {totalAll}
                 </Badge>
               </TabsTrigger>
               <TabsTrigger value='global'>
-                Global
+                Global Hours
                 <Badge variant='secondary' className='ml-2'>
-                  {globalHours.length}
+                  {groupedData.global.length}
                 </Badge>
               </TabsTrigger>
             </TabsList>
 
+            {/* All Office Hours */}
             <TabsContent value='all' className='mt-4'>
               <OfficeHoursTable
-                data={allHours}
+                data={[
+                  ...groupedData.global,
+                  ...groupedData.workLocation,
+                  ...groupedData.doctor,
+                  ...groupedData.doctorInLocation,
+                ]}
                 search={search}
                 navigate={navigate}
                 isLoading={isLoading}
               />
             </TabsContent>
 
-            <TabsContent value='doctor-at-location' className='mt-4'>
-              <OfficeHoursTable
-                data={doctorInLocationHours}
-                search={search}
-                navigate={navigate}
-                isLoading={isLoading}
-              />
-            </TabsContent>
-
-            <TabsContent value='doctor-all' className='mt-4'>
-              <OfficeHoursTable
-                data={doctorHours}
-                search={search}
-                navigate={navigate}
-                isLoading={isLoading}
-              />
-            </TabsContent>
-
-            <TabsContent value='location' className='mt-4'>
-              <OfficeHoursTable
-                data={workLocationHours}
-                search={search}
-                navigate={navigate}
-                isLoading={isLoading}
-              />
-            </TabsContent>
-
+            {/* Global Hours - Apply to all locations as fallback */}
             <TabsContent value='global' className='mt-4'>
+              <div className='bg-muted/50 mb-4 rounded-lg border p-4'>
+                <h3 className='font-medium'>Global Hours</h3>
+                <p className='text-muted-foreground text-sm'>
+                  These hours apply to all locations as fallback when no
+                  specific hours are defined. Global hours have the lowest
+                  priority in the system.
+                </p>
+              </div>
               <OfficeHoursTable
-                data={globalHours}
+                data={groupedData.global}
                 search={search}
                 navigate={navigate}
                 isLoading={isLoading}
