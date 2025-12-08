@@ -1,12 +1,12 @@
 /**
  * Office Hours Table Columns
  * Column definitions for office hours data table
+ * Simplified to match API capabilities (no edit, no bulk actions)
  */
 import { type ColumnDef } from '@tanstack/react-table'
 import { Clock, MapPin, User, Calendar } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
-import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import {
   type OfficeHour,
@@ -33,37 +33,6 @@ function formatTime(timeString: string): string {
 }
 
 export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <div className='flex items-center justify-center'>
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && 'indeterminate')
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
-          className='translate-y-0.5'
-        />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className='flex items-center justify-center'>
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Select row'
-          className='translate-y-0.5'
-        />
-      </div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-    meta: {
-      className: 'w-[50px] max-w-[50px]',
-    },
-  },
   {
     accessorKey: 'dayOfWeek',
     header: ({ column }) => (
@@ -227,7 +196,7 @@ export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
     id: 'actions',
     cell: ({ row }) => <DataTableRowActions row={row} />,
     meta: {
-      className: 'w-[60px]',
+      className: 'w-[60px] sticky right-0 bg-background',
     },
   },
 ]

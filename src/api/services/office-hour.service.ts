@@ -47,21 +47,16 @@ export interface CreateOfficeHourRequest {
   isGlobal?: boolean
 }
 
+/**
+ * Grouped response from GET /api/office-hours
+ * API returns office hours categorized by type
+ * Note: apiClient interceptor auto-unwraps response.data.data to response.data
+ */
 export interface OfficeHoursGroupedResponse {
-  global: OfficeHour[]
-  workLocation: OfficeHour[]
-  doctor: OfficeHour[]
-  doctorInLocation: OfficeHour[]
-}
-
-export interface OfficeHoursApiResponse {
-  success: boolean
-  message: string
-  data: OfficeHoursGroupedResponse
-  timestamp: string
-  path: string
-  method: string
-  statusCode: number
+  global: OfficeHour[] // isGlobal=true, doctorId=null
+  workLocation: OfficeHour[] // workLocationId set, doctorId=null, isGlobal=false
+  doctor: OfficeHour[] // doctorId set, workLocationId=null
+  doctorInLocation: OfficeHour[] // Both doctorId and workLocationId set
 }
 
 // ============================================================================
@@ -76,11 +71,12 @@ class OfficeHourService {
   /**
    * Get all office hours with filtering (staff only)
    * GET /api/office-hours
+   * Returns: Grouped office hours (auto-unwrapped by apiClient interceptor)
    */
   async getOfficeHours(
     params: OfficeHourQueryParams = {}
-  ): Promise<OfficeHoursApiResponse> {
-    const response = await apiClient.get<OfficeHoursApiResponse>(
+  ): Promise<OfficeHoursGroupedResponse> {
+    const response = await apiClient.get<OfficeHoursGroupedResponse>(
       '/office-hours',
       { params }
     )
@@ -88,30 +84,37 @@ class OfficeHourService {
   }
 
   /**
+   * Get public office hours for a doctor at a location (public endpoint)
+   * GET /api/office-hours/public?doctorId=xxx&workLocationId=xxx
+   * Returns: Flat array of applicable office hours
+   */
+  async getPublicOfficeHours(
+    doctorId: string,
+    workLocationId: string
+  ): Promise<OfficeHour[]> {
+    const response = await apiClient.get<OfficeHour[]>('/office-hours/public', {
+      params: { doctorId, workLocationId },
+    })
+    return response.data
+  }
+
+  /**
    * Create new office hours entry (staff only)
    * POST /api/office-hours
+   * Returns: Created office hour (auto-unwrapped by apiClient interceptor)
    */
-  async createOfficeHour(
-    data: CreateOfficeHourRequest
-  ): Promise<{ success: boolean; data: OfficeHour }> {
-    const response = await apiClient.post<{
-      success: boolean
-      data: OfficeHour
-    }>('/office-hours', data)
+  async createOfficeHour(data: CreateOfficeHourRequest): Promise<OfficeHour> {
+    const response = await apiClient.post<OfficeHour>('/office-hours', data)
     return response.data
   }
 
   /**
    * Delete an office hours entry (staff only)
    * DELETE /api/office-hours/:id
+   * Returns: Deleted office hour (auto-unwrapped by apiClient interceptor)
    */
-  async deleteOfficeHour(
-    id: string
-  ): Promise<{ success: boolean; message: string }> {
-    const response = await apiClient.delete<{
-      success: boolean
-      message: string
-    }>(`/office-hours/${id}`)
+  async deleteOfficeHour(id: string): Promise<OfficeHour> {
+    const response = await apiClient.delete<OfficeHour>(`/office-hours/${id}`)
     return response.data
   }
 }
