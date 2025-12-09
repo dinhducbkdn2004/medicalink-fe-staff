@@ -38,8 +38,7 @@ export function WorkLocations() {
   }
 
   // Debug: Log API params (remove in production)
-  // eslint-disable-next-line no-console
-  console.log('🔍 Work Locations API Params:', queryParams)
+  // console.log('🔍 Work Locations API Params:', queryParams)
 
   const { data, isLoading } = useWorkLocations(queryParams)
 
@@ -79,4 +78,3 @@ export function WorkLocations() {
     </WorkLocationsProvider>
   )
 }
-

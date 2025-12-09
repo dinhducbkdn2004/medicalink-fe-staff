@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { parseISO, format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,10 +11,14 @@ import {
   rescheduleAppointmentSchema,
   type TRescheduleAppointmentFormData,
 } from '@/calendar/schemas'
-import type { TimeValue } from 'react-aria-components'
+import { Loader2 } from 'lucide-react'
+import {
+  doctorProfileService,
+  type TimeSlot,
+} from '@/api/services/doctor-profile.service'
 import type { RescheduleAppointmentRequest } from '@/api/types/appointment.types'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Form,
   FormField,
@@ -31,7 +35,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { SingleDayPicker } from '@/components/ui/single-day-picker'
-import { TimeInput } from '@/components/ui/time-input'
 import { useRescheduleAppointment } from '@/features/appointments/data/hooks'
 
 interface IProps {
@@ -47,6 +50,9 @@ export function AppointmentRescheduleForm({
 }: IProps) {
   const { mutate: rescheduleAppointment, isPending } =
     useRescheduleAppointment()
+
+  const [slots, setSlots] = useState<TimeSlot[]>([])
+  const [loadingSlots, setLoadingSlots] = useState(false)
 
   // Extract default values
   const serviceDate = appointment?.event
@@ -67,12 +73,17 @@ export function AppointmentRescheduleForm({
       serviceDate: serviceDate,
       timeStart: { hour: timeStartHour, minute: timeStartMinute },
       timeEnd: { hour: timeEndHour, minute: timeEndMinute },
-      autoconfirm: false,
     },
   })
 
-  // Watch doctorId to fetch locations
+  // Watch values for fetching slots
   const selectedDoctorId = form.watch('doctorId')
+  const selectedLocationId = form.watch('locationId')
+  const selectedDate = form.watch('serviceDate')
+
+  // Watch time for highlighting selected slot
+  const selectedTimeStart = form.watch('timeStart')
+  const selectedTimeEnd = form.watch('timeEnd')
 
   // Fetch doctors based on appointment specialty
   const { doctors, isLoading: isLoadingDoctors } = useDoctorsBySpecialty(
@@ -83,12 +94,44 @@ export function AppointmentRescheduleForm({
   const { locations, isLoading: isLoadingLocations } =
     useLocationsByDoctor(selectedDoctorId)
 
-  // Reset location if doctor changes (optional, but good UX)
+  // Reset location if doctor changes
   useEffect(() => {
-    if (selectedDoctorId !== appointment.doctorId) {
-      // Logic to handle location reset if needed
+    if (
+      selectedDoctorId !== appointment.doctorId &&
+      form.getValues('locationId')
+    ) {
+      form.setValue('locationId', '')
     }
-  }, [selectedDoctorId, appointment.doctorId])
+  }, [selectedDoctorId, appointment.doctorId, form])
+
+  // Fetch available slots
+  useEffect(() => {
+    async function fetchSlots() {
+      if (!selectedDoctorId || !selectedLocationId || !selectedDate) {
+        setSlots([])
+        return
+      }
+
+      setLoadingSlots(true)
+      try {
+        const dateStr = format(selectedDate, 'yyyy-MM-dd')
+        const fetchedSlots = await doctorProfileService.getDoctorAvailableSlots(
+          selectedDoctorId,
+          selectedLocationId,
+          dateStr,
+          true // allowPast? Maybe check if it's today
+        )
+        setSlots(fetchedSlots)
+      } catch (error) {
+        console.error('Failed to fetch slots', error)
+        setSlots([])
+      } finally {
+        setLoadingSlots(false)
+      }
+    }
+
+    fetchSlots()
+  }, [selectedDoctorId, selectedLocationId, selectedDate])
 
   const onSubmit = (values: TRescheduleAppointmentFormData) => {
     const requestData: RescheduleAppointmentRequest = {
@@ -115,6 +158,23 @@ export function AppointmentRescheduleForm({
     )
   }
 
+  const handleSlotClick = (slot: TimeSlot) => {
+    const [startHour, startMinute] = slot.timeStart.split(':').map(Number)
+    const [endHour, endMinute] = slot.timeEnd.split(':').map(Number)
+
+    form.setValue('timeStart', { hour: startHour, minute: startMinute })
+    form.setValue('timeEnd', { hour: endHour, minute: endMinute })
+    form.trigger(['timeStart', 'timeEnd'])
+  }
+
+  // Format form time to string for comparison
+  const currentTimeStartStr = selectedTimeStart
+    ? `${String(selectedTimeStart.hour).padStart(2, '0')}:${String(selectedTimeStart.minute).padStart(2, '0')}`
+    : ''
+  const currentTimeEndStr = selectedTimeEnd
+    ? `${String(selectedTimeEnd.hour).padStart(2, '0')}:${String(selectedTimeEnd.minute).padStart(2, '0')}`
+    : ''
+
   return (
     <Form {...form}>
       <form
@@ -122,74 +182,84 @@ export function AppointmentRescheduleForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className='flex flex-col gap-6'
       >
-        <FormField
-          control={form.control}
-          name='doctorId'
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel>Doctor</FormLabel>
-              <FormControl>
-                <Select
-                  value={field.value}
-                  onValueChange={(val) => {
-                    field.onChange(val)
-                    form.setValue('locationId', '') // Reset location when doctor changes
-                  }}
-                  disabled={isLoadingDoctors}
-                >
-                  <SelectTrigger data-invalid={fieldState.invalid}>
-                    <SelectValue
-                      placeholder={
-                        isLoadingDoctors ? 'Loading...' : 'Select a doctor'
-                      }
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {doctors?.map((doctor) => (
-                      <SelectItem key={doctor.id} value={doctor.id}>
-                        {doctor.fullName}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className='grid gap-6 md:grid-cols-2'>
+          <FormField
+            control={form.control}
+            name='doctorId'
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>Doctor</FormLabel>
+                <FormControl>
+                  <Select
+                    value={field.value}
+                    onValueChange={(val) => {
+                      field.onChange(val)
+                    }}
+                    disabled={isLoadingDoctors}
+                  >
+                    <SelectTrigger
+                      data-invalid={fieldState.invalid}
+                      className='w-full truncate'
+                    >
+                      <SelectValue
+                        placeholder={
+                          isLoadingDoctors ? 'Loading...' : 'Select a doctor'
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {doctors?.map((doctor) => (
+                        <SelectItem key={doctor.id} value={doctor.id}>
+                          {doctor.fullName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name='locationId'
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel>Location</FormLabel>
-              <FormControl>
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  disabled={!selectedDoctorId || isLoadingLocations}
-                >
-                  <SelectTrigger data-invalid={fieldState.invalid}>
-                    <SelectValue
-                      placeholder={
-                        isLoadingLocations ? 'Loading...' : 'Select a location'
-                      }
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {locations?.map((location) => (
-                      <SelectItem key={location.id} value={location.id}>
-                        {location.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name='locationId'
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>Location</FormLabel>
+                <FormControl>
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    disabled={!selectedDoctorId || isLoadingLocations}
+                  >
+                    <SelectTrigger
+                      data-invalid={fieldState.invalid}
+                      className='w-full truncate'
+                    >
+                      <SelectValue
+                        placeholder={
+                          isLoadingLocations
+                            ? 'Loading...'
+                            : 'Select a location'
+                        }
+                        className='truncate'
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {locations?.map((location) => (
+                        <SelectItem key={location.id} value={location.id}>
+                          {location.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -211,65 +281,54 @@ export function AppointmentRescheduleForm({
           )}
         />
 
-        <div className='flex items-start gap-2'>
-          <FormField
-            control={form.control}
-            name='timeStart'
-            render={({ field, fieldState }) => (
-              <FormItem className='flex-1'>
-                <FormLabel>Start Time</FormLabel>
-                <FormControl>
-                  <TimeInput
-                    value={field.value as TimeValue}
-                    onChange={field.onChange}
-                    hourCycle={24}
-                    data-invalid={fieldState.invalid}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='timeEnd'
-            render={({ field, fieldState }) => (
-              <FormItem className='flex-1'>
-                <FormLabel>End Time</FormLabel>
-                <FormControl>
-                  <TimeInput
-                    value={field.value as TimeValue}
-                    onChange={field.onChange}
-                    hourCycle={24}
-                    data-invalid={fieldState.invalid}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name='autoconfirm'
-          render={({ field }) => (
-            <FormItem className='flex flex-row items-start space-y-0 space-x-3'>
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className='space-y-1 leading-none'>
-                <FormLabel>
-                  Auto-confirm appointment after rescheduling
-                </FormLabel>
+        {/* Available Slots Section */}
+        <div className='space-y-2'>
+          <FormLabel>Available Slots</FormLabel>
+          <div className='rounded-md border p-4'>
+            {loadingSlots ? (
+              <div className='text-muted-foreground flex items-center justify-center py-4 text-sm'>
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                Loading available slots...
               </div>
-            </FormItem>
-          )}
-        />
+            ) : !selectedDate || !selectedDoctorId || !selectedLocationId ? (
+              <div className='text-muted-foreground py-4 text-center text-sm'>
+                Select doctor, location and date to view available slots
+              </div>
+            ) : slots.length === 0 ? (
+              <div className='text-muted-foreground py-4 text-center text-sm'>
+                No available slots for this date
+              </div>
+            ) : (
+              <div className='grid grid-cols-3 gap-2 sm:grid-cols-4'>
+                {slots.map((slot, index) => {
+                  const isSelected =
+                    currentTimeStartStr === slot.timeStart &&
+                    currentTimeEndStr === slot.timeEnd
+
+                  return (
+                    <Button
+                      key={`${slot.timeStart}-${index}`}
+                      type='button'
+                      variant={isSelected ? 'default' : 'outline'}
+                      className={cn(
+                        'flex h-auto flex-col items-center px-3 py-2 text-xs',
+                        isSelected && 'border-primary'
+                      )}
+                      onClick={() => handleSlotClick(slot)}
+                    >
+                      <span className='font-medium'>{slot.timeStart}</span>
+                      <span className='text-[10px] opacity-70'>
+                        to {slot.timeEnd}
+                      </span>
+                    </Button>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+          {/* Hidden fields to maintain validation logic if needed, or just rely on state */}
+          <FormMessage>{form.formState.errors.timeStart?.message}</FormMessage>
+        </div>
 
         <div className='flex items-center justify-end gap-2 pt-4'>
           <Button

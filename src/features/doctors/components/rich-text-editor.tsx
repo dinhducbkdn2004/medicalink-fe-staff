@@ -356,7 +356,13 @@ export function RichTextEditor({
       // Chỉ trigger onChange cho thay đổi từ user
       if (source === 'user' && onChange) {
         // Lấy HTML bằng getSemanticHTML() (recommended method)
-        const html = quill.getSemanticHTML()
+        let html = quill.getSemanticHTML()
+
+        // Replace &nbsp; with regular space to prevent UI issues
+        if (html) {
+          html = html.replace(/&nbsp;/g, ' ')
+        }
+
         lastValueRef.current = html
         onChange(html)
       }

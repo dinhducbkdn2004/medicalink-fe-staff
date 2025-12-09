@@ -39,8 +39,10 @@ export function RichTextEditor({
       })
 
       quillRef.current.on('text-change', () => {
-        const content = quillRef.current?.root.innerHTML
+        let content = quillRef.current?.root.innerHTML
         if (content && content !== value) {
+          // Replace &nbsp; with regular space to prevent UI issues
+          content = content.replace(/&nbsp;/g, ' ')
           onChange(content)
         }
       })

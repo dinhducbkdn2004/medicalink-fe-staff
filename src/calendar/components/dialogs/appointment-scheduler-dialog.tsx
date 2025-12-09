@@ -104,7 +104,7 @@ export function AppointmentSchedulerDialog({
         <DialogDescription className='sr-only'>
           Choose an available date from the calendar and then select a time slot
         </DialogDescription>
-        <div className='flex-1 overflow-y-auto p-4'>
+        <div className='flex-1 overflow-y-auto p-4 pt-10'>
           {/* Calendar Header */}
           <div className='mb-4 grid grid-cols-3 items-center gap-2'>
             <Button
