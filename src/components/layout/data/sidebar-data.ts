@@ -19,6 +19,8 @@ import {
   Star,
   MessageCircleQuestion,
   UserRound,
+  BookOpen,
+  FileText,
 } from 'lucide-react'
 import type { UserRole } from '@/api/types/auth.types'
 import type { NavGroupWithAccess } from '@/lib/sidebar-utils'
@@ -127,6 +129,21 @@ export const navGroups: NavGroupWithAccess[] = [
         title: 'Q&A',
         url: '/questions',
         icon: MessageCircleQuestion,
+      },
+    ],
+  },
+  {
+    title: 'Content Management',
+    items: [
+      {
+        title: 'Blog Categories',
+        url: '/blogs/categories',
+        icon: BookOpen,
+      },
+      {
+        title: 'All Blogs',
+        url: '/blogs/list',
+        icon: FileText,
       },
     ],
   },

@@ -72,7 +72,6 @@ export function WorkLocationsTable({
           setCurrentRow(workLocation)
           setOpen('edit')
         },
-        separator: true,
       },
       {
         label: 'Delete',
