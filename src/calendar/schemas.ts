@@ -38,7 +38,7 @@ export const createAppointmentSchema = z
       .max(255, 'Reason must be less than 255 characters'),
     notes: z.string().optional(),
     status: appointmentStatusSchema.optional(),
-    priceAmount: z.number().optional(),
+    priceAmount: z.coerce.number().optional(),
     currency: z.string().max(3).optional(),
   })
   .refine(
@@ -64,7 +64,7 @@ export const createAppointmentSchema = z
 export const updateAppointmentSchema = z.object({
   status: appointmentStatusSchema.optional(),
   notes: z.string().optional(),
-  priceAmount: z.number().optional(),
+  priceAmount: z.coerce.number().optional(),
   reason: z
     .string()
     .max(255, 'Reason must be less than 255 characters')
@@ -82,7 +82,6 @@ export const rescheduleAppointmentSchema = z
     serviceDate: z.date().optional(),
     timeStart: z.object({ hour: z.number(), minute: z.number() }).optional(),
     timeEnd: z.object({ hour: z.number(), minute: z.number() }).optional(),
-    autoconfirm: z.boolean().optional(),
   })
   .refine(
     (data) => {
