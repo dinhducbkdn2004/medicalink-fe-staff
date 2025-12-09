@@ -23,15 +23,9 @@ export const createAppointmentSchema = z
     patientId: z.string().min(1, 'Patient is required'),
     doctorId: z.string().min(1, 'Doctor is required'),
     locationId: z.string().min(1, 'Location is required'),
-    serviceDate: z.date({ required_error: 'Service date is required' }),
-    timeStart: z.object(
-      { hour: z.number(), minute: z.number() },
-      { required_error: 'Start time is required' }
-    ),
-    timeEnd: z.object(
-      { hour: z.number(), minute: z.number() },
-      { required_error: 'End time is required' }
-    ),
+    serviceDate: z.date(),
+    timeStart: z.object({ hour: z.number(), minute: z.number() }),
+    timeEnd: z.object({ hour: z.number(), minute: z.number() }),
     reason: z
       .string()
       .min(1, 'Reason is required')

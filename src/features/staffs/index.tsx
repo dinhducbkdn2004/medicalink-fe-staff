@@ -51,8 +51,7 @@ export function Staffs() {
   }
 
   // Debug: Log API params (remove in production)
-  // eslint-disable-next-line no-console
-  console.log('🔍 Staffs API Params:', queryParams)
+  // console.log('🔍 Staffs API Params:', queryParams)
 
   const { data, isLoading } = useStaffs(queryParams)
 

@@ -18,10 +18,7 @@ import { PasswordInput } from '@/components/password-input'
 
 const formSchema = z
   .object({
-    email: z.email({
-      error: (iss) =>
-        iss.input === '' ? 'Please enter your email' : undefined,
-    }),
+    email: z.string().email('Please enter a valid email'),
     password: z
       .string()
       .min(1, 'Please enter your password')
@@ -48,10 +45,10 @@ export function SignUpForm({
     },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  function onSubmit(_data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    // eslint-disable-next-line no-console
-    console.log(data)
+
+    // console.log(data)
 
     setTimeout(() => {
       setIsLoading(false)

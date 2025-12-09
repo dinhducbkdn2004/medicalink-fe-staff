@@ -63,8 +63,7 @@ export function DoctorProfileView() {
   // Log data for debugging (development only)
   useEffect(() => {
     if (completeData && import.meta.env.DEV) {
-      // eslint-disable-next-line no-console
-      console.log('Complete Doctor Data:', completeData)
+      // console.log('Complete Doctor Data:', completeData)
     }
   }, [completeData])
 
