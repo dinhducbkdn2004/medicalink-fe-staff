@@ -1,6 +1,7 @@
 import { format } from 'date-fns'
 import { useParams } from '@tanstack/react-router'
 import { Eye } from 'lucide-react'
+import { type Blog } from '@/api/services/blog.service'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { PageLoader } from '@/components/ui/page-loader'
 import { ConfigDrawer } from '@/components/config-drawer'
@@ -12,12 +13,13 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { useBlog } from '../data/use-blogs'
 
 export function BlogViewPage() {
-  // @ts-expect-error - params type mismatch
   const { blogId } = useParams({ strict: false })
-  const { data: blogResponse, isLoading } = useBlog(blogId)
+  const { data: blogResponse, isLoading } = useBlog(blogId as string)
 
-  // Handle both direct data or nested data structure from API
-  const blog = blogResponse?.data || blogResponse
+  const blog =
+    blogResponse && 'data' in blogResponse
+      ? (blogResponse as { data: Blog }).data
+      : (blogResponse as Blog | undefined)
 
   if (isLoading) {
     return <PageLoader />

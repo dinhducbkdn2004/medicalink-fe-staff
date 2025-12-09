@@ -29,7 +29,6 @@ export function BlogsPage() {
   const navigate = useNavigate()
   const search = route.useSearch()
 
-  // @ts-ignore
   const { data, isLoading } = useBlogs(search)
   const { mutate: deleteBlog } = useDeleteBlog()
 
@@ -74,7 +73,7 @@ export function BlogsPage() {
         </div>
 
         <BlogList
-          //@ts-ignore
+          //@ts-expect-error - Data type mismatch
           data={Array.isArray(data) ? data : data?.data || []}
           isLoading={isLoading}
           onDelete={setDeletingBlog}

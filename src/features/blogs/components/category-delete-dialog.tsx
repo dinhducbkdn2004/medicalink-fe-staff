@@ -1,4 +1,4 @@
-import { BlogCategory } from '@/api/services/blog.service'
+import type { BlogCategory } from '@/api/services/blog.service'
 import {
   AlertDialog,
   AlertDialogAction,

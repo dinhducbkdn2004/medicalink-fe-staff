@@ -55,6 +55,7 @@ import { Route as AuthenticatedBlogsNewRouteRouteImport } from './routes/_authen
 import { Route as AuthenticatedBlogsListRouteRouteImport } from './routes/_authenticated/blogs/list/route'
 import { Route as AuthenticatedBlogsCategoriesRouteRouteImport } from './routes/_authenticated/blogs/categories/route'
 import { Route as AuthenticatedBlogsBlogIdRouteRouteImport } from './routes/_authenticated/blogs/$blogId/route'
+import { Route as AuthenticatedBlogsBlogIdIndexRouteImport } from './routes/_authenticated/blogs/$blogId/index'
 import { Route as AuthenticatedDoctorsDoctorIdProfileRouteImport } from './routes/_authenticated/doctors/$doctorId.profile'
 import { Route as AuthenticatedBlogsBlogIdEditRouteRouteImport } from './routes/_authenticated/blogs/$blogId/edit/route'
 
@@ -317,6 +318,12 @@ const AuthenticatedBlogsBlogIdRouteRoute =
     path: '/blogs/$blogId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedBlogsBlogIdIndexRoute =
+  AuthenticatedBlogsBlogIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedBlogsBlogIdRouteRoute,
+  } as any)
 const AuthenticatedDoctorsDoctorIdProfileRoute =
   AuthenticatedDoctorsDoctorIdProfileRouteImport.update({
     id: '/doctors/$doctorId/profile',
@@ -378,6 +385,7 @@ export interface FileRoutesByFullPath {
   '/work-locations': typeof AuthenticatedWorkLocationsIndexRoute
   '/blogs/$blogId/edit': typeof AuthenticatedBlogsBlogIdEditRouteRoute
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
+  '/blogs/$blogId/': typeof AuthenticatedBlogsBlogIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
@@ -391,7 +399,6 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
-  '/blogs/$blogId': typeof AuthenticatedBlogsBlogIdRouteRouteWithChildren
   '/blogs/categories': typeof AuthenticatedBlogsCategoriesRouteRoute
   '/blogs/list': typeof AuthenticatedBlogsListRouteRoute
   '/blogs/new': typeof AuthenticatedBlogsNewRouteRoute
@@ -425,6 +432,7 @@ export interface FileRoutesByTo {
   '/work-locations': typeof AuthenticatedWorkLocationsIndexRoute
   '/blogs/$blogId/edit': typeof AuthenticatedBlogsBlogIdEditRouteRoute
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
+  '/blogs/$blogId': typeof AuthenticatedBlogsBlogIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -476,6 +484,7 @@ export interface FileRoutesById {
   '/_authenticated/work-locations/': typeof AuthenticatedWorkLocationsIndexRoute
   '/_authenticated/blogs/$blogId/edit': typeof AuthenticatedBlogsBlogIdEditRouteRoute
   '/_authenticated/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
+  '/_authenticated/blogs/$blogId/': typeof AuthenticatedBlogsBlogIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -527,6 +536,7 @@ export interface FileRouteTypes {
     | '/work-locations'
     | '/blogs/$blogId/edit'
     | '/doctors/$doctorId/profile'
+    | '/blogs/$blogId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/forgot-password'
@@ -540,7 +550,6 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
-    | '/blogs/$blogId'
     | '/blogs/categories'
     | '/blogs/list'
     | '/blogs/new'
@@ -574,6 +583,7 @@ export interface FileRouteTypes {
     | '/work-locations'
     | '/blogs/$blogId/edit'
     | '/doctors/$doctorId/profile'
+    | '/blogs/$blogId'
   id:
     | '__root__'
     | '/_authenticated'
@@ -624,6 +634,7 @@ export interface FileRouteTypes {
     | '/_authenticated/work-locations/'
     | '/_authenticated/blogs/$blogId/edit'
     | '/_authenticated/doctors/$doctorId/profile'
+    | '/_authenticated/blogs/$blogId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -964,6 +975,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBlogsBlogIdRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/blogs/$blogId/': {
+      id: '/_authenticated/blogs/$blogId/'
+      path: '/'
+      fullPath: '/blogs/$blogId/'
+      preLoaderRoute: typeof AuthenticatedBlogsBlogIdIndexRouteImport
+      parentRoute: typeof AuthenticatedBlogsBlogIdRouteRoute
+    }
     '/_authenticated/doctors/$doctorId/profile': {
       id: '/_authenticated/doctors/$doctorId/profile'
       path: '/doctors/$doctorId/profile'
@@ -1035,12 +1053,14 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 
 interface AuthenticatedBlogsBlogIdRouteRouteChildren {
   AuthenticatedBlogsBlogIdEditRouteRoute: typeof AuthenticatedBlogsBlogIdEditRouteRoute
+  AuthenticatedBlogsBlogIdIndexRoute: typeof AuthenticatedBlogsBlogIdIndexRoute
 }
 
 const AuthenticatedBlogsBlogIdRouteRouteChildren: AuthenticatedBlogsBlogIdRouteRouteChildren =
   {
     AuthenticatedBlogsBlogIdEditRouteRoute:
       AuthenticatedBlogsBlogIdEditRouteRoute,
+    AuthenticatedBlogsBlogIdIndexRoute: AuthenticatedBlogsBlogIdIndexRoute,
   }
 
 const AuthenticatedBlogsBlogIdRouteRouteWithChildren =

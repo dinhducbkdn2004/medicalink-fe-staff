@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { type Blog } from '@/api/services/blog.service'
+import type { Blog, BlogCategory } from '@/api/services/blog.service'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -44,6 +44,10 @@ export function BlogForm({ initialData }: BlogFormProps) {
   const { data: categoriesData } = useBlogCategories({ limit: 100 })
   const { mutate: createBlog, isPending: isCreating } = useCreateBlog()
   const { mutate: updateBlog, isPending: isUpdating } = useUpdateBlog()
+
+  const categories = Array.isArray(categoriesData)
+    ? (categoriesData as BlogCategory[])
+    : (categoriesData as { data: BlogCategory[] })?.data || []
 
   const isPending = isCreating || isUpdating
 
@@ -128,19 +132,11 @@ export function BlogForm({ initialData }: BlogFormProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {(categoriesData as any)?.data?.map((cat: any) => (
+                      {categories.map((cat) => (
                         <SelectItem key={cat.id} value={cat.id}>
                           {cat.name}
                         </SelectItem>
-                      )) ||
-                        (Array.isArray(categoriesData)
-                          ? categoriesData
-                          : []
-                        ).map((cat: any) => (
-                          <SelectItem key={cat.id} value={cat.id}>
-                            {cat.name}
-                          </SelectItem>
-                        ))}
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />

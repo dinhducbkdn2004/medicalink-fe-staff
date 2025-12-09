@@ -1,5 +1,4 @@
-import { format } from 'date-fns'
-import { Link } from '@tanstack/react-router'
+import { useNavigate, Link } from '@tanstack/react-router'
 import { Edit, Eye, MoreVertical, Trash } from 'lucide-react'
 import { type Blog } from '@/api/services/blog.service'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -9,8 +8,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -22,6 +19,8 @@ interface BlogListProps {
 }
 
 export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
+  const navigate = useNavigate()
+
   const getExcerpt = (html: string) => {
     if (!html) return ''
     return html.replace(/<[^>]+>/g, '').slice(0, 150) + '...'
@@ -83,7 +82,8 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
           {/* Image & Status Badge */}
           <div className='relative overflow-hidden'>
             <Link
-              to={`/blogs/${blog.id}`}
+              to='/blogs/$blogId'
+              params={{ blogId: blog.id }}
               className='block aspect-video w-full'
             >
               {blog.thumbnailUrl ? (
@@ -118,8 +118,8 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
 
           <div className='flex flex-1 flex-col p-4'>
             <div className='grid gap-2'>
-              <Link to={`/blogs/${blog.id}`}>
-                <h3 className='decoration-primary line-clamp-2 text-lg leading-tight font-semibold decoration-2 '>
+              <Link to='/blogs/$blogId' params={{ blogId: blog.id }}>
+                <h3 className='decoration-primary line-clamp-2 text-lg leading-tight font-semibold decoration-2'>
                   {blog.title}
                 </h3>
               </Link>
@@ -163,17 +163,27 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align='end'>
-                    <DropdownMenuItem asChild>
-                      <Link to={`/blogs/${blog.id}`}>
-                        <Eye className='mr-2 h-4 w-4' />
-                        View Details
-                      </Link>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        navigate({
+                          to: '/blogs/$blogId',
+                          params: { blogId: blog.id },
+                        })
+                      }
+                    >
+                      <Eye className='mr-2 h-4 w-4' />
+                      View Details
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to={`/blogs/${blog.id}/edit`}>
-                        <Edit className='mr-2 h-4 w-4' />
-                        Edit Post
-                      </Link>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        navigate({
+                          to: '/blogs/$blogId/edit',
+                          params: { blogId: blog.id },
+                        })
+                      }
+                    >
+                      <Edit className='mr-2 h-4 w-4' />
+                      Edit Post
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => onDelete(blog)}

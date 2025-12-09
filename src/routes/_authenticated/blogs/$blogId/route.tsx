@@ -1,6 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { BlogViewPage } from '@/features/blogs/pages/blog-view-page'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/blogs/$blogId')({
-  component: BlogViewPage,
+  component: () => <Outlet />,
 })

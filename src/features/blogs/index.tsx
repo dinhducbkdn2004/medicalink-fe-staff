@@ -50,7 +50,7 @@ export function BlogCategories() {
         </div>
 
         <CategoryList
-          //@ts-ignore - Handle both array and paginated response
+          //@ts-expect-error - Handle both array and paginated response
           data={Array.isArray(data) ? data : data?.data || []}
           isLoading={isLoading}
           onEdit={(category) => setEditingCategory(category)}

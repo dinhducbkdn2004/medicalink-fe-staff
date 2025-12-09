@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, getRouteApi } from '@tanstack/react-router'
 import { X } from 'lucide-react'
+import type { BlogCategory } from '@/api/services/blog.service'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -34,11 +35,11 @@ export function BlogFilters() {
   const navigate = useNavigate()
   const search = route.useSearch()
 
-  // @ts-ignore
+  // @ts-expect-error - Query data type mismatch
   const { data: categoriesData } = useBlogCategories({ limit: 100 })
   const categories = Array.isArray(categoriesData)
-    ? categoriesData
-    : (categoriesData as any)?.data || []
+    ? (categoriesData as BlogCategory[])
+    : (categoriesData as { data: BlogCategory[] })?.data || []
 
   const [searchTerm, setSearchTerm] = useState(search.search || '')
 
@@ -134,7 +135,7 @@ export function BlogFilters() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value='all'>All Categories</SelectItem>
-            {categories.map((cat: any) => (
+            {categories.map((cat) => (
               <SelectItem key={cat.id} value={cat.id}>
                 {cat.name}
               </SelectItem>

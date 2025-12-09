@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { BlogCategory } from '@/api/services/blog.service'
+import type { BlogCategory } from '@/api/services/blog.service'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { CategoryFormValues, categorySchema } from '../data/schema'
+import { type CategoryFormValues, categorySchema } from '../data/schema'
 import {
   useCreateBlogCategory,
   useUpdateBlogCategory,
