@@ -37,8 +37,7 @@ export function Specialties() {
   }
 
   // Debug: Log API params (remove in production)
-  // eslint-disable-next-line no-console
-  console.log('🔍 Specialties API Params:', queryParams)
+  // console.log('🔍 Specialties API Params:', queryParams)
 
   const { data, isLoading } = useSpecialties(queryParams)
 
@@ -78,4 +77,3 @@ export function Specialties() {
     </SpecialtiesProvider>
   )
 }
-

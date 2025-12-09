@@ -149,7 +149,6 @@ export interface RescheduleAppointmentRequest {
   serviceDate?: string // Date string (YYYY-MM-DD)
   timeStart?: string // Time string (HH:mm)
   timeEnd?: string // Time string (HH:mm)
-  autoconfirm?: boolean // Auto-confirm after reschedule
 }
 
 /**

@@ -23,22 +23,16 @@ export const createAppointmentSchema = z
     patientId: z.string().min(1, 'Patient is required'),
     doctorId: z.string().min(1, 'Doctor is required'),
     locationId: z.string().min(1, 'Location is required'),
-    serviceDate: z.date({ required_error: 'Service date is required' }),
-    timeStart: z.object(
-      { hour: z.number(), minute: z.number() },
-      { required_error: 'Start time is required' }
-    ),
-    timeEnd: z.object(
-      { hour: z.number(), minute: z.number() },
-      { required_error: 'End time is required' }
-    ),
+    serviceDate: z.date(),
+    timeStart: z.object({ hour: z.number(), minute: z.number() }),
+    timeEnd: z.object({ hour: z.number(), minute: z.number() }),
     reason: z
       .string()
       .min(1, 'Reason is required')
       .max(255, 'Reason must be less than 255 characters'),
     notes: z.string().optional(),
     status: appointmentStatusSchema.optional(),
-    priceAmount: z.number().optional(),
+    priceAmount: z.coerce.number().optional(),
     currency: z.string().max(3).optional(),
   })
   .refine(
@@ -64,7 +58,7 @@ export const createAppointmentSchema = z
 export const updateAppointmentSchema = z.object({
   status: appointmentStatusSchema.optional(),
   notes: z.string().optional(),
-  priceAmount: z.number().optional(),
+  priceAmount: z.coerce.number().optional(),
   reason: z
     .string()
     .max(255, 'Reason must be less than 255 characters')
@@ -82,7 +76,6 @@ export const rescheduleAppointmentSchema = z
     serviceDate: z.date().optional(),
     timeStart: z.object({ hour: z.number(), minute: z.number() }).optional(),
     timeEnd: z.object({ hour: z.number(), minute: z.number() }).optional(),
-    autoconfirm: z.boolean().optional(),
   })
   .refine(
     (data) => {

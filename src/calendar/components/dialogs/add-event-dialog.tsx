@@ -319,13 +319,17 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                         onValueChange={field.onChange}
                         disabled={isLoadingLocations}
                       >
-                        <SelectTrigger data-invalid={fieldState.invalid}>
+                        <SelectTrigger
+                          data-invalid={fieldState.invalid}
+                          className='w-full truncate'
+                        >
                           <SelectValue
                             placeholder={
                               isLoadingLocations
                                 ? 'Loading...'
                                 : 'Select a location'
                             }
+                            className='truncate'
                           />
                         </SelectTrigger>
                         <SelectContent>
@@ -357,9 +361,13 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                         onValueChange={field.onChange}
                         disabled={isLoadingSpecialties}
                       >
-                        <SelectTrigger data-invalid={fieldState.invalid}>
+                        <SelectTrigger
+                          data-invalid={fieldState.invalid}
+                          className='w-full truncate'
+                        >
                           <SelectValue
                             placeholder={getSpecialtyPlaceholder()}
+                            className='truncate'
                           />
                         </SelectTrigger>
                         <SelectContent>
@@ -397,8 +405,14 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                         isLoadingDoctors
                       }
                     >
-                      <SelectTrigger data-invalid={fieldState.invalid}>
-                        <SelectValue placeholder={getDoctorPlaceholder()} />
+                      <SelectTrigger
+                        data-invalid={fieldState.invalid}
+                        className='w-full truncate'
+                      >
+                        <SelectValue
+                          placeholder={getDoctorPlaceholder()}
+                          className='truncate'
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {doctorOptions.map((doctor) => (
@@ -521,13 +535,6 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                         placeholder='0.00'
                         data-invalid={fieldState.invalid}
                         {...field}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value
-                              ? Number.parseFloat(e.target.value)
-                              : undefined
-                          )
-                        }
                       />
                     </FormControl>
                     <FormMessage />
