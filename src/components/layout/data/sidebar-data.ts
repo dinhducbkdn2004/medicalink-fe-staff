@@ -136,14 +136,14 @@ export const navGroups: NavGroupWithAccess[] = [
     title: 'Content Management',
     items: [
       {
-        title: 'All Blogs',
-        url: '/blogs/list',
-        icon: FileText,
-      },
-      {
         title: 'Blog Categories',
         url: '/blogs/categories',
         icon: BookOpen,
+      },
+      {
+        title: 'All Blogs',
+        url: '/blogs/list',
+        icon: FileText,
       },
     ],
   },

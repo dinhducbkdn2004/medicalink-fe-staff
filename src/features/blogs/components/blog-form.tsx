@@ -3,8 +3,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { ArrowLeft } from 'lucide-react'
-import { Blog } from '@/api/services/blog.service'
+import { type Blog } from '@/api/services/blog.service'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -80,7 +79,8 @@ export function BlogForm({ initialData }: BlogFormProps) {
         }
       )
     } else {
-      createBlog(values, {
+      const { status, ...createData } = values
+      createBlog(createData, {
         onSuccess: () => navigate({ to: '/blogs/list' }),
       })
     }
@@ -89,13 +89,6 @@ export function BlogForm({ initialData }: BlogFormProps) {
   return (
     <div className='space-y-6'>
       <div className='flex items-center gap-4'>
-        <Button
-          variant='outline'
-          size='icon'
-          onClick={() => navigate({ to: '/blogs/list' })}
-        >
-          <ArrowLeft className='h-4 w-4' />
-        </Button>
         <h1 className='text-2xl font-bold tracking-tight'>
           {initialData ? 'Edit Blog Post' : 'Create Blog Post'}
         </h1>

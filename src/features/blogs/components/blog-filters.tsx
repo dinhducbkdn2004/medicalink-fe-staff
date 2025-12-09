@@ -1,21 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, getRouteApi } from '@tanstack/react-router'
-import { Check, ChevronsUpDown, X } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from '@/components/ui/command'
 import { Input } from '@/components/ui/input'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -118,7 +105,7 @@ export function BlogFilters() {
           placeholder='Search blogs...'
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className='h-8 w-full sm:w-[200px] lg:w-[300px]'
+          className='h-8 w-full sm:w-[200px] lg:w-[250px]'
         />
 
         <Select
@@ -142,7 +129,7 @@ export function BlogFilters() {
           value={search.categoryId || 'all'}
           onValueChange={handleCategoryChange}
         >
-          <SelectTrigger className='h-8 w-full sm:w-[150px]'>
+          <SelectTrigger className='h-8 w-full sm:w-[140px]'>
             <SelectValue placeholder='Category' />
           </SelectTrigger>
           <SelectContent>
@@ -163,7 +150,7 @@ export function BlogFilters() {
           }
           onValueChange={handleSortChange}
         >
-          <SelectTrigger className='h-8 w-full sm:w-[150px]'>
+          <SelectTrigger className='h-8 w-full sm:w-[100px]'>
             <SelectValue placeholder='Sort by' />
           </SelectTrigger>
           <SelectContent>

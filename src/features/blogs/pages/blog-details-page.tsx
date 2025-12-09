@@ -1,4 +1,5 @@
 import { useParams } from '@tanstack/react-router'
+import { PageLoader } from '@/components/ui/page-loader'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -9,12 +10,12 @@ import { BlogForm } from '../components/blog-form'
 import { useBlog } from '../data/use-blogs'
 
 export function BlogDetailsPage() {
-  // @ts-ignore
+  // @ts-expect-error - params type mismatch
   const { blogId } = useParams({ strict: false })
   const { data: blog, isLoading } = useBlog(blogId)
 
   if (blogId && isLoading) {
-    return <Main>Loading...</Main>
+    return <PageLoader />
   }
 
   return (
@@ -29,7 +30,7 @@ export function BlogDetailsPage() {
       </Header>
 
       <Main>
-        {/* @ts-ignore */}
+        {/* @ts-expect-error - blog type mismatch */}
         <BlogForm initialData={blog?.data || blog} />
       </Main>
     </>

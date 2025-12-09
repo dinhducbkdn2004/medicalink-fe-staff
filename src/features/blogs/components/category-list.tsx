@@ -1,8 +1,10 @@
 import { format } from 'date-fns'
-import { Link } from '@tanstack/react-router'
-import { Edit, FileText, MoreVertical, Trash } from 'lucide-react'
-import { BlogCategory } from '@/api/services/blog.service'
+import { useNavigate } from '@tanstack/react-router'
+import { type ColumnDef } from '@tanstack/react-table'
+import { Edit, FileText, MoreHorizontal, Trash } from 'lucide-react'
+import { type BlogCategory } from '@/api/services/blog.service'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,15 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Skeleton } from '@/components/ui/skeleton'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { DataTable } from '@/components/data-table/data-table'
 
 interface CategoryListProps {
   data: BlogCategory[]
@@ -34,122 +28,143 @@ export function CategoryList({
   onEdit,
   onDelete,
 }: CategoryListProps) {
-  if (isLoading) {
-    return (
-      <div className='rounded-md border'>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Slug</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Created At</TableHead>
-              <TableHead className='w-[70px]'></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                  <Skeleton className='h-4 w-[150px]' />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className='h-4 w-[100px]' />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className='h-4 w-[200px]' />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className='h-4 w-[100px]' />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className='h-8 w-8 rounded-full' />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    )
-  }
+  const navigate = useNavigate()
 
-  if (data.length === 0) {
-    return (
-      <div className='animate-in fade-in-50 flex h-64 flex-col items-center justify-center rounded-lg border border-dashed text-center'>
-        <div className='bg-muted mx-auto flex h-12 w-12 items-center justify-center rounded-full'>
-          <Edit className='text-muted-foreground h-6 w-6' />
-        </div>
-        <h3 className='mt-4 text-lg font-semibold'>No categories found</h3>
-        <p className='text-muted-foreground mt-2 mb-4 text-sm'>
-          Get started by creating a new category.
-        </p>
-      </div>
-    )
-  }
+  const columns: ColumnDef<BlogCategory>[] = [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label='Select all'
+          className='translate-y-[2px]'
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label='Select row'
+          className='translate-y-[2px]'
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: 'name',
+      header: 'Name',
+      cell: ({ row }) => (
+        <span className='font-medium'>{row.original.name}</span>
+      ),
+    },
+    {
+      accessorKey: 'slug',
+      header: 'Slug',
+      cell: ({ row }) => (
+        <span className='font-mono text-xs'>{row.original.slug}</span>
+      ),
+    },
+    {
+      accessorKey: 'description',
+      header: 'Description',
+      cell: ({ row }) => (
+        <span className='text-muted-foreground line-clamp-1 max-w-[300px]'>
+          {row.original.description || '-'}
+        </span>
+      ),
+    },
+    {
+      accessorKey: 'createdAt',
+      header: 'Created At',
+      cell: ({ row }) =>
+        format(new Date(row.original.createdAt), 'MMM d, yyyy'),
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => {
+        const category = row.original
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' className='h-8 w-8 p-0'>
+                <span className='sr-only'>Open menu</span>
+                <MoreHorizontal className='h-4 w-4' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate({
+                    to: '/blogs/list',
+                    search: { categoryId: category.id },
+                  })
+                }
+              >
+                <FileText className='mr-2 h-4 w-4' />
+                View Blogs
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => onEdit(category)}>
+                <Edit className='mr-2 h-4 w-4' />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => onDelete(category)}
+                className='text-destructive focus:text-destructive'
+              >
+                <Trash className='mr-2 h-4 w-4' />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      },
+      size: 50,
+      enableSorting: false,
+    },
+  ]
+
+  const getRowActions = (row: { original: BlogCategory }) => [
+    {
+      label: 'View Blogs',
+      icon: FileText,
+      onClick: () =>
+        navigate({
+          to: '/blogs/list',
+          search: { categoryId: row.original.id },
+        }),
+    },
+    {
+      label: 'Edit',
+      icon: Edit,
+      onClick: () => onEdit(row.original),
+    },
+    {
+      label: 'Delete',
+      icon: Trash,
+      onClick: () => onDelete(row.original),
+      variant: 'destructive',
+    },
+  ]
 
   return (
-    <div className='rounded-md border'>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Slug</TableHead>
-            <TableHead className='hidden md:table-cell'>Description</TableHead>
-            <TableHead>Created At</TableHead>
-            <TableHead className='w-[70px]'></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((category) => (
-            <TableRow key={category.id}>
-              <TableCell className='font-medium'>{category.name}</TableCell>
-              <TableCell className='font-mono text-xs'>
-                {category.slug}
-              </TableCell>
-              <TableCell className='hidden max-w-[300px] truncate md:table-cell'>
-                {category.description || '-'}
-              </TableCell>
-              <TableCell>
-                {format(new Date(category.createdAt), 'MMM d, yyyy')}
-              </TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant='ghost' className='h-8 w-8 p-0'>
-                      <span className='sr-only'>Open menu</span>
-                      <MoreVertical className='h-4 w-4' />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align='end'>
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        to='/blogs/list'
-                        search={{ categoryId: category.id }}
-                      >
-                        <FileText className='mr-2 h-4 w-4' />
-                        View Blogs
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => onEdit(category)}>
-                      <Edit className='mr-2 h-4 w-4' />
-                      Edit
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => onDelete(category)}
-                      className='text-destructive focus:text-destructive'
-                    >
-                      <Trash className='mr-2 h-4 w-4' />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <DataTable
+      data={data}
+      columns={columns}
+      isLoading={isLoading}
+      search={{}}
+      navigate={navigate}
+      entityName='category'
+      searchPlaceholder='Search categories...'
+      hideToolbar={true}
+      // @ts-expect-error - getRowActions is not strictly typed in DataTableProps yet
+      getRowActions={getRowActions}
+    />
   )
 }
