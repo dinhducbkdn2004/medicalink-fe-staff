@@ -1,7 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { type Row } from '@tanstack/react-table'
-import { Eye, Edit, Trash2, Power } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import { type Row } from '@tanstack/react-table'
+import { Eye, Edit, Trash2, Power, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -74,6 +74,20 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
+            navigate({
+              to: '/doctors/$doctorId/reviews',
+              params: { doctorId: doctor.profileId || doctor.id },
+            } as never)
+          }}
+        >
+          View Reviews
+          <DropdownMenuShortcut>
+            <Star size={16} />
+          </DropdownMenuShortcut>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => {
             setCurrentRow(doctor)
             setOpen('delete')
           }}
@@ -88,4 +102,3 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     </DropdownMenu>
   )
 }
-

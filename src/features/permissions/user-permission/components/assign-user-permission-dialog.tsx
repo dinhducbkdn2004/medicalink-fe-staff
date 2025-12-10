@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/form'
 import { Switch } from '@/components/ui/switch'
 import { ResourceActionSelector } from '../../components'
-import { useAssignUserPermission } from '../../hooks'
+import { useAssignUserPermission, usePermissions } from '../../hooks'
 
 const assignPermissionSchema = z.object({
   effect: z.enum(['ALLOW', 'DENY']).default('ALLOW'),
@@ -48,6 +48,7 @@ export function AssignUserPermissionDialog({
   const [selectedResource, setSelectedResource] = useState<Resource>()
   const [selectedActions, setSelectedActions] = useState<Action[]>([])
 
+  const { data: allPermissions } = usePermissions()
   const assignMutation = useAssignUserPermission()
 
   const form = useForm<AssignPermissionFormValues>({
@@ -58,19 +59,31 @@ export function AssignUserPermissionDialog({
   })
 
   const onSubmit = async (data: AssignPermissionFormValues) => {
-    if (!userId || !selectedResource || selectedActions.length === 0) {
+    if (
+      !userId ||
+      !selectedResource ||
+      selectedActions.length === 0 ||
+      !allPermissions
+    ) {
       return
     }
 
     try {
       // Assign each selected action
       for (const action of selectedActions) {
-        // Build permissionId in format: perm_{resource}_{action}
-        const permissionId = `perm_${selectedResource}_${action}`
-        
+        // Find matching permission from system permissions
+        const permission = allPermissions.find(
+          (p) => p.resource === selectedResource && p.action === action
+        )
+
+        if (!permission) {
+          console.warn(`Permission not found for ${selectedResource}:${action}`)
+          continue
+        }
+
         await assignMutation.mutateAsync({
           userId,
-          permissionId,
+          permissionId: permission.id,
           effect: data.effect,
         })
       }

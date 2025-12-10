@@ -1,83 +1,52 @@
+import { useRevenueByDoctorStats } from '@/hooks/use-stats'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export function RecentSales() {
+  const { data: topDoctors } = useRevenueByDoctorStats()
+
   return (
-    <div className='space-y-8'>
-      <div className='flex items-center gap-4'>
-        <Avatar className='h-9 w-9'>
-          <AvatarImage src='/avatars/01.png' alt='Avatar' />
-          <AvatarFallback>OM</AvatarFallback>
-        </Avatar>
-        <div className='flex flex-1 flex-wrap items-center justify-between'>
-          <div className='space-y-1'>
-            <p className='text-sm leading-none font-medium'>Olivia Martin</p>
-            <p className='text-muted-foreground text-sm'>
-              olivia.martin@email.com
-            </p>
+    <div className='space-y-6'>
+      {topDoctors?.map((item) => (
+        <div key={item.doctorId} className='flex items-center gap-4'>
+          <Avatar className='h-9 w-9'>
+            <AvatarImage
+              src={item.doctor.avatarUrl}
+              alt={item.doctor.fullName}
+            />
+            <AvatarFallback>{item.doctor.fullName.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div className='flex flex-1 flex-wrap items-center justify-between'>
+            <div className='space-y-1'>
+              <p className='text-sm leading-none font-medium'>
+                {item.doctor.fullName}
+              </p>
+              <p className='text-muted-foreground text-sm'>
+                {item.doctor.isActive ? 'Active' : 'Inactive'}
+              </p>
+            </div>
+            <div className='font-medium'>
+              {item.total.VND
+                ? new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  }).format(item.total.VND)
+                : item.total['$']
+                  ? new Intl.NumberFormat('en-US', {
+                      style: 'currency',
+                      currency: 'USD',
+                    }).format(item.total['$'])
+                  : '0 ₫'}
+            </div>
           </div>
-          <div className='font-medium'>+$1,999.00</div>
         </div>
-      </div>
-      <div className='flex items-center gap-4'>
-        <Avatar className='flex h-9 w-9 items-center justify-center space-y-0 border'>
-          <AvatarImage src='/avatars/02.png' alt='Avatar' />
-          <AvatarFallback>JL</AvatarFallback>
-        </Avatar>
-        <div className='flex flex-1 flex-wrap items-center justify-between'>
-          <div className='space-y-1'>
-            <p className='text-sm leading-none font-medium'>Jackson Lee</p>
-            <p className='text-muted-foreground text-sm'>
-              jackson.lee@email.com
-            </p>
-          </div>
-          <div className='font-medium'>+$39.00</div>
+      ))}
+      {(!topDoctors || topDoctors.length === 0) && (
+        <div className='flex h-full min-h-[100px] flex-col items-center justify-center text-center'>
+          <p className='text-muted-foreground text-sm'>
+            No doctor revenue data available for this month.
+          </p>
         </div>
-      </div>
-      <div className='flex items-center gap-4'>
-        <Avatar className='h-9 w-9'>
-          <AvatarImage src='/avatars/03.png' alt='Avatar' />
-          <AvatarFallback>IN</AvatarFallback>
-        </Avatar>
-        <div className='flex flex-1 flex-wrap items-center justify-between'>
-          <div className='space-y-1'>
-            <p className='text-sm leading-none font-medium'>Isabella Nguyen</p>
-            <p className='text-muted-foreground text-sm'>
-              isabella.nguyen@email.com
-            </p>
-          </div>
-          <div className='font-medium'>+$299.00</div>
-        </div>
-      </div>
-
-      <div className='flex items-center gap-4'>
-        <Avatar className='h-9 w-9'>
-          <AvatarImage src='/avatars/04.png' alt='Avatar' />
-          <AvatarFallback>WK</AvatarFallback>
-        </Avatar>
-        <div className='flex flex-1 flex-wrap items-center justify-between'>
-          <div className='space-y-1'>
-            <p className='text-sm leading-none font-medium'>William Kim</p>
-            <p className='text-muted-foreground text-sm'>will@email.com</p>
-          </div>
-          <div className='font-medium'>+$99.00</div>
-        </div>
-      </div>
-
-      <div className='flex items-center gap-4'>
-        <Avatar className='h-9 w-9'>
-          <AvatarImage src='/avatars/05.png' alt='Avatar' />
-          <AvatarFallback>SD</AvatarFallback>
-        </Avatar>
-        <div className='flex flex-1 flex-wrap items-center justify-between'>
-          <div className='space-y-1'>
-            <p className='text-sm leading-none font-medium'>Sofia Davis</p>
-            <p className='text-muted-foreground text-sm'>
-              sofia.davis@email.com
-            </p>
-          </div>
-          <div className='font-medium'>+$39.00</div>
-        </div>
-      </div>
+      )}
     </div>
   )
 }

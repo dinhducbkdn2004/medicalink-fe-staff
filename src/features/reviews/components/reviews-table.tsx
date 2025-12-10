@@ -2,28 +2,29 @@
  * Reviews Table
  * Data table component for displaying reviews
  */
-import type { UseNavigateResult } from '@tanstack/react-router'
-import { Eye, Trash2, CheckCircle } from 'lucide-react'
+import { Eye, Trash2 } from 'lucide-react'
+import type { Review } from '@/api/services/review.service'
+import { useAuthStore } from '@/stores/auth-store'
+// ============================================================================
+// Types
+// ============================================================================
+
+import { type NavigateFn } from '@/hooks/use-table-url-state'
 import {
   DataTable,
   type DataTableAction,
   type ColumnFilterConfig,
 } from '@/components/data-table'
-import { statusOptions, ratingOptions } from '../data/data'
-import type { Review } from '../data/schema'
+import { ratingOptions } from '../data/data'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { columns } from './reviews-columns'
 import { useReviews } from './use-reviews'
-
-// ============================================================================
-// Types
-// ============================================================================
 
 interface ReviewsTableProps {
   data: Review[]
   pageCount?: number
   search: Record<string, unknown>
-  navigate: UseNavigateResult<string>
+  navigate: NavigateFn
   isLoading?: boolean
 }
 
@@ -33,15 +34,12 @@ interface ReviewsTableProps {
 
 const columnFilterConfigs: ColumnFilterConfig[] = [
   {
-    columnId: 'status',
-    queryParam: 'status',
-    serialize: (value: string[]) => (value.length > 0 ? value[0] : undefined),
-    deserialize: (value: unknown) => (value ? [value] : []),
-  },
-  {
     columnId: 'rating',
-    queryParam: 'rating',
-    serialize: (value: string[]) => (value.length > 0 ? value[0] : undefined),
+    searchKey: 'rating',
+    serialize: (value: unknown) => {
+      const arr = value as string[]
+      return arr.length > 0 ? arr[0] : undefined
+    },
     deserialize: (value: unknown) => (value ? [value] : []),
   },
 ]
@@ -58,12 +56,14 @@ export function ReviewsTable({
   isLoading = false,
 }: Readonly<ReviewsTableProps>) {
   const { setOpen, setCurrentReview } = useReviews()
+  const { user } = useAuthStore()
+  const isAdmin = user?.role === 'SUPER_ADMIN' || user?.role === 'ADMIN'
 
   // Define row actions (context menu)
   const getRowActions = (row: { original: Review }): DataTableAction[] => {
     const review = row.original
 
-    return [
+    const actions: DataTableAction[] = [
       {
         label: 'View Details',
         icon: Eye,
@@ -72,16 +72,11 @@ export function ReviewsTable({
           setOpen('view')
         },
       },
-      {
-        label: 'Approve',
-        icon: CheckCircle,
-        onClick: () => {
-          setCurrentReview(review)
-          setOpen('approve')
-        },
-        disabled: review.status === 'APPROVED',
-      },
-      {
+    ]
+
+    // Only Admins can delete
+    if (isAdmin) {
+      actions.push({
         label: 'Delete',
         icon: Trash2,
         onClick: () => {
@@ -90,8 +85,10 @@ export function ReviewsTable({
         },
         variant: 'destructive',
         separator: true,
-      },
-    ]
+      })
+    }
+
+    return actions
   }
 
   return (
@@ -109,15 +106,6 @@ export function ReviewsTable({
       searchPlaceholder='Search by doctor or patient...'
       // Using global filter instead of column-specific search
       filters={[
-        {
-          columnId: 'status',
-          title: 'Status',
-          options: statusOptions.map((status) => ({
-            label: status.label,
-            value: status.value,
-            icon: status.icon,
-          })),
-        },
         {
           columnId: 'rating',
           title: 'Rating',

@@ -40,7 +40,8 @@ export function UserPermission() {
               User Permissions
             </h2>
             <p className='text-muted-foreground'>
-              Assign direct permissions to individual users. Use groups for common permission sets.
+              Assign direct permissions to individual users. Use groups for
+              common permission sets.
             </p>
           </div>
           <RoleGate roles={['SUPER_ADMIN']}>
@@ -58,7 +59,7 @@ export function UserPermission() {
         </div>
 
         {/* Main Content: Two Column Layout */}
-        <div className='grid gap-4 lg:grid-cols-[380px_1fr]'>
+        <div className='grid grid-cols-1 gap-4 lg:grid-cols-[380px_1fr]'>
           {/* Left: User List */}
           <UserList
             selectedUserId={selectedUserId}

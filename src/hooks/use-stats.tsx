@@ -9,7 +9,6 @@ import { statsService } from '@/api/services/stats.service'
 export const statsKeys = {
   all: ['stats'] as const,
   staffs: () => [...statsKeys.all, 'staffs'] as const,
-  doctors: () => [...statsKeys.all, 'doctors'] as const,
   revenue: () => [...statsKeys.all, 'revenue'] as const,
   revenueByDoctor: (limit: number) =>
     [...statsKeys.all, 'revenue-by-doctor', limit] as const,
@@ -29,19 +28,6 @@ export function useStaffStats(enabled = true) {
   return useQuery({
     queryKey: statsKeys.staffs(),
     queryFn: statsService.getStaffStats,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 1,
-    enabled,
-  })
-}
-
-/**
- * Hook to fetch doctor statistics
- */
-export function useDoctorStats(enabled = true) {
-  return useQuery({
-    queryKey: statsKeys.doctors(),
-    queryFn: statsService.getDoctorStats,
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 1,
     enabled,

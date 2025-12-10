@@ -24,7 +24,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { useCreatePermissionGroup, useUpdatePermissionGroup } from '../../hooks'
 import { useGroupManager } from './use-group-manager'
@@ -38,7 +37,6 @@ const groupFormSchema = z.object({
     .string()
     .max(500, 'Description must not exceed 500 characters')
     .optional(),
-  isActive: z.boolean().default(true),
   tenantId: z.string().optional(),
 })
 
@@ -64,7 +62,6 @@ export function GroupFormDialog({
     defaultValues: {
       name: currentGroup?.name || '',
       description: currentGroup?.description || '',
-      isActive: currentGroup?.isActive ?? true,
       tenantId: currentGroup?.tenantId || 'global',
     },
   })
@@ -77,7 +74,6 @@ export function GroupFormDialog({
           data: {
             name: data.name,
             description: data.description,
-            isActive: data.isActive,
           },
         })
       } else {
@@ -120,7 +116,11 @@ export function GroupFormDialog({
                 <FormItem>
                   <FormLabel>Group Name</FormLabel>
                   <FormControl>
-                    <Input placeholder='e.g., Admins, Doctors' {...field} />
+                    <Input
+                      placeholder='e.g., Admins, Doctors'
+                      {...field}
+                      disabled={currentGroup?.name.toLowerCase() === 'admin'}
+                    />
                   </FormControl>
                   <FormDescription>
                     A unique name for this permission group.
@@ -147,27 +147,6 @@ export function GroupFormDialog({
                     Optional description of this permission group.
                   </FormDescription>
                   <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='isActive'
-              render={({ field }) => (
-                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                  <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>Active Status</FormLabel>
-                    <FormDescription>
-                      Inactive groups will not grant any permissions to members.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
                 </FormItem>
               )}
             />

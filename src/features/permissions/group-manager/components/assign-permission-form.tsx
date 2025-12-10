@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/form'
 import { Switch } from '@/components/ui/switch'
 import { ResourceActionSelector } from '../../components'
-import { useAssignGroupPermission } from '../../hooks'
+import { useAssignGroupPermission, usePermissions } from '../../hooks'
 
 const assignPermissionSchema = z.object({
   effect: z.enum(['ALLOW', 'DENY']).default('ALLOW'),
@@ -40,6 +40,7 @@ export function AssignPermissionForm({
   const [selectedResource, setSelectedResource] = useState<Resource>()
   const [selectedActions, setSelectedActions] = useState<Action[]>([])
 
+  const { data: allPermissions } = usePermissions()
   const assignMutation = useAssignGroupPermission()
 
   const form = useForm<AssignPermissionFormValues>({
@@ -50,20 +51,27 @@ export function AssignPermissionForm({
   })
 
   const onSubmit = async (data: AssignPermissionFormValues) => {
-    if (!selectedResource || selectedActions.length === 0) {
+    if (!selectedResource || selectedActions.length === 0 || !allPermissions) {
       return
     }
 
     try {
       // Assign each selected action
       for (const action of selectedActions) {
-        // Build permissionId in format: perm_{resource}_{action}
-        const permissionId = `perm_${selectedResource}_${action}`
-        
+        // Find matching permission from system permissions
+        const permission = allPermissions.find(
+          (p) => p.resource === selectedResource && p.action === action
+        )
+
+        if (!permission) {
+          console.warn(`Permission not found for ${selectedResource}:${action}`)
+          continue
+        }
+
         await assignMutation.mutateAsync({
           groupId,
           data: {
-            permissionId,
+            permissionId: permission.id,
             effect: data.effect,
             tenantId,
           },
@@ -102,7 +110,8 @@ export function AssignPermissionForm({
               <div className='space-y-0.5'>
                 <FormLabel className='text-base'>Permission Effect</FormLabel>
                 <FormDescription>
-                  ALLOW grants access. Turn off to DENY these permissions explicitly.
+                  ALLOW grants access. Turn off to DENY these permissions
+                  explicitly.
                 </FormDescription>
               </div>
               <FormControl>

@@ -59,15 +59,15 @@ export function ReviewDeleteDialog() {
 
         <div className='rounded-lg border p-4'>
           <div className='mb-2 flex items-center justify-between'>
-            <span className='font-medium'>{currentReview.patientName}</span>
+            <span className='font-medium'>{currentReview.authorName}</span>
             <span className='text-muted-foreground text-sm'>
               Rating: {currentReview.rating}/5 ⭐
             </span>
           </div>
           <div className='text-muted-foreground mb-2 text-sm'>
-            For: {currentReview.doctor.fullName}
+            For: {currentReview.doctor?.fullName ?? 'Unknown Doctor'}
           </div>
-          <p className='line-clamp-2 text-sm'>{currentReview.comment}</p>
+          <p className='line-clamp-2 text-sm'>{currentReview.body}</p>
         </div>
 
         <DialogFooter>

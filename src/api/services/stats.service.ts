@@ -5,7 +5,6 @@
 import { apiClient } from '../core/client'
 import type {
   StaffStats,
-  DoctorStats,
   RevenueStats,
   RevenueByDoctorStats,
   PatientStats,
@@ -24,20 +23,11 @@ export async function getStaffStats(): Promise<StaffStats> {
 }
 
 /**
- * GET /api/doctors/stats
- * Get doctor statistics
- */
-export async function getDoctorStats(): Promise<DoctorStats> {
-  const response = await apiClient.get<DoctorStats>('/doctors/stats')
-  return response.data
-}
-
-/**
  * GET /api/stats/revenue
  * Get revenue statistics by month
  */
-export async function getRevenueStats(): Promise<RevenueStats> {
-  const response = await apiClient.get<RevenueStats>('/stats/revenue')
+export async function getRevenueStats(): Promise<RevenueStats[]> {
+  const response = await apiClient.get<RevenueStats[]>('/stats/revenue')
   return response.data
 }
 
@@ -48,8 +38,8 @@ export async function getRevenueStats(): Promise<RevenueStats> {
  */
 export async function getRevenueByDoctorStats(
   limit: number = 5
-): Promise<RevenueByDoctorStats> {
-  const response = await apiClient.get<RevenueByDoctorStats>(
+): Promise<RevenueByDoctorStats[]> {
+  const response = await apiClient.get<RevenueByDoctorStats[]>(
     '/stats/revenue-by-doctor',
     {
       params: { limit },
@@ -99,7 +89,6 @@ export async function getQAOverviewStats(): Promise<QAOverviewStats> {
 // Export all stats services as a single object for convenience
 export const statsService = {
   getStaffStats,
-  getDoctorStats,
   getRevenueStats,
   getRevenueByDoctorStats,
   getPatientStats,
