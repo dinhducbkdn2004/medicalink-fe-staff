@@ -1,16 +1,39 @@
+import { format } from 'date-fns'
 import { useNavigate, Link } from '@tanstack/react-router'
 import { Edit, Eye, MoreVertical, Trash } from 'lucide-react'
-import { type Blog } from '@/api/services/blog.service'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
+import { type Blog, type BlogStatus } from '@/api/services/blog.service'
+import { useAuthStore } from '@/stores/auth-store'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { useUpdateBlog } from '../data/use-blogs'
 
 interface BlogListProps {
   data: Blog[]
@@ -20,40 +43,57 @@ interface BlogListProps {
 
 export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
   const navigate = useNavigate()
+  const { user } = useAuthStore()
+  const { mutate: updateBlog } = useUpdateBlog()
+  const isDoctor = user?.role === 'DOCTOR'
 
-  const getExcerpt = (html: string) => {
-    if (!html) return ''
-    return html.replace(/<[^>]+>/g, '').slice(0, 150) + '...'
-  }
-
-  const getReadTime = (html: string) => {
-    if (!html) return 0
-    const text = html.replace(/<[^>]+>/g, '')
-    const wordsPerMinute = 200
-    const words = text.trim().split(/\s+/).length
-    return Math.ceil(words / wordsPerMinute)
+  const handleStatusChange = (blogId: string, status: string) => {
+    updateBlog({ id: blogId, data: { status: status as BlogStatus } })
   }
 
   if (isLoading) {
     return (
-      <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div
-            key={i}
-            className='bg-card text-card-foreground overflow-hidden rounded-lg border shadow-sm'
-          >
-            <Skeleton className='h-48 w-full' />
-            <div className='grid gap-2 p-4'>
-              <Skeleton className='h-6 w-3/4' />
-              <Skeleton className='h-4 w-full' />
-              <Skeleton className='h-4 w-2/3' />
-              <div className='flex items-center gap-2 pt-2'>
-                <Skeleton className='h-6 w-6 rounded-full' />
-                <Skeleton className='h-4 w-24' />
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className='rounded-md border'>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className='w-[400px]'>Blog Details</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Author</TableHead>
+              <TableHead>Created At</TableHead>
+              <TableHead className='sticky right-0 w-[50px]'></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <TableRow key={i}>
+                <TableCell>
+                  <div className='flex items-center gap-3'>
+                    <Skeleton className='h-16 w-24 rounded-md' />
+                    <div className='flex flex-col gap-2'>
+                      <Skeleton className='h-4 w-48' />
+                      <Skeleton className='h-3 w-32' />
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-5 w-16' />
+                </TableCell>
+                <TableCell>
+                  <div className='flex items-center gap-2'>
+                    <Skeleton className='h-4 w-24' />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-4 w-24' />
+                </TableCell>
+                <TableCell className='sticky right-0'>
+                  <Skeleton className='h-8 w-8' />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     )
   }
@@ -73,108 +113,141 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
   }
 
   return (
-    <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-      {data.map((blog) => (
-        <div
-          key={blog.id}
-          className='bg-card text-card-foreground group flex flex-col overflow-hidden rounded-lg border shadow-sm transition-all hover:shadow-md'
-        >
-          {/* Image & Status Badge */}
-          <div className='relative overflow-hidden'>
-            <Link
-              to='/blogs/$blogId'
-              params={{ blogId: blog.id }}
-              className='block aspect-video w-full'
-            >
-              {blog.thumbnailUrl ? (
-                <img
-                  src={blog.thumbnailUrl}
-                  alt={blog.title}
-                  width='400'
-                  height='225'
-                  className='h-full w-full object-cover transition-transform duration-500 group-hover:scale-105'
-                />
-              ) : (
-                <div className='bg-muted flex h-full w-full items-center justify-center text-gray-400'>
-                  <span className='text-4xl font-bold opacity-20'>Blog</span>
-                </div>
-              )}
-            </Link>
-            <div className='absolute top-2 right-2'>
-              <Badge
-                variant={
-                  blog.status === 'PUBLISHED'
-                    ? 'default'
-                    : blog.status === 'ARCHIVED'
-                      ? 'destructive'
-                      : 'secondary'
-                }
-                className='shadow-sm'
-              >
-                {blog.status}
-              </Badge>
-            </div>
-          </div>
-
-          <div className='flex flex-1 flex-col p-4'>
-            <div className='grid gap-2'>
-              <Link to='/blogs/$blogId' params={{ blogId: blog.id }}>
-                <h3 className='decoration-primary line-clamp-2 text-lg leading-tight font-semibold decoration-2'>
-                  {blog.title}
-                </h3>
-              </Link>
-              <p className='text-muted-foreground line-clamp-3 text-sm'>
-                {getExcerpt(blog.content)}
-              </p>
-            </div>
-
-            <div className='mt-auto'>
-              <div className='text-muted-foreground flex items-center justify-between text-sm'>
-                <div className='flex items-center gap-2'>
-                  <span
-                    data-slot='avatar'
-                    className='relative flex h-6 w-6 shrink-0 overflow-hidden rounded-full'
-                  >
-                    <Avatar className='h-6 w-6'>
-                      <AvatarImage
-                        src={`https://ui-avatars.com/api/?name=${blog.authorName || 'Admin'}`}
-                      />
-                      <AvatarFallback>
-                        {(blog.authorName || 'AD').substring(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </span>
-                  <span className='max-w-[100px] truncate'>
-                    {blog.authorName || 'Admin'}
-                  </span>
-                  <span>•</span>
-                  <span>{getReadTime(blog.content)} min read</span>
-                </div>
-
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant='ghost'
-                      size='sm'
-                      className='text-muted-foreground hover:text-foreground h-8 w-8 p-0'
-                    >
-                      <span className='sr-only'>Open menu</span>
-                      <MoreVertical className='h-4 w-4' />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align='end'>
-                    <DropdownMenuItem
-                      onClick={() =>
-                        navigate({
-                          to: '/blogs/$blogId',
-                          params: { blogId: blog.id },
-                        })
+    <div className='rounded-md border'>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className='w-[400px]'>Blog Details</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Author</TableHead>
+            <TableHead>Created At</TableHead>
+            <TableHead className='sticky right-0 w-[50px]'></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.map((blog) => (
+            <ContextMenu key={blog.id}>
+              <ContextMenuTrigger asChild>
+                <TableRow>
+                  <TableCell className='max-w-[300px]'>
+                    <div className='flex items-start gap-3'>
+                      <div className='flex flex-col gap-1 overflow-hidden'>
+                        <Link
+                          to='/blogs/$blogId'
+                          params={{ blogId: blog.id }}
+                          className='decoration-primary block truncate font-medium'
+                          title={blog.title}
+                        >
+                          {blog.title}
+                        </Link>
+                        <span className='text-muted-foreground truncate text-xs'>
+                          {blog.category?.name || 'Uncategorized'}
+                        </span>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Select
+                      defaultValue={blog.status}
+                      onValueChange={(value) =>
+                        handleStatusChange(blog.id, value)
                       }
+                      disabled={isDoctor && blog.authorId !== user?.id}
                     >
-                      <Eye className='mr-2 h-4 w-4' />
-                      View Details
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
+                      <SelectTrigger
+                        className={cn(
+                          'w-[120px] text-xs font-medium',
+                          blog.status === 'PUBLISHED' &&
+                            'bg-green-100 text-green-800 hover:bg-green-100/80 dark:bg-green-900/30 dark:text-green-400',
+                          blog.status === 'ARCHIVED' &&
+                            'bg-red-100 text-red-800 hover:bg-red-100/80 dark:bg-red-900/30 dark:text-red-400',
+                          blog.status === 'DRAFT' &&
+                            'bg-gray-100 text-gray-800 hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-300'
+                        )}
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value='DRAFT'>DRAFT</SelectItem>
+                        <SelectItem value='PUBLISHED'>PUBLISHED</SelectItem>
+                        <SelectItem value='ARCHIVED'>ARCHIVED</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell>
+                    <span className='text-sm font-medium'>
+                      {blog.authorName || 'Admin'}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <div className='text-sm text-nowrap'>
+                      {format(new Date(blog.createdAt), 'MMM dd, yyyy')}
+                    </div>
+                  </TableCell>
+                  <TableCell className='sticky right-0 shadow-[0_0_10px_rgba(0,0,0,0.05)]'>
+                    {isDoctor && blog.authorId !== user?.id ? null : (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant='ghost'
+                            size='sm'
+                            className='data-[state=open]:bg-muted h-8 w-8 p-0'
+                          >
+                            <MoreVertical className='h-4 w-4' />
+                            <span className='sr-only'>Open menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align='end'>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate({
+                                to: '/blogs/$blogId',
+                                params: { blogId: blog.id },
+                              })
+                            }
+                          >
+                            <Eye className='mr-2 h-4 w-4' />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate({
+                                to: '/blogs/$blogId/edit',
+                                params: { blogId: blog.id },
+                              })
+                            }
+                          >
+                            <Edit className='mr-2 h-4 w-4' />
+                            Edit Post
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => onDelete(blog)}
+                            className='text-destructive focus:text-destructive'
+                          >
+                            <Trash className='mr-2 h-4 w-4' />
+                            Delete Post
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </TableCell>
+                </TableRow>
+              </ContextMenuTrigger>
+              <ContextMenuContent>
+                <ContextMenuItem
+                  onClick={() =>
+                    navigate({
+                      to: '/blogs/$blogId',
+                      params: { blogId: blog.id },
+                    })
+                  }
+                >
+                  <Eye className='mr-2 h-4 w-4' />
+                  View Details
+                </ContextMenuItem>
+                {(!isDoctor || blog.authorId === user?.id) && (
+                  <>
+                    <ContextMenuItem
                       onClick={() =>
                         navigate({
                           to: '/blogs/$blogId/edit',
@@ -184,21 +257,21 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                     >
                       <Edit className='mr-2 h-4 w-4' />
                       Edit Post
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
+                    </ContextMenuItem>
+                    <ContextMenuItem
                       onClick={() => onDelete(blog)}
                       className='text-destructive focus:text-destructive'
                     >
                       <Trash className='mr-2 h-4 w-4' />
                       Delete Post
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
+                    </ContextMenuItem>
+                  </>
+                )}
+              </ContextMenuContent>
+            </ContextMenu>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   )
 }

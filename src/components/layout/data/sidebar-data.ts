@@ -34,6 +34,7 @@ import type { NavGroupWithAccess } from '@/lib/sidebar-utils'
 export const navGroups: NavGroupWithAccess[] = [
   {
     title: 'Dashboard',
+    allowedRoles: ['SUPER_ADMIN', 'ADMIN'],
     items: [
       {
         title: 'Dashboard',
@@ -140,6 +141,7 @@ export const navGroups: NavGroupWithAccess[] = [
         title: 'Blog Categories',
         url: '/blogs/categories',
         icon: BookOpen,
+        allowedRoles: ['SUPER_ADMIN', 'ADMIN'],
       },
       {
         title: 'All Blogs',

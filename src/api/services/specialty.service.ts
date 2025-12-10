@@ -20,6 +20,36 @@ export interface SpecialtyQueryParams extends PaginationParams {
 
 export type SpecialtyListResponse = PaginatedResponse<Specialty>
 
+export interface CreateSpecialtyRequest {
+  name: string
+  description?: string
+  iconUrl?: string
+  isActive?: boolean
+}
+
+export type UpdateSpecialtyRequest = Partial<CreateSpecialtyRequest>
+
+export interface SpecialtyInfoSection {
+  id: string
+  specialtyId: string
+  title: string
+  content: string
+  order?: number
+  isActive: boolean
+}
+
+export interface CreateInfoSectionRequest {
+  specialtyId: string
+  title: string
+  content: string
+  order?: number
+  isActive?: boolean
+}
+
+export type UpdateInfoSectionRequest = Partial<
+  Omit<CreateInfoSectionRequest, 'specialtyId'>
+>
+
 class SpecialtyService {
   /**
    * Get all specialties
@@ -30,6 +60,22 @@ class SpecialtyService {
   ): Promise<SpecialtyListResponse> {
     const response = await apiClient.get<SpecialtyListResponse>(
       '/specialties',
+      {
+        params,
+      }
+    )
+    return response.data
+  }
+
+  /**
+   * Get all public specialties
+   * GET /api/specialties/public
+   */
+  async getPublicSpecialties(
+    params: SpecialtyQueryParams = {}
+  ): Promise<SpecialtyListResponse> {
+    const response = await apiClient.get<SpecialtyListResponse>(
+      '/specialties/public',
       {
         params,
       }
@@ -77,6 +123,96 @@ class SpecialtyService {
         return []
       }
     }
+  }
+
+  /**
+   * Get specialty by ID
+   */
+  async getSpecialty(id: string): Promise<Specialty> {
+    const response = await apiClient.get<Specialty>(`/specialties/${id}`)
+    return response.data
+  }
+
+  /**
+   * Create new specialty
+   */
+  async createSpecialty(data: CreateSpecialtyRequest): Promise<Specialty> {
+    const response = await apiClient.post<Specialty>('/specialties', data)
+    return response.data
+  }
+
+  /**
+   * Update specialty
+   */
+  async updateSpecialty(
+    id: string,
+    data: UpdateSpecialtyRequest
+  ): Promise<Specialty> {
+    const response = await apiClient.patch<Specialty>(
+      `/specialties/${id}`,
+      data
+    )
+    return response.data
+  }
+
+  /**
+   * Delete specialty
+   */
+  async deleteSpecialty(id: string): Promise<void> {
+    await apiClient.delete(`/specialties/${id}`)
+  }
+
+  /**
+   * Get specialty statistics
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getSpecialtyStats(): Promise<any> {
+    const response = await apiClient.get('/specialties/stats')
+    return response.data
+  }
+
+  /**
+   * Get info sections for a specialty
+   */
+  async getInfoSections(specialtyId: string): Promise<SpecialtyInfoSection[]> {
+    const response = await apiClient.get<SpecialtyInfoSection[]>(
+      `/specialties/${specialtyId}/info-sections`
+    )
+    return response.data
+  }
+
+  /**
+   * Create info section
+   */
+  async createInfoSection(
+    data: CreateInfoSectionRequest
+  ): Promise<SpecialtyInfoSection> {
+    const response = await apiClient.post<SpecialtyInfoSection>(
+      '/specialties/info-sections',
+      data
+    )
+    return response.data
+  }
+
+  /**
+   * Update info section
+   */
+  async updateInfoSection(
+    id: string,
+    data: UpdateInfoSectionRequest
+  ): Promise<SpecialtyInfoSection> {
+    const response = await apiClient.patch<SpecialtyInfoSection>(
+      `/specialties/info-sections/${id}`,
+      data
+    )
+    return response.data
+  }
+
+  /**
+   * Delete info section
+   */
+  async deleteInfoSection(id: string): Promise<void> {
+    await apiClient.delete(`/specialties/info-sections/${id}`)
   }
 }
 

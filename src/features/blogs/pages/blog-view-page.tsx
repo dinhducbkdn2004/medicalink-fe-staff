@@ -93,7 +93,7 @@ export function BlogViewPage() {
 
           {/* Content */}
           <article
-            className='prose prose-stone dark:prose-invert lg:prose-lg max-w-none'
+            className='prose prose-stone dark:prose-invert lg:prose-lg max-w-none [&_img]:mx-auto [&_img]:block'
             dangerouslySetInnerHTML={{ __html: blog.content }}
           />
         </div>

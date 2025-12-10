@@ -30,3 +30,14 @@ export function useSpecialties(params: SpecialtyQueryParams = {}) {
     staleTime: 60 * 60 * 1000, // 1 hour
   })
 }
+
+/**
+ * Get all public specialties
+ */
+export function usePublicSpecialties(params: SpecialtyQueryParams = {}) {
+  return useQuery({
+    queryKey: [...specialtyKeys.lists(), 'public', params],
+    queryFn: () => specialtyService.getPublicSpecialties(params),
+    staleTime: 60 * 60 * 1000, // 1 hour
+  })
+}
