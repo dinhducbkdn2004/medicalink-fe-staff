@@ -9,6 +9,7 @@ import {
   useDoctorsByLocationAndSpecialty,
   useDoctorAvailableDates,
   useAvailableSlots,
+  usePublicDoctors,
 } from '@/calendar/hooks/use-appointment-form-data'
 import {
   createAppointmentSchema,
@@ -96,14 +97,27 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
   const prevSpecialtyRef = useRef<string | undefined>(undefined)
   const prevDoctorRef = useRef<string | undefined>(undefined)
 
-  // Fetch data (location and specialty are independent)
+  // Fetch data
   const { patients, isLoading: isLoadingPatients } = usePatients(patientSearch)
   const { locations, isLoading: isLoadingLocations } = useWorkLocations()
   const { specialties, isLoading: isLoadingSpecialties } = useSpecialties()
 
-  // Only fetch doctors when BOTH location AND specialty are selected
-  const { doctors, isLoading: isLoadingDoctors } =
+  // 1. Fetch ALL public doctors for initial selection (when no filters)
+  const { doctors: allDoctors, isLoading: isLoadingAllDoctors } =
+    usePublicDoctors()
+
+  // 2. Fetch FILTERED doctors when filters are active
+  const { doctors: filteredDoctors, isLoading: isLoadingFilteredDoctors } =
     useDoctorsByLocationAndSpecialty(selectedLocationId, selectedSpecialtyId)
+
+  // Determine which doctors list to show
+  // Show filtered list only if BOTH location and specialty are selected
+  // Otherwise show all doctors (to allow "Select Doctor First")
+  const showFilteredDoctors = selectedLocationId && selectedSpecialtyId
+  const displayDoctors = showFilteredDoctors ? filteredDoctors : allDoctors
+  const isLoadingDoctors = showFilteredDoctors
+    ? isLoadingFilteredDoctors
+    : isLoadingAllDoctors
 
   // Fetch available dates when doctor and location are selected
   const { availableDates, isLoading: isLoadingDates } = useDoctorAvailableDates(
@@ -128,7 +142,53 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
       prevSpecialtyRef.current !== selectedSpecialtyId
 
     if (locationChanged || specialtyChanged) {
-      // Reset doctor and times when location or specialty changes
+      // If filters change, we might need to reset doctor
+      // BUT if we just auto-filled them from a doctor selection, we shouldn't reset.
+      // We can check if the current doctor is still valid for the new filters?
+      // For now, keep the reset behavior implies "filtering down".
+      // Note: If user selects doctor first -> location/specialty filled.
+      // If user then changes location -> doctor might need reset if not in new location.
+      // For simplicity, reset doctor if filters change manually.
+      // To distinguish manual change vs auto-fill:
+      // When auto-fill happens, we set location, specialty AND doctor roughly same time.
+      // But standard interaction is: user picks doctor -> we set loc/spec.
+      // If user picks loc/spec -> we reset doctor.
+      // We verify validity in the doctorOptions logic? No.
+      if (selectedDoctorId) {
+        // If doctor is selected, checks if he is still in the new filtered list?
+        // It's complex to check validity async.
+        // Let's rely on the user to re-select if needed, OR
+        // If the change was triggered by "Select Doctor First", we don't want to reset immediately.
+        // But here we are detecting change in location/specialty.
+        // If I select doctor, I update location/specialty. This effect runs.
+        // It sees change. It resets doctor. BAD.
+        // Fix: Don't reset doctor if the location/specialty matches the current doctor's work places?
+        // Or simply: check if we are in "auto-filling" state? No easy way.
+        // Better: Check if the currently selected doctor supports the new location/specialty.
+        // But we don't have the full doctor object here easily unless we find it in allDoctors.
+
+        // Let's find the doctor in allDoctors (or displayDoctors)
+        const currentDoc =
+          displayDoctors.find((d) => d.id === selectedDoctorId) ||
+          allDoctors.find((d) => d.id === selectedDoctorId)
+
+        if (currentDoc) {
+          const hasLocation =
+            !selectedLocationId ||
+            currentDoc.workLocations.some((l) => l.id === selectedLocationId)
+          const hasSpecialty =
+            !selectedSpecialtyId ||
+            currentDoc.specialties.some((s) => s.id === selectedSpecialtyId)
+
+          if (hasLocation && hasSpecialty) {
+            // Doctor is still valid, don't reset
+            prevLocationRef.current = selectedLocationId
+            prevSpecialtyRef.current = selectedSpecialtyId
+            return
+          }
+        }
+      }
+
       form.setValue('doctorId', '')
       // @ts-expect-error - allow undefined for time reset
       form.setValue('timeStart', undefined)
@@ -139,7 +199,14 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     // Update refs
     prevLocationRef.current = selectedLocationId
     prevSpecialtyRef.current = selectedSpecialtyId
-  }, [selectedLocationId, selectedSpecialtyId, form])
+  }, [
+    selectedLocationId,
+    selectedSpecialtyId,
+    form,
+    selectedDoctorId,
+    displayDoctors,
+    allDoctors,
+  ]) // Added deps
 
   useEffect(() => {
     const doctorChanged =
@@ -147,6 +214,24 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
       prevDoctorRef.current !== selectedDoctorId
 
     if (doctorChanged) {
+      // AUTO-FILL LOGIC: If doctor selected, and location/specialty missing, fill them.
+      if (selectedDoctorId) {
+        const doctor =
+          allDoctors.find((d) => d.id === selectedDoctorId) ||
+          filteredDoctors.find((d) => d.id === selectedDoctorId)
+
+        if (doctor) {
+          // Fill Location if undefined or empty
+          if (!selectedLocationId && doctor.workLocations.length > 0) {
+            form.setValue('locationId', doctor.workLocations[0].id)
+          }
+          // Fill Specialty if undefined or empty
+          if (!selectedSpecialtyId && doctor.specialties.length > 0) {
+            form.setValue('specialtyId', doctor.specialties[0].id)
+          }
+        }
+      }
+
       // Reset date and slot when doctor changes
       // @ts-expect-error - allow undefined for date reset
       form.setValue('serviceDate', undefined)
@@ -159,7 +244,14 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
 
     // Update ref
     prevDoctorRef.current = selectedDoctorId
-  }, [selectedDoctorId, form])
+  }, [
+    selectedDoctorId,
+    form,
+    allDoctors,
+    filteredDoctors,
+    selectedLocationId,
+    selectedSpecialtyId,
+  ])
 
   // Memoized placeholder functions
   const getSpecialtyPlaceholder = useCallback(() => {
@@ -168,18 +260,10 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
   }, [isLoadingSpecialties])
 
   const getDoctorPlaceholder = useCallback(() => {
-    if (!selectedLocationId || !selectedSpecialtyId) {
-      return 'Select location and specialty first'
-    }
     if (isLoadingDoctors) return 'Loading...'
-    if (doctors.length === 0) return 'No doctors available'
+    if (displayDoctors.length === 0) return 'No doctors available'
     return 'Select a doctor'
-  }, [
-    selectedLocationId,
-    selectedSpecialtyId,
-    isLoadingDoctors,
-    doctors.length,
-  ])
+  }, [isLoadingDoctors, displayDoctors.length])
 
   // Memoized options for better performance
   const patientOptions = useMemo(
@@ -211,29 +295,11 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
   )
 
   const doctorOptions = useMemo(() => {
-    let filteredDoctors = doctors
-
-    // If current user is a doctor, only show themselves
-    if (user?.role === 'DOCTOR') {
-      filteredDoctors = doctors.filter((doc) => doc.staffAccountId === user.id)
-    }
-
-    return filteredDoctors.map((doctor) => ({
+    return displayDoctors.map((doctor) => ({
       value: doctor.id, // Use profile ID for slots and appointment creation
       label: doctor.fullName,
     }))
-  }, [doctors, user])
-
-  // Auto-select doctor if only one option (especially for DOCTOR role)
-  useEffect(() => {
-    if (
-      user?.role === 'DOCTOR' &&
-      doctorOptions.length === 1 &&
-      selectedDoctorId !== doctorOptions[0].value
-    ) {
-      form.setValue('doctorId', doctorOptions[0].value)
-    }
-  }, [user, doctorOptions, selectedDoctorId, form])
+  }, [displayDoctors])
 
   // Memoized button text for scheduler dialog
   const schedulerButtonText = useMemo(() => {
@@ -266,6 +332,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     [createAppointment, onClose, form]
   )
 
+  // Reset form when dialog opens
   useEffect(() => {
     if (isOpen) {
       setSelectedSlot(undefined)
@@ -291,8 +358,8 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
         <DialogHeader>
           <DialogTitle>Add New Appointment</DialogTitle>
           <DialogDescription>
-            Create a new appointment by selecting patient, location, specialty,
-            doctor, and time slot.
+            Create a new appointment. You can select a doctor directly to
+            auto-fill location and specialty.
           </DialogDescription>
         </DialogHeader>
 
@@ -410,7 +477,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               />
             </div>
 
-            {/* Step 3: Doctor Selection (Requires BOTH Location AND Specialty) */}
+            {/* Step 3: Doctor Selection (Auto-enabled) */}
             <FormField
               control={formControl}
               name='doctorId'
@@ -421,12 +488,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                     <Select
                       value={field.value}
                       onValueChange={field.onChange}
-                      disabled={
-                        !selectedLocationId ||
-                        !selectedSpecialtyId ||
-                        isLoadingDoctors ||
-                        (user?.role === 'DOCTOR' && doctorOptions.length > 0)
-                      }
+                      disabled={isLoadingDoctors}
                     >
                       <SelectTrigger
                         data-invalid={fieldState.invalid}

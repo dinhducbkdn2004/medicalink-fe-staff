@@ -34,18 +34,23 @@ export function usePatients(search?: string) {
   const [isLoading, setIsLoading] = useState(false)
 
   const searchPatients = useCallback(async (searchTerm: string) => {
-    if (!searchTerm || searchTerm.length < 2) {
-      setPatients([])
-      return
-    }
-
     setIsLoading(true)
     try {
-      const response = await patientService.getPatients({
-        page: 1,
-        limit: 20,
-        search: searchTerm,
-      })
+      // If no search term, fetch latest 10 patients
+      // If search term exists, fetch matched patients
+      const params = searchTerm
+        ? { page: 1, limit: 20, search: searchTerm }
+        : {
+            page: 1,
+            limit: 10,
+            sortBy: 'createdAt',
+            sortOrder: 'desc',
+            includedDeleted: true,
+            search: '', // Explicit empty search
+          }
+
+      // @ts-expect-error - params type mismatch for overloading
+      const response = await patientService.getPatients(params)
       setPatients(response.data)
     } catch (error) {
       console.error('Failed to search patients:', error)
@@ -55,15 +60,12 @@ export function usePatients(search?: string) {
   }, [])
 
   useEffect(() => {
-    if (search && search.length >= 2) {
-      const timeoutId = setTimeout(() => {
-        searchPatients(search)
-      }, 500)
+    // Debounce search
+    const timeoutId = setTimeout(() => {
+      searchPatients(search || '')
+    }, 500)
 
-      return () => clearTimeout(timeoutId)
-    } else {
-      setPatients([])
-    }
+    return () => clearTimeout(timeoutId)
   }, [search, searchPatients])
 
   return { patients, isLoading, searchPatients }
@@ -129,6 +131,37 @@ export function useWorkLocations() {
 }
 
 // ============================================================================
+// Hook: Fetch Initial Public Doctors (for "Select Doctor First")
+// ============================================================================
+export function usePublicDoctors() {
+  const [doctors, setDoctors] = useState<PublicDoctorProfile[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      setIsLoading(true)
+      try {
+        const response = await doctorProfileService.getPublicDoctorProfiles({
+          page: 1,
+          limit: 20,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+        })
+        setDoctors(response.data)
+      } catch (error) {
+        console.error('Failed to fetch public doctors:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchDoctors()
+  }, [])
+
+  return { doctors, isLoading }
+}
+
+// ============================================================================
 // Hook: Fetch Public Specialties (Step 2)
 // ============================================================================
 export function useSpecialties() {
@@ -163,7 +196,7 @@ export function useSpecialties() {
       isFetchingSpecialties = true
       setIsLoading(true)
       try {
-        const response = await specialtyService.getSpecialties({
+        const response = await specialtyService.getPublicSpecialties({
           page: 1,
           limit: 100,
         })
