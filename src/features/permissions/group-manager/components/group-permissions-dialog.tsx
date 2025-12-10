@@ -15,6 +15,7 @@ import {
   useGroupPermissions,
   useAssignGroupPermission,
   useRevokeGroupPermission,
+  usePermissions,
 } from '../../hooks'
 import { AssignPermissionForm } from './assign-permission-form'
 import { useGroupManager } from './use-group-manager'
@@ -34,6 +35,8 @@ export function GroupPermissionsDialog({
     currentGroup?.id || ''
   )
 
+  const { data: allPermissions } = usePermissions()
+
   const assignMutation = useAssignGroupPermission()
   const revokeMutation = useRevokeGroupPermission()
 
@@ -42,10 +45,17 @@ export function GroupPermissionsDialog({
     action: string,
     granted: boolean
   ) => {
-    if (!currentGroup) return
+    if (!currentGroup || !allPermissions) return
 
-    // Build permissionId in format: perm_{resource}_{action}
-    const permissionId = `perm_${resource}_${action}`
+    // Find matching permission from system permissions
+    const permission = allPermissions.find(
+      (p) => p.resource === resource && p.action === action
+    )
+
+    if (!permission) {
+      console.warn(`Permission not found for ${resource}:${action}`)
+      return
+    }
 
     try {
       if (granted) {
@@ -53,7 +63,7 @@ export function GroupPermissionsDialog({
         await assignMutation.mutateAsync({
           groupId: currentGroup.id,
           data: {
-            permissionId,
+            permissionId: permission.id,
             effect: 'ALLOW',
             tenantId: currentGroup.tenantId,
           },
@@ -63,7 +73,7 @@ export function GroupPermissionsDialog({
         await revokeMutation.mutateAsync({
           groupId: currentGroup.id,
           data: {
-            permissionId,
+            permissionId: permission.id,
             tenantId: currentGroup.tenantId,
           },
         })

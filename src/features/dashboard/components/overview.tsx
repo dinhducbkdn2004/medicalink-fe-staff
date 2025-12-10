@@ -1,60 +1,18 @@
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
-
-const data = [
-  {
-    name: 'Jan',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Feb',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Mar',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Apr',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'May',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Jun',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Jul',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Aug',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Sep',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Oct',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Nov',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Dec',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-]
+import { useRevenueStats } from '@/hooks/use-stats'
 
 export function Overview() {
+  const { data: revenueStats } = useRevenueStats()
+
+  // Process data to have a single value field for the chart
+  const chartData = revenueStats?.map((item) => ({
+    name: item.name,
+    value: item.total.VND || (item.total['$'] || 0) * 25000, // Fallback conversion if needed or just prioritize VND
+  }))
+
   return (
     <ResponsiveContainer width='100%' height={350}>
-      <BarChart data={data}>
+      <BarChart data={chartData || []}>
         <XAxis
           dataKey='name'
           stroke='#888888'
@@ -67,10 +25,15 @@ export function Overview() {
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `$${value}`}
+          tickFormatter={(value) =>
+            new Intl.NumberFormat('en-US', {
+              notation: 'compact',
+              compactDisplay: 'short',
+            }).format(value)
+          }
         />
         <Bar
-          dataKey='total'
+          dataKey='value'
           fill='currentColor'
           radius={[4, 4, 0, 0]}
           className='fill-primary'

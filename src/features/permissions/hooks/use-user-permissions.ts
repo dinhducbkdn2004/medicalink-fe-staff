@@ -39,8 +39,9 @@ export function useAssignUserPermission() {
     mutationFn: (data: AssignUserPermissionRequest) =>
       permissionService.assignUserPermission(data),
     onSuccess: (_, variables) => {
+      // Invalidate all tenant variations for this user
       queryClient.invalidateQueries({
-        queryKey: userPermissionKeys.user(variables.userId, variables.tenantId),
+        queryKey: [...userPermissionKeys.all, variables.userId],
       })
       queryClient.invalidateQueries({ queryKey: ['permission-stats'] })
       toast.success('Permission assigned to user successfully')

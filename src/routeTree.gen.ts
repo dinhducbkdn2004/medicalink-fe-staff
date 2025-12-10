@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedReviewsRouteImport } from './routes/_authenticated/reviews'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
@@ -31,7 +32,6 @@ import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedStaffsIndexRouteImport } from './routes/_authenticated/staffs/index'
 import { Route as AuthenticatedSpecialtiesIndexRouteImport } from './routes/_authenticated/specialties/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
-import { Route as AuthenticatedReviewsIndexRouteImport } from './routes/_authenticated/reviews/index'
 import { Route as AuthenticatedQuestionsIndexRouteImport } from './routes/_authenticated/questions/index'
 import { Route as AuthenticatedPatientsIndexRouteImport } from './routes/_authenticated/patients.index'
 import { Route as AuthenticatedOfficeHoursIndexRouteImport } from './routes/_authenticated/office-hours/index'
@@ -56,6 +56,7 @@ import { Route as AuthenticatedBlogsListRouteRouteImport } from './routes/_authe
 import { Route as AuthenticatedBlogsCategoriesRouteRouteImport } from './routes/_authenticated/blogs/categories/route'
 import { Route as AuthenticatedBlogsBlogIdRouteRouteImport } from './routes/_authenticated/blogs/$blogId/route'
 import { Route as AuthenticatedBlogsBlogIdIndexRouteImport } from './routes/_authenticated/blogs/$blogId/index'
+import { Route as AuthenticatedDoctorsDoctorIdReviewsRouteImport } from './routes/_authenticated/doctors/$doctorId.reviews'
 import { Route as AuthenticatedDoctorsDoctorIdProfileRouteImport } from './routes/_authenticated/doctors/$doctorId.profile'
 import { Route as AuthenticatedBlogsBlogIdEditRouteRouteImport } from './routes/_authenticated/blogs/$blogId/edit/route'
 
@@ -66,6 +67,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedReviewsRoute = AuthenticatedReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const errors503Route = errors503RouteImport.update({
@@ -175,12 +181,6 @@ const AuthenticatedSettingsIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
-const AuthenticatedReviewsIndexRoute =
-  AuthenticatedReviewsIndexRouteImport.update({
-    id: '/reviews/',
-    path: '/reviews/',
-    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedQuestionsIndexRoute =
   AuthenticatedQuestionsIndexRouteImport.update({
@@ -324,6 +324,12 @@ const AuthenticatedBlogsBlogIdIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedBlogsBlogIdRouteRoute,
   } as any)
+const AuthenticatedDoctorsDoctorIdReviewsRoute =
+  AuthenticatedDoctorsDoctorIdReviewsRouteImport.update({
+    id: '/doctors/$doctorId/reviews',
+    path: '/doctors/$doctorId/reviews',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDoctorsDoctorIdProfileRoute =
   AuthenticatedDoctorsDoctorIdProfileRouteImport.update({
     id: '/doctors/$doctorId/profile',
@@ -350,6 +356,7 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/reviews': typeof AuthenticatedReviewsRoute
   '/': typeof AuthenticatedIndexRoute
   '/blogs/$blogId': typeof AuthenticatedBlogsBlogIdRouteRouteWithChildren
   '/blogs/categories': typeof AuthenticatedBlogsCategoriesRouteRoute
@@ -374,7 +381,6 @@ export interface FileRoutesByFullPath {
   '/office-hours': typeof AuthenticatedOfficeHoursIndexRoute
   '/patients': typeof AuthenticatedPatientsIndexRoute
   '/questions': typeof AuthenticatedQuestionsIndexRoute
-  '/reviews': typeof AuthenticatedReviewsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/specialties': typeof AuthenticatedSpecialtiesIndexRoute
   '/staffs': typeof AuthenticatedStaffsIndexRoute
@@ -385,6 +391,7 @@ export interface FileRoutesByFullPath {
   '/work-locations': typeof AuthenticatedWorkLocationsIndexRoute
   '/blogs/$blogId/edit': typeof AuthenticatedBlogsBlogIdEditRouteRoute
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
+  '/doctors/$doctorId/reviews': typeof AuthenticatedDoctorsDoctorIdReviewsRoute
   '/blogs/$blogId/': typeof AuthenticatedBlogsBlogIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -398,6 +405,7 @@ export interface FileRoutesByTo {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/reviews': typeof AuthenticatedReviewsRoute
   '/': typeof AuthenticatedIndexRoute
   '/blogs/categories': typeof AuthenticatedBlogsCategoriesRouteRoute
   '/blogs/list': typeof AuthenticatedBlogsListRouteRoute
@@ -421,7 +429,6 @@ export interface FileRoutesByTo {
   '/office-hours': typeof AuthenticatedOfficeHoursIndexRoute
   '/patients': typeof AuthenticatedPatientsIndexRoute
   '/questions': typeof AuthenticatedQuestionsIndexRoute
-  '/reviews': typeof AuthenticatedReviewsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/specialties': typeof AuthenticatedSpecialtiesIndexRoute
   '/staffs': typeof AuthenticatedStaffsIndexRoute
@@ -432,6 +439,7 @@ export interface FileRoutesByTo {
   '/work-locations': typeof AuthenticatedWorkLocationsIndexRoute
   '/blogs/$blogId/edit': typeof AuthenticatedBlogsBlogIdEditRouteRoute
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
+  '/doctors/$doctorId/reviews': typeof AuthenticatedDoctorsDoctorIdReviewsRoute
   '/blogs/$blogId': typeof AuthenticatedBlogsBlogIdIndexRoute
 }
 export interface FileRoutesById {
@@ -449,6 +457,7 @@ export interface FileRoutesById {
   '/(errors)/404': typeof errors404Route
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
+  '/_authenticated/reviews': typeof AuthenticatedReviewsRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/blogs/$blogId': typeof AuthenticatedBlogsBlogIdRouteRouteWithChildren
   '/_authenticated/blogs/categories': typeof AuthenticatedBlogsCategoriesRouteRoute
@@ -473,7 +482,6 @@ export interface FileRoutesById {
   '/_authenticated/office-hours/': typeof AuthenticatedOfficeHoursIndexRoute
   '/_authenticated/patients/': typeof AuthenticatedPatientsIndexRoute
   '/_authenticated/questions/': typeof AuthenticatedQuestionsIndexRoute
-  '/_authenticated/reviews/': typeof AuthenticatedReviewsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/specialties/': typeof AuthenticatedSpecialtiesIndexRoute
   '/_authenticated/staffs/': typeof AuthenticatedStaffsIndexRoute
@@ -484,6 +492,7 @@ export interface FileRoutesById {
   '/_authenticated/work-locations/': typeof AuthenticatedWorkLocationsIndexRoute
   '/_authenticated/blogs/$blogId/edit': typeof AuthenticatedBlogsBlogIdEditRouteRoute
   '/_authenticated/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
+  '/_authenticated/doctors/$doctorId/reviews': typeof AuthenticatedDoctorsDoctorIdReviewsRoute
   '/_authenticated/blogs/$blogId/': typeof AuthenticatedBlogsBlogIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -501,6 +510,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/reviews'
     | '/'
     | '/blogs/$blogId'
     | '/blogs/categories'
@@ -525,7 +535,6 @@ export interface FileRouteTypes {
     | '/office-hours'
     | '/patients'
     | '/questions'
-    | '/reviews'
     | '/settings/'
     | '/specialties'
     | '/staffs'
@@ -536,6 +545,7 @@ export interface FileRouteTypes {
     | '/work-locations'
     | '/blogs/$blogId/edit'
     | '/doctors/$doctorId/profile'
+    | '/doctors/$doctorId/reviews'
     | '/blogs/$blogId/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -549,6 +559,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/reviews'
     | '/'
     | '/blogs/categories'
     | '/blogs/list'
@@ -572,7 +583,6 @@ export interface FileRouteTypes {
     | '/office-hours'
     | '/patients'
     | '/questions'
-    | '/reviews'
     | '/settings'
     | '/specialties'
     | '/staffs'
@@ -583,6 +593,7 @@ export interface FileRouteTypes {
     | '/work-locations'
     | '/blogs/$blogId/edit'
     | '/doctors/$doctorId/profile'
+    | '/doctors/$doctorId/reviews'
     | '/blogs/$blogId'
   id:
     | '__root__'
@@ -599,6 +610,7 @@ export interface FileRouteTypes {
     | '/(errors)/404'
     | '/(errors)/500'
     | '/(errors)/503'
+    | '/_authenticated/reviews'
     | '/_authenticated/'
     | '/_authenticated/blogs/$blogId'
     | '/_authenticated/blogs/categories'
@@ -623,7 +635,6 @@ export interface FileRouteTypes {
     | '/_authenticated/office-hours/'
     | '/_authenticated/patients/'
     | '/_authenticated/questions/'
-    | '/_authenticated/reviews/'
     | '/_authenticated/settings/'
     | '/_authenticated/specialties/'
     | '/_authenticated/staffs/'
@@ -634,6 +645,7 @@ export interface FileRouteTypes {
     | '/_authenticated/work-locations/'
     | '/_authenticated/blogs/$blogId/edit'
     | '/_authenticated/doctors/$doctorId/profile'
+    | '/_authenticated/doctors/$doctorId/reviews'
     | '/_authenticated/blogs/$blogId/'
   fileRoutesById: FileRoutesById
 }
@@ -665,6 +677,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reviews': {
+      id: '/_authenticated/reviews'
+      path: '/reviews'
+      fullPath: '/reviews'
+      preLoaderRoute: typeof AuthenticatedReviewsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/(errors)/503': {
@@ -806,13 +825,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings/'
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
-    '/_authenticated/reviews/': {
-      id: '/_authenticated/reviews/'
-      path: '/reviews'
-      fullPath: '/reviews'
-      preLoaderRoute: typeof AuthenticatedReviewsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/questions/': {
       id: '/_authenticated/questions/'
@@ -982,6 +994,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBlogsBlogIdIndexRouteImport
       parentRoute: typeof AuthenticatedBlogsBlogIdRouteRoute
     }
+    '/_authenticated/doctors/$doctorId/reviews': {
+      id: '/_authenticated/doctors/$doctorId/reviews'
+      path: '/doctors/$doctorId/reviews'
+      fullPath: '/doctors/$doctorId/reviews'
+      preLoaderRoute: typeof AuthenticatedDoctorsDoctorIdReviewsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/doctors/$doctorId/profile': {
       id: '/_authenticated/doctors/$doctorId/profile'
       path: '/doctors/$doctorId/profile'
@@ -1071,6 +1090,7 @@ const AuthenticatedBlogsBlogIdRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAppointmentsRouteRoute: typeof AuthenticatedAppointmentsRouteRouteWithChildren
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
+  AuthenticatedReviewsRoute: typeof AuthenticatedReviewsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedBlogsBlogIdRouteRoute: typeof AuthenticatedBlogsBlogIdRouteRouteWithChildren
   AuthenticatedBlogsCategoriesRouteRoute: typeof AuthenticatedBlogsCategoriesRouteRoute
@@ -1085,7 +1105,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOfficeHoursIndexRoute: typeof AuthenticatedOfficeHoursIndexRoute
   AuthenticatedPatientsIndexRoute: typeof AuthenticatedPatientsIndexRoute
   AuthenticatedQuestionsIndexRoute: typeof AuthenticatedQuestionsIndexRoute
-  AuthenticatedReviewsIndexRoute: typeof AuthenticatedReviewsIndexRoute
   AuthenticatedSpecialtiesIndexRoute: typeof AuthenticatedSpecialtiesIndexRoute
   AuthenticatedStaffsIndexRoute: typeof AuthenticatedStaffsIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
@@ -1094,12 +1113,14 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedWorkLocationsIndexRoute: typeof AuthenticatedWorkLocationsIndexRoute
   AuthenticatedDoctorsDoctorIdProfileRoute: typeof AuthenticatedDoctorsDoctorIdProfileRoute
+  AuthenticatedDoctorsDoctorIdReviewsRoute: typeof AuthenticatedDoctorsDoctorIdReviewsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAppointmentsRouteRoute:
     AuthenticatedAppointmentsRouteRouteWithChildren,
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
+  AuthenticatedReviewsRoute: AuthenticatedReviewsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedBlogsBlogIdRouteRoute:
     AuthenticatedBlogsBlogIdRouteRouteWithChildren,
@@ -1116,7 +1137,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOfficeHoursIndexRoute: AuthenticatedOfficeHoursIndexRoute,
   AuthenticatedPatientsIndexRoute: AuthenticatedPatientsIndexRoute,
   AuthenticatedQuestionsIndexRoute: AuthenticatedQuestionsIndexRoute,
-  AuthenticatedReviewsIndexRoute: AuthenticatedReviewsIndexRoute,
   AuthenticatedSpecialtiesIndexRoute: AuthenticatedSpecialtiesIndexRoute,
   AuthenticatedStaffsIndexRoute: AuthenticatedStaffsIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
@@ -1126,6 +1146,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedWorkLocationsIndexRoute: AuthenticatedWorkLocationsIndexRoute,
   AuthenticatedDoctorsDoctorIdProfileRoute:
     AuthenticatedDoctorsDoctorIdProfileRoute,
+  AuthenticatedDoctorsDoctorIdReviewsRoute:
+    AuthenticatedDoctorsDoctorIdReviewsRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

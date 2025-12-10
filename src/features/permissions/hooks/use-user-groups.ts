@@ -42,8 +42,10 @@ export function useAddUserToGroup() {
       tenantId?: string
     }) => permissionService.addUserToGroup(userId, { groupId, tenantId }),
     onSuccess: (_, variables) => {
+      // Invalidate all tenant variations for this user
+      // by using the base key prefix up to userId
       queryClient.invalidateQueries({
-        queryKey: userGroupKeys.user(variables.userId, variables.tenantId),
+        queryKey: [...userGroupKeys.all, variables.userId],
       })
       queryClient.invalidateQueries({ queryKey: ['permission-stats'] })
       queryClient.invalidateQueries({ queryKey: ['permission-groups'] })
@@ -73,7 +75,7 @@ export function useRemoveUserFromGroup() {
     }) => permissionService.removeUserFromGroup(userId, groupId, tenantId),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: userGroupKeys.user(variables.userId, variables.tenantId),
+        queryKey: [...userGroupKeys.all, variables.userId],
       })
       queryClient.invalidateQueries({ queryKey: ['permission-stats'] })
       queryClient.invalidateQueries({ queryKey: ['permission-groups'] })

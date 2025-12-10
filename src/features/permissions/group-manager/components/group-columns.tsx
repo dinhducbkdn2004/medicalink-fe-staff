@@ -4,7 +4,6 @@
  */
 import { type ColumnDef } from '@tanstack/react-table'
 import type { PermissionGroup } from '@/api/types/permission.types'
-import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { PermissionStatusBadge } from '../../components/permission-badge'
@@ -64,34 +63,7 @@ export const groupColumns: ColumnDef<PermissionGroup>[] = [
       )
     },
   },
-  {
-    accessorKey: 'memberCount',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Members' />
-    ),
-    cell: ({ row }) => {
-      const count = row.getValue<number>('memberCount')
-      return (
-        <Badge variant='secondary' className='font-mono'>
-          {count || 0}
-        </Badge>
-      )
-    },
-  },
-  {
-    accessorKey: 'permissionCount',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Permissions' />
-    ),
-    cell: ({ row }) => {
-      const count = row.getValue<number>('permissionCount')
-      return (
-        <Badge variant='secondary' className='font-mono'>
-          {count || 0}
-        </Badge>
-      )
-    },
-  },
+
   {
     accessorKey: 'isActive',
     header: ({ column }) => (

@@ -3,7 +3,7 @@
  * Table view for doctor account management with API integration
  * Refactored to use the generic DataTable component
  */
-import { Eye, Edit, Trash2, Power } from 'lucide-react'
+import { Eye, Edit, Trash2, Power, Star } from 'lucide-react'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
 import {
   DataTable,
@@ -75,6 +75,16 @@ export function DoctorsTable({
     const doctor = row.original
 
     return [
+      {
+        label: 'View Reviews',
+        icon: Star,
+        onClick: () => {
+          navigate({
+            to: '/doctors/$doctorId/reviews',
+            params: { doctorId: doctor.profileId || doctor.id },
+          } as never)
+        },
+      },
       {
         label: 'View Profile',
         icon: Eye,

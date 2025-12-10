@@ -40,3 +40,51 @@ export interface DoctorStats {
   recentlyCreated: number
   deleted: number
 }
+
+export interface RevenueStats {
+  name: string
+  total: {
+    VND?: number
+    $?: number
+  }
+}
+
+export interface RevenueByDoctorStats {
+  doctorId: string
+  total: {
+    VND?: number
+    $?: number
+  }
+  doctor: {
+    id: string
+    staffAccountId: string
+    fullName: string
+    isActive: boolean
+    avatarUrl: string
+  }
+}
+
+export interface PatientStats {
+  totalPatients: number
+  currentMonthPatients: number
+  previousMonthPatients: number
+  growthPercent: number
+}
+
+export interface AppointmentStats {
+  totalAppointments: number
+  currentMonthAppointments: number
+  previousMonthAppointments: number
+  growthPercent: number
+}
+
+export interface ReviewsOverviewStats {
+  totalReviews: number
+  ratingCounts: Record<string, number>
+}
+
+export interface QAOverviewStats {
+  totalQuestions: number
+  answeredQuestions: number
+  answerRate: number
+}
