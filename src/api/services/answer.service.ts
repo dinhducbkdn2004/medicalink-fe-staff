@@ -22,11 +22,11 @@ export interface Answer {
   questionId: string
   body: string
   authorId: string
-  authorName?: string // Optional, might be populated by UI or if API changes
-  doctor?: Doctor // Optional, if we fetch it separately
+  authorFullName?: string // API response field
+  doctor?: Doctor // Keeping purely for backward compat if needed, but API seems to use authorFullName
   publicIds?: string[]
-  isAccepted: boolean // API says isAccepted, service said accepted
-  upvotes?: number // API didn't show this in some examples, keeping optional
+  isAccepted: boolean
+  upvotes?: number
   createdAt: string
   updatedAt: string
 }

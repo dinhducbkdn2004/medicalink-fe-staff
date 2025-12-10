@@ -32,7 +32,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useUpdateQuestion } from '../data/use-questions'
-import { useSpecialties } from '../data/use-specialties'
+import { usePublicSpecialties } from '../data/use-specialties'
 import { useQuestions } from './use-questions'
 
 // ============================================================================
@@ -52,7 +52,7 @@ type FormValues = z.infer<typeof formSchema>
 
 export function QuestionsEditDialog() {
   const { open, setOpen, currentQuestion } = useQuestions()
-  const { data: specialtiesData } = useSpecialties({ limit: 100 })
+  const { data: specialtiesData } = usePublicSpecialties({ limit: 100 })
   const updateQuestionMutation = useUpdateQuestion()
   const isOpen = open.edit
   const specialties = specialtiesData?.data || []

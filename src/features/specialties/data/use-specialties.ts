@@ -195,12 +195,12 @@ export function useUpdateInfoSection() {
       data,
     }: {
       id: string
-      _specialtyId: string
+      specialtyId: string
       data: UpdateInfoSectionRequest
     }) => specialtyService.updateInfoSection(id, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: specialtyKeys.infoSections(variables._specialtyId),
+        queryKey: specialtyKeys.infoSections(variables.specialtyId),
       })
       toast.success('Info section updated successfully')
     },
@@ -217,14 +217,14 @@ export function useDeleteInfoSection() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id }: { id: string; _specialtyId: string }) =>
+    mutationFn: ({ id }: { id: string; specialtyId: string }) =>
       specialtyService.deleteInfoSection(id),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: specialtyKeys.infoSections(variables._specialtyId),
+        queryKey: specialtyKeys.infoSections(variables.specialtyId),
       })
       queryClient.invalidateQueries({
-        queryKey: specialtyKeys.detail(variables._specialtyId),
+        queryKey: specialtyKeys.detail(variables.specialtyId),
       })
       toast.success('Info section deleted successfully')
     },

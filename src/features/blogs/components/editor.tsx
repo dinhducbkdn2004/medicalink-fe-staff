@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import Quill from 'quill'
-import 'quill/dist/quill.snow.css'
 import { cn } from '@/lib/utils'
 
 interface RichTextEditorProps {
@@ -62,11 +61,13 @@ export function RichTextEditor({
   }, [value])
 
   return (
-    <div className={cn('flex flex-col space-y-2', className)}>
-      <div
-        ref={editorRef}
-        className='bg-background min-h-[200px] rounded-md border'
-      />
+    <div
+      className={cn(
+        'flex flex-col overflow-hidden rounded-md border [&_.ql-container]:!border-0 [&_.ql-toolbar]:!border-0',
+        className
+      )}
+    >
+      <div ref={editorRef} className='bg-background min-h-[200px]' />
     </div>
   )
 }

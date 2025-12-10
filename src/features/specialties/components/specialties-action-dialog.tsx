@@ -3,11 +3,10 @@
  * Create/Edit specialty form dialog
  */
 import { useEffect } from 'react'
+import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
-
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -26,13 +25,11 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { ImageUpload } from '@/components/ui/image-upload'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { type Specialty } from '../data/schema'
-import {
-  useCreateSpecialty,
-  useUpdateSpecialty,
-} from '../data/use-specialties'
+import { useCreateSpecialty, useUpdateSpecialty } from '../data/use-specialties'
 
 // ============================================================================
 // Types & Schema
@@ -44,7 +41,7 @@ const formSchema = z.object({
     .min(2, 'Name must be at least 2 characters')
     .max(120, 'Name must be at most 120 characters'),
   description: z.string().optional(),
-  iconUrl: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  iconUrl: z.string().optional().or(z.literal('')),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -183,23 +180,22 @@ export function SpecialtiesActionDialog({
               )}
             />
 
-            {/* Icon URL */}
+            {/* Icon URL (Image Upload) */}
             <FormField
               control={form.control}
               name='iconUrl'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Icon URL</FormLabel>
+                  <FormLabel>Icon</FormLabel>
                   <FormControl>
-                    <Input
-                      type='url'
-                      placeholder='https://example.com/icon.svg'
-                      {...field}
+                    <ImageUpload
+                      value={field.value || undefined}
+                      onChange={field.onChange}
                       disabled={isLoading}
                     />
                   </FormControl>
                   <FormDescription>
-                    Optional URL to an icon/image for this specialty
+                    Upload an icon/image for this specialty (SVG, PNG, JPG)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -226,4 +222,3 @@ export function SpecialtiesActionDialog({
     </Dialog>
   )
 }
-

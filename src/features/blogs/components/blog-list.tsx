@@ -1,8 +1,9 @@
 import { format } from 'date-fns'
 import { useNavigate, Link } from '@tanstack/react-router'
 import { Edit, Eye, MoreVertical, Trash } from 'lucide-react'
-import { type Blog } from '@/api/services/blog.service'
-import { Badge } from '@/components/ui/badge'
+import { type Blog, type BlogStatus } from '@/api/services/blog.service'
+import { useAuthStore } from '@/stores/auth-store'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   ContextMenu,
@@ -16,6 +17,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
@@ -25,6 +33,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useUpdateBlog } from '../data/use-blogs'
 
 interface BlogListProps {
   data: Blog[]
@@ -34,6 +43,13 @@ interface BlogListProps {
 
 export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
   const navigate = useNavigate()
+  const { user } = useAuthStore()
+  const { mutate: updateBlog } = useUpdateBlog()
+  const isDoctor = user?.role === 'DOCTOR'
+
+  const handleStatusChange = (blogId: string, status: string) => {
+    updateBlog({ id: blogId, data: { status: status as BlogStatus } })
+  }
 
   if (isLoading) {
     return (
@@ -105,7 +121,7 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
             <TableHead>Status</TableHead>
             <TableHead>Author</TableHead>
             <TableHead>Created At</TableHead>
-            <TableHead className='bg-background sticky right-0 w-[50px]'></TableHead>
+            <TableHead className='sticky right-0 w-[50px]'></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -115,23 +131,6 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                 <TableRow>
                   <TableCell className='max-w-[300px]'>
                     <div className='flex items-start gap-3'>
-                      <Link
-                        to='/blogs/$blogId'
-                        params={{ blogId: blog.id }}
-                        className='shrink-0'
-                      >
-                        {blog.thumbnailUrl ? (
-                          <img
-                            src={blog.thumbnailUrl}
-                            alt={blog.title}
-                            className='h-16 w-24 rounded-md object-cover'
-                          />
-                        ) : (
-                          <div className='bg-muted flex h-16 w-24 items-center justify-center rounded-md border text-xs text-gray-400'>
-                            No img
-                          </div>
-                        )}
-                      </Link>
                       <div className='flex flex-col gap-1 overflow-hidden'>
                         <Link
                           to='/blogs/$blogId'
@@ -148,17 +147,32 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge
-                      variant={
-                        blog.status === 'PUBLISHED'
-                          ? 'default'
-                          : blog.status === 'ARCHIVED'
-                            ? 'destructive'
-                            : 'secondary'
+                    <Select
+                      defaultValue={blog.status}
+                      onValueChange={(value) =>
+                        handleStatusChange(blog.id, value)
                       }
+                      disabled={isDoctor && blog.authorId !== user?.id}
                     >
-                      {blog.status}
-                    </Badge>
+                      <SelectTrigger
+                        className={cn(
+                          'w-[120px] text-xs font-medium',
+                          blog.status === 'PUBLISHED' &&
+                            'bg-green-100 text-green-800 hover:bg-green-100/80 dark:bg-green-900/30 dark:text-green-400',
+                          blog.status === 'ARCHIVED' &&
+                            'bg-red-100 text-red-800 hover:bg-red-100/80 dark:bg-red-900/30 dark:text-red-400',
+                          blog.status === 'DRAFT' &&
+                            'bg-gray-100 text-gray-800 hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-300'
+                        )}
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value='DRAFT'>DRAFT</SelectItem>
+                        <SelectItem value='PUBLISHED'>PUBLISHED</SelectItem>
+                        <SelectItem value='ARCHIVED'>ARCHIVED</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </TableCell>
                   <TableCell>
                     <span className='text-sm font-medium'>
@@ -170,50 +184,52 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                       {format(new Date(blog.createdAt), 'MMM dd, yyyy')}
                     </div>
                   </TableCell>
-                  <TableCell className='bg-background sticky right-0 shadow-[0_0_10px_rgba(0,0,0,0.05)]'>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant='ghost'
-                          size='sm'
-                          className='data-[state=open]:bg-muted h-8 w-8 p-0'
-                        >
-                          <MoreVertical className='h-4 w-4' />
-                          <span className='sr-only'>Open menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align='end'>
-                        <DropdownMenuItem
-                          onClick={() =>
-                            navigate({
-                              to: '/blogs/$blogId',
-                              params: { blogId: blog.id },
-                            })
-                          }
-                        >
-                          <Eye className='mr-2 h-4 w-4' />
-                          View Details
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() =>
-                            navigate({
-                              to: '/blogs/$blogId/edit',
-                              params: { blogId: blog.id },
-                            })
-                          }
-                        >
-                          <Edit className='mr-2 h-4 w-4' />
-                          Edit Post
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => onDelete(blog)}
-                          className='text-destructive focus:text-destructive'
-                        >
-                          <Trash className='mr-2 h-4 w-4' />
-                          Delete Post
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                  <TableCell className='sticky right-0 shadow-[0_0_10px_rgba(0,0,0,0.05)]'>
+                    {isDoctor && blog.authorId !== user?.id ? null : (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant='ghost'
+                            size='sm'
+                            className='data-[state=open]:bg-muted h-8 w-8 p-0'
+                          >
+                            <MoreVertical className='h-4 w-4' />
+                            <span className='sr-only'>Open menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align='end'>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate({
+                                to: '/blogs/$blogId',
+                                params: { blogId: blog.id },
+                              })
+                            }
+                          >
+                            <Eye className='mr-2 h-4 w-4' />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate({
+                                to: '/blogs/$blogId/edit',
+                                params: { blogId: blog.id },
+                              })
+                            }
+                          >
+                            <Edit className='mr-2 h-4 w-4' />
+                            Edit Post
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => onDelete(blog)}
+                            className='text-destructive focus:text-destructive'
+                          >
+                            <Trash className='mr-2 h-4 w-4' />
+                            Delete Post
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
                   </TableCell>
                 </TableRow>
               </ContextMenuTrigger>
@@ -229,24 +245,28 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                   <Eye className='mr-2 h-4 w-4' />
                   View Details
                 </ContextMenuItem>
-                <ContextMenuItem
-                  onClick={() =>
-                    navigate({
-                      to: '/blogs/$blogId/edit',
-                      params: { blogId: blog.id },
-                    })
-                  }
-                >
-                  <Edit className='mr-2 h-4 w-4' />
-                  Edit Post
-                </ContextMenuItem>
-                <ContextMenuItem
-                  onClick={() => onDelete(blog)}
-                  className='text-destructive focus:text-destructive'
-                >
-                  <Trash className='mr-2 h-4 w-4' />
-                  Delete Post
-                </ContextMenuItem>
+                {(!isDoctor || blog.authorId === user?.id) && (
+                  <>
+                    <ContextMenuItem
+                      onClick={() =>
+                        navigate({
+                          to: '/blogs/$blogId/edit',
+                          params: { blogId: blog.id },
+                        })
+                      }
+                    >
+                      <Edit className='mr-2 h-4 w-4' />
+                      Edit Post
+                    </ContextMenuItem>
+                    <ContextMenuItem
+                      onClick={() => onDelete(blog)}
+                      className='text-destructive focus:text-destructive'
+                    >
+                      <Trash className='mr-2 h-4 w-4' />
+                      Delete Post
+                    </ContextMenuItem>
+                  </>
+                )}
               </ContextMenuContent>
             </ContextMenu>
           ))}

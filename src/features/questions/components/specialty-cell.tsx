@@ -4,7 +4,7 @@
  */
 import type { Specialty } from '@/api/services'
 import { Badge } from '@/components/ui/badge'
-import { useSpecialties } from '../data/use-specialties'
+import { usePublicSpecialties } from '../data/use-specialties'
 
 interface SpecialtyCellProps {
   specialtyId?: string | null
@@ -31,7 +31,7 @@ export function SpecialtyCell({ specialtyId, specialty }: SpecialtyCellProps) {
 }
 
 function SpecialtyLookup({ id }: { id: string }) {
-  const { data } = useSpecialties({ limit: 100 })
+  const { data } = usePublicSpecialties({ limit: 100 })
   const specialties = data?.data || []
   const found = specialties.find((s) => s.id === id)
 

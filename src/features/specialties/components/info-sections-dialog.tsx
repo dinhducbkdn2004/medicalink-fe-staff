@@ -65,7 +65,7 @@ export function InfoSectionsDialog({
         open={open && !showForm}
         onOpenChange={onOpenChange}
       >
-        <DrawerContent className='h-full w-full sm:w-[600px]'>
+        <DrawerContent className='h-full w-full sm:!max-w-[800px]'>
           <DrawerHeader>
             <DrawerTitle className='flex items-center gap-2'>
               Info Sections

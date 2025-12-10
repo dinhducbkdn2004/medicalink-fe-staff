@@ -5,6 +5,7 @@
 import { useState } from 'react'
 import { format } from 'date-fns'
 import { CheckCircle, Trash2, X, ThumbsUp, User } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,7 +26,6 @@ import {
   DrawerTitle,
   DrawerDescription,
 } from '@/components/ui/drawer'
-import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { Answer } from '../data/schema'
 import {
@@ -43,6 +43,8 @@ import { useQuestions } from './use-questions'
 export function QuestionAnswersDialog() {
   const { open, setOpen, currentQuestion } = useQuestions()
   const isOpen = open.answers
+  const { user } = useAuthStore()
+  const isDoctor = user?.role === 'DOCTOR'
 
   const [editingAnswerId, setEditingAnswerId] = useState<string | null>(null)
   const [isCreating, setIsCreating] = useState(false)
@@ -84,13 +86,21 @@ export function QuestionAnswersDialog() {
       <Drawer
         direction='right'
         open={isOpen}
+        dismissible={false}
         onOpenChange={() => {
           setOpen('answers')
           setIsCreating(false)
           setEditingAnswerId(null)
         }}
       >
-        <DrawerContent className='h-full w-full sm:w-[600px]'>
+        <DrawerContent
+          className='h-full w-full sm:!max-w-[800px]'
+          onOverlayClick={() => {
+            setOpen('answers', false)
+            setIsCreating(false)
+            setEditingAnswerId(null)
+          }}
+        >
           <DrawerHeader>
             <DrawerTitle className='text-xl'>Manage Answers</DrawerTitle>
             <DrawerDescription className='line-clamp-2'>
@@ -109,7 +119,7 @@ export function QuestionAnswersDialog() {
                 Write an Answer
               </Button>
             ) : isCreating ? (
-              <div className='bg-muted/30 rounded-lg border p-4'>
+              <div className='rounded-lg border p-4'>
                 <h4 className='mb-3 font-semibold'>Write your answer</h4>
                 <QuestionsAnswerForm
                   questionId={currentQuestion.id}
@@ -118,8 +128,6 @@ export function QuestionAnswersDialog() {
                 />
               </div>
             ) : null}
-
-            <Separator />
 
             {isLoading ? (
               <div className='space-y-4'>
@@ -153,7 +161,7 @@ export function QuestionAnswersDialog() {
                     {answers.map((answer: Answer) => (
                       <div
                         key={answer.id}
-                        className='hover:bg-muted/50 rounded-lg border p-4 transition-colors'
+                        className='rounded-lg border p-4 transition-colors'
                       >
                         {editingAnswerId === answer.id ? (
                           <QuestionsAnswerForm
@@ -171,31 +179,28 @@ export function QuestionAnswersDialog() {
                                   <AvatarImage
                                     src={answer.doctor?.avatarUrl || undefined}
                                     alt={
+                                      answer.authorFullName ||
                                       answer.doctor?.fullName ||
-                                      answer.authorName ||
                                       'Doctor'
                                     }
                                   />
                                   <AvatarFallback>
-                                    {answer.doctor?.fullName ||
-                                    answer.authorName
-                                      ? (
-                                          answer.doctor?.fullName ||
-                                          answer.authorName ||
-                                          'Doctor'
-                                        )
-                                          .split(' ')
-                                          .map((n) => n[0])
-                                          .join('')
-                                          .toUpperCase()
-                                          .slice(0, 2)
-                                      : 'DR'}
+                                    {(
+                                      answer.authorFullName ||
+                                      answer.doctor?.fullName ||
+                                      'DR'
+                                    )
+                                      .split(' ')
+                                      .map((n) => n[0])
+                                      .join('')
+                                      .toUpperCase()
+                                      .slice(0, 2)}
                                   </AvatarFallback>
                                 </Avatar>
                                 <div>
                                   <div className='font-semibold'>
-                                    {answer.doctor?.fullName ||
-                                      answer.authorName ||
+                                    {answer.authorFullName ||
+                                      answer.doctor?.fullName ||
                                       'Unknown Doctor'}
                                   </div>
                                   {answer.doctor?.specialty && (
@@ -205,19 +210,7 @@ export function QuestionAnswersDialog() {
                                   )}
                                 </div>
                               </div>
-                              {(answer.isAccepted ||
-                                (
-                                  answer as {
-                                    is_accepted?: boolean
-                                    accepted?: boolean
-                                  }
-                                ).is_accepted ||
-                                (
-                                  answer as {
-                                    is_accepted?: boolean
-                                    accepted?: boolean
-                                  }
-                                ).accepted) && (
+                              {answer.isAccepted && (
                                 <Badge className='bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'>
                                   <CheckCircle className='mr-1 size-3' />
                                   Accepted
@@ -247,57 +240,50 @@ export function QuestionAnswersDialog() {
                                 </div>
                               </div>
                               <div className='flex items-center gap-2'>
-                                <Button
-                                  size='sm'
-                                  variant='ghost'
-                                  onClick={() => {
-                                    setEditingAnswerId(answer.id)
-                                    setIsCreating(false)
-                                  }}
-                                  disabled={!!editingAnswerId || isCreating}
-                                >
-                                  Edit
-                                </Button>
-                                {!answer.isAccepted &&
-                                  !(
-                                    answer as {
-                                      is_accepted?: boolean
-                                      accepted?: boolean
+                                {(!isDoctor ||
+                                  answer.authorId === user?.id) && (
+                                  <Button
+                                    size='sm'
+                                    variant='ghost'
+                                    onClick={() => {
+                                      setEditingAnswerId(answer.id)
+                                      setIsCreating(false)
+                                    }}
+                                    disabled={!!editingAnswerId || isCreating}
+                                  >
+                                    Edit
+                                  </Button>
+                                )}
+                                {!answer.isAccepted && !isDoctor && (
+                                  <Button
+                                    size='sm'
+                                    variant='outline'
+                                    onClick={() =>
+                                      handleAcceptAnswer(answer.id)
                                     }
-                                  ).is_accepted &&
-                                  !(
-                                    answer as {
-                                      is_accepted?: boolean
-                                      accepted?: boolean
-                                    }
-                                  ).accepted && (
-                                    <Button
-                                      size='sm'
-                                      variant='outline'
-                                      onClick={() =>
-                                        handleAcceptAnswer(answer.id)
-                                      }
-                                      disabled={acceptAnswerMutation.isPending}
-                                      className='border-green-600 text-green-600 hover:bg-green-50'
-                                    >
-                                      <CheckCircle className='mr-1 size-3' />
-                                      Accept
-                                    </Button>
-                                  )}
-                                <Button
-                                  size='sm'
-                                  variant='ghost'
-                                  onClick={() => setDeleteAnswerId(answer.id)}
-                                  disabled={deleteAnswerMutation.isPending}
-                                  className='text-destructive hover:bg-destructive/10 hover:text-destructive'
-                                >
-                                  <Trash2 className='size-3' />
-                                </Button>
+                                    disabled={acceptAnswerMutation.isPending}
+                                    className='border-green-600 text-green-600 hover:bg-green-50'
+                                  >
+                                    <CheckCircle className='mr-1 size-3' />
+                                    Accept
+                                  </Button>
+                                )}
+                                {(!isDoctor ||
+                                  answer.authorId === user?.id) && (
+                                  <Button
+                                    size='sm'
+                                    variant='ghost'
+                                    onClick={() => setDeleteAnswerId(answer.id)}
+                                    disabled={deleteAnswerMutation.isPending}
+                                    className='text-destructive hover:bg-destructive/10 hover:text-destructive'
+                                  >
+                                    <Trash2 className='size-3' />
+                                  </Button>
+                                )}
                               </div>
                             </div>
                           </>
                         )}
-                        <Separator className='mt-3' />
                       </div>
                     ))}
                   </div>

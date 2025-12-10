@@ -125,8 +125,16 @@ export function InfoSectionForm({
   const isLoading = createMutation.isPending || updateMutation.isPending
 
   return (
-    <Drawer direction='right' open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className='h-full w-full sm:w-[600px]'>
+    <Drawer
+      direction='right'
+      open={open}
+      dismissible={false}
+      onOpenChange={onOpenChange}
+    >
+      <DrawerContent
+        className='h-full w-full sm:!max-w-[800px]'
+        onOverlayClick={onOpenChange}
+      >
         <DrawerHeader>
           <DrawerTitle>
             {isEditMode ? 'Edit Info Section' : 'Create Info Section'}
