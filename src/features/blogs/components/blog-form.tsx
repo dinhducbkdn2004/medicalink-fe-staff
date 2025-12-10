@@ -41,7 +41,8 @@ interface BlogFormProps {
 
 export function BlogForm({ initialData }: BlogFormProps) {
   const navigate = useNavigate()
-  const { data: categoriesData } = useBlogCategories({ limit: 100 })
+  const { data: categoriesData, isLoading: isLoadingCategories } =
+    useBlogCategories({ limit: 100 })
   const { mutate: createBlog, isPending: isCreating } = useCreateBlog()
   const { mutate: updateBlog, isPending: isUpdating } = useUpdateBlog()
 
@@ -64,9 +65,13 @@ export function BlogForm({ initialData }: BlogFormProps) {
 
   useEffect(() => {
     if (initialData) {
+      // Determine the correct category ID from available fields
+      const categoryId =
+        initialData.categoryId || initialData.category?.id || ''
+
       form.reset({
         title: initialData.title,
-        categoryId: initialData.categoryId,
+        categoryId,
         thumbnailUrl: initialData.thumbnailUrl || '',
         content: initialData.content,
         status: initialData.status,
@@ -88,6 +93,22 @@ export function BlogForm({ initialData }: BlogFormProps) {
         onSuccess: () => navigate({ to: '/blogs/list' }),
       })
     }
+  }
+
+  // Helper to determine what to show in the SelectValue
+  const getSelectedCategoryName = (currentValue: string) => {
+    // 1. Try to find in the loaded categories list
+    const found = categories.find((c) => c.id === currentValue)
+    if (found) return found.name
+
+    // 2. If valid initialData matches current value, use initialData name
+    const initialId = initialData?.categoryId || initialData?.category?.id
+    if (initialId && initialId === currentValue) {
+      return initialData?.category?.name
+    }
+
+    // 3. Fallback
+    return 'Select a category'
   }
 
   return (
@@ -123,12 +144,16 @@ export function BlogForm({ initialData }: BlogFormProps) {
                   <FormLabel>Category</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
                     value={field.value}
+                    // Removed disabled={isLoadingCategories} to allow interaction/visibility
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder='Select a category' />
+                        <SelectValue placeholder='Select a category'>
+                          {field.value
+                            ? getSelectedCategoryName(field.value)
+                            : 'Select a category'}
+                        </SelectValue>
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -169,11 +194,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    value={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder='Select status' />
@@ -201,7 +222,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                   <RichTextEditor
                     value={field.value}
                     onChange={field.onChange}
-                    className='min-h-[400px]'
+                    className='h-[75vh]'
                   />
                 </FormControl>
                 <FormMessage />

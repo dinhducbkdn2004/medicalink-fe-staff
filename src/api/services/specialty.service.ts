@@ -38,6 +38,22 @@ class SpecialtyService {
   }
 
   /**
+   * Get all public specialties
+   * GET /api/specialties/public
+   */
+  async getPublicSpecialties(
+    params: SpecialtyQueryParams = {}
+  ): Promise<SpecialtyListResponse> {
+    const response = await apiClient.get<SpecialtyListResponse>(
+      '/specialties/public',
+      {
+        params,
+      }
+    )
+    return response.data
+  }
+
+  /**
    * Get all active specialties (no pagination, for dropdowns)
    * GET /api/specialties?isActive=true&limit=100
    */
