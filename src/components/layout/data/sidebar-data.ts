@@ -121,14 +121,15 @@ export const navGroups: NavGroupWithAccess[] = [
         icon: UserRound,
       },
       {
-        title: 'Reviews',
-        url: '/reviews',
-        icon: Star,
-      },
-      {
         title: 'Q&A',
         url: '/questions',
         icon: MessageCircleQuestion,
+      },
+      {
+        title: 'Reviews',
+        url: '/reviews',
+        icon: Star,
+        allowedRoles: ['DOCTOR'],
       },
     ],
   },

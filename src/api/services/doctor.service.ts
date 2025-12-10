@@ -1,7 +1,6 @@
 import { apiClient } from '../core/client'
 import type {
   DoctorAccount,
-  DoctorStats,
   DoctorQueryParams,
   DoctorListResponse,
   CompleteDoctorData,
@@ -24,15 +23,6 @@ export const doctorService = {
     const response = await apiClient.get<DoctorListResponse>('/doctors', {
       params,
     })
-    return response.data
-  },
-
-  /**
-   * Get statistics about doctor accounts
-   * @returns Doctor statistics including total, active, inactive counts
-   */
-  async getDoctorStats(): Promise<DoctorStats> {
-    const response = await apiClient.get<DoctorStats>('/doctors/stats')
     return response.data
   },
 

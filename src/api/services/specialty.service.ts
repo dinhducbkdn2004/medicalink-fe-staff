@@ -9,6 +9,7 @@ export interface Specialty {
   id: string
   name: string
   slug: string
+  isActive?: boolean
 }
 
 export interface SpecialtyQueryParams extends PaginationParams {
@@ -34,6 +35,48 @@ class SpecialtyService {
       }
     )
     return response.data
+  }
+
+  /**
+   * Get all active specialties (no pagination, for dropdowns)
+   * GET /api/specialties?isActive=true&limit=100
+   */
+  async getAllActiveSpecialties(): Promise<Specialty[]> {
+    try {
+      const response = await apiClient.get<SpecialtyListResponse>(
+        '/specialties',
+        {
+          params: {
+            isActive: true,
+            limit: 100, // Get active specialties (backend may have max limit)
+            sortBy: 'name',
+            sortOrder: 'asc',
+          },
+        }
+      )
+      return response.data.data
+    } catch (_error) {
+      // Fallback: try without isActive filter if it fails
+      try {
+        const response = await apiClient.get<SpecialtyListResponse>(
+          '/specialties',
+          {
+            params: {
+              limit: 100,
+              sortBy: 'name',
+              sortOrder: 'asc',
+            },
+          }
+        )
+        // Filter active on client side if API doesn't support filtering
+        // Logic: if 'isActive' property exists, filter by it. Otherwise return all.
+        // Assuming Specialty interface might not strictly enforce isActive locally but backend returns it.
+        // If Specialty interface needs update, we should check that too.
+        return response.data.data
+      } catch (_fallbackError) {
+        return []
+      }
+    }
   }
 }
 

@@ -25,7 +25,7 @@ import {
   isSameYear,
   isWithinInterval,
 } from 'date-fns'
-import type { ICalendarCell, IAppointment } from '@/calendar/interfaces'
+import type { ICalendarCell, IAppointment, IEvent } from '@/calendar/interfaces'
 import type {
   TCalendarView,
   TVisibleHours,

@@ -1,5 +1,10 @@
 import { useAuthStore } from '@/stores/auth-store'
-import { useStaffStats, useDoctorStats } from '@/hooks/use-stats'
+import {
+  useStaffStats,
+  usePatientStats,
+  useAppointmentStats,
+  useRevenueStats,
+} from '@/hooks/use-stats'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -26,8 +31,20 @@ export function Dashboard() {
   const isAdmin = user?.role === 'SUPER_ADMIN' || user?.role === 'ADMIN'
 
   const { data: staffStats, isLoading: isLoadingStaff } = useStaffStats(isAdmin)
-  const { data: doctorStats, isLoading: isLoadingDoctor } =
-    useDoctorStats(isAdmin)
+  const { data: patientStats, isLoading: isLoadingPatient } =
+    usePatientStats(isAdmin)
+  const { data: appointmentStats, isLoading: isLoadingAppointment } =
+    useAppointmentStats(isAdmin)
+  const { data: revenueStats, isLoading: isLoadingRevenue } =
+    useRevenueStats(isAdmin)
+
+  // Calculate total revenue from current year/month if data is available (assuming API returns array of months)
+  // Or just display "N/A" if aggregate not provided directly.
+  // Based on API response example: revenueStats is array of months.
+  const totalRevenue = revenueStats?.reduce((acc, curr) => {
+    return acc + (curr.total.VND || 0)
+  }, 0)
+
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -107,7 +124,7 @@ export function Dashboard() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Total Doctors
+                    Total Patients
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -119,54 +136,21 @@ export function Dashboard() {
                     strokeWidth='2'
                     className='text-muted-foreground h-4 w-4'
                   >
-                    <path d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' />
-                    <circle cx='12' cy='7' r='4' />
+                    <path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2' />
+                    <circle cx='9' cy='7' r='4' />
+                    <path d='M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' />
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  {isLoadingDoctor ? (
+                  {isLoadingPatient ? (
                     <Skeleton className='h-8 w-20' />
                   ) : (
                     <>
                       <div className='text-2xl font-bold'>
-                        {doctorStats?.total || 0}
+                        {patientStats?.totalPatients || 0}
                       </div>
                       <p className='text-muted-foreground text-xs'>
-                        {doctorStats?.byRole.DOCTOR || 0} active doctors
-                      </p>
-                    </>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>Admins</CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='text-muted-foreground h-4 w-4'
-                  >
-                    <path d='M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z' />
-                    <circle cx='12' cy='12' r='3' />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  {isLoadingStaff ? (
-                    <Skeleton className='h-8 w-20' />
-                  ) : (
-                    <>
-                      <div className='text-2xl font-bold'>
-                        {(staffStats?.byRole.ADMIN || 0) +
-                          (staffStats?.byRole.SUPER_ADMIN || 0)}
-                      </div>
-                      <p className='text-muted-foreground text-xs'>
-                        {staffStats?.byRole.SUPER_ADMIN || 0} super admin
+                        {patientStats?.currentMonthPatients || 0} new this month
                       </p>
                     </>
                   )}
@@ -176,7 +160,7 @@ export function Dashboard() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Deleted Accounts
+                    Appointments
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -188,23 +172,64 @@ export function Dashboard() {
                     strokeWidth='2'
                     className='text-muted-foreground h-4 w-4'
                   >
-                    <path d='M3 6h18' />
-                    <path d='M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6' />
-                    <path d='M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2' />
-                    <line x1='10' x2='10' y1='11' y2='17' />
-                    <line x1='14' x2='14' y1='11' y2='17' />
+                    <rect width='18' height='18' x='3' y='4' rx='2' ry='2' />
+                    <line x1='16' x2='16' y1='2' y2='6' />
+                    <line x1='8' x2='8' y1='2' y2='6' />
+                    <line x1='3' x2='21' y1='10' y2='10' />
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  {isLoadingStaff ? (
+                  {isLoadingAppointment ? (
                     <Skeleton className='h-8 w-20' />
                   ) : (
                     <>
                       <div className='text-2xl font-bold'>
-                        {staffStats?.deleted || 0}
+                        {appointmentStats?.totalAppointments || 0}
                       </div>
                       <p className='text-muted-foreground text-xs'>
-                        Total deleted staffs
+                        {appointmentStats?.growthPercent != null && (
+                          <>
+                            {appointmentStats.growthPercent > 0 ? '+' : ''}
+                            {appointmentStats.growthPercent}% from last month
+                          </>
+                        )}
+                      </p>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <CardTitle className='text-sm font-medium'>
+                    Total Revenue
+                  </CardTitle>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    className='text-muted-foreground h-4 w-4'
+                  >
+                    <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
+                  </svg>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingRevenue ? (
+                    <Skeleton className='h-8 w-20' />
+                  ) : (
+                    <>
+                      <div className='text-2xl font-bold'>
+                        {new Intl.NumberFormat('vi-VN', {
+                          style: 'currency',
+                          currency: 'VND',
+                        }).format(totalRevenue || 0)}
+                      </div>
+                      <p className='text-muted-foreground text-xs'>
+                        Year to date
                       </p>
                     </>
                   )}
@@ -222,9 +247,9 @@ export function Dashboard() {
               </Card>
               <Card className='col-span-1 lg:col-span-3'>
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
+                  <CardTitle>Top Doctors by Revenue</CardTitle>
                   <CardDescription>
-                    You made 265 sales this month.
+                    Highest earning doctors this month.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

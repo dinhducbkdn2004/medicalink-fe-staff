@@ -3,17 +3,14 @@
  * Manage user-group memberships (user-centric view)
  */
 import { useState } from 'react'
-import { UserCog } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { RoleGate } from '@/components/auth/role-gate'
-import { UserList } from './components/user-list'
 import { UserGroupMemberships } from './components/user-group-memberships'
+import { UserList } from './components/user-list'
 
 export function UserGroup() {
   const [selectedUserId, setSelectedUserId] = useState<string>()
@@ -41,18 +38,10 @@ export function UserGroup() {
               their groups.
             </p>
           </div>
-          <RoleGate roles={['SUPER_ADMIN']}>
-            {selectedUserId && (
-              <Button variant='outline'>
-                <UserCog className='mr-2 h-4 w-4' />
-                Manage Groups
-              </Button>
-            )}
-          </RoleGate>
         </div>
 
         {/* Main Content: Two Column Layout */}
-        <div className='grid gap-4 lg:grid-cols-[380px_1fr]'>
+        <div className='grid grid-cols-1 gap-4 lg:grid-cols-[380px_1fr]'>
           {/* Left: User List */}
           <UserList
             selectedUserId={selectedUserId}

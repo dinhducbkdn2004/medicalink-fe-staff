@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import { format } from 'date-fns'
-import { useForm } from 'react-hook-form'
+import { useForm, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   usePatients,
@@ -16,6 +16,7 @@ import {
 } from '@/calendar/schemas'
 import type { TimeSlot } from '@/api/services/doctor-profile.service'
 import type { CreateAppointmentRequest } from '@/api/types/appointment.types'
+import { useAuth } from '@/hooks/use-auth'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { Button } from '@/components/ui/button'
 import {
@@ -56,6 +57,7 @@ interface IProps {
 }
 
 export function AddEventDialog({ children, startDate, startTime }: IProps) {
+  const { user } = useAuth()
   const { isOpen, onClose, onToggle } = useDisclosure()
   const [patientSearch, setPatientSearch] = useState('')
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | undefined>(
@@ -79,6 +81,9 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
       currency: 'VND',
     },
   })
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const formControl = form.control as any
 
   // Watch form values for dependent selects
   const selectedLocationId = form.watch('locationId')
@@ -205,14 +210,30 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     [specialties]
   )
 
-  const doctorOptions = useMemo(
-    () =>
-      doctors.map((doctor) => ({
-        value: doctor.id, // Use profile ID for slots and appointment creation
-        label: doctor.fullName,
-      })),
-    [doctors]
-  )
+  const doctorOptions = useMemo(() => {
+    let filteredDoctors = doctors
+
+    // If current user is a doctor, only show themselves
+    if (user?.role === 'DOCTOR') {
+      filteredDoctors = doctors.filter((doc) => doc.staffAccountId === user.id)
+    }
+
+    return filteredDoctors.map((doctor) => ({
+      value: doctor.id, // Use profile ID for slots and appointment creation
+      label: doctor.fullName,
+    }))
+  }, [doctors, user])
+
+  // Auto-select doctor if only one option (especially for DOCTOR role)
+  useEffect(() => {
+    if (
+      user?.role === 'DOCTOR' &&
+      doctorOptions.length === 1 &&
+      selectedDoctorId !== doctorOptions[0].value
+    ) {
+      form.setValue('doctorId', doctorOptions[0].value)
+    }
+  }, [user, doctorOptions, selectedDoctorId, form])
 
   // Memoized button text for scheduler dialog
   const schedulerButtonText = useMemo(() => {
@@ -226,8 +247,8 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     return 'Select date & time slot'
   }, [isLoadingDates, selectedServiceDate, selectedSlot])
 
-  const onSubmit = useCallback(
-    (values: TCreateAppointmentFormData) => {
+  const onSubmit: SubmitHandler<TCreateAppointmentFormData> = useCallback(
+    (values) => {
       const requestData: CreateAppointmentRequest = {
         ...values,
         serviceDate: format(values.serviceDate, 'yyyy-MM-dd'),
@@ -278,12 +299,13 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
         <Form {...form}>
           <form
             id='appointment-form'
-            onSubmit={form.handleSubmit(onSubmit)}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onSubmit={form.handleSubmit(onSubmit as any)}
             className='grid gap-3 py-3'
           >
             {/* Step 0: Patient Selection */}
             <FormField
-              control={form.control}
+              control={formControl}
               name='patientId'
               render={({ field, fieldState }) => (
                 <FormItem>
@@ -308,7 +330,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
             {/* Step 1 & 2: Location and Specialty in 2 columns */}
             <div className='grid grid-cols-2 gap-3'>
               <FormField
-                control={form.control}
+                control={formControl}
                 name='locationId'
                 render={({ field, fieldState }) => (
                   <FormItem>
@@ -350,7 +372,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               />
 
               <FormField
-                control={form.control}
+                control={formControl}
                 name='specialtyId'
                 render={({ field, fieldState }) => (
                   <FormItem>
@@ -390,7 +412,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
 
             {/* Step 3: Doctor Selection (Requires BOTH Location AND Specialty) */}
             <FormField
-              control={form.control}
+              control={formControl}
               name='doctorId'
               render={({ field, fieldState }) => (
                 <FormItem>
@@ -402,7 +424,8 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                       disabled={
                         !selectedLocationId ||
                         !selectedSpecialtyId ||
-                        isLoadingDoctors
+                        isLoadingDoctors ||
+                        (user?.role === 'DOCTOR' && doctorOptions.length > 0)
                       }
                     >
                       <SelectTrigger
@@ -482,7 +505,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
 
             {/* Step 6: Reason, Notes, and Price */}
             <FormField
-              control={form.control}
+              control={formControl}
               name='reason'
               render={({ field, fieldState }) => (
                 <FormItem>
@@ -502,7 +525,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
             />
 
             <FormField
-              control={form.control}
+              control={formControl}
               name='notes'
               render={({ field, fieldState }) => (
                 <FormItem>
@@ -523,7 +546,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
 
             <div className='flex items-start gap-2'>
               <FormField
-                control={form.control}
+                control={formControl}
                 name='priceAmount'
                 render={({ field, fieldState }) => (
                   <FormItem className='flex-1'>
@@ -543,7 +566,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               />
 
               <FormField
-                control={form.control}
+                control={formControl}
                 name='currency'
                 render={({ field, fieldState }) => (
                   <FormItem className='w-32'>

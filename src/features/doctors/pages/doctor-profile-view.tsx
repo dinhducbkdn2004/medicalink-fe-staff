@@ -180,7 +180,7 @@ export function DoctorProfileView() {
           </Card>
         )}
 
-        <div className='grid gap-4 md:grid-cols-3'>
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
           {/* Left Column - Avatar & Basic Info */}
           <div className='space-y-4'>
             {/* Avatar Card */}

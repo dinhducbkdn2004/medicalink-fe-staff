@@ -10,63 +10,36 @@ import type { PaginatedResponse, PaginationParams } from '../types/common.types'
 // Types
 // ============================================================================
 
-export interface Doctor {
-  id: string
-  fullName: string
-  specialty?: string
-  avatarUrl?: string
-}
-
 export interface Review {
   id: string
-  doctorId: string
-  doctor: Doctor
-  patientName: string
-  patientEmail?: string
   rating: number
-  comment: string
-  appointmentDate?: string
-  publicIds?: string[]
-  status: 'PENDING' | 'APPROVED' | 'REJECTED'
-  helpfulCount: number
+  title: string
+  body: string
+  authorName: string
+  authorEmail: string
+  doctorId: string
+  isPublic: boolean
   createdAt: string
-  updatedAt: string
-}
-
-export interface ReviewSummary {
-  averageRating: number
-  totalReviews: number
-  ratingDistribution: {
-    5: number
-    4: number
-    3: number
-    2: number
-    1: number
+  publicIds: string[]
+  // These fields might be populated if the backend joins data,
+  // but based on the raw response they aren't there.
+  // We'll keep them optional for now to avoid breaking UI that relies on them until we fix components.
+  doctor?: {
+    id: string
+    fullName: string
+    specialty?: string
+    avatarUrl?: string
   }
-}
-
-export interface DoctorReviewsResponse extends PaginatedResponse<Review> {
-  summary: ReviewSummary
-}
-
-export interface ReviewQueryParams extends PaginationParams {
-  doctorId?: string
-  rating?: number
-  sortBy?: string
-  sortOrder?: 'asc' | 'desc'
 }
 
 export interface CreateReviewRequest {
   doctorId: string
-  patientName: string
-  patientEmail?: string
   rating: number
-  comment: string
-  appointmentDate?: string
-  publicIds?: string[]
+  title: string
+  body: string
+  authorName: string
+  authorEmail: string
 }
-
-export type ReviewListResponse = PaginatedResponse<Review>
 
 // ============================================================================
 // Service Class
@@ -78,28 +51,15 @@ class ReviewService {
   // --------------------------------------------------------------------------
 
   /**
-   * Get all reviews with pagination and filtering
-   * GET /api/reviews
-   */
-  async getReviews(
-    params: ReviewQueryParams = {}
-  ): Promise<ReviewListResponse> {
-    const response = await apiClient.get<ReviewListResponse>('/reviews', {
-      params,
-    })
-    return response.data
-  }
-
-  /**
    * Get all reviews for a specific doctor
-   * GET /api/reviews/doctors/:doctorId
+   * GET /api/reviews/doctor/:doctorId
    */
   async getDoctorReviews(
     doctorId: string,
-    params: ReviewQueryParams = {}
-  ): Promise<DoctorReviewsResponse> {
-    const response = await apiClient.get<DoctorReviewsResponse>(
-      `/reviews/doctors/${doctorId}`,
+    params: PaginationParams = {}
+  ): Promise<PaginatedResponse<Review>> {
+    const response = await apiClient.get<PaginatedResponse<Review>>(
+      `/reviews/doctor/${doctorId}`,
       { params }
     )
     return response.data
@@ -110,17 +70,25 @@ class ReviewService {
    * GET /api/reviews/:id
    */
   async getReview(id: string): Promise<Review> {
-    const response = await apiClient.get<Review>(`/reviews/${id}`)
-    return response.data
+    const response = await apiClient.get<{
+      success: boolean
+      message: string
+      data: Review
+    }>(`/reviews/${id}`)
+    return response.data.data
   }
 
   /**
-   * Create a new review (public, rate-limited)
+   * Create a new review
    * POST /api/reviews
    */
   async createReview(data: CreateReviewRequest): Promise<Review> {
-    const response = await apiClient.post<Review>('/reviews', data)
-    return response.data
+    const response = await apiClient.post<{
+      success: boolean
+      message: string
+      data: Review
+    }>('/reviews', data)
+    return response.data.data
   }
 
   /**
@@ -133,8 +101,12 @@ class ReviewService {
     const response = await apiClient.delete<{
       success: boolean
       message: string
+      data: null
     }>(`/reviews/${id}`)
-    return response.data
+    return {
+      success: response.data.success,
+      message: response.data.message,
+    }
   }
 }
 
