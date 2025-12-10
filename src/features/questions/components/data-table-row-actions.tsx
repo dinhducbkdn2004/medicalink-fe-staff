@@ -2,14 +2,8 @@
  * Questions Data Table Row Actions
  * Dropdown menu actions for individual question rows
  */
-import {
-  MoreHorizontal,
-  Edit,
-  Trash2,
-  Eye,
-  CheckCircle,
-  XCircle,
-} from 'lucide-react'
+import { MoreHorizontal, Edit, Trash2, Eye } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -31,6 +25,8 @@ export function DataTableRowActions({
 }: Readonly<DataTableRowActionsProps>) {
   const question = row.original
   const { setOpen, setCurrentQuestion } = useQuestions()
+  const { user } = useAuthStore()
+  const isDoctor = user?.role === 'DOCTOR'
 
   return (
     <DropdownMenu>
@@ -54,49 +50,30 @@ export function DataTableRowActions({
           <Eye className='mr-2 size-4' />
           View Details
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            setCurrentQuestion(question)
-            setOpen('edit')
-          }}
-        >
-          <Edit className='mr-2 size-4' />
-          Edit
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => {
-            setCurrentQuestion(question)
-            setOpen('answer')
-          }}
-          disabled={
-            question.status === 'ANSWERED' || question.status === 'CLOSED'
-          }
-        >
-          <CheckCircle className='mr-2 size-4' />
-          Mark as Answered
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            setCurrentQuestion(question)
-            setOpen('close')
-          }}
-          disabled={question.status === 'CLOSED'}
-        >
-          <XCircle className='mr-2 size-4' />
-          Close Question
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => {
-            setCurrentQuestion(question)
-            setOpen('delete')
-          }}
-          className='text-destructive'
-        >
-          <Trash2 className='mr-2 size-4' />
-          Delete
-        </DropdownMenuItem>
+        {!isDoctor && (
+          <>
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentQuestion(question)
+                setOpen('edit')
+              }}
+            >
+              <Edit className='mr-2 size-4' />
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentQuestion(question)
+                setOpen('delete')
+              }}
+              className='text-destructive'
+            >
+              <Trash2 className='mr-2 size-4' />
+              Delete
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )

@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useNavigate, useSearch } from '@tanstack/react-router'
+import { doctorService } from '@/api/services/doctor.service'
 import { reviewService, type Review } from '@/api/services/review.service'
 import type { PaginationParams } from '@/api/types/common.types'
 import { useAuthStore } from '@/stores/auth-store'
@@ -28,10 +29,34 @@ export function DoctorReviewsPage({
   const { user } = useAuthStore()
 
   // Determine target doctor ID: prop -> route param -> current user
-  const doctorId =
-    initialDoctorId ||
-    params.doctorId ||
-    (user?.role === 'DOCTOR' ? user.id : undefined)
+  // If user is DOCTOR, we need to resolve their profileId first
+  const [resolvedDoctorId, setResolvedDoctorId] = useState<string | undefined>(
+    initialDoctorId || params.doctorId
+  )
+
+  useEffect(() => {
+    const resolveId = async () => {
+      // If we already have a specific ID from props or params, use it
+      if (initialDoctorId || params.doctorId) {
+        setResolvedDoctorId(initialDoctorId || params.doctorId)
+        return
+      }
+
+      // If user is doctor, fetch their profile ID
+      if (user?.role === 'DOCTOR' && user.id) {
+        try {
+          const doctorData = await doctorService.getProfileMe()
+          if (doctorData.id) {
+            setResolvedDoctorId(doctorData.id)
+          }
+        } catch (error) {
+          console.error('Failed to resolve doctor profile ID:', error)
+        }
+      }
+    }
+
+    resolveId()
+  }, [initialDoctorId, params.doctorId, user])
 
   const [data, setData] = useState<Review[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -43,7 +68,7 @@ export function DoctorReviewsPage({
 
   // Fetch reviews logic
   const fetchReviews = useCallback(async () => {
-    if (!doctorId) return
+    if (!resolvedDoctorId) return
 
     setIsLoading(true)
     try {
@@ -54,7 +79,7 @@ export function DoctorReviewsPage({
       }
 
       const response = await reviewService.getDoctorReviews(
-        doctorId,
+        resolvedDoctorId,
         queryParams
       )
       setData(response.data)
@@ -64,19 +89,13 @@ export function DoctorReviewsPage({
     } finally {
       setIsLoading(false)
     }
-  }, [doctorId, page, limit])
+  }, [resolvedDoctorId, page, limit])
 
   useEffect(() => {
-    fetchReviews()
-  }, [fetchReviews])
-
-  if (!doctorId) {
-    return (
-      <div className='flex items-center justify-center p-8'>
-        <p className='text-muted-foreground'>No doctor specified.</p>
-      </div>
-    )
-  }
+    if (resolvedDoctorId) {
+      fetchReviews()
+    }
+  }, [fetchReviews, resolvedDoctorId])
 
   return (
     <ReviewsProvider>

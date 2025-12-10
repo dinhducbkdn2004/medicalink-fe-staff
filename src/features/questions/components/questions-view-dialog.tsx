@@ -55,9 +55,13 @@ export function QuestionViewDialog() {
     <Drawer
       direction='right'
       open={isOpen}
+      dismissible={false}
       onOpenChange={() => setOpen('view')}
     >
-      <DrawerContent className='h-full w-full sm:w-[600px]'>
+      <DrawerContent
+        className='h-full w-full sm:!max-w-[800px]'
+        onOverlayClick={() => setOpen('view', false)}
+      >
         <DrawerHeader>
           <div className='flex items-start justify-between gap-4'>
             <DrawerTitle className='text-xl leading-tight'>
@@ -81,7 +85,8 @@ export function QuestionViewDialog() {
         <div className='flex flex-1 flex-col overflow-y-auto p-4'>
           <div className='space-y-6'>
             {/* Author & Specialty */}
-            <div className='flex flex-wrap gap-4 text-sm'>
+            {/* Author & Specialty */}
+            <div className='flex flex-col gap-2 text-sm'>
               {currentQuestion.authorName && (
                 <div className='text-muted-foreground flex items-center gap-2'>
                   <span className='font-medium'>Asked by:</span>
@@ -89,7 +94,8 @@ export function QuestionViewDialog() {
                 </div>
               )}
               {currentQuestion.specialty && (
-                <div className='flex items-center gap-2'>
+                <div className='text-muted-foreground flex items-center gap-2'>
+                  <span className='font-medium'>Specialty:</span>
                   <Badge variant='outline' className='font-normal'>
                     {currentQuestion.specialty.name}
                   </Badge>
@@ -119,7 +125,7 @@ export function QuestionViewDialog() {
                 <MessageCircle className='text-muted-foreground size-5' />
                 <div className='text-center'>
                   <div className='text-2xl font-bold'>
-                    {currentQuestion.answerCount}
+                    {currentQuestion.answersCount}
                   </div>
                   <div className='text-muted-foreground text-xs'>Answers</div>
                 </div>
@@ -128,7 +134,7 @@ export function QuestionViewDialog() {
                 <CheckCircle className='size-5 text-green-600' />
                 <div className='text-center'>
                   <div className='text-2xl font-bold'>
-                    {currentQuestion.acceptedAnswerCount || 0}
+                    {currentQuestion.acceptedAnswersCount || 0}
                   </div>
                   <div className='text-muted-foreground text-xs'>Accepted</div>
                 </div>
@@ -145,7 +151,8 @@ export function QuestionViewDialog() {
             </div>
 
             {/* Dates */}
-            <div className='text-muted-foreground flex justify-between text-sm'>
+            {/* Dates */}
+            <div className='text-muted-foreground flex flex-col gap-1 text-sm'>
               <div>
                 Asked on{' '}
                 {format(new Date(currentQuestion.createdAt), 'MMMM dd, yyyy')}

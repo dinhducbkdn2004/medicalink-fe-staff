@@ -13,6 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { ImageUpload } from '@/components/ui/image-upload'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -41,8 +42,7 @@ interface BlogFormProps {
 
 export function BlogForm({ initialData }: BlogFormProps) {
   const navigate = useNavigate()
-  const { data: categoriesData, isLoading: isLoadingCategories } =
-    useBlogCategories({ limit: 100 })
+  const { data: categoriesData } = useBlogCategories({ limit: 100 })
   const { mutate: createBlog, isPending: isCreating } = useCreateBlog()
   const { mutate: updateBlog, isPending: isUpdating } = useUpdateBlog()
 
@@ -175,11 +175,12 @@ export function BlogForm({ initialData }: BlogFormProps) {
             name='thumbnailUrl'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Thumbnail URL (Optional)</FormLabel>
+                <FormLabel>Thumbnail (Optional)</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder='https://example.com/image.jpg'
-                    {...field}
+                  <ImageUpload
+                    value={field.value}
+                    onChange={field.onChange}
+                    disabled={isPending}
                   />
                 </FormControl>
                 <FormMessage />

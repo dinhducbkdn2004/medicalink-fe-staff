@@ -4,6 +4,7 @@
  */
 import type { UseNavigateResult } from '@tanstack/react-router'
 import { Edit, Trash2, Eye } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import {
   DataTable,
   type DataTableAction,
@@ -11,7 +12,7 @@ import {
 } from '@/components/data-table'
 import { statusOptions } from '../data/data'
 import type { Question } from '../data/schema'
-import { useSpecialties } from '../data/use-specialties'
+import { usePublicSpecialties } from '../data/use-specialties'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { columns } from './questions-columns'
 import { useQuestions } from './use-questions'
@@ -72,15 +73,15 @@ export function QuestionsTable({
   isLoading = false,
 }: Readonly<QuestionsTableProps>) {
   const { setOpen, setCurrentQuestion } = useQuestions()
-  const { data: specialtiesData } = useSpecialties({ limit: 100 })
+  const { data: specialtiesData } = usePublicSpecialties({ limit: 100 })
   const specialties = specialtiesData?.data || []
 
   // Define row actions (context menu)
   const getRowActions = (row: { original: Question }): DataTableAction[] => {
     const question = row.original
-    const hasAnswers = (question.answerCount || 0) > 0
+    const isDoctor = useAuthStore.getState().user?.role === 'DOCTOR'
 
-    return [
+    const actions: DataTableAction[] = [
       {
         label: 'View Details',
         icon: Eye,
@@ -89,26 +90,32 @@ export function QuestionsTable({
           setOpen('view')
         },
       },
-      {
-        label: 'Edit',
-        icon: Edit,
-        onClick: () => {
-          setCurrentQuestion(question)
-          setOpen('edit')
-        },
-      },
-      {
-        label: 'Delete',
-        icon: Trash2,
-        onClick: () => {
-          setCurrentQuestion(question)
-          setOpen('delete')
-        },
-        variant: 'destructive',
-        separator: true,
-        disabled: hasAnswers, // Disable if there are answers to prevent FK error
-      },
     ]
+
+    if (!isDoctor) {
+      actions.push(
+        {
+          label: 'Edit',
+          icon: Edit,
+          onClick: () => {
+            setCurrentQuestion(question)
+            setOpen('edit')
+          },
+        },
+        {
+          label: 'Delete',
+          icon: Trash2,
+          onClick: () => {
+            setCurrentQuestion(question)
+            setOpen('delete')
+          },
+          variant: 'destructive',
+          separator: true,
+        }
+      )
+    }
+
+    return actions
   }
 
   return (

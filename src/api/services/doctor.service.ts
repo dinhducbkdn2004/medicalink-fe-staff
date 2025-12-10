@@ -109,4 +109,14 @@ export const doctorService = {
     const response = await apiClient.delete<DoctorAccount>(`/doctors/${id}`)
     return response.data
   },
+  /**
+   * Get current doctor's profile
+   * GET /api/doctors/profile/me
+   */
+  async getProfileMe(): Promise<CompleteDoctorData> {
+    const response = await apiClient.get<CompleteDoctorData>(
+      '/doctors/profile/me'
+    )
+    return response.data
+  },
 }

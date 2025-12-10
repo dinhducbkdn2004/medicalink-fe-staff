@@ -58,7 +58,6 @@ interface IProps {
 }
 
 export function AddEventDialog({ children, startDate, startTime }: IProps) {
-  const { user } = useAuth()
   const { isOpen, onClose, onToggle } = useDisclosure()
   const [patientSearch, setPatientSearch] = useState('')
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | undefined>(
@@ -386,7 +385,11 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                       placeholder='Search patient by name, email or phone...'
                       emptyMessage='No patient found'
                       isLoading={isLoadingPatients}
-                      className={fieldState.invalid ? 'border-destructive' : ''}
+                      className={`${
+                        fieldState.invalid
+                          ? 'border-destructive focus-visible:border-destructive'
+                          : ''
+                      } ${field.value ? 'h-12' : ''}`}
                     />
                   </FormControl>
                   <FormMessage />
@@ -606,52 +609,25 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               )}
             />
 
-            <div className='flex items-start gap-2'>
-              <FormField
-                control={formControl}
-                name='priceAmount'
-                render={({ field, fieldState }) => (
-                  <FormItem className='flex-1'>
-                    <FormLabel>Price</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='number'
-                        step='0.01'
-                        placeholder='0.00'
-                        data-invalid={fieldState.invalid}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={formControl}
-                name='currency'
-                render={({ field, fieldState }) => (
-                  <FormItem className='w-32'>
-                    <FormLabel>Currency</FormLabel>
-                    <FormControl>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger data-invalid={fieldState.invalid}>
-                          <SelectValue placeholder='VND' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value='VND'>VND</SelectItem>
-                          <SelectItem value='USD'>USD</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={formControl}
+              name='priceAmount'
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Price (VND)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      step='0.01'
+                      placeholder='0.00'
+                      data-invalid={fieldState.invalid}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </form>
         </Form>
 

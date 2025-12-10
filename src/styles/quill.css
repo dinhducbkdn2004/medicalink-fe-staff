@@ -1,6 +1,5 @@
 .rich-text-editor {
   height: fit-content;
-  max-height: 300px;
   overflow: hidden;
   border-bottom-right-radius: 8px;
   border-bottom-left-radius: 8px;
@@ -15,7 +14,6 @@
 }
 
 .ql-container {
-  max-height: 300px;
   overflow-y: auto;
   overflow-x: hidden;
   font-family: inherit;

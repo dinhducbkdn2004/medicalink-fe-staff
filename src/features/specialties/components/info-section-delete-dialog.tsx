@@ -3,7 +3,6 @@
  * Confirmation dialog for deleting an info section
  */
 import { Loader2 } from 'lucide-react'
-
 import {
   AlertDialog,
   AlertDialogContent,
@@ -53,17 +52,13 @@ export function InfoSectionDeleteDialog({
           <AlertDialogTitle>Delete Info Section?</AlertDialogTitle>
           <AlertDialogDescription>
             Are you sure you want to delete the section{' '}
-            <span className='font-semibold'>&quot;{section.name}&quot;</span>?
+            <span className='font-semibold'>&quot;{section.title}&quot;</span>?
             This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <Button
-            variant='outline'
-            onClick={onOpenChange}
-            disabled={isLoading}
-          >
+          <Button variant='outline' onClick={onOpenChange} disabled={isLoading}>
             Cancel
           </Button>
           <Button
@@ -79,4 +74,3 @@ export function InfoSectionDeleteDialog({
     </AlertDialog>
   )
 }
-
