@@ -29,6 +29,19 @@
   word-break: break-word;
 }
 
+/* Size variants */
+.ql-editor-compact .ql-editor {
+  min-height: 200px;
+}
+
+.ql-editor-medium .ql-editor {
+  min-height: 300px;
+}
+
+.ql-editor-large .ql-editor {
+  min-height: 400px;
+}
+
 .rich-text-editor-wrapper {
   max-width: 100%;
   overflow: hidden;

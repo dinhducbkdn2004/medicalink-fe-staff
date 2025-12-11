@@ -17,7 +17,6 @@ import {
 } from '@/calendar/schemas'
 import type { TimeSlot } from '@/api/services/doctor-profile.service'
 import type { CreateAppointmentRequest } from '@/api/types/appointment.types'
-import { useAuth } from '@/hooks/use-auth'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { Button } from '@/components/ui/button'
 import {
