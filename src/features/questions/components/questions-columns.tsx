@@ -112,19 +112,13 @@ export const columns: ColumnDef<Question>[] = [
   },
   // Answer Count
   {
-    accessorKey: 'answersCount',
+    accessorKey: 'answerCount',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Answers' />
     ),
     cell: ({ row }) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const count =
-        (row.original as any).answersCount || row.original.answerCount
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const acceptedCount =
-        (row.original as any).acceptedAnswersCount ||
-        row.original.acceptedAnswerCount ||
-        0
+      const count = row.original.answerCount
+      const acceptedCount = row.original.acceptedAnswerCount || 0
       return (
         <div className='flex items-center gap-2'>
           <MessageCircle className='text-muted-foreground size-4' />
