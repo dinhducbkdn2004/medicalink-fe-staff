@@ -11,6 +11,7 @@ export * from './doctor-profile.service'
 export * from './specialty.service'
 export * from './work-location.service'
 export * from './blog.service'
+export * from './cloudinary.service'
 
 export * from './office-hour.service'
 export * from './permission.service'

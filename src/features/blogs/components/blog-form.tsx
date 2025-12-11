@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import type { Blog, BlogCategory } from '@/api/services/blog.service'
+import { useAuthStore } from '@/stores/auth-store'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -22,9 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { RichTextEditor } from '@/features/doctors/components/rich-text-editor'
 import { useBlogCategories } from '../data/use-blog-categories'
 import { useCreateBlog, useUpdateBlog } from '../data/use-blogs'
-import { RichTextEditor } from './editor'
 
 const blogSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -42,6 +44,7 @@ interface BlogFormProps {
 
 export function BlogForm({ initialData }: BlogFormProps) {
   const navigate = useNavigate()
+  const { accessToken } = useAuthStore()
   const { data: categoriesData } = useBlogCategories({ limit: 100 })
   const { mutate: createBlog, isPending: isCreating } = useCreateBlog()
   const { mutate: updateBlog, isPending: isUpdating } = useUpdateBlog()
@@ -64,7 +67,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
   })
 
   useEffect(() => {
-    if (initialData) {
+    if (initialData && categories.length > 0) {
       // Determine the correct category ID from available fields
       const categoryId =
         initialData.categoryId || initialData.category?.id || ''
@@ -74,10 +77,10 @@ export function BlogForm({ initialData }: BlogFormProps) {
         categoryId,
         thumbnailUrl: initialData.thumbnailUrl || '',
         content: initialData.content,
-        status: initialData.status,
+        status: initialData.status || 'DRAFT',
       })
     }
-  }, [initialData, form])
+  }, [initialData, categories.length, form])
 
   const onSubmit = (values: BlogFormValues) => {
     if (initialData) {
@@ -95,154 +98,189 @@ export function BlogForm({ initialData }: BlogFormProps) {
     }
   }
 
-  // Helper to determine what to show in the SelectValue
-  const getSelectedCategoryName = (currentValue: string) => {
-    // 1. Try to find in the loaded categories list
-    const found = categories.find((c) => c.id === currentValue)
-    if (found) return found.name
-
-    // 2. If valid initialData matches current value, use initialData name
-    const initialId = initialData?.categoryId || initialData?.category?.id
-    if (initialId && initialId === currentValue) {
-      return initialData?.category?.name
-    }
-
-    // 3. Fallback
-    return 'Select a category'
-  }
-
   return (
-    <div className='space-y-6'>
-      <div className='flex items-center gap-4'>
+    <div className='relative pb-24'>
+      {/* Header */}
+      <div className='mb-6 flex items-center justify-between'>
         <h1 className='text-2xl font-bold tracking-tight'>
           {initialData ? 'Edit Blog Post' : 'Create Blog Post'}
         </h1>
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-          <div className='grid gap-6 md:grid-cols-2'>
-            <FormField
-              control={form.control}
-              name='title'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder='Blog title' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+          {/* Section 1: Basic Information */}
+          <div className='bg-card rounded-lg border p-6 shadow-sm'>
+            <h2 className='mb-4 text-lg font-semibold'>Basic Information</h2>
 
+            <div className='grid gap-6 lg:grid-cols-3'>
+              {/* Left: Title + Category + Status (2/3 width) */}
+              <div className='space-y-4 lg:col-span-2'>
+                {/* Title */}
+                <FormField
+                  control={form.control}
+                  name='title'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Title</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder='Enter blog title...'
+                          className='text-base'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Category and Status in same row */}
+                <div className='grid gap-4 sm:grid-cols-2'>
+                  <FormField
+                    control={form.control}
+                    name='categoryId'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Category</FormLabel>
+                        <Select
+                          key={`category-${field.value}`}
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder='Select category' />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {categories.map((cat) => (
+                              <SelectItem key={cat.id} value={cat.id}>
+                                {cat.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {initialData && (
+                    <FormField
+                      control={form.control}
+                      name='status'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Status</FormLabel>
+                          <Select
+                            key={`status-${field.value}`}
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger
+                                className={cn(
+                                  'text-xs font-medium w-[120px]',
+                                  field.value === 'PUBLISHED' &&
+                                    'bg-green-100 text-green-800 hover:bg-green-100/80 dark:bg-green-900/30 dark:text-green-400',
+                                  field.value === 'ARCHIVED' &&
+                                    'bg-red-100 text-red-800 hover:bg-red-100/80 dark:bg-red-900/30 dark:text-red-400',
+                                  field.value === 'DRAFT' &&
+                                    'bg-gray-100 text-gray-800 hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-300'
+                                )}
+                              >
+                                <SelectValue placeholder='Select status' />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value='DRAFT'>DRAFT</SelectItem>
+                              <SelectItem value='PUBLISHED'>
+                                  PUBLISHED
+                              </SelectItem>
+                              <SelectItem value='ARCHIVED'>ARCHIVED</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* Right: Thumbnail (1/3 width) */}
+              <div className='lg:col-span-1'>
+                <FormField
+                  control={form.control}
+                  name='thumbnailUrl'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Thumbnail</FormLabel>
+                      <FormControl>
+                        <ImageUpload
+                          value={field.value}
+                          onChange={field.onChange}
+                          disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Content Editor */}
+          <div className='bg-card rounded-lg border p-6 shadow-sm'>
+            <h2 className='mb-4 text-lg font-semibold'>Content</h2>
             <FormField
               control={form.control}
-              name='categoryId'
+              name='content'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    // Removed disabled={isLoadingCategories} to allow interaction/visibility
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select a category'>
-                          {field.value
-                            ? getSelectedCategoryName(field.value)
-                            : 'Select a category'}
-                        </SelectValue>
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {categories.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <RichTextEditor
+                      value={field.value}
+                      onChange={field.onChange}
+                      accessToken={accessToken || ''}
+                      placeholder='Write your blog content here...'
+                      toolbarOptions='full'
+                      enableImageUpload={true}
+                      enableVideoUpload={true}
+                      enableSyntax={true}
+                      enableFormula={true}
+                      size='large'
+                      disabled={isPending}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
 
-          <FormField
-            control={form.control}
-            name='thumbnailUrl'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Thumbnail (Optional)</FormLabel>
-                <FormControl>
-                  <ImageUpload
-                    value={field.value}
-                    onChange={field.onChange}
-                    disabled={isPending}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {initialData && (
-            <FormField
-              control={form.control}
-              name='status'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Status</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select status' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value='DRAFT'>Draft</SelectItem>
-                      <SelectItem value='PUBLISHED'>Published</SelectItem>
-                      <SelectItem value='ARCHIVED'>Archived</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
-
-          <FormField
-            control={form.control}
-            name='content'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Content</FormLabel>
-                <FormControl>
-                  <RichTextEditor
-                    value={field.value}
-                    onChange={field.onChange}
-                    className='h-[75vh]'
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className='flex justify-end gap-4'>
-            <Button
-              type='button'
-              variant='outline'
-              onClick={() => navigate({ to: '/blogs/list' })}
-              disabled={isPending}
-            >
-              Cancel
-            </Button>
-            <Button type='submit' disabled={isPending}>
-              {isPending ? 'Saving...' : 'Save Blog Post'}
-            </Button>
+          {/* Sticky Footer with Actions */}
+          <div className='bg-background/95 supports-backdrop-filter:bg-background/60 fixed inset-x-0 bottom-0 z-50 border-t backdrop-blur'>
+            <div className='container flex h-16 items-center justify-between'>
+              <div className='text-muted-foreground text-sm'>
+                {isPending ? 'Saving changes...' : 'All changes are autosaved'}
+              </div>
+              <div className='flex gap-3'>
+                <Button
+                  type='button'
+                  variant='outline'
+                  onClick={() => navigate({ to: '/blogs/list' })}
+                  disabled={isPending}
+                >
+                  Cancel
+                </Button>
+                <Button type='submit' disabled={isPending}>
+                  {isPending ? 'Saving...' : 'Save Blog Post'}
+                </Button>
+              </div>
+            </div>
           </div>
         </form>
       </Form>

@@ -148,7 +148,8 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                   </TableCell>
                   <TableCell>
                     <Select
-                      defaultValue={blog.status}
+                      key={`${blog.id}-${blog.status}`}
+                      value={blog.status}
                       onValueChange={(value) =>
                         handleStatusChange(blog.id, value)
                       }

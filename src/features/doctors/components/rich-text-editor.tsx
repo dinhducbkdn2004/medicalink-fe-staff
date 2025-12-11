@@ -179,28 +179,37 @@ export function RichTextEditor({
         return
       }
 
+      // Get Quill instance first
+      const quill = quillInstanceRef.current
+      if (!quill) {
+        toast.error('Editor is not ready')
+        return
+      }
+
+      // Get current cursor position before upload
+      const range = quill.getSelection(true)
+      if (!range) {
+        toast.error('Please click in the editor first')
+        return
+      }
+
+      const cursorPosition = range.index
+
       try {
-        toast.info('Uploading image...')
+        // Disable editor during upload
+        quill.enable(false)
+
+        // Show loading toast
+        toast.loading('Uploading image...', { id: 'image-upload' })
 
         // Upload lên Cloudinary
         const result = await uploadMedia(file, accessToken)
 
-        // Get Quill instance
-        const quill = quillInstanceRef.current
-        if (!quill) {
-          toast.error('Editor is not ready')
-          return
-        }
-
-        // Get current cursor position
-        const range = quill.getSelection(true)
-        const index = range ? range.index : quill.getLength()
-
-        // Insert image at cursor position
-        quill.insertEmbed(index, 'image', result.secure_url)
+        // Insert actual image at cursor position
+        quill.insertEmbed(cursorPosition, 'image', result.secure_url)
 
         // Move cursor after image
-        quill.setSelection(index + 1)
+        quill.setSelection(cursorPosition + 1)
 
         // Trigger onChange with HTML content
         if (onChange) {
@@ -209,12 +218,16 @@ export function RichTextEditor({
           onChange(html)
         }
 
-        toast.success('Uploading image successful!')
+        toast.success('Image uploaded successfully', { id: 'image-upload' })
       } catch (error) {
         console.error('Image upload failed:', error)
         toast.error(
-          error instanceof Error ? error.message : 'Uploading image failed'
+          error instanceof Error ? error.message : 'Failed to upload image',
+          { id: 'image-upload' }
         )
+      } finally {
+        // Re-enable editor
+        quill.enable(true)
       }
     }
   }, [uploadMedia, accessToken, onChange, enableImageUpload])
@@ -247,28 +260,39 @@ export function RichTextEditor({
         return
       }
 
+      // Get Quill instance first
+      const quill = quillInstanceRef.current
+      if (!quill) {
+        toast.error('Editor is not ready')
+        return
+      }
+
+      // Get current cursor position before upload
+      const range = quill.getSelection(true)
+      if (!range) {
+        toast.error('Please click in the editor first')
+        return
+      }
+
+      const cursorPosition = range.index
+
       try {
-        toast.info('Uploading video... This may take a few minutes.')
+        // Disable editor during upload
+        quill.enable(false)
+
+        // Show loading toast
+        toast.loading('Uploading video... This may take a few minutes.', {
+          id: 'video-upload',
+        })
 
         // Upload lên Cloudinary
         const result = await uploadMedia(file, accessToken)
 
-        // Get Quill instance
-        const quill = quillInstanceRef.current
-        if (!quill) {
-          toast.error('Editor is not ready')
-          return
-        }
-
-        // Get current cursor position
-        const range = quill.getSelection(true)
-        const index = range ? range.index : quill.getLength()
-
-        // Insert video at cursor position
-        quill.insertEmbed(index, 'video', result.secure_url)
+        // Insert actual video at cursor position
+        quill.insertEmbed(cursorPosition, 'video', result.secure_url)
 
         // Move cursor after video
-        quill.setSelection(index + 1)
+        quill.setSelection(cursorPosition + 1)
 
         // Trigger onChange with HTML content
         if (onChange) {
@@ -277,12 +301,16 @@ export function RichTextEditor({
           onChange(html)
         }
 
-        toast.success('Uploading video successful!')
+        toast.success('Video uploaded successfully', { id: 'video-upload' })
       } catch (error) {
         console.error('Video upload failed:', error)
         toast.error(
-          error instanceof Error ? error.message : 'Uploading video failed'
+          error instanceof Error ? error.message : 'Failed to upload video',
+          { id: 'video-upload' }
         )
+      } finally {
+        // Re-enable editor
+        quill.enable(true)
       }
     }
   }, [uploadMedia, accessToken, onChange, enableVideoUpload])
@@ -468,19 +496,31 @@ export function RichTextEditor({
     if (!quill || !enableImageUpload) return
 
     const uploadImageFromBlob = async (blob: File) => {
+      // Get cursor position before upload
+      const range = quill.getSelection(true)
+      if (!range) {
+        toast.error('Please click in the editor first')
+        return
+      }
+
+      const cursorPosition = range.index
+
       try {
-        toast.info('Uploading image from clipboard...')
+        // Disable editor during upload
+        quill.enable(false)
+
+        // Show loading toast
+        toast.loading('Uploading image from clipboard...', {
+          id: 'clipboard-upload',
+        })
+
         const result = await uploadMedia(blob, accessToken)
 
-        // Get cursor position
-        const range = quill.getSelection(true)
-        const index = range ? range.index : quill.getLength()
+        // Insert actual image
+        quill.insertEmbed(cursorPosition, 'image', result.secure_url)
 
-        // Insert image
-        quill.insertEmbed(index, 'image', result.secure_url)
-
-        // Move cursor
-        quill.setSelection(index + 1)
+        // Move cursor after image
+        quill.setSelection(cursorPosition + 1)
 
         // Trigger onChange
         if (onChange) {
@@ -489,10 +529,15 @@ export function RichTextEditor({
           onChange(html)
         }
 
-        toast.success('Uploading image from clipboard successful!')
+        toast.success('Image uploaded successfully', { id: 'clipboard-upload' })
       } catch (error) {
         console.error('Clipboard image upload failed:', error)
-        toast.error('Uploading image from clipboard failed')
+        toast.error('Failed to upload image from clipboard', {
+          id: 'clipboard-upload',
+        })
+      } finally {
+        // Re-enable editor
+        quill.enable(true)
       }
     }
 
