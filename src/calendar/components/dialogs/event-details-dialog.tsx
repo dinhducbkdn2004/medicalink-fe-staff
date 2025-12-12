@@ -64,19 +64,21 @@ export function EventDetailsDialog({
   }
 
   const serviceDate = parseISO(appointment.event.serviceDate)
+  const hasDoctorAssigned = appointment.doctor !== null
   const canConfirm =
-    appointment.status === 'BOOKED' || appointment.status === 'RESCHEDULED'
-  const canComplete = appointment.status === 'CONFIRMED'
+    hasDoctorAssigned &&
+    (appointment.status === 'BOOKED' || appointment.status === 'RESCHEDULED')
+  const canComplete = hasDoctorAssigned && appointment.status === 'CONFIRMED'
   const canCancel = ![
     'COMPLETED',
     'CANCELLED_BY_PATIENT',
     'CANCELLED_BY_STAFF',
   ].includes(appointment.status)
-  const canReschedule = ![
-    'COMPLETED',
-    'CANCELLED_BY_PATIENT',
-    'CANCELLED_BY_STAFF',
-  ].includes(appointment.status)
+  const canReschedule =
+    hasDoctorAssigned &&
+    !['COMPLETED', 'CANCELLED_BY_PATIENT', 'CANCELLED_BY_STAFF'].includes(
+      appointment.status
+    )
 
   const resetView = () => {
     setIsEditing(false)
@@ -163,7 +165,9 @@ export function EventDetailsDialog({
                 <Stethoscope className='text-muted-foreground mt-1 size-5 shrink-0' />
                 <div className='space-y-1'>
                   <p className='text-sm font-medium'>Doctor</p>
-                  <p className='text-sm'>{appointment.doctor.name}</p>
+                  <p className='text-sm'>
+                    {appointment.doctor?.name || 'Deleted Doctor'}
+                  </p>
                   {appointment.specialty && (
                     <p className='text-muted-foreground text-xs'>
                       Specialty: {appointment.specialty.name}

@@ -23,9 +23,9 @@ import { InfoSectionDeleteDialog } from './info-section-delete-dialog'
 import { InfoSectionForm } from './info-section-form'
 
 interface InfoSectionsDialogProps {
-  open: boolean
-  onOpenChange: () => void
-  specialty: Specialty
+  readonly open: boolean
+  readonly onOpenChange: () => void
+  readonly specialty: Specialty
 }
 
 export function InfoSectionsDialog({
@@ -63,9 +63,13 @@ export function InfoSectionsDialog({
       <Drawer
         direction='right'
         open={open && !showForm}
+        dismissible={false}
         onOpenChange={onOpenChange}
       >
-        <DrawerContent className='h-full w-full sm:!max-w-[800px]'>
+        <DrawerContent
+          className='h-full w-full sm:max-w-[800px]!'
+          onOverlayClick={onOpenChange}
+        >
           <DrawerHeader>
             <DrawerTitle className='flex items-center gap-2'>
               Info Sections
@@ -115,18 +119,10 @@ export function InfoSectionsDialog({
                       <div className='flex items-start justify-between gap-2'>
                         <div className='flex-1'>
                           <CardTitle className='text-base'>
-                            {section.name}
+                            {section.title}
                           </CardTitle>
                           <CardDescription className='text-xs'>
-                            Created{' '}
-                            {new Date(section.createdAt).toLocaleDateString(
-                              'en-US',
-                              {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                              }
-                            )}
+                            Order: {section.order ?? 'N/A'}
                           </CardDescription>
                         </div>
                         <div className='flex gap-1'>
