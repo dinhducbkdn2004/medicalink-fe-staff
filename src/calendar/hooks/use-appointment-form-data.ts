@@ -2,7 +2,7 @@
  * Hooks for appointment form data fetching
  * Correct Flow: Patient → Location → Specialty → Doctor → Date → Time Slots
  */
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import {
   patientService,
@@ -22,9 +22,18 @@ import type { PublicDoctorProfile } from '@/api/types/doctor.types'
 let workLocationsCache: { data: WorkLocation[]; timestamp: number } | null =
   null
 let specialtiesCache: { data: Specialty[]; timestamp: number } | null = null
+let publicDoctorsCache: {
+  data: PublicDoctorProfile[]
+  timestamp: number
+} | null = null
 let isFetchingLocations = false
 let isFetchingSpecialties = false
+let isFetchingPublicDoctors = false
 const CACHE_DURATION = 10 * 60 * 1000 // 10 minutes
+
+// Cache for initial patients list (empty search)
+let initialPatientsCache: { data: Patient[]; timestamp: number } | null = null
+let isFetchingPatients = false
 
 // ============================================================================
 // Hook: Search Patients
@@ -33,42 +42,77 @@ export function usePatients(search?: string) {
   const [patients, setPatients] = useState<Patient[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
-  const searchPatients = useCallback(async (searchTerm: string) => {
-    setIsLoading(true)
-    try {
-      // If no search term, fetch latest 10 patients
-      // If search term exists, fetch matched patients
-      const params = searchTerm
-        ? { page: 1, limit: 20, search: searchTerm }
-        : {
-            page: 1,
-            limit: 10,
-            sortBy: 'createdAt',
-            sortOrder: 'desc',
-            includedDeleted: true,
-            search: '', // Explicit empty search
-          }
-
-      // @ts-expect-error - params type mismatch for overloading
-      const response = await patientService.getPatients(params)
-      setPatients(response.data)
-    } catch (error) {
-      console.error('Failed to search patients:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
-
   useEffect(() => {
-    // Debounce search
-    const timeoutId = setTimeout(() => {
-      searchPatients(search || '')
-    }, 500)
+    const fetchPatients = async (searchTerm: string) => {
+      // For empty search, check cache first
+      if (
+        !searchTerm &&
+        initialPatientsCache &&
+        Date.now() - initialPatientsCache.timestamp < CACHE_DURATION
+      ) {
+        setPatients(initialPatientsCache.data)
+        return
+      }
+
+      // Prevent multiple simultaneous fetches for initial load
+      if (!searchTerm && isFetchingPatients) {
+        return
+      }
+
+      if (!searchTerm) {
+        isFetchingPatients = true
+      }
+
+      setIsLoading(true)
+      try {
+        // If no search term, fetch latest 10 patients
+        // If search term exists, fetch matched patients
+        const params = searchTerm
+          ? { page: 1, limit: 20, search: searchTerm }
+          : {
+              page: 1,
+              limit: 10,
+              sortBy: 'createdAt',
+              sortOrder: 'desc',
+              includedDeleted: true,
+              search: '', // Explicit empty search
+            }
+
+        // @ts-expect-error - params type mismatch for overloading
+        const response = await patientService.getPatients(params)
+
+        // Cache initial patients list
+        if (!searchTerm) {
+          initialPatientsCache = {
+            data: response.data,
+            timestamp: Date.now(),
+          }
+        }
+
+        setPatients(response.data)
+      } catch (error) {
+        console.error('Failed to search patients:', error)
+        setPatients([])
+      } finally {
+        setIsLoading(false)
+        if (!searchTerm) {
+          isFetchingPatients = false
+        }
+      }
+    }
+
+    // Debounce search - increase delay for user typing
+    const timeoutId = setTimeout(
+      () => {
+        fetchPatients(search || '')
+      },
+      search ? 800 : 0 // 800ms for search typing, immediate for initial load
+    )
 
     return () => clearTimeout(timeoutId)
-  }, [search, searchPatients])
+  }, [search])
 
-  return { patients, isLoading, searchPatients }
+  return { patients, isLoading }
 }
 
 // ============================================================================
@@ -134,11 +178,35 @@ export function useWorkLocations() {
 // Hook: Fetch Initial Public Doctors (for "Select Doctor First")
 // ============================================================================
 export function usePublicDoctors() {
-  const [doctors, setDoctors] = useState<PublicDoctorProfile[]>([])
+  const [doctors, setDoctors] = useState<PublicDoctorProfile[]>(() => {
+    // Initialize with cached data if available and fresh
+    if (
+      publicDoctorsCache &&
+      Date.now() - publicDoctorsCache.timestamp < CACHE_DURATION
+    ) {
+      return publicDoctorsCache.data
+    }
+    return []
+  })
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchDoctors = async () => {
+      // Check cache first
+      if (
+        publicDoctorsCache &&
+        Date.now() - publicDoctorsCache.timestamp < CACHE_DURATION
+      ) {
+        setDoctors(publicDoctorsCache.data)
+        return
+      }
+
+      // Prevent multiple simultaneous fetches
+      if (isFetchingPublicDoctors) {
+        return
+      }
+
+      isFetchingPublicDoctors = true
       setIsLoading(true)
       try {
         const response = await doctorProfileService.getPublicDoctorProfiles({
@@ -147,16 +215,22 @@ export function usePublicDoctors() {
           sortBy: 'createdAt',
           sortOrder: 'desc',
         })
+        // Update cache
+        publicDoctorsCache = {
+          data: response.data,
+          timestamp: Date.now(),
+        }
         setDoctors(response.data)
       } catch (error) {
         console.error('Failed to fetch public doctors:', error)
       } finally {
         setIsLoading(false)
+        isFetchingPublicDoctors = false
       }
     }
 
     fetchDoctors()
-  }, [])
+  }, []) // Empty deps - only fetch once on mount
 
   return { doctors, isLoading }
 }

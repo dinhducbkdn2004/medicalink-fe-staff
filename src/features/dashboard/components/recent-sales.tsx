@@ -10,18 +10,20 @@ export function RecentSales() {
         <div key={item.doctorId} className='flex items-center gap-4'>
           <Avatar className='h-9 w-9'>
             <AvatarImage
-              src={item.doctor.avatarUrl}
-              alt={item.doctor.fullName}
+              src={item.doctor?.avatarUrl}
+              alt={item.doctor?.fullName || 'Unknown'}
             />
-            <AvatarFallback>{item.doctor.fullName.charAt(0)}</AvatarFallback>
+            <AvatarFallback>
+              {item.doctor?.fullName?.charAt(0) || 'U'}
+            </AvatarFallback>
           </Avatar>
           <div className='flex flex-1 flex-wrap items-center justify-between'>
             <div className='space-y-1'>
               <p className='text-sm leading-none font-medium'>
-                {item.doctor.fullName}
+                {item.doctor?.fullName || 'Deleted Doctor'}
               </p>
               <p className='text-muted-foreground text-sm'>
-                {item.doctor.isActive ? 'Active' : 'Inactive'}
+                {item.doctor?.isActive ? 'Active' : 'Inactive'}
               </p>
             </div>
             <div className='font-medium'>

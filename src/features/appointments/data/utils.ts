@@ -13,13 +13,13 @@ export const getEventColorByStatus = (
   status: Appointment['status']
 ): TEventColor => {
   const statusColorMap: Record<Appointment['status'], TEventColor> = {
-    BOOKED: 'blue',
-    CONFIRMED: 'green',
-    CANCELLED_BY_PATIENT: 'red',
-    CANCELLED_BY_STAFF: 'red',
-    COMPLETED: 'gray',
-    NO_SHOW: 'orange',
-    RESCHEDULED: 'blue',
+    BOOKED: 'blue', // New booking - blue for pending
+    CONFIRMED: 'green', // Confirmed - green for active/ready
+    CANCELLED_BY_PATIENT: 'red', // Cancelled - red for error/cancelled
+    CANCELLED_BY_STAFF: 'red', // Cancelled - red for error/cancelled
+    COMPLETED: 'gray', // Completed - gray for done/archived
+    NO_SHOW: 'orange', // No show - orange for warning
+    RESCHEDULED: 'purple', // Rescheduled - purple for modified
   }
   return statusColorMap[status] || 'blue'
 }
@@ -70,16 +70,22 @@ export const transformAppointmentToEvent = (
     color: getEventColorByStatus(status),
     description: `
 Patient: ${patient.fullName}
-Doctor: ${doctor.name}
+Doctor: ${doctor?.name || 'Deleted Doctor'}
 Status: ${status}
 Reason: ${reason}
 ${appointment.notes ? `Notes: ${appointment.notes}` : ''}
     `.trim(),
-    user: {
-      id: doctor.id,
-      name: doctor.name,
-      picturePath: doctor.avatarUrl,
-    },
+    user: doctor
+      ? {
+          id: doctor.id,
+          name: doctor.name,
+          picturePath: doctor.avatarUrl,
+        }
+      : {
+          id: 'deleted-doctor',
+          name: 'Deleted Doctor',
+          picturePath: null,
+        },
     appointment: {
       ...appointment,
       // Ensure nested objects match IAppointment interface if needed
@@ -110,7 +116,8 @@ export const extractUsersFromAppointments = (
 
   for (const appointment of appointments) {
     const { doctor } = appointment
-    if (!uniqueDoctors.has(doctor.id)) {
+    // Skip appointments with null doctors
+    if (doctor && !uniqueDoctors.has(doctor.id)) {
       uniqueDoctors.set(doctor.id, {
         id: doctor.id,
         name: doctor.name,
