@@ -88,7 +88,9 @@ export function CancelAppointmentDialog({ children, appointment }: IProps) {
             </div>
             <div className='flex justify-between text-sm'>
               <span className='text-muted-foreground'>Doctor:</span>
-              <span className='font-medium'>{appointment.doctor.name}</span>
+              <span className='font-medium'>
+                {appointment.doctor?.name || 'Deleted Doctor'}
+              </span>
             </div>
             <div className='flex justify-between text-sm'>
               <span className='text-muted-foreground'>Date:</span>
