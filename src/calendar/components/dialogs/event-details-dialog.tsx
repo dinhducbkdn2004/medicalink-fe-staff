@@ -197,7 +197,8 @@ export function EventDetailsDialog({
                     {format(serviceDate, 'EEEE, MMMM d, yyyy')}
                   </p>
                   <p className='text-sm'>
-                    {appointment.event.timeStart} - {appointment.event.timeEnd}
+                    {format(parseISO(appointment.event.timeStart), 'h:mm a')} -{' '}
+                    {format(parseISO(appointment.event.timeEnd), 'h:mm a')}
                   </p>
                 </div>
               </div>
