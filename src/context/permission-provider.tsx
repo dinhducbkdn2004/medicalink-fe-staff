@@ -1,8 +1,3 @@
-/**
- * Permission Provider
- * Loads and manages user permissions after authentication
- * Wraps the application to provide permission context
- */
 import {
   createContext,
   useContext,
@@ -20,21 +15,9 @@ import {
 } from '@/stores/permission-store'
 import { useMyPermissions } from '@/hooks/use-permissions'
 
-// ============================================================================
-// Context Types
-// ============================================================================
-
 interface PermissionContextValue {
-  /**
-   * Check if user has permission for resource:action (UI level)
-   * Does not evaluate conditions
-   */
   can: (resource: string, action: string) => boolean
 
-  /**
-   * Check if user has permission with context (Action level)
-   * Evaluates conditions against provided context
-   */
   canWithContext: (
     resource: string,
     action: string,
@@ -81,6 +64,7 @@ const PermissionContext = createContext<PermissionContextValue | null>(null)
  * Use permission context
  * Must be used within PermissionProvider
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function usePermissions() {
   const context = useContext(PermissionContext)
 

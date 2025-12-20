@@ -58,9 +58,11 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
             />
           )}
           <div className='flex flex-col'>
-            <span className='font-medium'>{row.original.name}</span>
+            <span className='max-w-[200px] truncate font-medium'>
+              {row.original.name}
+            </span>
             {row.original.slug && (
-              <span className='text-muted-foreground text-xs'>
+              <span className='text-muted-foreground max-w-[200px] truncate text-xs'>
                 {row.original.slug}
               </span>
             )}
@@ -85,25 +87,6 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
     },
     meta: {
       className: 'min-w-[200px]',
-    },
-  },
-  {
-    accessorKey: 'infoSectionsCount',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Info Sections' />
-    ),
-    cell: ({ row }) => {
-      const count = row.original.infoSectionsCount || 0
-      return (
-        <div className='text-center'>
-          <Badge variant='secondary' className='font-mono'>
-            {count}
-          </Badge>
-        </div>
-      )
-    },
-    meta: {
-      className: 'w-[120px] text-center',
     },
   },
   {

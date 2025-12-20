@@ -1,9 +1,4 @@
-/**
- * Doctor Appointments Section
- * Displays pending (booked) and upcoming (confirmed) appointments for doctors
- * Based on API_DOCTOR_STATS.md requirements
- */
-import { useState } from 'react'
+
 import { format, addDays, subMonths, addMonths } from 'date-fns'
 import {
   Calendar,
