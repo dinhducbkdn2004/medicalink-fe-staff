@@ -15,7 +15,7 @@ import {
   type DataTableAction,
   type ColumnFilterConfig,
 } from '@/components/data-table'
-import { ratingOptions } from '../data/data'
+import { verifiedOptions } from '../data/data'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { columns } from './reviews-columns'
 import { useReviews } from './use-reviews'
@@ -36,6 +36,15 @@ const columnFilterConfigs: ColumnFilterConfig[] = [
   {
     columnId: 'rating',
     searchKey: 'rating',
+    serialize: (value: unknown) => {
+      const arr = value as string[]
+      return arr.length > 0 ? arr[0] : undefined
+    },
+    deserialize: (value: unknown) => (value ? [value] : []),
+  },
+  {
+    columnId: 'isPublic',
+    searchKey: 'isPublic',
     serialize: (value: unknown) => {
       const arr = value as string[]
       return arr.length > 0 ? arr[0] : undefined
@@ -102,17 +111,15 @@ export function ReviewsTable({
       pageCount={pageCount}
       isLoading={isLoading}
       entityName='review'
-      // Toolbar
-      searchPlaceholder='Search by doctor or patient...'
-      // Using global filter instead of column-specific search
+      // Toolbar - no search bar
       filters={[
         {
-          columnId: 'rating',
-          title: 'Rating',
-          options: ratingOptions.map((rating) => ({
-            label: rating.label,
-            value: rating.value,
-            icon: rating.icon,
+          columnId: 'isPublic',
+          title: 'Verified Status',
+          options: verifiedOptions.map((option) => ({
+            label: option.label,
+            value: option.value,
+            icon: option.icon,
           })),
         },
       ]}

@@ -17,6 +17,7 @@ import {
 } from '@/calendar/schemas'
 import type { TimeSlot } from '@/api/services/doctor-profile.service'
 import type { CreateAppointmentRequest } from '@/api/types/appointment.types'
+import { useAuthStore } from '@/stores/auth-store'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { Button } from '@/components/ui/button'
 import {
@@ -62,6 +63,12 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | undefined>(
     undefined
   )
+
+  // Get user role to determine if past dates can be selected
+  const user = useAuthStore((state) => state.user)
+  const allowPastDates = user
+    ? user.role === 'ADMIN' || user.role === 'SUPER_ADMIN'
+    : false
 
   const { mutate: createAppointment, isPending } = useCreateAppointment()
 
@@ -527,6 +534,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                 disabled={
                   !selectedDoctorId || !selectedLocationId || isLoadingDates
                 }
+                allowPast={allowPastDates} // Only ADMIN/SUPER_ADMIN can select past dates
                 onDateSelect={(date) => {
                   form.setValue('serviceDate', date)
                   setSelectedSlot(undefined)

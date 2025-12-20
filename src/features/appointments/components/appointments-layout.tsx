@@ -13,6 +13,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { RequirePermission } from '@/components/auth/require-permission'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -26,7 +27,7 @@ import {
   getDateRangeForView,
 } from '../data/utils'
 
-export function AppointmentsLayout() {
+function AppointmentsLayoutContent() {
   const location = useLocation()
   const [selectedDate, setSelectedDate] = useState(new Date())
 
@@ -126,5 +127,16 @@ export function AppointmentsLayout() {
         </div>
       </Main>
     </CalendarProvider>
+  )
+}
+
+/**
+ * Appointments Layout with permission guard
+ */
+export function AppointmentsLayout() {
+  return (
+    <RequirePermission resource='appointments' action='read'>
+      <AppointmentsLayoutContent />
+    </RequirePermission>
   )
 }

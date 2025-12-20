@@ -2,22 +2,21 @@ import { useEffect, useState } from 'react'
 import { parseISO, format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { AppointmentSchedulerDialog } from '@/calendar/components/dialogs/appointment-scheduler-dialog'
 import {
   useDoctorsBySpecialty,
   useLocationsByDoctor,
+  useDoctorAvailableDates,
+  useAvailableSlots,
 } from '@/calendar/hooks/use-appointment-form-data'
 import type { IAppointment } from '@/calendar/interfaces'
 import {
   rescheduleAppointmentSchema,
   type TRescheduleAppointmentFormData,
 } from '@/calendar/schemas'
-import { Loader2 } from 'lucide-react'
-import {
-  doctorProfileService,
-  type TimeSlot,
-} from '@/api/services/doctor-profile.service'
+import type { TimeSlot } from '@/api/services/doctor-profile.service'
 import type { RescheduleAppointmentRequest } from '@/api/types/appointment.types'
-import { cn } from '@/lib/utils'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -34,7 +33,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { SingleDayPicker } from '@/components/ui/single-day-picker'
 import { useRescheduleAppointment } from '@/features/appointments/data/hooks'
 
 interface IProps {
@@ -51,8 +49,9 @@ export function AppointmentRescheduleForm({
   const { mutate: rescheduleAppointment, isPending } =
     useRescheduleAppointment()
 
-  const [slots, setSlots] = useState<TimeSlot[]>([])
-  const [loadingSlots, setLoadingSlots] = useState(false)
+  const [selectedSlot, setSelectedSlot] = useState<TimeSlot | undefined>(
+    undefined
+  )
 
   // Extract default values
   const serviceDate = appointment?.event
@@ -66,6 +65,7 @@ export function AppointmentRescheduleForm({
     : [10, 0]
 
   const form = useForm<TRescheduleAppointmentFormData>({
+    // @ts-expect-error - Zod v4 type compatibility issue with zodResolver
     resolver: zodResolver(rescheduleAppointmentSchema),
     defaultValues: {
       doctorId: appointment?.doctorId || '',
@@ -81,10 +81,6 @@ export function AppointmentRescheduleForm({
   const selectedLocationId = form.watch('locationId')
   const selectedDate = form.watch('serviceDate')
 
-  // Watch time for highlighting selected slot
-  const selectedTimeStart = form.watch('timeStart')
-  const selectedTimeEnd = form.watch('timeEnd')
-
   // Fetch doctors based on appointment specialty
   const { doctors, isLoading: isLoadingDoctors } = useDoctorsBySpecialty(
     appointment?.specialtyId
@@ -93,6 +89,25 @@ export function AppointmentRescheduleForm({
   // Fetch locations based on selected doctor
   const { locations, isLoading: isLoadingLocations } =
     useLocationsByDoctor(selectedDoctorId)
+
+  // Fetch available dates
+  const { availableDates, isLoading: isLoadingDates } = useDoctorAvailableDates(
+    selectedDoctorId,
+    selectedLocationId
+  )
+
+  // Fetch available slots for selected date
+  const { slots, isLoading: isLoadingSlots } = useAvailableSlots(
+    selectedDoctorId,
+    selectedLocationId,
+    selectedDate
+  )
+
+  // Get user role for allowPast
+  const user = useAuthStore((state) => state.user)
+  const allowPastDates = user
+    ? user.role === 'ADMIN' || user.role === 'SUPER_ADMIN'
+    : false
 
   // Reset location if doctor changes
   useEffect(() => {
@@ -103,35 +118,6 @@ export function AppointmentRescheduleForm({
       form.setValue('locationId', '')
     }
   }, [selectedDoctorId, appointment.doctorId, form])
-
-  // Fetch available slots
-  useEffect(() => {
-    async function fetchSlots() {
-      if (!selectedDoctorId || !selectedLocationId || !selectedDate) {
-        setSlots([])
-        return
-      }
-
-      setLoadingSlots(true)
-      try {
-        const dateStr = format(selectedDate, 'yyyy-MM-dd')
-        const fetchedSlots = await doctorProfileService.getDoctorAvailableSlots(
-          selectedDoctorId,
-          selectedLocationId,
-          dateStr,
-          true // allowPast? Maybe check if it's today
-        )
-        setSlots(fetchedSlots)
-      } catch (error) {
-        console.error('Failed to fetch slots', error)
-        setSlots([])
-      } finally {
-        setLoadingSlots(false)
-      }
-    }
-
-    fetchSlots()
-  }, [selectedDoctorId, selectedLocationId, selectedDate])
 
   const onSubmit = (values: TRescheduleAppointmentFormData) => {
     const requestData: RescheduleAppointmentRequest = {
@@ -158,7 +144,8 @@ export function AppointmentRescheduleForm({
     )
   }
 
-  const handleSlotClick = (slot: TimeSlot) => {
+  const handleSlotSelect = (slot: TimeSlot) => {
+    setSelectedSlot(slot)
     const [startHour, startMinute] = slot.timeStart.split(':').map(Number)
     const [endHour, endMinute] = slot.timeEnd.split(':').map(Number)
 
@@ -166,14 +153,6 @@ export function AppointmentRescheduleForm({
     form.setValue('timeEnd', { hour: endHour, minute: endMinute })
     form.trigger(['timeStart', 'timeEnd'])
   }
-
-  // Format form time to string for comparison
-  const currentTimeStartStr = selectedTimeStart
-    ? `${String(selectedTimeStart.hour).padStart(2, '0')}:${String(selectedTimeStart.minute).padStart(2, '0')}`
-    : ''
-  const currentTimeEndStr = selectedTimeEnd
-    ? `${String(selectedTimeEnd.hour).padStart(2, '0')}:${String(selectedTimeEnd.minute).padStart(2, '0')}`
-    : ''
 
   return (
     <Form {...form}>
@@ -261,74 +240,53 @@ export function AppointmentRescheduleForm({
           />
         </div>
 
+        {/* Date & Time Picker with Available Slots */}
         <FormField
           control={form.control}
           name='serviceDate'
-          render={({ field, fieldState }) => (
+          render={({ fieldState }) => (
             <FormItem>
-              <FormLabel htmlFor='serviceDate'>Service Date</FormLabel>
+              <FormLabel>Date & Time *</FormLabel>
               <FormControl>
-                <SingleDayPicker
-                  id='serviceDate'
-                  value={field.value}
-                  onSelect={(date) => field.onChange(date as Date)}
-                  placeholder='Select a date'
-                  data-invalid={fieldState.invalid}
-                />
+                <AppointmentSchedulerDialog
+                  availableDates={availableDates}
+                  slots={slots}
+                  isLoadingSlots={isLoadingSlots}
+                  selectedDate={selectedDate}
+                  selectedSlot={selectedSlot}
+                  disabled={
+                    !selectedDoctorId || !selectedLocationId || isLoadingDates
+                  }
+                  allowPast={allowPastDates}
+                  onDateSelect={(date) => {
+                    form.setValue('serviceDate', date)
+                    setSelectedSlot(undefined)
+                    form.setValue('timeStart', undefined)
+                    form.setValue('timeEnd', undefined)
+                  }}
+                  onSlotSelect={handleSlotSelect}
+                >
+                  <Button
+                    type='button'
+                    variant='outline'
+                    className='w-full justify-start text-left font-normal'
+                    disabled={
+                      !selectedDoctorId || !selectedLocationId || isLoadingDates
+                    }
+                    data-invalid={fieldState.invalid}
+                  >
+                    {selectedDate && selectedSlot
+                      ? `${format(selectedDate, 'PPP')} • ${selectedSlot.timeStart} - ${selectedSlot.timeEnd}`
+                      : selectedDate
+                        ? format(selectedDate, 'PPP')
+                        : 'Select date and time'}
+                  </Button>
+                </AppointmentSchedulerDialog>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
-        {/* Available Slots Section */}
-        <div className='space-y-2'>
-          <FormLabel>Available Slots</FormLabel>
-          <div className='rounded-md border p-4'>
-            {loadingSlots ? (
-              <div className='text-muted-foreground flex items-center justify-center py-4 text-sm'>
-                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                Loading available slots...
-              </div>
-            ) : !selectedDate || !selectedDoctorId || !selectedLocationId ? (
-              <div className='text-muted-foreground py-4 text-center text-sm'>
-                Select doctor, location and date to view available slots
-              </div>
-            ) : slots.length === 0 ? (
-              <div className='text-muted-foreground py-4 text-center text-sm'>
-                No available slots for this date
-              </div>
-            ) : (
-              <div className='grid grid-cols-3 gap-2 sm:grid-cols-4'>
-                {slots.map((slot, index) => {
-                  const isSelected =
-                    currentTimeStartStr === slot.timeStart &&
-                    currentTimeEndStr === slot.timeEnd
-
-                  return (
-                    <Button
-                      key={`${slot.timeStart}-${index}`}
-                      type='button'
-                      variant={isSelected ? 'default' : 'outline'}
-                      className={cn(
-                        'flex h-auto flex-col items-center px-3 py-2 text-xs',
-                        isSelected && 'border-primary'
-                      )}
-                      onClick={() => handleSlotClick(slot)}
-                    >
-                      <span className='font-medium'>{slot.timeStart}</span>
-                      <span className='text-[10px] opacity-70'>
-                        to {slot.timeEnd}
-                      </span>
-                    </Button>
-                  )
-                })}
-              </div>
-            )}
-          </div>
-          {/* Hidden fields to maintain validation logic if needed, or just rely on state */}
-          <FormMessage>{form.formState.errors.timeStart?.message}</FormMessage>
-        </div>
 
         <div className='flex items-center justify-end gap-2 pt-4'>
           <Button

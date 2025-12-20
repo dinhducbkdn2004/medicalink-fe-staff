@@ -2,10 +2,10 @@
  * Doctors Dialogs Wrapper
  * Renders all doctor management dialogs
  */
-
 import { DoctorsCreateDialog } from './doctors-create-dialog'
-import { DoctorsEditDialog } from './doctors-edit-dialog'
 import { DoctorsDeleteDialog } from './doctors-delete-dialog'
+import { DoctorsEditDialog } from './doctors-edit-dialog'
+import { DoctorsStatsDialogWrapper } from './doctors-stats-dialog-wrapper'
 import { DoctorsToggleActiveDialog } from './doctors-toggle-active-dialog'
 
 export function DoctorsDialogs() {
@@ -15,7 +15,7 @@ export function DoctorsDialogs() {
       <DoctorsEditDialog />
       <DoctorsDeleteDialog />
       <DoctorsToggleActiveDialog />
+      <DoctorsStatsDialogWrapper />
     </>
   )
 }
-

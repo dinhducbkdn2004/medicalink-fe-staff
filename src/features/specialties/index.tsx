@@ -3,6 +3,8 @@
  * Main page for managing medical specialties
  */
 import { getRouteApi } from '@tanstack/react-router'
+import { Can } from '@/components/auth/permission-gate'
+import { RequirePermission } from '@/components/auth/require-permission'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -36,44 +38,45 @@ export function Specialties() {
     sortOrder: (search.sortOrder as 'asc' | 'desc' | undefined) || undefined,
   }
 
-  // Debug: Log API params (remove in production)
-  // console.log('🔍 Specialties API Params:', queryParams)
-
   const { data, isLoading } = useSpecialties(queryParams)
 
   return (
-    <SpecialtiesProvider>
-      <Header fixed>
-        <Search />
-        <div className='ms-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ConfigDrawer />
-          <ProfileDropdown />
-        </div>
-      </Header>
-
-      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        <div className='flex flex-wrap items-end justify-between gap-2'>
-          <div>
-            <h2 className='text-2xl font-bold tracking-tight'>
-              Specialty Management
-            </h2>
-            <p className='text-muted-foreground'>
-              Manage medical specialties and their information sections.
-            </p>
+    <RequirePermission resource='specialties' action='manage'>
+      <SpecialtiesProvider>
+        <Header fixed>
+          <Search />
+          <div className='ms-auto flex items-center space-x-4'>
+            <ThemeSwitch />
+            <ConfigDrawer />
+            <ProfileDropdown />
           </div>
-          <SpecialtiesPrimaryButtons />
-        </div>
-        <SpecialtiesTable
-          data={data?.data || []}
-          pageCount={data?.meta?.totalPages || 0}
-          search={search}
-          navigate={navigate}
-          isLoading={isLoading}
-        />
-      </Main>
+        </Header>
 
-      <SpecialtiesDialogs />
-    </SpecialtiesProvider>
+        <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+          <div className='flex flex-wrap items-end justify-between gap-2'>
+            <div>
+              <h2 className='text-2xl font-bold tracking-tight'>
+                Specialty Management
+              </h2>
+              <p className='text-muted-foreground'>
+                Manage medical specialties and their information sections.
+              </p>
+            </div>
+            <Can I='specialties:create'>
+              <SpecialtiesPrimaryButtons />
+            </Can>
+          </div>
+          <SpecialtiesTable
+            data={data?.data || []}
+            pageCount={data?.meta?.totalPages || 0}
+            search={search}
+            navigate={navigate}
+            isLoading={isLoading}
+          />
+        </Main>
+
+        <SpecialtiesDialogs />
+      </SpecialtiesProvider>
+    </RequirePermission>
   )
 }

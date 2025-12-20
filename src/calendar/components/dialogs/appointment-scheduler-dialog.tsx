@@ -36,6 +36,7 @@ interface AppointmentSchedulerDialogProps {
   readonly selectedDate?: Date
   readonly selectedSlot?: TimeSlot
   readonly disabled?: boolean
+  readonly allowPast?: boolean // Allow selecting past dates (for staff portal)
 }
 
 export function AppointmentSchedulerDialog({
@@ -48,6 +49,7 @@ export function AppointmentSchedulerDialog({
   selectedDate,
   selectedSlot,
   disabled,
+  allowPast = false,
 }: AppointmentSchedulerDialogProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [currentMonth, setCurrentMonth] = useState(new Date())
@@ -156,7 +158,8 @@ export function AppointmentSchedulerDialog({
               const isAvailable = availableDates.includes(dateStr)
               const isSelected = selectedDate && isSameDay(date, selectedDate)
               const isPast = isBefore(date, startOfDay(new Date()))
-              const isDisabled = !isAvailable || isPast
+              // Only disable past dates if allowPast is false
+              const isDisabled = !isAvailable || (isPast && !allowPast)
 
               return (
                 <button
@@ -232,7 +235,7 @@ export function AppointmentSchedulerDialog({
                           >
                             <div className='font-medium'>{slot.timeStart}</div>
                             <div className='text-[10px] opacity-70'>
-                              đến {slot.timeEnd}
+                              to {slot.timeEnd}
                             </div>
                           </button>
                         )

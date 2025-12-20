@@ -6,7 +6,8 @@ import { useState } from 'react'
 import { UserPlus } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { RoleGate } from '@/components/auth/role-gate'
+import { Can } from '@/components/auth/permission-gate'
+import { RequirePermission } from '@/components/auth/require-permission'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -22,7 +23,7 @@ export function UserPermission() {
   const [showAssignDialog, setShowAssignDialog] = useState(false)
 
   return (
-    <>
+    <RequirePermission resource='permissions' action='manage'>
       <Header fixed>
         <Search />
         <div className='ms-auto flex items-center space-x-4'>
@@ -44,7 +45,7 @@ export function UserPermission() {
               common permission sets.
             </p>
           </div>
-          <RoleGate roles={['SUPER_ADMIN']}>
+          <Can I='permissions:manage'>
             {selectedUserId ? (
               <Button onClick={() => setShowAssignDialog(true)}>
                 <UserPlus className='mr-2 h-4 w-4' />
@@ -55,7 +56,7 @@ export function UserPermission() {
                 Select a user to assign permissions
               </Badge>
             )}
-          </RoleGate>
+          </Can>
         </div>
 
         {/* Main Content: Two Column Layout */}
@@ -77,6 +78,6 @@ export function UserPermission() {
         onOpenChange={setShowAssignDialog}
         userId={selectedUserId}
       />
-    </>
+    </RequirePermission>
   )
 }

@@ -1,4 +1,5 @@
-import { useAuthStore } from '@/stores/auth-store'
+import { useAuth } from '@/hooks/use-auth'
+import { useCan } from '@/hooks/use-permissions'
 import {
   useStaffStats,
   usePatientStats,
@@ -22,21 +23,26 @@ import { TopNav } from '@/components/layout/top-nav'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { Analytics } from './components/analytics'
+import { AdminDoctorBookingStats } from './components/admin-doctor-booking-stats'
+import { AdminDoctorContentStats } from './components/admin-doctor-content-stats'
+import { DoctorBookingChart } from './components/doctor-booking-chart'
+import { DoctorContentChart } from './components/doctor-content-chart'
+import { DoctorDashboard } from './components/doctor-dashboard'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 
-export function Dashboard() {
-  const { user } = useAuthStore()
-  const isAdmin = user?.role === 'SUPER_ADMIN' || user?.role === 'ADMIN'
+function DashboardContent() {
+  // Use permission-based check instead of role
+  const canViewStats = useCan('staff', 'read')
 
-  const { data: staffStats, isLoading: isLoadingStaff } = useStaffStats(isAdmin)
+  const { data: staffStats, isLoading: isLoadingStaff } =
+    useStaffStats(canViewStats)
   const { data: patientStats, isLoading: isLoadingPatient } =
-    usePatientStats(isAdmin)
+    usePatientStats(canViewStats)
   const { data: appointmentStats, isLoading: isLoadingAppointment } =
-    useAppointmentStats(isAdmin)
+    useAppointmentStats(canViewStats)
   const { data: revenueStats, isLoading: isLoadingRevenue } =
-    useRevenueStats(isAdmin)
+    useRevenueStats(canViewStats)
 
   // Calculate total revenue from current year/month if data is available (assuming API returns array of months)
   // Or just display "N/A" if aggregate not provided directly.
@@ -62,9 +68,6 @@ export function Dashboard() {
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
           <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
-          <div className='flex items-center space-x-2'>
-            <Button>Export</Button>
-          </div>
         </div>
         <Tabs
           orientation='vertical'
@@ -74,12 +77,11 @@ export function Dashboard() {
           <div className='w-full overflow-x-auto pb-2'>
             <TabsList>
               <TabsTrigger value='overview'>Overview</TabsTrigger>
-              <TabsTrigger value='analytics'>Analytics</TabsTrigger>
-              <TabsTrigger value='reports' disabled>
-                Reports
+              <TabsTrigger value='booking-stats'>
+                Doctor Booking Stats
               </TabsTrigger>
-              <TabsTrigger value='notifications' disabled>
-                Notifications
+              <TabsTrigger value='content-stats'>
+                Doctor Content Stats
               </TabsTrigger>
             </TabsList>
           </div>
@@ -258,8 +260,13 @@ export function Dashboard() {
               </Card>
             </div>
           </TabsContent>
-          <TabsContent value='analytics' className='space-y-4'>
-            <Analytics />
+          <TabsContent value='booking-stats' className='space-y-4'>
+            <DoctorBookingChart />
+            <AdminDoctorBookingStats />
+          </TabsContent>
+          <TabsContent value='content-stats' className='space-y-4'>
+            <DoctorContentChart />
+            <AdminDoctorContentStats />
           </TabsContent>
         </Tabs>
       </Main>
@@ -281,3 +288,21 @@ const topNav = [
     disabled: false,
   },
 ]
+
+/**
+ * Dashboard page with role-based routing
+ * - Doctor role: Shows DoctorDashboard with personal stats
+ * - Admin/SuperAdmin roles: Shows DashboardContent with system-wide stats
+ */
+export function Dashboard() {
+  const { user } = useAuth()
+
+  // If user is a doctor, show doctor dashboard
+  if (user?.role === 'DOCTOR') {
+    return <DoctorDashboard />
+  }
+
+  // For Admin/SuperAdmin, show dashboard directly without permission guard
+  // since role-based check is already done above
+  return <DashboardContent />
+}

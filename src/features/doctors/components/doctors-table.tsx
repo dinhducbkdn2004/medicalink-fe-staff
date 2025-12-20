@@ -3,7 +3,7 @@
  * Table view for doctor account management with API integration
  * Refactored to use the generic DataTable component
  */
-import { Eye, Edit, Trash2, Power, Star } from 'lucide-react'
+import { Eye, Edit, Trash2, Power, Star, BarChart3 } from 'lucide-react'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
 import {
   DataTable,
@@ -104,13 +104,21 @@ export function DoctorsTable({
         },
       },
       {
+        label: 'View Stats',
+        icon: BarChart3,
+        onClick: () => {
+          setCurrentRow(doctor)
+          setOpen('stats')
+        },
+        separator: true,
+      },
+      {
         label: doctor.isActive ? 'Deactivate' : 'Activate',
         icon: Power,
         onClick: () => {
           setCurrentRow(doctor)
           setOpen('toggleActive')
         },
-        separator: true,
       },
       {
         label: 'Delete',

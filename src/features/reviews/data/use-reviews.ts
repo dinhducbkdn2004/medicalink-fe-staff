@@ -167,10 +167,26 @@ export function useDeleteReview() {
       toast.success('Review deleted successfully')
       queryClient.invalidateQueries({ queryKey: reviewKeys.lists() })
     },
-    onError: (error: Error) => {
-      toast.error('Failed to delete review', {
-        description: error.message,
-      })
+    onError: (error: unknown) => {
+      const err = error as {
+        response?: { status?: number; data?: { message?: string } }
+        message?: string
+      }
+
+      // Handle 404 specifically for unverified reviews
+      if (err?.response?.status === 404) {
+        toast.error('Cannot delete review', {
+          description:
+            'This review was not found. It may be an unverified review (no confirmed appointments) that is not accessible through the API.',
+        })
+      } else {
+        toast.error('Failed to delete review', {
+          description:
+            err?.response?.data?.message ||
+            err?.message ||
+            'Please try again later',
+        })
+      }
     },
   })
 }

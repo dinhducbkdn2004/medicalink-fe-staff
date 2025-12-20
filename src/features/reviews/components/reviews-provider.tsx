@@ -20,9 +20,13 @@ type DialogType = 'view' | 'approve' | 'reject' | 'delete' | null
 
 interface ReviewsProviderProps {
   children: ReactNode
+  onReviewDeleted?: () => void
 }
 
-export function ReviewsProvider({ children }: Readonly<ReviewsProviderProps>) {
+export function ReviewsProvider({
+  children,
+  onReviewDeleted,
+}: Readonly<ReviewsProviderProps>) {
   const [openDialog, setOpenDialog] = useState<DialogType>(null)
   const [currentReview, setCurrentReview] = useState<Review | null>(null)
 
@@ -36,8 +40,9 @@ export function ReviewsProvider({ children }: Readonly<ReviewsProviderProps>) {
       setOpen,
       currentReview,
       setCurrentReview,
+      onReviewDeleted,
     }),
-    [openDialog, setOpen, currentReview]
+    [openDialog, setOpen, currentReview, onReviewDeleted]
   )
 
   return (

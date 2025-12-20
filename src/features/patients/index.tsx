@@ -3,7 +3,8 @@
  * Main page for managing patient records
  */
 import { getRouteApi } from '@tanstack/react-router'
-import { useAuth } from '@/hooks/use-auth'
+import { Can } from '@/components/auth/permission-gate'
+import { RequirePermission } from '@/components/auth/require-permission'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -15,14 +16,12 @@ import { PatientsPrimaryButtons } from './components/patients-primary-buttons'
 import { PatientsProvider } from './components/patients-provider'
 import { PatientsTable } from './components/patients-table'
 import { usePatients as usePatientsData } from './data/use-patients'
-import { canReadPatients } from './utils/permissions'
 
 const route = getRouteApi('/_authenticated/patients/')
 
 export function Patients() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
-  const { user } = useAuth()
 
   // Fetch patients with query params
   const queryParams = {
@@ -38,67 +37,57 @@ export function Patients() {
 
   const { data: patientsData, isLoading, error } = usePatientsData(queryParams)
 
-  // Check permissions
-  if (!canReadPatients(user)) {
-    return (
-      <Main className='flex flex-1 items-center justify-center'>
-        <div className='text-center'>
-          <h2 className='text-2xl font-bold'>Access Denied</h2>
-          <p className='text-muted-foreground mt-2'>
-            You do not have permission to view patient management.
-          </p>
-        </div>
-      </Main>
-    )
-  }
-
   return (
-    <PatientsProvider>
-      {/* Header */}
-      <Header fixed>
-        <Search />
-        <div className='ml-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ConfigDrawer />
-          <ProfileDropdown />
-        </div>
-      </Header>
-
-      {/* Main Content */}
-      <Main>
-        <div className='mb-2 flex items-center justify-between space-y-2'>
-          <div>
-            <h1 className='text-2xl font-bold tracking-tight'>
-              Patient Management
-            </h1>
-            <p className='text-muted-foreground'>
-              Manage patient records and information
-            </p>
+    <RequirePermission resource='patients' action='read'>
+      <PatientsProvider>
+        {/* Header */}
+        <Header fixed>
+          <Search />
+          <div className='ml-auto flex items-center space-x-4'>
+            <ThemeSwitch />
+            <ConfigDrawer />
+            <ProfileDropdown />
           </div>
-          <PatientsPrimaryButtons />
-        </div>
+        </Header>
 
-        {/* Error State */}
-        {error && (
-          <div className='rounded-md border border-red-200 bg-red-50 p-4'>
-            <p className='text-sm text-red-800'>
-              Failed to load patients. Please try again later.
-            </p>
+        {/* Main Content */}
+        <Main>
+          <div className='mb-2 flex items-center justify-between space-y-2'>
+            <div>
+              <h1 className='text-2xl font-bold tracking-tight'>
+                Patient Management
+              </h1>
+              <p className='text-muted-foreground'>
+                Manage patient records and information
+              </p>
+            </div>
+            <Can I='patients:create'>
+              <PatientsPrimaryButtons />
+            </Can>
           </div>
-        )}
 
-        {/* Table */}
-        <PatientsTable
-          data={patientsData?.data || []}
-          pageCount={patientsData?.meta?.totalPages || 0}
-          search={search}
-          navigate={navigate}
-          isLoading={isLoading}
-        />
+          {/* Error State */}
+          {error && (
+            <div className='rounded-md border border-red-200 bg-red-50 p-4'>
+              <p className='text-sm text-red-800'>
+                Failed to load patients. Please try again later.
+              </p>
+            </div>
+          )}
 
-        {/* Dialogs */}
-        <PatientsDialogs />
-      </Main>
-    </PatientsProvider>
+          {/* Table */}
+          <PatientsTable
+            data={patientsData?.data || []}
+            pageCount={patientsData?.meta?.totalPages || 0}
+            search={search}
+            navigate={navigate}
+            isLoading={isLoading}
+          />
+
+          {/* Dialogs */}
+          <PatientsDialogs />
+        </Main>
+      </PatientsProvider>
+    </RequirePermission>
   )
 }

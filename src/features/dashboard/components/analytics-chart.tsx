@@ -1,44 +1,21 @@
+import { useMemo } from 'react'
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
-const data = [
-  {
-    name: 'Mon',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
-  {
-    name: 'Tue',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
-  {
-    name: 'Wed',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
-  {
-    name: 'Thu',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
-  {
-    name: 'Fri',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
-  {
-    name: 'Sat',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
-  {
-    name: 'Sun',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
+// Static sample data - in production, this would come from an API
+const SAMPLE_DATA = [
+  { name: 'Mon', clicks: 523, uniques: 412 },
+  { name: 'Tue', clicks: 687, uniques: 534 },
+  { name: 'Wed', clicks: 456, uniques: 321 },
+  { name: 'Thu', clicks: 892, uniques: 678 },
+  { name: 'Fri', clicks: 745, uniques: 589 },
+  { name: 'Sat', clicks: 334, uniques: 245 },
+  { name: 'Sun', clicks: 278, uniques: 198 },
 ]
 
 export function AnalyticsChart() {
+  // Memoize data to prevent unnecessary re-renders
+  const data = useMemo(() => SAMPLE_DATA, [])
+
   return (
     <ResponsiveContainer width='100%' height={300}>
       <AreaChart data={data}>

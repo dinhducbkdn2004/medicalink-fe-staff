@@ -13,6 +13,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import { Can } from '@/components/auth/permission-gate'
+import { RequirePermission } from '@/components/auth/require-permission'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -43,7 +45,7 @@ export function BlogsPage() {
   }
 
   return (
-    <>
+    <RequirePermission resource='blogs' action='read'>
       <Header fixed>
         <Search />
         <div className='ms-auto flex items-center space-x-4'>
@@ -64,9 +66,11 @@ export function BlogsPage() {
                 Create, manage, and publish your content.
               </p>
             </div>
-            <Button onClick={() => navigate({ to: '/blogs/new' })}>
-              <Plus className='mr-2 h-4 w-4' /> Create New Post
-            </Button>
+            <Can I='blogs:create'>
+              <Button onClick={() => navigate({ to: '/blogs/new' })}>
+                <Plus className='mr-2 h-4 w-4' /> Create New Post
+              </Button>
+            </Can>
           </div>
 
           <BlogFilters />
@@ -103,6 +107,6 @@ export function BlogsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </RequirePermission>
   )
 }

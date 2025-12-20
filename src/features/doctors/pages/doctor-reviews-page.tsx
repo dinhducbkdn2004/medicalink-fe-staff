@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useNavigate, useSearch } from '@tanstack/react-router'
-import { doctorService } from '@/api/services/doctor.service'
+import { doctorProfileService } from '@/api/services/doctor-profile.service'
 import { reviewService, type Review } from '@/api/services/review.service'
 import type { PaginationParams } from '@/api/types/common.types'
 import { useAuthStore } from '@/stores/auth-store'
@@ -8,7 +8,6 @@ import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ReviewsDialogs } from '@/features/reviews/components/reviews-dialogs'
 import { ReviewsProvider } from '@/features/reviews/components/reviews-provider'
@@ -28,34 +27,42 @@ export function DoctorReviewsPage({
   const search: any = useSearch({ strict: false })
   const { user } = useAuthStore()
 
-  // Determine target doctor ID: prop -> route param -> current user
-  // If user is DOCTOR, we need to resolve their profileId first
-  const [resolvedDoctorId, setResolvedDoctorId] = useState<string | undefined>(
-    initialDoctorId || params.doctorId
-  )
+  // BREAKING CHANGE: Reviews API now uses staffAccountId instead of profileId
+  // We need to resolve staffAccountId from profileId
+  const [resolvedStaffAccountId, setResolvedStaffAccountId] = useState<
+    string | undefined
+  >(undefined)
 
   useEffect(() => {
-    const resolveId = async () => {
-      // If we already have a specific ID from props or params, use it
-      if (initialDoctorId || params.doctorId) {
-        setResolvedDoctorId(initialDoctorId || params.doctorId)
+    const resolveStaffAccountId = async () => {
+      // If user is doctor viewing their own reviews, use their staff account ID directly
+      if (
+        !initialDoctorId &&
+        !params.doctorId &&
+        user?.role === 'DOCTOR' &&
+        user.id
+      ) {
+        setResolvedStaffAccountId(user.id)
         return
       }
 
-      // If user is doctor, fetch their profile ID
-      if (user?.role === 'DOCTOR' && user.id) {
+      // If we have a profileId from props or params, fetch the profile to get staffAccountId
+      const profileId = initialDoctorId || params.doctorId
+      if (profileId) {
         try {
-          const doctorData = await doctorService.getProfileMe()
-          if (doctorData.id) {
-            setResolvedDoctorId(doctorData.id)
+          // Fetch doctor profile to get staffAccountId
+          const profile =
+            await doctorProfileService.getDoctorProfileById(profileId)
+          if (profile.staffAccountId) {
+            setResolvedStaffAccountId(profile.staffAccountId)
           }
         } catch (error) {
-          console.error('Failed to resolve doctor profile ID:', error)
+          console.error('Failed to resolve staff account ID:', error)
         }
       }
     }
 
-    resolveId()
+    resolveStaffAccountId()
   }, [initialDoctorId, params.doctorId, user])
 
   const [data, setData] = useState<Review[]>([])
@@ -65,21 +72,27 @@ export function DoctorReviewsPage({
   // Derived pagination from search params
   const page = Number(search?.page) || 1
   const limit = Number(search?.limit) || 10
+  const isPublic = search?.isPublic ? search.isPublic === 'true' : undefined
 
   // Fetch reviews logic
   const fetchReviews = useCallback(async () => {
-    if (!resolvedDoctorId) return
+    if (!resolvedStaffAccountId) return
 
     setIsLoading(true)
     try {
-      const queryParams: PaginationParams = {
+      const queryParams: PaginationParams & { isPublic?: boolean } = {
         page,
         limit,
-        // Add other filters if needed
       }
 
+      // Add isPublic filter if specified
+      if (isPublic !== undefined) {
+        queryParams.isPublic = isPublic
+      }
+
+      // BREAKING CHANGE: Use staffAccountId instead of profileId
       const response = await reviewService.getDoctorReviews(
-        resolvedDoctorId,
+        resolvedStaffAccountId,
         queryParams
       )
       setData(response.data)
@@ -89,18 +102,17 @@ export function DoctorReviewsPage({
     } finally {
       setIsLoading(false)
     }
-  }, [resolvedDoctorId, page, limit])
+  }, [resolvedStaffAccountId, page, limit, isPublic])
 
   useEffect(() => {
-    if (resolvedDoctorId) {
+    if (resolvedStaffAccountId) {
       fetchReviews()
     }
-  }, [fetchReviews, resolvedDoctorId])
+  }, [fetchReviews, resolvedStaffAccountId])
 
   return (
-    <ReviewsProvider>
+    <ReviewsProvider onReviewDeleted={fetchReviews}>
       <Header fixed>
-        <Search />
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />

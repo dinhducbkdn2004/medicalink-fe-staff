@@ -4,6 +4,7 @@
  */
 import { useMemo } from 'react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
+import { RequirePermission } from '@/components/auth/require-permission'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -88,8 +89,10 @@ function QuestionsContent() {
 
 export function Questions() {
   return (
-    <QuestionsProvider>
-      <QuestionsContent />
-    </QuestionsProvider>
+    <RequirePermission resource='questions' action='read'>
+      <QuestionsProvider>
+        <QuestionsContent />
+      </QuestionsProvider>
+    </RequirePermission>
   )
 }

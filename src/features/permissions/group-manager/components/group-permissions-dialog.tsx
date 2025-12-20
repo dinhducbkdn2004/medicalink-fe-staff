@@ -19,6 +19,7 @@ import {
 } from '../../hooks'
 import { AssignPermissionForm } from './assign-permission-form'
 import { useGroupManager } from './use-group-manager'
+import { RefreshCw } from 'lucide-react'
 
 type GroupPermissionsDialogProps = {
   open: boolean
@@ -117,7 +118,12 @@ export function GroupPermissionsDialog({
 
             {isLoading ? (
               <div className='flex flex-1 items-center justify-center'>
-                <p className='text-muted-foreground'>Loading permissions...</p>
+                <div className='flex items-center gap-2'>
+                  <RefreshCw className='text-primary h-4 w-4 animate-spin' />
+                  <p className='text-muted-foreground text-sm'>
+                    Loading permissions...
+                  </p>
+                </div>
               </div>
             ) : (
               <div className='min-h-0 flex-1 overflow-y-auto pr-2'>
