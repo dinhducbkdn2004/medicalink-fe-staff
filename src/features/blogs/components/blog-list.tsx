@@ -147,33 +147,49 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Select
-                      key={`${blog.id}-${blog.status}`}
-                      value={blog.status}
-                      onValueChange={(value) =>
-                        handleStatusChange(blog.id, value)
-                      }
-                      disabled={isDoctor && blog.authorId !== user?.id}
-                    >
-                      <SelectTrigger
+                    {/* Hide status selector for doctors - they can't change status */}
+                    {isDoctor ? (
+                      <span
                         className={cn(
-                          'w-[120px] text-xs font-medium',
+                          'inline-flex items-center rounded-md px-2 py-1 text-xs font-medium',
                           blog.status === 'PUBLISHED' &&
-                            'bg-green-100 text-green-800 hover:bg-green-100/80 dark:bg-green-900/30 dark:text-green-400',
+                            'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
                           blog.status === 'ARCHIVED' &&
-                            'bg-red-100 text-red-800 hover:bg-red-100/80 dark:bg-red-900/30 dark:text-red-400',
+                            'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
                           blog.status === 'DRAFT' &&
-                            'bg-gray-100 text-gray-800 hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-300'
+                            'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
                         )}
                       >
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value='DRAFT'>DRAFT</SelectItem>
-                        <SelectItem value='PUBLISHED'>PUBLISHED</SelectItem>
-                        <SelectItem value='ARCHIVED'>ARCHIVED</SelectItem>
-                      </SelectContent>
-                    </Select>
+                        {blog.status}
+                      </span>
+                    ) : (
+                      <Select
+                        key={`${blog.id}-${blog.status}`}
+                        value={blog.status}
+                        onValueChange={(value) =>
+                          handleStatusChange(blog.id, value)
+                        }
+                      >
+                        <SelectTrigger
+                          className={cn(
+                            'w-[120px] text-xs font-medium',
+                            blog.status === 'PUBLISHED' &&
+                              'bg-green-100 text-green-800 hover:bg-green-100/80 dark:bg-green-900/30 dark:text-green-400',
+                            blog.status === 'ARCHIVED' &&
+                              'bg-red-100 text-red-800 hover:bg-red-100/80 dark:bg-red-900/30 dark:text-red-400',
+                            blog.status === 'DRAFT' &&
+                              'bg-gray-100 text-gray-800 hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-300'
+                          )}
+                        >
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value='DRAFT'>DRAFT</SelectItem>
+                          <SelectItem value='PUBLISHED'>PUBLISHED</SelectItem>
+                          <SelectItem value='ARCHIVED'>ARCHIVED</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
                   </TableCell>
                   <TableCell>
                     <span className='text-sm font-medium'>

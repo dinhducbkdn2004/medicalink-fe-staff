@@ -46,7 +46,7 @@ export const columns: ColumnDef<Review>[] = [
       className: 'w-[40px]',
     },
   },
-  // Author
+    // Author
   {
     accessorKey: 'authorName',
     header: ({ column }) => (
@@ -56,14 +56,14 @@ export const columns: ColumnDef<Review>[] = [
       const name = row.original.authorName
       const email = row.original.authorEmail
       return (
-        <div className='flex flex-col'>
-          <div className='flex items-center gap-2'>
-            <User className='text-muted-foreground size-4' />
+        <div className='flex items-center gap-3'>
+          <User className='text-muted-foreground size-4 flex-shrink-0' />
+          <div className='flex flex-col'>
             <span className='font-medium'>{name}</span>
+            {email && (
+              <span className='text-muted-foreground text-xs'>{email}</span>
+            )}
           </div>
-          {email && (
-            <span className='text-muted-foreground ml-6 text-xs'>{email}</span>
-          )}
         </div>
       )
     },

@@ -56,6 +56,8 @@ import { Route as AuthenticatedBlogsListRouteRouteImport } from './routes/_authe
 import { Route as AuthenticatedBlogsCategoriesRouteRouteImport } from './routes/_authenticated/blogs/categories/route'
 import { Route as AuthenticatedBlogsBlogIdRouteRouteImport } from './routes/_authenticated/blogs/$blogId/route'
 import { Route as AuthenticatedBlogsBlogIdIndexRouteImport } from './routes/_authenticated/blogs/$blogId/index'
+import { Route as AuthenticatedReviewsDoctorIdAnalysesRouteImport } from './routes/_authenticated/reviews/$doctorId.analyses'
+import { Route as AuthenticatedDoctorsDoctorIdStatsRouteImport } from './routes/_authenticated/doctors/$doctorId.stats'
 import { Route as AuthenticatedDoctorsDoctorIdReviewsRouteImport } from './routes/_authenticated/doctors/$doctorId.reviews'
 import { Route as AuthenticatedDoctorsDoctorIdProfileRouteImport } from './routes/_authenticated/doctors/$doctorId.profile'
 import { Route as AuthenticatedBlogsBlogIdEditRouteRouteImport } from './routes/_authenticated/blogs/$blogId/edit/route'
@@ -324,6 +326,18 @@ const AuthenticatedBlogsBlogIdIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedBlogsBlogIdRouteRoute,
   } as any)
+const AuthenticatedReviewsDoctorIdAnalysesRoute =
+  AuthenticatedReviewsDoctorIdAnalysesRouteImport.update({
+    id: '/$doctorId/analyses',
+    path: '/$doctorId/analyses',
+    getParentRoute: () => AuthenticatedReviewsRoute,
+  } as any)
+const AuthenticatedDoctorsDoctorIdStatsRoute =
+  AuthenticatedDoctorsDoctorIdStatsRouteImport.update({
+    id: '/doctors/$doctorId/stats',
+    path: '/doctors/$doctorId/stats',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDoctorsDoctorIdReviewsRoute =
   AuthenticatedDoctorsDoctorIdReviewsRouteImport.update({
     id: '/doctors/$doctorId/reviews',
@@ -356,7 +370,7 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/reviews': typeof AuthenticatedReviewsRoute
+  '/reviews': typeof AuthenticatedReviewsRouteWithChildren
   '/': typeof AuthenticatedIndexRoute
   '/blogs/$blogId': typeof AuthenticatedBlogsBlogIdRouteRouteWithChildren
   '/blogs/categories': typeof AuthenticatedBlogsCategoriesRouteRoute
@@ -392,6 +406,8 @@ export interface FileRoutesByFullPath {
   '/blogs/$blogId/edit': typeof AuthenticatedBlogsBlogIdEditRouteRoute
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
   '/doctors/$doctorId/reviews': typeof AuthenticatedDoctorsDoctorIdReviewsRoute
+  '/doctors/$doctorId/stats': typeof AuthenticatedDoctorsDoctorIdStatsRoute
+  '/reviews/$doctorId/analyses': typeof AuthenticatedReviewsDoctorIdAnalysesRoute
   '/blogs/$blogId/': typeof AuthenticatedBlogsBlogIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -405,7 +421,7 @@ export interface FileRoutesByTo {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/reviews': typeof AuthenticatedReviewsRoute
+  '/reviews': typeof AuthenticatedReviewsRouteWithChildren
   '/': typeof AuthenticatedIndexRoute
   '/blogs/categories': typeof AuthenticatedBlogsCategoriesRouteRoute
   '/blogs/list': typeof AuthenticatedBlogsListRouteRoute
@@ -440,6 +456,8 @@ export interface FileRoutesByTo {
   '/blogs/$blogId/edit': typeof AuthenticatedBlogsBlogIdEditRouteRoute
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
   '/doctors/$doctorId/reviews': typeof AuthenticatedDoctorsDoctorIdReviewsRoute
+  '/doctors/$doctorId/stats': typeof AuthenticatedDoctorsDoctorIdStatsRoute
+  '/reviews/$doctorId/analyses': typeof AuthenticatedReviewsDoctorIdAnalysesRoute
   '/blogs/$blogId': typeof AuthenticatedBlogsBlogIdIndexRoute
 }
 export interface FileRoutesById {
@@ -457,7 +475,7 @@ export interface FileRoutesById {
   '/(errors)/404': typeof errors404Route
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
-  '/_authenticated/reviews': typeof AuthenticatedReviewsRoute
+  '/_authenticated/reviews': typeof AuthenticatedReviewsRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/blogs/$blogId': typeof AuthenticatedBlogsBlogIdRouteRouteWithChildren
   '/_authenticated/blogs/categories': typeof AuthenticatedBlogsCategoriesRouteRoute
@@ -493,6 +511,8 @@ export interface FileRoutesById {
   '/_authenticated/blogs/$blogId/edit': typeof AuthenticatedBlogsBlogIdEditRouteRoute
   '/_authenticated/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
   '/_authenticated/doctors/$doctorId/reviews': typeof AuthenticatedDoctorsDoctorIdReviewsRoute
+  '/_authenticated/doctors/$doctorId/stats': typeof AuthenticatedDoctorsDoctorIdStatsRoute
+  '/_authenticated/reviews/$doctorId/analyses': typeof AuthenticatedReviewsDoctorIdAnalysesRoute
   '/_authenticated/blogs/$blogId/': typeof AuthenticatedBlogsBlogIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -546,6 +566,8 @@ export interface FileRouteTypes {
     | '/blogs/$blogId/edit'
     | '/doctors/$doctorId/profile'
     | '/doctors/$doctorId/reviews'
+    | '/doctors/$doctorId/stats'
+    | '/reviews/$doctorId/analyses'
     | '/blogs/$blogId/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -594,6 +616,8 @@ export interface FileRouteTypes {
     | '/blogs/$blogId/edit'
     | '/doctors/$doctorId/profile'
     | '/doctors/$doctorId/reviews'
+    | '/doctors/$doctorId/stats'
+    | '/reviews/$doctorId/analyses'
     | '/blogs/$blogId'
   id:
     | '__root__'
@@ -646,6 +670,8 @@ export interface FileRouteTypes {
     | '/_authenticated/blogs/$blogId/edit'
     | '/_authenticated/doctors/$doctorId/profile'
     | '/_authenticated/doctors/$doctorId/reviews'
+    | '/_authenticated/doctors/$doctorId/stats'
+    | '/_authenticated/reviews/$doctorId/analyses'
     | '/_authenticated/blogs/$blogId/'
   fileRoutesById: FileRoutesById
 }
@@ -994,6 +1020,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBlogsBlogIdIndexRouteImport
       parentRoute: typeof AuthenticatedBlogsBlogIdRouteRoute
     }
+    '/_authenticated/reviews/$doctorId/analyses': {
+      id: '/_authenticated/reviews/$doctorId/analyses'
+      path: '/$doctorId/analyses'
+      fullPath: '/reviews/$doctorId/analyses'
+      preLoaderRoute: typeof AuthenticatedReviewsDoctorIdAnalysesRouteImport
+      parentRoute: typeof AuthenticatedReviewsRoute
+    }
+    '/_authenticated/doctors/$doctorId/stats': {
+      id: '/_authenticated/doctors/$doctorId/stats'
+      path: '/doctors/$doctorId/stats'
+      fullPath: '/doctors/$doctorId/stats'
+      preLoaderRoute: typeof AuthenticatedDoctorsDoctorIdStatsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/doctors/$doctorId/reviews': {
       id: '/_authenticated/doctors/$doctorId/reviews'
       path: '/doctors/$doctorId/reviews'
@@ -1070,6 +1110,18 @@ const AuthenticatedSettingsRouteRouteWithChildren =
     AuthenticatedSettingsRouteRouteChildren,
   )
 
+interface AuthenticatedReviewsRouteChildren {
+  AuthenticatedReviewsDoctorIdAnalysesRoute: typeof AuthenticatedReviewsDoctorIdAnalysesRoute
+}
+
+const AuthenticatedReviewsRouteChildren: AuthenticatedReviewsRouteChildren = {
+  AuthenticatedReviewsDoctorIdAnalysesRoute:
+    AuthenticatedReviewsDoctorIdAnalysesRoute,
+}
+
+const AuthenticatedReviewsRouteWithChildren =
+  AuthenticatedReviewsRoute._addFileChildren(AuthenticatedReviewsRouteChildren)
+
 interface AuthenticatedBlogsBlogIdRouteRouteChildren {
   AuthenticatedBlogsBlogIdEditRouteRoute: typeof AuthenticatedBlogsBlogIdEditRouteRoute
   AuthenticatedBlogsBlogIdIndexRoute: typeof AuthenticatedBlogsBlogIdIndexRoute
@@ -1090,7 +1142,7 @@ const AuthenticatedBlogsBlogIdRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAppointmentsRouteRoute: typeof AuthenticatedAppointmentsRouteRouteWithChildren
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
-  AuthenticatedReviewsRoute: typeof AuthenticatedReviewsRoute
+  AuthenticatedReviewsRoute: typeof AuthenticatedReviewsRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedBlogsBlogIdRouteRoute: typeof AuthenticatedBlogsBlogIdRouteRouteWithChildren
   AuthenticatedBlogsCategoriesRouteRoute: typeof AuthenticatedBlogsCategoriesRouteRoute
@@ -1114,13 +1166,14 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedWorkLocationsIndexRoute: typeof AuthenticatedWorkLocationsIndexRoute
   AuthenticatedDoctorsDoctorIdProfileRoute: typeof AuthenticatedDoctorsDoctorIdProfileRoute
   AuthenticatedDoctorsDoctorIdReviewsRoute: typeof AuthenticatedDoctorsDoctorIdReviewsRoute
+  AuthenticatedDoctorsDoctorIdStatsRoute: typeof AuthenticatedDoctorsDoctorIdStatsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAppointmentsRouteRoute:
     AuthenticatedAppointmentsRouteRouteWithChildren,
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
-  AuthenticatedReviewsRoute: AuthenticatedReviewsRoute,
+  AuthenticatedReviewsRoute: AuthenticatedReviewsRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedBlogsBlogIdRouteRoute:
     AuthenticatedBlogsBlogIdRouteRouteWithChildren,
@@ -1148,6 +1201,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDoctorsDoctorIdProfileRoute,
   AuthenticatedDoctorsDoctorIdReviewsRoute:
     AuthenticatedDoctorsDoctorIdReviewsRoute,
+  AuthenticatedDoctorsDoctorIdStatsRoute:
+    AuthenticatedDoctorsDoctorIdStatsRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

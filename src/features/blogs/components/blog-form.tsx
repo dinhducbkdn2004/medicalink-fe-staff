@@ -26,7 +26,11 @@ import {
 } from '@/components/ui/select'
 import { RichTextEditor } from '@/features/doctors/components/rich-text-editor'
 import { useBlogCategories } from '../data/use-blog-categories'
-import { useCreateBlog, useUpdateBlog } from '../data/use-blogs'
+import {
+  useCreateBlog,
+  useUpdateBlog,
+  useUpdateBlogAsDoctor,
+} from '../data/use-blogs'
 
 const blogSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -44,16 +48,19 @@ interface BlogFormProps {
 
 export function BlogForm({ initialData }: BlogFormProps) {
   const navigate = useNavigate()
-  const { accessToken } = useAuthStore()
+  const { accessToken, user } = useAuthStore()
   const { data: categoriesData } = useBlogCategories({ limit: 100 })
   const { mutate: createBlog, isPending: isCreating } = useCreateBlog()
   const { mutate: updateBlog, isPending: isUpdating } = useUpdateBlog()
+  const { mutate: updateBlogAsDoctor, isPending: isUpdatingAsDoctor } =
+    useUpdateBlogAsDoctor()
 
   const categories = Array.isArray(categoriesData)
     ? (categoriesData as BlogCategory[])
     : (categoriesData as { data: BlogCategory[] })?.data || []
 
-  const isPending = isCreating || isUpdating
+  const isDoctor = user?.role === 'DOCTOR'
+  const isPending = isCreating || isUpdating || isUpdatingAsDoctor
 
   const form = useForm<BlogFormValues>({
     resolver: zodResolver(blogSchema),
@@ -84,12 +91,27 @@ export function BlogForm({ initialData }: BlogFormProps) {
 
   const onSubmit = (values: BlogFormValues) => {
     if (initialData) {
-      updateBlog(
-        { id: initialData.id, data: values },
-        {
-          onSuccess: () => navigate({ to: '/blogs/list' }),
+      // Use doctor-specific API if user is a doctor
+      if (isDoctor) {
+        // Doctors can only update title and content
+        const doctorData = {
+          title: values.title,
+          content: values.content,
         }
-      )
+        updateBlogAsDoctor(
+          { id: initialData.id, data: doctorData },
+          {
+            onSuccess: () => navigate({ to: '/blogs/list' }),
+          }
+        )
+      } else {
+        updateBlog(
+          { id: initialData.id, data: values },
+          {
+            onSuccess: () => navigate({ to: '/blogs/list' }),
+          }
+        )
+      }
     } else {
       const { status, ...createData } = values
       createBlog(createData, {
@@ -166,7 +188,8 @@ export function BlogForm({ initialData }: BlogFormProps) {
                     )}
                   />
 
-                  {initialData && (
+                  {/* Hide status field for doctors */}
+                  {initialData && !isDoctor && (
                     <FormField
                       control={form.control}
                       name='status'
@@ -181,7 +204,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                             <FormControl>
                               <SelectTrigger
                                 className={cn(
-                                  'text-xs font-medium w-[120px]',
+                                  'w-[120px] text-xs font-medium',
                                   field.value === 'PUBLISHED' &&
                                     'bg-green-100 text-green-800 hover:bg-green-100/80 dark:bg-green-900/30 dark:text-green-400',
                                   field.value === 'ARCHIVED' &&
@@ -196,7 +219,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                             <SelectContent>
                               <SelectItem value='DRAFT'>DRAFT</SelectItem>
                               <SelectItem value='PUBLISHED'>
-                                  PUBLISHED
+                                PUBLISHED
                               </SelectItem>
                               <SelectItem value='ARCHIVED'>ARCHIVED</SelectItem>
                             </SelectContent>

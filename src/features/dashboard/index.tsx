@@ -6,7 +6,6 @@ import {
   useAppointmentStats,
   useRevenueStats,
 } from '@/hooks/use-stats'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,

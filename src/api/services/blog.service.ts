@@ -195,6 +195,21 @@ class BlogService {
   }
 
   /**
+   * Update a blog (Doctor only - limited fields)
+   * Doctors can only update: title and content
+   */
+  async updateBlogAsDoctor(
+    id: string,
+    data: Pick<UpdateBlogRequest, 'title' | 'content'>
+  ): Promise<ApiResponse<Blog>> {
+    const response = await apiClient.patch<ApiResponse<Blog>>(
+      `${this.BASE_PATH}/${id}/doctor`,
+      data
+    )
+    return response.data
+  }
+
+  /**
    * Delete a blog
    */
   async deleteBlog(id: string): Promise<ApiResponse<null>> {

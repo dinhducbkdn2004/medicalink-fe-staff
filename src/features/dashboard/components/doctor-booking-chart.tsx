@@ -233,7 +233,7 @@ export function DoctorBookingChart() {
               <Legend
                 verticalAlign='bottom'
                 height={36}
-                formatter={(value, entry: any) => (
+                formatter={(value, entry: { payload: { value: number } }) => (
                   <span className='text-sm'>
                     {value}: {entry.payload.value.toLocaleString()}
                   </span>

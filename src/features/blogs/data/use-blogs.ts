@@ -67,6 +67,30 @@ export function useUpdateBlog() {
   })
 }
 
+export function useUpdateBlogAsDoctor() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string
+      data: Pick<UpdateBlogRequest, 'title' | 'content'>
+    }) => blogService.updateBlogAsDoctor(id, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: blogPostKeys.posts() })
+      queryClient.invalidateQueries({
+        queryKey: blogPostKeys.post(variables.id),
+      })
+      toast.success('Blog post updated successfully')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to update blog post')
+    },
+  })
+}
+
 export function useDeleteBlog() {
   const queryClient = useQueryClient()
 

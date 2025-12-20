@@ -74,8 +74,10 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            setCurrentRow(doctor)
-            setOpen('stats')
+            navigate({
+              to: '/doctors/$doctorId/stats',
+              params: { doctorId: doctor.id },
+            } as never)
           }}
         >
           View Stats

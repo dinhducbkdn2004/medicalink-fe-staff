@@ -35,7 +35,7 @@ export function useMyPermissions() {
   const actionsRef = useRef(usePermissionStore.getState())
 
   return useQuery({
-    queryKey: myPermissionKeys.current(),
+    queryKey: [myPermissionKeys.current(), actionsRef.current],
     queryFn: async () => {
       const { setLoading, setPermissions, clearPermissions } =
         actionsRef.current
@@ -94,7 +94,9 @@ export function useCanWithContext(
 
   return useMemo(() => {
     if (!isLoaded) return false
-    return usePermissionStore.getState().canWithContext(resource, action, context)
+    return usePermissionStore
+      .getState()
+      .canWithContext(resource, action, context)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resource, action, contextKey, isLoaded, permissionMap])
 }
@@ -121,7 +123,9 @@ export function usePermissionChecker() {
   const canWithContext = useCallback(
     (resource: string, action: string, context?: Record<string, unknown>) => {
       if (!isLoaded) return false
-      return usePermissionStore.getState().canWithContext(resource, action, context)
+      return usePermissionStore
+        .getState()
+        .canWithContext(resource, action, context)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [isLoaded, permissionMap]
@@ -173,4 +177,3 @@ export function useIsSystemAdmin(): boolean {
 export function useCanManagePermissions(): boolean {
   return useCan('permissions', 'manage')
 }
-

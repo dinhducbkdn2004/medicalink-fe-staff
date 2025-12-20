@@ -2,7 +2,6 @@ import { useQAOverviewStats, useReviewsOverviewStats } from '@/hooks/use-stats'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'

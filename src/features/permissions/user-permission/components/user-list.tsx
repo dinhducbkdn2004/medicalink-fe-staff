@@ -9,14 +9,21 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Skeleton } from '@/components/ui/skeleton'
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card'
+import { Input } from '@/components/ui/input'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
 import type { Staff } from '@/features/staffs/data/schema'
 import { useStaffs } from '@/features/staffs/data/use-staffs'
 
@@ -27,12 +34,17 @@ type UserListProps = {
 
 export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
   const [searchTerm, setSearchTerm] = useState('')
+  const [roleFilter, setRoleFilter] = useState<string>('all')
 
   // Fetch staffs (admins and doctors have staff accounts)
   const { data, isLoading } = useStaffs({
     page: 1,
     limit: 50,
     search: searchTerm || undefined,
+    role:
+      roleFilter === 'all'
+        ? undefined
+        : (roleFilter as 'DOCTOR' | 'ADMIN' | 'SUPER_ADMIN'),
   })
 
   const users = data?.data || []
@@ -64,8 +76,8 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
       <CardHeader className='space-y-3 pb-4'>
         <div className='flex items-center justify-between'>
           <CardTitle className='flex items-center gap-2 text-lg'>
-            <div className='rounded-lg bg-primary/10 p-2'>
-              <Users className='h-4 w-4 text-primary' />
+            <div className='bg-primary/10 rounded-lg p-2'>
+              <Users className='text-primary h-4 w-4' />
             </div>
             Users
           </CardTitle>
@@ -73,15 +85,28 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
             {users.length} total
           </Badge>
         </div>
-        <div className='relative'>
-          <Search className='text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4' />
-          <Input
-            type='search'
-            placeholder='Search by name or email...'
-            className='h-9 pl-8'
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <div className='space-y-2 flex  gap-2'>
+          <div className='relative '>
+            <Search className='text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4' />
+            <Input
+              type='search'
+              placeholder='Search by name or email...'
+              className='h-9 pl-8'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <Select value={roleFilter} onValueChange={setRoleFilter}>
+            <SelectTrigger className='h-9'>
+              <SelectValue placeholder='Filter by role' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='all'>All Roles</SelectItem>
+              <SelectItem value='DOCTOR'>Doctor</SelectItem>
+              <SelectItem value='ADMIN'>Admin</SelectItem>
+              <SelectItem value='SUPER_ADMIN'>Super Admin</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </CardHeader>
       <CardContent className='p-0'>
@@ -99,8 +124,8 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
           </div>
         ) : users.length === 0 ? (
           <div className='flex flex-col items-center justify-center gap-3 py-12'>
-            <div className='rounded-full bg-muted p-3'>
-              <UserCircle2 className='h-6 w-6 text-muted-foreground' />
+            <div className='bg-muted rounded-full p-3'>
+              <UserCircle2 className='text-muted-foreground h-6 w-6' />
             </div>
             <div className='text-center'>
               <p className='text-sm font-medium'>No users found</p>
@@ -120,11 +145,11 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
                       className={cn(
                         'h-auto w-full justify-start gap-3 p-3 transition-all',
                         selectedUserId === user.id &&
-                          'bg-accent shadow-sm ring-1 ring-primary/20'
+                          'bg-accent ring-primary/20 shadow-sm ring-1'
                       )}
                       onClick={() => onSelectUser(user.id)}
                     >
-                      <Avatar className='h-10 w-10 border-2 border-background shadow-sm'>
+                      <Avatar className='border-background h-10 w-10 border-2 shadow-sm'>
                         <AvatarImage src={user.avatar} alt={user.fullName} />
                         <AvatarFallback className='bg-primary/10 text-xs font-semibold'>
                           {getInitials(user.fullName)}
@@ -148,14 +173,10 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
                       </div>
                     </Button>
                   </HoverCardTrigger>
-                  <HoverCardContent
-                    side='right'
-                    className='w-80'
-                    align='start'
-                  >
+                  <HoverCardContent side='right' className='w-80' align='start'>
                     <div className='space-y-3'>
                       <div className='flex items-start gap-3'>
-                        <Avatar className='h-12 w-12 border-2 border-primary/20'>
+                        <Avatar className='border-primary/20 h-12 w-12 border-2'>
                           <AvatarImage src={user.avatar} alt={user.fullName} />
                           <AvatarFallback className='bg-primary/10 text-sm font-semibold'>
                             {getInitials(user.fullName)}
@@ -194,9 +215,7 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
                           </span>
                           <div className='mt-1'>
                             <Badge
-                              variant={
-                                user.isActive ? 'default' : 'secondary'
-                              }
+                              variant={user.isActive ? 'default' : 'secondary'}
                               className='text-xs'
                             >
                               {user.isActive ? 'Active' : 'Inactive'}

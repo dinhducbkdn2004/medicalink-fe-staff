@@ -4,7 +4,7 @@
  * Simplified to match API capabilities (no edit, no bulk actions)
  */
 import { type ColumnDef } from '@tanstack/react-table'
-import { Clock, MapPin, User, Calendar } from 'lucide-react'
+import { Clock, MapPin, Calendar } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { DataTableColumnHeader } from '@/components/data-table'
@@ -70,45 +70,7 @@ export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
       className: 'min-w-[160px]',
     },
   },
-  {
-    id: 'doctor',
-    header: 'Doctor',
-    cell: ({ row }) => {
-      const doctor = row.original.doctor
-      const doctorId = row.original.doctorId
 
-      if (!doctorId) {
-        return <span className='text-muted-foreground text-sm'>-</span>
-      }
-
-      return (
-        <div className='flex items-center gap-2'>
-          <User className='text-muted-foreground size-4' />
-          <div className='flex flex-col'>
-            {doctor ? (
-              <>
-                <span className='text-sm font-medium'>
-                  {doctor.firstName} {doctor.lastName}
-                </span>
-                {doctor.specialtyName && (
-                  <span className='text-muted-foreground text-xs'>
-                    {doctor.specialtyName}
-                  </span>
-                )}
-              </>
-            ) : (
-              <span className='text-muted-foreground text-sm'>
-                ID: {doctorId}
-              </span>
-            )}
-          </div>
-        </div>
-      )
-    },
-    meta: {
-      className: 'min-w-[180px]',
-    },
-  },
   {
     id: 'workLocation',
     header: 'Work Location',
@@ -125,7 +87,7 @@ export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
       return (
         <div className='flex items-center gap-2'>
           <MapPin className='text-muted-foreground size-4' />
-          <span className='text-sm'>
+          <span className='truncate max-w-[120px] text-sm' title={workLocation?.name || `ID: ${workLocationId}`}>
             {workLocation ? workLocation.name : `ID: ${workLocationId}`}
           </span>
         </div>

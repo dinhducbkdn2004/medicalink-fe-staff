@@ -107,8 +107,10 @@ export function DoctorsTable({
         label: 'View Stats',
         icon: BarChart3,
         onClick: () => {
-          setCurrentRow(doctor)
-          setOpen('stats')
+          navigate({
+            to: '/doctors/$doctorId/stats',
+            params: { doctorId: doctor.id },
+          } as never)
         },
         separator: true,
       },
