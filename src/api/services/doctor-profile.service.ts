@@ -32,6 +32,16 @@ export interface TimeSlot {
 }
 
 /**
+ * Response from GET /api/doctors/profile/:profileId/month-slots
+ * Contains available dates in a specific month
+ */
+export interface MonthSlotsResponse {
+  availableDates: string[] // Array of dates in YYYY-MM-DD format
+  month: number
+  year: number
+}
+
+/**
  * Doctor Profile API Service
  * Manages public-facing doctor profile information including specialties, locations, and professional details
  */
@@ -185,8 +195,42 @@ export const doctorProfileService = {
   },
 
   /**
+   * Get available dates for a doctor in a specific month
+   * NEW ENDPOINT from BREAKING_CHANGES_15-12.md
+   * GET /api/doctors/profile/:profileId/month-slots
+   * @param profileId - Doctor profile CUID
+   * @param month - Month (1-12)
+   * @param year - Year (e.g., 2025)
+   * @param locationId - Work location CUID
+   * @param allowPast - Allow past dates (default: false)
+   * @returns Response with available dates array
+   */
+  async getDoctorMonthSlots(
+    profileId: string,
+    month: number,
+    year: number,
+    locationId: string,
+    allowPast = false
+  ): Promise<MonthSlotsResponse> {
+    const response = await apiClient.get<MonthSlotsResponse>(
+      `/doctors/profile/${profileId}/month-slots`,
+      {
+        params: {
+          month,
+          year,
+          locationId,
+          allowPast,
+        },
+      }
+    )
+    // Note: apiClient interceptor already unwraps response.data.data -> response.data
+    return response.data
+  },
+
+  /**
    * Get available dates for a doctor at a specific location
    * This method queries slots endpoint for a date range to find available dates
+   * @deprecated Use getDoctorMonthSlots instead for better performance
    * @param profileId - Doctor profile CUID
    * @param locationId - Work location CUID
    * @param startDate - Optional start date in YYYY-MM-DD format

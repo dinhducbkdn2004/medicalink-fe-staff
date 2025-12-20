@@ -3,7 +3,8 @@
  * Main page for managing permission groups
  */
 import { getRouteApi } from '@tanstack/react-router'
-import { RoleGate } from '@/components/auth/role-gate'
+import { Can } from '@/components/auth/permission-gate'
+import { RequirePermission } from '@/components/auth/require-permission'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -26,48 +27,50 @@ export function GroupManager() {
   const { data: stats, isLoading: statsLoading } = usePermissionStats()
 
   return (
-    <GroupManagerProvider>
-      <Header fixed>
-        <div className='ms-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ConfigDrawer />
-          <ProfileDropdown />
-        </div>
-      </Header>
-
-      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        {/* Page Header */}
-        <div className='flex flex-wrap items-end justify-between gap-4'>
-          <div className='space-y-1'>
-            <div className='flex items-center gap-3'>
-              <h2 className='text-2xl font-bold tracking-tight'>
-                Permission Groups
-              </h2>
-            </div>
-            <p className='text-muted-foreground'>
-              Create and manage permission groups. Assign permissions to groups,
-              then add users to groups.
-            </p>
+    <RequirePermission resource='permissions' action='manage'>
+      <GroupManagerProvider>
+        <Header fixed>
+          <div className='ms-auto flex items-center space-x-4'>
+            <ThemeSwitch />
+            <ConfigDrawer />
+            <ProfileDropdown />
           </div>
-          <RoleGate roles={['SUPER_ADMIN']}>
-            <GroupPrimaryButtons />
-          </RoleGate>
-        </div>
+        </Header>
 
-        {/* Permission Stats */}
-        <PermissionStatsCards stats={stats} isLoading={statsLoading} />
+        <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+          {/* Page Header */}
+          <div className='flex flex-wrap items-end justify-between gap-4'>
+            <div className='space-y-1'>
+              <div className='flex items-center gap-3'>
+                <h2 className='text-2xl font-bold tracking-tight'>
+                  Permission Groups
+                </h2>
+              </div>
+              <p className='text-muted-foreground'>
+                Create and manage permission groups. Assign permissions to
+                groups, then add users to groups.
+              </p>
+            </div>
+            <Can I='groups:create'>
+              <GroupPrimaryButtons />
+            </Can>
+          </div>
 
-        {/* Groups Table */}
-        <GroupsTable
-          data={groups || []}
-          search={search}
-          navigate={navigate}
-          isLoading={groupsLoading}
-        />
-      </Main>
+          {/* Permission Stats */}
+          <PermissionStatsCards stats={stats} isLoading={statsLoading} />
 
-      {/* Dialogs */}
-      <GroupDialogs />
-    </GroupManagerProvider>
+          {/* Groups Table */}
+          <GroupsTable
+            data={groups || []}
+            search={search}
+            navigate={navigate}
+            isLoading={groupsLoading}
+          />
+        </Main>
+
+        {/* Dialogs */}
+        <GroupDialogs />
+      </GroupManagerProvider>
+    </RequirePermission>
   )
 }

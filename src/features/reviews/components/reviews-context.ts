@@ -9,6 +9,7 @@ export interface ReviewsContextValue {
   setOpen: (type: DialogType) => void
   currentReview: Review | null
   setCurrentReview: (review: Review | null) => void
+  onReviewDeleted?: () => void
 }
 
 export const ReviewsContext = createContext<ReviewsContextValue | null>(null)

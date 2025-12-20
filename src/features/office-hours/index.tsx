@@ -5,6 +5,8 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Can } from '@/components/auth/permission-gate'
+import { RequirePermission } from '@/components/auth/require-permission'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -15,10 +17,11 @@ import { OfficeHoursPrimaryButtons } from './components/office-hours-primary-but
 import { OfficeHoursProvider } from './components/office-hours-provider'
 import { OfficeHoursTable } from './components/office-hours-table'
 import { useOfficeHours } from './data/use-office-hours'
+import { Search } from '@/components/search'
 
 const route = getRouteApi('/_authenticated/office-hours/')
 
-export function OfficeHours() {
+function OfficeHoursContent() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
@@ -88,6 +91,7 @@ export function OfficeHours() {
   return (
     <OfficeHoursProvider>
       <Header fixed>
+        <Search/>
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />
@@ -105,7 +109,11 @@ export function OfficeHours() {
               Manage working hours and schedules for doctors and locations.
             </p>
           </div>
-          {!isPermissionError && <OfficeHoursPrimaryButtons />}
+          {!isPermissionError && (
+            <Can I='office-hours:create'>
+              <OfficeHoursPrimaryButtons />
+            </Can>
+          )}
         </div>
 
         {isPermissionError ? (
@@ -177,5 +185,16 @@ export function OfficeHours() {
 
       <OfficeHoursDialogs />
     </OfficeHoursProvider>
+  )
+}
+
+/**
+ * Office Hours page with permission guard
+ */
+export function OfficeHours() {
+  return (
+    <RequirePermission resource='office-hours' action='manage'>
+      <OfficeHoursContent />
+    </RequirePermission>
   )
 }

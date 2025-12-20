@@ -10,6 +10,15 @@ import type { PaginatedResponse, PaginationParams } from '../types/common.types'
 // Types
 // ============================================================================
 
+export interface ReviewQueryParams extends PaginationParams {
+  /**
+   * Filter reviews by public status
+   * true = reviewer has at least 1 confirmed appointment with the doctor
+   * false = reviewer has no confirmed appointments
+   */
+  isPublic?: boolean
+}
+
 export interface Review {
   id: string
   rating: number
@@ -33,6 +42,11 @@ export interface Review {
 }
 
 export interface CreateReviewRequest {
+  /**
+   * BREAKING CHANGE (15-12-2024):
+   * This field now requires staffAccountId instead of profileId
+   * When creating a review, use the doctor's staffAccountId (from doctor.staffAccountId in public API)
+   */
   doctorId: string
   rating: number
   title: string
@@ -53,10 +67,17 @@ class ReviewService {
   /**
    * Get all reviews for a specific doctor
    * GET /api/reviews/doctor/:doctorId
+   *
+   * BREAKING CHANGE (15-12-2024):
+   * doctorId parameter now requires staffAccountId instead of profileId
+   * Use doctor.staffAccountId from the doctor profile data
+   *
+   * Query params:
+   * - isPublic: Filter by public status (true/false)
    */
   async getDoctorReviews(
     doctorId: string,
-    params: PaginationParams = {}
+    params: ReviewQueryParams = {}
   ): Promise<PaginatedResponse<Review>> {
     const response = await apiClient.get<PaginatedResponse<Review>>(
       `/reviews/doctor/${doctorId}`,
@@ -81,6 +102,10 @@ class ReviewService {
   /**
    * Create a new review
    * POST /api/reviews
+   *
+   * BREAKING CHANGE (15-12-2024):
+   * data.doctorId must be staffAccountId (from doctor.staffAccountId in public doctor profile)
+   * NOT the profileId
    */
   async createReview(data: CreateReviewRequest): Promise<Review> {
     const response = await apiClient.post<{
@@ -94,19 +119,14 @@ class ReviewService {
   /**
    * Delete a review (admin only)
    * DELETE /api/reviews/:id
+   *
+   * Note: The API response is auto-unwrapped by the interceptor
+   * API returns { success, message, data: null }
+   * After unwrapping, response.data will be null
    */
-  async deleteReview(
-    id: string
-  ): Promise<{ success: boolean; message: string }> {
-    const response = await apiClient.delete<{
-      success: boolean
-      message: string
-      data: null
-    }>(`/reviews/${id}`)
-    return {
-      success: response.data.success,
-      message: response.data.message,
-    }
+  async deleteReview(id: string): Promise<void> {
+    await apiClient.delete(`/reviews/${id}`)
+    // Response is successfully unwrapped to null, no need to return anything
   }
 }
 

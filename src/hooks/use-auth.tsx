@@ -63,10 +63,10 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: async () => {
-      // Clear auth state
+      // Clear auth state (PermissionProvider will auto-clear permissions)
       clearAuth()
 
-      // Clear all queries
+      // Clear all queries (including permissions)
       queryClient.clear()
     },
     onSuccess: () => {

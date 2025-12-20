@@ -87,6 +87,36 @@ export const columns: ColumnDef<Review>[] = [
       className: 'w-[140px]',
     },
   },
+  // Public Status (Verified)
+  {
+    accessorKey: 'isPublic',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Verified' />
+    ),
+    cell: ({ row }) => {
+      const isPublic = row.original.isPublic
+      return (
+        <div className='flex items-center gap-2'>
+          {isPublic ? (
+            <span className='bg-primary/10 text-primary inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium'>
+              ✓ Verified
+            </span>
+          ) : (
+            <span className='bg-muted text-muted-foreground inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium'>
+              Unverified
+            </span>
+          )}
+        </div>
+      )
+    },
+    filterFn: (row, _id, value: string[]) => {
+      if (!value || value.length === 0) return true
+      return value.includes(String(row.original.isPublic))
+    },
+    meta: {
+      className: 'w-[120px]',
+    },
+  },
   // Title & Body Preview
   {
     accessorKey: 'title',

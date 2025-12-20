@@ -1,12 +1,10 @@
 import {
   LayoutDashboard,
-  Monitor,
   HelpCircle,
   Bell,
   Palette,
   Settings,
   Wrench,
-  UserCog,
   Users,
   ShieldCheck,
   UserRoundCog,
@@ -22,24 +20,27 @@ import {
   BookOpen,
   FileText,
 } from 'lucide-react'
-import type { UserRole } from '@/api/types/auth.types'
-import type { NavGroupWithAccess } from '@/lib/sidebar-utils'
+import type { NavGroupWithPermission } from '@/lib/sidebar-utils'
 
 /**
- * Define role-based sidebar navigation
- * Super Admin: Full access to all features
- * Admin: Limited access (no Permission management)
- * Doctor: Will have separate UI (not implemented yet)
+ * Permission-based sidebar navigation configuration
+ *
+ * Each item can specify:
+ * - permission: { resource, action } - Required permission to see this item
+ * - No permission = visible to all authenticated users
+ *
+ * The 'manage' action implies all CRUD actions (create, read, update, delete)
  */
-export const navGroups: NavGroupWithAccess[] = [
+export const navGroups: NavGroupWithPermission[] = [
   {
     title: 'Dashboard',
-    allowedRoles: ['SUPER_ADMIN', 'ADMIN'],
     items: [
       {
         title: 'Dashboard',
         url: '/',
         icon: LayoutDashboard,
+        // Dashboard is visible to all authenticated users
+        // Different content shown based on role
       },
     ],
   },
@@ -49,39 +50,44 @@ export const navGroups: NavGroupWithAccess[] = [
       {
         title: 'User Management',
         icon: Users,
-        allowedRoles: ['SUPER_ADMIN', 'ADMIN'],
         items: [
           {
             title: 'Staff Accounts',
             url: '/staffs',
             icon: UserRoundCog,
+            permission: { resource: 'staff', action: 'read' },
           },
           {
             title: 'Doctor Accounts',
             url: '/doctors',
             icon: Stethoscope,
+            // Require manage permission (not just read) to see management page
+            // Doctor has doctors:read but not doctors:manage
+            permission: { resource: 'doctors', action: 'manage' },
           },
         ],
       },
       {
         title: 'Permission',
         icon: Shield,
-        allowedRoles: ['SUPER_ADMIN'], // Only Super Admin can access
         items: [
           {
             title: 'Group Manager',
             url: '/group-manager',
             icon: UsersRound,
+            permission: { resource: 'permissions', action: 'manage' },
           },
           {
             title: 'User Permission',
             url: '/user-permission',
             icon: ShieldCheck,
+            permission: { resource: 'permissions', action: 'manage' },
           },
           {
             title: 'User Group',
             url: '/user-group',
             icon: UsersRound,
+            permission: { resource: 'groups', action: 'manage' },
           },
         ],
       },
@@ -89,22 +95,26 @@ export const navGroups: NavGroupWithAccess[] = [
   },
   {
     title: 'Hospital Configuration',
-    allowedRoles: ['SUPER_ADMIN', 'ADMIN'],
     items: [
       {
         title: 'Specialties',
         url: '/specialties',
         icon: Stethoscope,
+        // Require manage for configuration pages (Admin/SuperAdmin)
+        permission: { resource: 'specialties', action: 'manage' },
       },
       {
         title: 'Work Locations',
         url: '/work-locations',
         icon: MapPin,
+        permission: { resource: 'work-locations', action: 'manage' },
       },
       {
         title: 'Office Hours',
         url: '/office-hours',
         icon: Clock,
+        // Require manage for office hours configuration
+        permission: { resource: 'office-hours', action: 'manage' },
       },
     ],
   },
@@ -115,22 +125,29 @@ export const navGroups: NavGroupWithAccess[] = [
         title: 'Appointments',
         url: '/appointments',
         icon: CalendarDays,
+        permission: { resource: 'appointments', action: 'read' },
       },
       {
         title: 'Patients',
         url: '/patients',
         icon: UserRound,
+        permission: { resource: 'patients', action: 'read' },
       },
       {
         title: 'Q&A',
         url: '/questions',
         icon: MessageCircleQuestion,
+        permission: { resource: 'questions', action: 'read' },
       },
       {
         title: 'Reviews',
         url: '/reviews',
         icon: Star,
-        allowedRoles: ['DOCTOR'],
+        permission: {
+          resource: 'reviews',
+          action: 'read',
+          roleRequired: ['DOCTOR'],
+        },
       },
     ],
   },
@@ -141,12 +158,13 @@ export const navGroups: NavGroupWithAccess[] = [
         title: 'Blog Categories',
         url: '/blogs/categories',
         icon: BookOpen,
-        allowedRoles: ['SUPER_ADMIN', 'ADMIN'],
+        permission: { resource: 'blogs', action: 'manage' },
       },
       {
         title: 'All Blogs',
         url: '/blogs/list',
         icon: FileText,
+        permission: { resource: 'blogs', action: 'read' },
       },
     ],
   },
@@ -158,13 +176,8 @@ export const navGroups: NavGroupWithAccess[] = [
         icon: Settings,
         items: [
           {
-            title: 'Profile',
+            title: 'General',
             url: '/settings',
-            icon: UserCog,
-          },
-          {
-            title: 'Account',
-            url: '/settings/account',
             icon: Wrench,
           },
           {
@@ -176,11 +189,6 @@ export const navGroups: NavGroupWithAccess[] = [
             title: 'Notifications',
             url: '/settings/notifications',
             icon: Bell,
-          },
-          {
-            title: 'Display',
-            url: '/settings/display',
-            icon: Monitor,
           },
         ],
       },
@@ -204,18 +212,17 @@ export const teams = [
   },
   {
     name: 'MedicaLink Admin',
-    logo: ShieldCheck,
+    logo: Shield,
     plan: 'Management',
   },
 ]
 
 /**
- * Get sidebar data with role-based filtering
+ * Get sidebar data
  */
-export function getSidebarData(userRole?: UserRole) {
+export function getSidebarData() {
   return {
     teams,
     navGroups,
-    userRole,
   }
 }

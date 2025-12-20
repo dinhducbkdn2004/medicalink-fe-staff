@@ -3,6 +3,8 @@
  * Main page for managing work locations
  */
 import { getRouteApi } from '@tanstack/react-router'
+import { Can } from '@/components/auth/permission-gate'
+import { RequirePermission } from '@/components/auth/require-permission'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -37,44 +39,45 @@ export function WorkLocations() {
     includeMetadata: true,
   }
 
-  // Debug: Log API params (remove in production)
-  // console.log('🔍 Work Locations API Params:', queryParams)
-
   const { data, isLoading } = useWorkLocations(queryParams)
 
   return (
-    <WorkLocationsProvider>
-      <Header fixed>
-        <Search />
-        <div className='ms-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ConfigDrawer />
-          <ProfileDropdown />
-        </div>
-      </Header>
-
-      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        <div className='flex flex-wrap items-end justify-between gap-2'>
-          <div>
-            <h2 className='text-2xl font-bold tracking-tight'>
-              Work Location Management
-            </h2>
-            <p className='text-muted-foreground'>
-              Manage hospital and clinic locations where doctors practice.
-            </p>
+    <RequirePermission resource='work-locations' action='manage'>
+      <WorkLocationsProvider>
+        <Header fixed>
+          <Search />
+          <div className='ms-auto flex items-center space-x-4'>
+            <ThemeSwitch />
+            <ConfigDrawer />
+            <ProfileDropdown />
           </div>
-          <WorkLocationsPrimaryButtons />
-        </div>
-        <WorkLocationsTable
-          data={data?.data || []}
-          pageCount={data?.meta?.totalPages || 0}
-          search={search}
-          navigate={navigate}
-          isLoading={isLoading}
-        />
-      </Main>
+        </Header>
 
-      <WorkLocationsDialogs />
-    </WorkLocationsProvider>
+        <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+          <div className='flex flex-wrap items-end justify-between gap-2'>
+            <div>
+              <h2 className='text-2xl font-bold tracking-tight'>
+                Work Location Management
+              </h2>
+              <p className='text-muted-foreground'>
+                Manage hospital and clinic locations where doctors practice.
+              </p>
+            </div>
+            <Can I='work-locations:create'>
+              <WorkLocationsPrimaryButtons />
+            </Can>
+          </div>
+          <WorkLocationsTable
+            data={data?.data || []}
+            pageCount={data?.meta?.totalPages || 0}
+            search={search}
+            navigate={navigate}
+            isLoading={isLoading}
+          />
+        </Main>
+
+        <WorkLocationsDialogs />
+      </WorkLocationsProvider>
+    </RequirePermission>
   )
 }

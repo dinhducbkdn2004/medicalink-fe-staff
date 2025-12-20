@@ -1,94 +1,125 @@
 /**
  * Doctor Module Permissions
  * Permission checking utilities for doctor management features
+ * Uses the new permission-driven system from API
  */
-import type { User, UserRole } from '@/api/types/auth.types'
+import { can, canWithContext } from '@/lib/permission-utils'
 
 /**
- * Doctor module permissions
+ * Doctor resource permissions
  */
 export const DoctorPermissions = {
-  READ: 'doctors:read',
-  UPDATE: 'doctors:update',
-  DELETE: 'doctors:delete',
+  READ: { resource: 'doctors', action: 'read' },
+  CREATE: { resource: 'doctors', action: 'create' },
+  UPDATE: { resource: 'doctors', action: 'update' },
+  DELETE: { resource: 'doctors', action: 'delete' },
+  MANAGE: { resource: 'doctors', action: 'manage' },
 } as const
-
-export type DoctorPermission =
-  (typeof DoctorPermissions)[keyof typeof DoctorPermissions]
-
-/**
- * Roles allowed to manage doctors
- */
-export const DOCTOR_MANAGEMENT_ROLES: UserRole[] = ['SUPER_ADMIN', 'ADMIN']
-
-/**
- * Roles allowed to edit own profile
- */
-export const DOCTOR_SELF_EDIT_ROLES: UserRole[] = ['DOCTOR']
 
 /**
  * Check if user can read doctor information
  */
-export function canReadDoctors(user: User | null): boolean {
-  if (!user) return false
-  return DOCTOR_MANAGEMENT_ROLES.includes(user.role) || user.role === 'DOCTOR'
+export function canReadDoctors(): boolean {
+  return can('doctors', 'read')
 }
 
 /**
- * Check if user can create/update doctors
+ * Check if user can create doctors
  */
-export function canManageDoctors(user: User | null): boolean {
-  if (!user) return false
-  return DOCTOR_MANAGEMENT_ROLES.includes(user.role)
+export function canCreateDoctors(): boolean {
+  return can('doctors', 'create')
+}
+
+/**
+ * Check if user can update doctors (any doctor)
+ */
+export function canUpdateDoctors(): boolean {
+  return can('doctors', 'update')
 }
 
 /**
  * Check if user can delete doctors
  */
-export function canDeleteDoctors(user: User | null): boolean {
-  if (!user) return false
-  return DOCTOR_MANAGEMENT_ROLES.includes(user.role)
+export function canDeleteDoctors(): boolean {
+  return can('doctors', 'delete')
 }
 
 /**
- * Check if user can edit their own profile
+ * Check if user can manage doctors (full CRUD)
+ */
+export function canManageDoctors(): boolean {
+  return can('doctors', 'manage')
+}
+
+/**
+ * Check if user can edit a specific doctor profile
+ * Takes into account conditional permissions (isSelf)
+ */
+export function canEditDoctorProfile(isSelf: boolean): boolean {
+  // Check with context for conditional permissions
+  return canWithContext('doctors', 'update', { isSelf })
+}
+
+/**
+ * Check if user can edit own profile
+ * Kept for backward compatibility with existing code
+ *
+ * @param user - User object (can be null)
+ * @param doctorId - Doctor ID to check
  */
 export function canEditOwnProfile(
-  user: User | null,
+  user: { id: string } | null | undefined,
   doctorId?: string
 ): boolean {
-  if (!user) return false
-
-  // Admins can edit any profile
-  if (DOCTOR_MANAGEMENT_ROLES.includes(user.role)) {
-    return true
+  // If no user or doctorId, check basic permission
+  if (!user || !doctorId) {
+    return can('doctors', 'update')
   }
 
-  // Doctors can only edit their own profile
-  if (user.role === 'DOCTOR' && doctorId) {
-    return user.id === doctorId
-  }
+  // Check if this is self-edit
+  const isSelf = user.id === doctorId
 
-  return false
+  // Use permission with context
+  return canEditDoctorProfile(isSelf)
+}
+
+/**
+ * Check if user can delete a specific doctor
+ * Takes into account conditional permissions
+ */
+export function canDeleteDoctor(isSelf: boolean): boolean {
+  return canWithContext('doctors', 'delete', { isSelf })
 }
 
 /**
  * Check if user can toggle doctor active status
  */
-export function canToggleActive(user: User | null): boolean {
-  if (!user) return false
-  return DOCTOR_MANAGEMENT_ROLES.includes(user.role)
+export function canToggleActive(): boolean {
+  return can('doctors', 'update')
 }
 
 /**
- * Get accessible doctor management actions for user
+ * Get accessible doctor management actions
  */
-export function getDoctorActions(user: User | null) {
+export function getDoctorActions() {
   return {
-    canRead: canReadDoctors(user),
-    canCreate: canManageDoctors(user),
-    canUpdate: canManageDoctors(user),
-    canDelete: canDeleteDoctors(user),
-    canToggleActive: canToggleActive(user),
+    canRead: canReadDoctors(),
+    canCreate: canCreateDoctors(),
+    canUpdate: canUpdateDoctors(),
+    canDelete: canDeleteDoctors(),
+    canManage: canManageDoctors(),
+    canToggleActive: canToggleActive(),
+  }
+}
+
+/**
+ * Get doctor row actions with context
+ * Used for table row actions that may depend on ownership
+ */
+export function getDoctorRowActions(isSelf: boolean) {
+  return {
+    canEdit: canEditDoctorProfile(isSelf),
+    canDelete: canDeleteDoctor(isSelf),
+    canToggleActive: canToggleActive(),
   }
 }
