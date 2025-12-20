@@ -69,13 +69,14 @@ export type {
 export {
   DoctorPermissions,
   canReadDoctors,
-  canManageDoctors,
+  canCreateDoctors,
+  canUpdateDoctors,
   canDeleteDoctors,
+  canManageDoctors,
+  canEditDoctorProfile,
   canEditOwnProfile,
+  canDeleteDoctor,
   canToggleActive,
   getDoctorActions,
-  DOCTOR_MANAGEMENT_ROLES,
-  DOCTOR_SELF_EDIT_ROLES,
+  getDoctorRowActions,
 } from './utils/permissions'
-
-export type { DoctorPermission } from './utils/permissions'

@@ -2,7 +2,7 @@
  * Reviews Feature - Static Data
  * Filter options and constants
  */
-import { CheckCircle, Clock, XCircle, Star } from 'lucide-react'
+import { CheckCircle, Clock, XCircle, Star, ShieldCheck } from 'lucide-react'
 
 // ============================================================================
 // Filter Options
@@ -22,6 +22,19 @@ export const statusOptions = [
   {
     label: 'Rejected',
     value: 'REJECTED',
+    icon: XCircle,
+  },
+]
+
+export const verifiedOptions = [
+  {
+    label: 'Verified',
+    value: 'true',
+    icon: ShieldCheck,
+  },
+  {
+    label: 'Unverified',
+    value: 'false',
     icon: XCircle,
   },
 ]

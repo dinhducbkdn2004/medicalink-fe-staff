@@ -1,5 +1,4 @@
-import { createFileRoute, Navigate } from '@tanstack/react-router'
-import { useAuthStore } from '@/stores/auth-store'
+import { createFileRoute } from '@tanstack/react-router'
 import { Dashboard } from '@/features/dashboard'
 
 export const Route = createFileRoute('/_authenticated/')({
@@ -7,11 +6,8 @@ export const Route = createFileRoute('/_authenticated/')({
 })
 
 function DashboardRoute() {
-  const { user } = useAuthStore()
-
-  if (user?.role === 'DOCTOR') {
-    return <Navigate to='/appointments' />
-  }
-
+  // Dashboard component now handles role-based rendering internally
+  // - Doctor: Shows DoctorDashboard with personal stats
+  // - Admin/SuperAdmin: Shows system-wide dashboard
   return <Dashboard />
 }

@@ -1,7 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { useNavigate } from '@tanstack/react-router'
 import { type Row } from '@tanstack/react-table'
-import { Eye, Edit, Trash2, Power, Star } from 'lucide-react'
+import { Eye, Edit, Trash2, Power, Star, BarChart3 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -72,6 +72,17 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => {
+            setCurrentRow(doctor)
+            setOpen('stats')
+          }}
+        >
+          View Stats
+          <DropdownMenuShortcut>
+            <BarChart3 size={16} />
+          </DropdownMenuShortcut>
+        </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
             navigate({

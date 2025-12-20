@@ -1,50 +1,81 @@
 /**
  * Patient Permissions Utility
  * Helper functions to check user permissions for patient operations
+ * Uses the new permission-driven system from API
  */
-import type { User } from '@/api/types/auth.types'
+import { can, canWithContext } from '@/lib/permission-utils'
+
+/**
+ * Patient resource permissions
+ */
+export const PatientPermissions = {
+  READ: { resource: 'patients', action: 'read' },
+  CREATE: { resource: 'patients', action: 'create' },
+  UPDATE: { resource: 'patients', action: 'update' },
+  DELETE: { resource: 'patients', action: 'delete' },
+  MANAGE: { resource: 'patients', action: 'manage' },
+} as const
 
 /**
  * Check if user can read patients
  */
-export function canReadPatients(user?: User | null): boolean {
-  if (!user) return false
-
-  // Super Admin and Admin have full access
-  if (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') {
-    return true
-  }
-
-  // For now, allow all authenticated users to read patients
-  return true
+export function canReadPatients(): boolean {
+  return can('patients', 'read')
 }
 
 /**
  * Check if user can create patients
  */
-export function canCreatePatients(user?: User | null): boolean {
-  if (!user) return false
-
-  // Only Super Admin and Admin can create
-  return user.role === 'SUPER_ADMIN' || user.role === 'ADMIN'
+export function canCreatePatients(): boolean {
+  return can('patients', 'create')
 }
 
 /**
  * Check if user can update patients
  */
-export function canUpdatePatients(user?: User | null): boolean {
-  if (!user) return false
-
-  // Only Super Admin and Admin can update
-  return user.role === 'SUPER_ADMIN' || user.role === 'ADMIN'
+export function canUpdatePatients(): boolean {
+  return can('patients', 'update')
 }
 
 /**
  * Check if user can delete patients
  */
-export function canDeletePatients(user?: User | null): boolean {
-  if (!user) return false
+export function canDeletePatients(): boolean {
+  return can('patients', 'delete')
+}
 
-  // Only Super Admin can delete
-  return user.role === 'SUPER_ADMIN'
+/**
+ * Check if user can manage patients (full CRUD)
+ */
+export function canManagePatients(): boolean {
+  return can('patients', 'manage')
+}
+
+/**
+ * Check if user can edit a specific patient
+ * Takes into account conditional permissions
+ */
+export function canEditPatient(context?: Record<string, unknown>): boolean {
+  return canWithContext('patients', 'update', context)
+}
+
+/**
+ * Check if user can delete a specific patient
+ * Takes into account conditional permissions
+ */
+export function canDeletePatient(context?: Record<string, unknown>): boolean {
+  return canWithContext('patients', 'delete', context)
+}
+
+/**
+ * Get accessible patient management actions
+ */
+export function getPatientActions() {
+  return {
+    canRead: canReadPatients(),
+    canCreate: canCreatePatients(),
+    canUpdate: canUpdatePatients(),
+    canDelete: canDeletePatients(),
+    canManage: canManagePatients(),
+  }
 }

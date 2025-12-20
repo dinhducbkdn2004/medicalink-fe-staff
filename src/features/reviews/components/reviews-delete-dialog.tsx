@@ -21,7 +21,7 @@ import { useReviews } from './use-reviews'
 // ============================================================================
 
 export function ReviewDeleteDialog() {
-  const { openDialog, setOpen, currentReview } = useReviews()
+  const { openDialog, setOpen, currentReview, onReviewDeleted } = useReviews()
   const isOpen = openDialog === 'delete'
   const deleteMutation = useDeleteReview()
 
@@ -31,6 +31,8 @@ export function ReviewDeleteDialog() {
     try {
       await deleteMutation.mutateAsync(currentReview.id)
       setOpen(null)
+      // Trigger refetch after successful delete
+      onReviewDeleted?.()
     } catch (error) {
       console.error('Failed to delete review:', error)
     }

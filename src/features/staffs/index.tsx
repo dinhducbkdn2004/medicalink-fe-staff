@@ -4,8 +4,8 @@
  */
 import { getRouteApi } from '@tanstack/react-router'
 import { StaffRole } from '@/api/types/staff.types'
-import { useAuth } from '@/hooks/use-auth'
-import { RoleGate } from '@/components/auth/role-gate'
+import { Can } from '@/components/auth/permission-gate'
+import { RequirePermission } from '@/components/auth/require-permission'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -23,9 +23,8 @@ const route = getRouteApi('/_authenticated/staffs/')
 export function Staffs() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
-  const { user } = useAuth()
 
-  // Fetch staffs with query params (must be called before any conditional returns)
+  // Fetch staffs with query params
   const queryParams = {
     page: (search.page as number) || 1,
     limit: (search.pageSize as number) || 10,
@@ -50,62 +49,45 @@ export function Staffs() {
     createdTo: (search.createdTo as string | undefined) || undefined,
   }
 
-  // Debug: Log API params (remove in production)
-  // console.log('🔍 Staffs API Params:', queryParams)
-
   const { data, isLoading } = useStaffs(queryParams)
 
-  // Check if user has permission to view staff management
-  const canViewStaffs = user?.role === 'SUPER_ADMIN'
-
-  if (!canViewStaffs) {
-    return (
-      <Main className='flex flex-1 items-center justify-center'>
-        <div className='text-center'>
-          <h2 className='text-2xl font-bold'>Access Denied</h2>
-          <p className='text-muted-foreground mt-2'>
-            You do not have permission to view staff management.
-          </p>
-        </div>
-      </Main>
-    )
-  }
-
   return (
-    <StaffsProvider>
-      <Header fixed>
-        <Search />
-        <div className='ms-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ConfigDrawer />
-          <ProfileDropdown />
-        </div>
-      </Header>
-
-      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        <div className='flex flex-wrap items-end justify-between gap-2'>
-          <div>
-            <h2 className='text-2xl font-bold tracking-tight'>
-              Staff Management
-            </h2>
-            <p className='text-muted-foreground'>
-              Manage staff accounts and their roles here.
-            </p>
+    <RequirePermission resource='staff' action='read'>
+      <StaffsProvider>
+        <Header fixed>
+          <Search />
+          <div className='ms-auto flex items-center space-x-4'>
+            <ThemeSwitch />
+            <ConfigDrawer />
+            <ProfileDropdown />
           </div>
-          <RoleGate roles={['SUPER_ADMIN']}>
-            <StaffsPrimaryButtons />
-          </RoleGate>
-        </div>
-        <StaffsTable
-          data={data?.data || []}
-          pageCount={data?.meta?.totalPages || 0}
-          search={search}
-          navigate={navigate}
-          isLoading={isLoading}
-        />
-      </Main>
+        </Header>
 
-      <StaffsDialogs />
-    </StaffsProvider>
+        <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+          <div className='flex flex-wrap items-end justify-between gap-2'>
+            <div>
+              <h2 className='text-2xl font-bold tracking-tight'>
+                Staff Management
+              </h2>
+              <p className='text-muted-foreground'>
+                Manage staff accounts and their roles here.
+              </p>
+            </div>
+            <Can I='staff:create'>
+              <StaffsPrimaryButtons />
+            </Can>
+          </div>
+          <StaffsTable
+            data={data?.data || []}
+            pageCount={data?.meta?.totalPages || 0}
+            search={search}
+            navigate={navigate}
+            isLoading={isLoading}
+          />
+        </Main>
+
+        <StaffsDialogs />
+      </StaffsProvider>
+    </RequirePermission>
   )
 }

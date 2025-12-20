@@ -15,6 +15,17 @@ import type { Specialty } from '@/api/services/specialty.service'
 import type { WorkLocation } from '@/api/services/work-location.service'
 import type { Patient } from '@/api/types'
 import type { PublicDoctorProfile } from '@/api/types/doctor.types'
+import { useAuthStore } from '@/stores/auth-store'
+
+// ============================================================================
+// Helper: Check if user can use allowPast
+// Only ADMIN and SUPER_ADMIN can select past dates, DOCTOR cannot
+// ============================================================================
+const canAllowPastDates = (): boolean => {
+  const user = useAuthStore.getState().user
+  if (!user) return false
+  return user.role === 'ADMIN' || user.role === 'SUPER_ADMIN'
+}
 
 // ============================================================================
 // Global Cache for static data to prevent repeated API calls
@@ -336,6 +347,7 @@ export function useDoctorsByLocationAndSpecialty(
 
 // ============================================================================
 // Hook: Fetch Available Dates (Step 3.5)
+// UPDATED: Now uses month-slots API to avoid spamming slots endpoint
 // ============================================================================
 export function useDoctorAvailableDates(
   profileId?: string,
@@ -354,11 +366,50 @@ export function useDoctorAvailableDates(
     const fetchAvailableDates = async () => {
       setIsLoading(true)
       try {
-        const dates = await doctorProfileService.getDoctorAvailableDates(
-          profileId,
-          locationId
+        // Get current month and next 2 months to provide a good date range
+        const today = new Date()
+        const currentMonth = today.getMonth() + 1 // JavaScript months are 0-indexed
+        const currentYear = today.getFullYear()
+
+        // Fetch available dates for current month and next 2 months
+        const monthsToFetch = [
+          { month: currentMonth, year: currentYear },
+          {
+            month: currentMonth === 12 ? 1 : currentMonth + 1,
+            year: currentMonth === 12 ? currentYear + 1 : currentYear,
+          },
+          {
+            month: currentMonth >= 11 ? currentMonth - 10 : currentMonth + 2,
+            year: currentMonth >= 11 ? currentYear + 1 : currentYear,
+          },
+        ]
+
+        // Fetch all months in parallel using the new month-slots API
+        const results = await Promise.allSettled(
+          monthsToFetch.map((period) =>
+            doctorProfileService.getDoctorMonthSlots(
+              profileId,
+              period.month,
+              period.year,
+              locationId,
+              canAllowPastDates() // Only ADMIN/SUPER_ADMIN can see past dates
+            )
+          )
         )
-        setAvailableDates(dates)
+
+        // Combine all available dates from all months
+        const allDates: string[] = []
+        results.forEach((result) => {
+          if (result.status === 'fulfilled' && result.value.availableDates) {
+            allDates.push(...result.value.availableDates)
+          }
+        })
+
+        // Sort dates chronologically and remove duplicates
+        const uniqueDates = [...new Set(allDates)].sort((a, b) =>
+          a.localeCompare(b)
+        )
+        setAvailableDates(uniqueDates)
       } catch (error) {
         console.error('Failed to fetch available dates:', error)
         setAvailableDates([])
@@ -399,7 +450,7 @@ export function useAvailableSlots(
           profileId,
           locationId,
           formattedDate,
-          true // allowPast for staff
+          canAllowPastDates() // Only ADMIN/SUPER_ADMIN can see past dates
         )
         setSlots(response)
       } catch (error) {
