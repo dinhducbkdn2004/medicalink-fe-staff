@@ -5,6 +5,12 @@
  */
 import { apiClient } from '../core/client'
 import type { PaginatedResponse, PaginationParams } from '../types/common.types'
+import type {
+  ReviewAnalysis,
+  ReviewAnalysisListItem,
+  CreateReviewAnalysisRequest,
+  ListReviewAnalysesParams,
+} from '../types/review-analysis.types'
 
 // ============================================================================
 // Types
@@ -127,6 +133,61 @@ class ReviewService {
   async deleteReview(id: string): Promise<void> {
     await apiClient.delete(`/reviews/${id}`)
     // Response is successfully unwrapped to null, no need to return anything
+  }
+
+  // --------------------------------------------------------------------------
+  // Review Analysis
+  // --------------------------------------------------------------------------
+
+  /**
+   * Create a new review analysis using AI
+   * POST /api/reviews/analyze
+   *
+   * Requires: reviews:analyze permission
+   * Rate Limit: 5 requests per hour
+   *
+   * @throws {429} Rate limit exceeded
+   * @throws {503} AI service unavailable
+   */
+  async createAnalysis(
+    data: CreateReviewAnalysisRequest
+  ): Promise<ReviewAnalysis> {
+    const response = await apiClient.post<ReviewAnalysis>(
+      '/reviews/analyze',
+      data
+    )
+    return response.data
+  }
+
+  /**
+   * List review analyses for a specific doctor
+   * GET /api/reviews/:doctorId/analyses
+   *
+   * Requires: reviews:read permission
+   * Returns paginated list with creator names composed from accounts service
+   */
+  async listAnalyses(
+    doctorId: string,
+    params: ListReviewAnalysesParams = {}
+  ): Promise<PaginatedResponse<ReviewAnalysisListItem>> {
+    const response = await apiClient.get<
+      PaginatedResponse<ReviewAnalysisListItem>
+    >(`/reviews/${doctorId}/analyses`, { params })
+    return response.data
+  }
+
+  /**
+   * Get a single review analysis by ID
+   * GET /api/reviews/analyses/:id
+   *
+   * Requires: reviews:read permission
+   * Returns full analysis details without composition
+   */
+  async getAnalysisById(id: string): Promise<ReviewAnalysis> {
+    const response = await apiClient.get<ReviewAnalysis>(
+      `/reviews/analyses/${id}`
+    )
+    return response.data
   }
 }
 

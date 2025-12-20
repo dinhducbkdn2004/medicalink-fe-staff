@@ -5,6 +5,13 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Can } from '@/components/auth/permission-gate'
 import { RequirePermission } from '@/components/auth/require-permission'
 import { ConfigDrawer } from '@/components/config-drawer'
@@ -17,6 +24,8 @@ import { OfficeHoursPrimaryButtons } from './components/office-hours-primary-but
 import { OfficeHoursProvider } from './components/office-hours-provider'
 import { OfficeHoursTable } from './components/office-hours-table'
 import { useOfficeHours } from './data/use-office-hours'
+import { useDoctors } from '@/features/doctors/data/use-doctors'
+import { useWorkLocations } from '@/features/work-locations/data/use-work-locations'
 import { Search } from '@/components/search'
 
 const route = getRouteApi('/_authenticated/office-hours/')
@@ -24,6 +33,32 @@ const route = getRouteApi('/_authenticated/office-hours/')
 function OfficeHoursContent() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
+
+  // Fetch filter options
+  const { data: doctorsData } = useDoctors({ limit: 100 })
+  const { data: locationsData } = useWorkLocations({ limit: 100 })
+  
+  const doctors = doctorsData?.data || []
+  const locations = locationsData?.data || []
+
+  // Filter handlers
+  const handleDoctorChange = (doctorId: string) => {
+    navigate({
+      search: {
+        ...search,
+        doctorId: doctorId === 'all' ? undefined : doctorId,
+      },
+    })
+  }
+
+  const handleLocationChange = (workLocationId: string) => {
+    navigate({
+      search: {
+        ...search,
+        workLocationId: workLocationId === 'all' ? undefined : workLocationId,
+      },
+    })
+  }
 
   // Fetch all office hours (API returns grouped data)
   const queryParams = {
@@ -114,6 +149,53 @@ function OfficeHoursContent() {
               <OfficeHoursPrimaryButtons />
             </Can>
           )}
+        </div>
+
+        {/* Filter Controls */}
+        <div className='flex flex-wrap gap-4'>
+          <div className='min-w-[200px]'>
+            <label className='text-sm font-medium mb-2 block'>
+              Filter by Doctor
+            </label>
+            <Select
+              value={(search.doctorId as string) || 'all'}
+              onValueChange={handleDoctorChange}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder='All Doctors' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>All Doctors</SelectItem>
+                {doctors.map((doctor) => (
+                  <SelectItem key={doctor.id} value={doctor.id}>
+                    {doctor.fullName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className='min-w-[200px]'>
+            <label className='text-sm font-medium mb-2 block'>
+              Filter by Location
+            </label>
+            <Select
+              value={(search.workLocationId as string) || 'all'}
+              onValueChange={handleLocationChange}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder='All Locations' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>All Locations</SelectItem>
+                {locations.map((location) => (
+                  <SelectItem key={location.id} value={location.id}>
+                    {location.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {isPermissionError ? (

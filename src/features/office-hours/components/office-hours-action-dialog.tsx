@@ -233,20 +233,19 @@ export function OfficeHoursActionDialog() {
                       checked={field.value}
                       onCheckedChange={(checked) => {
                         field.onChange(checked)
-                        // If global is checked, doctor must be null
+                        // If global is checked, both doctor and location must be null
                         if (checked) {
                           form.setValue('doctorId', null)
+                          form.setValue('workLocationId', null)
                         }
                       }}
-                      disabled={isLoading || !!form.watch('doctorId')}
+                      disabled={isLoading}
                     />
                   </FormControl>
                   <div className='space-y-1 leading-none'>
                     <FormLabel>Global Hours</FormLabel>
                     <FormDescription>
-                      Apply to all locations as fallback hours. Cannot be used
-                      with a specific doctor. Uncheck to create location or
-                      doctor-specific hours.
+                      Apply to all locations as fallback hours. When checked, doctor and location fields will be disabled and cleared.
                     </FormDescription>
                   </div>
                 </FormItem>
@@ -320,11 +319,15 @@ export function OfficeHoursActionDialog() {
                     </span>
                   </FormLabel>
                   <Select
-                    onValueChange={(value) =>
+                    onValueChange={(value) => {
                       field.onChange(value === 'none' ? null : value)
-                    }
+                      // If location is selected, isGlobal must be false  
+                      if (value !== 'none') {
+                        form.setValue('isGlobal', false)
+                      }
+                    }}
                     value={field.value || 'none'}
-                    disabled={isLoading}
+                    disabled={isLoading || form.watch('isGlobal')}
                   >
                     <FormControl>
                       <SelectTrigger>

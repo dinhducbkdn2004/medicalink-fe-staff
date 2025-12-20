@@ -1,3 +1,4 @@
+import { format, parseISO } from 'date-fns'
 import type { IAppointment } from '@/calendar/interfaces'
 import { CheckCircle } from 'lucide-react'
 import { useDisclosure } from '@/hooks/use-disclosure'
@@ -13,6 +14,20 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import { useConfirmAppointment } from '@/features/appointments/data/hooks'
+
+/**
+ * Format time string (HH:mm or ISO) to HH:mm format
+ */
+const formatTime = (timeStr: string): string => {
+  if (timeStr.includes('T')) {
+    // ISO timestamp like "1970-01-01T16:30:00.000Z"
+    const timePart = timeStr.split('T')[1]
+    const [hour, minute] = timePart.split(':').map(Number)
+    return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
+  }
+  // Already in HH:mm format
+  return timeStr
+}
 
 interface IProps {
   children: React.ReactNode
@@ -71,13 +86,17 @@ export function ConfirmAppointmentDialog({
             <div className='flex justify-between text-sm'>
               <span className='text-muted-foreground'>Date:</span>
               <span className='font-medium'>
-                {appointment.event.serviceDate}
+                {format(
+                  parseISO(appointment.event.serviceDate),
+                  'MMMM dd, yyyy'
+                )}
               </span>
             </div>
             <div className='flex justify-between text-sm'>
               <span className='text-muted-foreground'>Time:</span>
               <span className='font-medium'>
-                {appointment.event.timeStart} - {appointment.event.timeEnd}
+                {formatTime(appointment.event.timeStart)} -{' '}
+                {formatTime(appointment.event.timeEnd)}
               </span>
             </div>
           </div>

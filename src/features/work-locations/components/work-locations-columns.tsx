@@ -55,9 +55,11 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
     cell: ({ row }) => {
       return (
         <div className='flex flex-col gap-1'>
-          <span className='font-medium'>{row.original.name}</span>
+          <span className='max-w-[200px] truncate font-medium'>
+            {row.original.name}
+          </span>
           {row.original.slug && (
-            <span className='text-muted-foreground text-xs'>
+            <span className='text-muted-foreground max-w-[200px] truncate text-xs'>
               {row.original.slug}
             </span>
           )}
@@ -100,7 +102,7 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
       return (
         <div className='flex items-center gap-2'>
           {phone && <Phone className='text-muted-foreground size-4' />}
-          <span className='text-sm'>{phone || '-'}</span>
+          <span className='max-w-[120px] truncate text-sm'>{phone || '-'}</span>
         </div>
       )
     },
@@ -116,7 +118,7 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
       return (
         <div className='flex items-center gap-2'>
           <Clock className='text-muted-foreground size-4' />
-          <span className='text-muted-foreground text-sm'>
+          <span className='text-muted-foreground max-w-[140px] truncate text-sm'>
             {timezone || 'Asia/Ho_Chi_Minh'}
           </span>
         </div>
@@ -124,25 +126,6 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
     },
     meta: {
       className: 'w-[180px]',
-    },
-  },
-  {
-    accessorKey: 'doctorsCount',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Doctors' />
-    ),
-    cell: ({ row }) => {
-      const count = row.original.doctorsCount || 0
-      return (
-        <div className='text-center'>
-          <Badge variant='secondary' className='font-mono'>
-            {count}
-          </Badge>
-        </div>
-      )
-    },
-    meta: {
-      className: 'w-[100px] text-center',
     },
   },
   {
