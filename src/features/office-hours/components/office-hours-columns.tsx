@@ -4,15 +4,13 @@
  * Simplified to match API capabilities (no edit, no bulk actions)
  */
 import { type ColumnDef } from '@tanstack/react-table'
-import { Clock, MapPin, Calendar } from 'lucide-react'
+import { Clock, Calendar } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { DataTableColumnHeader } from '@/components/data-table'
 import {
   type OfficeHour,
   getDayLabel,
-  getOfficeHoursType,
-  getOfficeHoursTypeLabel,
 } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 
@@ -72,65 +70,45 @@ export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
   },
 
   {
-    id: 'workLocation',
-    header: 'Work Location',
-    cell: ({ row }) => {
-      const workLocation = row.original.workLocation
-      const workLocationId = row.original.workLocationId
-
-      if (!workLocationId) {
-        return (
-          <span className='text-muted-foreground text-sm'>All Locations</span>
-        )
-      }
-
-      return (
-        <div className='flex items-center gap-2'>
-          <MapPin className='text-muted-foreground size-4' />
-          <span className='truncate max-w-[120px] text-sm' title={workLocation?.name || `ID: ${workLocationId}`}>
-            {workLocation ? workLocation.name : `ID: ${workLocationId}`}
-          </span>
-        </div>
-      )
-    },
-    meta: {
-      className: 'min-w-[180px]',
-    },
-  },
-  {
     id: 'type',
     header: 'Type',
     cell: ({ row }) => {
-      const type = getOfficeHoursType(row.original)
-      const typeLabel = getOfficeHoursTypeLabel(type)
-      const isGlobal = row.original.isGlobal
+      const officeHour = row.original
+      let _type: string
+      let typeLabel: string
+      let badgeClass: string
+
+      // Determine type based on the 4 categories
+      if (officeHour.doctorId && officeHour.workLocationId) {
+        _type = 'doctorInLocation'
+        typeLabel = 'Doctor + Location'
+        badgeClass =
+          'border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950 dark:text-green-300'
+      } else if (officeHour.doctorId && !officeHour.workLocationId) {
+        _type = 'doctor'
+        typeLabel = 'Doctor Only'
+        badgeClass =
+          'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300'
+      } else if (!officeHour.doctorId && officeHour.workLocationId) {
+        _type = 'workLocation'
+        typeLabel = 'Location Only'
+        badgeClass =
+          'border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-300'
+      } else {
+        _type = 'global'
+        typeLabel = 'Global'
+        badgeClass =
+          'border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300'
+      }
 
       return (
-        <div className='flex flex-col gap-1'>
-          <Badge
-            variant='outline'
-            className={cn(
-              'font-normal',
-              type === 'doctor-at-location' &&
-                'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300',
-              type === 'doctor-all-locations' &&
-                'border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-800 dark:bg-purple-950 dark:text-purple-300',
-              type === 'global-location' &&
-                'border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950 dark:text-green-300'
-            )}
-          >
-            {typeLabel}
-          </Badge>
-          {isGlobal && (
-            <Badge variant='secondary' className='text-xs'>
-              Global
-            </Badge>
-          )}
-        </div>
+        <Badge variant='outline' className={cn('font-normal', badgeClass)}>
+          {typeLabel}
+        </Badge>
       )
     },
     meta: {
-      className: 'min-w-[200px]',
+      className: 'min-w-[150px]',
     },
   },
   {

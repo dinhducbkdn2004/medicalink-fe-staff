@@ -111,7 +111,7 @@ export function ReviewsTable({
       pageCount={pageCount}
       isLoading={isLoading}
       entityName='review'
-      // Toolbar - no search bar
+      // Toolbar - no search bar (don't provide searchKey or searchPlaceholder)
       filters={[
         {
           columnId: 'isPublic',

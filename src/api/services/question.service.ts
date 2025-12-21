@@ -26,8 +26,8 @@ export interface Question {
   specialtyId?: string
   specialty?: Specialty
   publicIds?: string[]
-  answerCount: number
-  acceptedAnswerCount?: number
+  answersCount: number
+  acceptedAnswersCount?: number
   viewCount: number
   status: 'PENDING' | 'ANSWERED' | 'CLOSED'
   createdAt: string
