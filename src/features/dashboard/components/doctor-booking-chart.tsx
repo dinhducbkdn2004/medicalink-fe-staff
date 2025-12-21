@@ -1,5 +1,5 @@
 /**
- * Doctor Booking Chart Component
+ * Doctor Booking Chart Component - Vertical Layout Fix
  * Visualizes doctor booking statistics with focused charts
  */
 import { useMemo } from 'react'
@@ -28,10 +28,10 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 
 const STATUS_COLORS = {
-  pending: '#fb923c',
-  confirmed: '#3b82f6',
-  completed: '#22c55e',
-  cancelled: '#ef4444',
+  pending: '#fbbf24',
+  confirmed: '#60a5fa',
+  completed: '#34d399',
+  cancelled: '#f87171',
 }
 
 export function DoctorBookingChart() {
@@ -44,28 +44,36 @@ export function DoctorBookingChart() {
 
   // Top 10 doctors by completion rate
   const completionRateData = useMemo(() => {
-    if (!data?.data) return []
+    if (!data?.data || data.data.length === 0) return []
+
     return data.data
       .slice(0, 10)
-      .filter((item) => item.completedRate > 0)
-      .map((item) => ({
-        name:
-          item.doctor?.fullName?.split(' ').slice(-2).join(' ') || 'Unknown',
-        rate: Number(item.completedRate.toFixed(1)),
-        completed: item.completedCount,
-        total: item.total,
-      }))
+      .map((item) => {
+        const fullName = item.doctor?.fullName || 'Unknown Doctor'
+        const nameParts = fullName.split(' ')
+        const shortName =
+          nameParts.length >= 2 ? nameParts.slice(-2).join(' ') : fullName
+
+        return {
+          name: shortName,
+          rate: Number((item.completedRate || 0).toFixed(1)),
+          completed: item.completedCount || 0,
+          total: item.total || 0,
+        }
+      })
+      .filter((item) => item.total > 0)
   }, [data])
 
   // Overall status distribution (pie chart)
   const statusDistribution = useMemo(() => {
-    if (!data?.data) return []
+    if (!data?.data || data.data.length === 0) return []
+
     const totals = data.data.reduce(
       (acc, item) => ({
-        pending: acc.pending + item.bookedCount,
-        confirmed: acc.confirmed + item.confirmedCount,
-        completed: acc.completed + item.completedCount,
-        cancelled: acc.cancelled + item.cancelledCount,
+        pending: acc.pending + (item.bookedCount || 0),
+        confirmed: acc.confirmed + (item.confirmedCount || 0),
+        completed: acc.completed + (item.completedCount || 0),
+        cancelled: acc.cancelled + (item.cancelledCount || 0),
       }),
       { pending: 0, confirmed: 0, completed: 0, cancelled: 0 }
     )
@@ -132,140 +140,162 @@ export function DoctorBookingChart() {
 
   return (
     <div className='grid gap-6 lg:grid-cols-2'>
-      {/* Completion Rate Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Top 10 Doctors by Completion Rate</CardTitle>
-          <CardDescription>
-            Doctors with highest appointment completion rates
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width='100%' height={350}>
-            <BarChart
-              data={completionRateData}
-              layout='horizontal'
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid
-                strokeDasharray='3 3'
-                opacity={0.2}
-                horizontal={true}
-                vertical={false}
-              />
-              <XAxis
-                type='number'
-                domain={[0, 100]}
-                tickFormatter={(value) => `${value}%`}
-                tick={{ fontSize: 12, fill: '#6b7280' }}
-                axisLine={{ stroke: '#d1d5db', strokeWidth: 1 }}
-                tickLine={{ stroke: '#d1d5db', strokeWidth: 1 }}
-                ticks={[0, 25, 50, 75, 100]}
-              />
-              <YAxis
-                dataKey='name'
-                type='category'
-                width={100}
-                fontSize={11}
-                tick={{ fontSize: 11, fill: '#6b7280' }}
-                axisLine={{ stroke: '#d1d5db', strokeWidth: 1 }}
-                tickLine={{ stroke: '#d1d5db', strokeWidth: 1 }}
-              />
-              <Tooltip
-                content={({ active, payload }) => {
-                  if (active && payload && payload.length) {
-                    const data = payload[0].payload
-                    return (
-                      <div className='bg-background rounded-lg border p-3 shadow-lg'>
-                        <p className='mb-2 font-semibold'>{data.name}</p>
-                        <div className='space-y-1 text-xs'>
-                          <p className='font-medium text-green-600'>
-                            ✓ Completion Rate: {data.rate}%
-                          </p>
-                          <p className='text-muted-foreground'>
-                            Completed: {data.completed} / {data.total}
-                          </p>
+      {/* Completion Rate Chart - VERTICAL */}
+      {completionRateData.length > 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Doctors by Completion Rate</CardTitle>
+            <CardDescription>
+              Doctors with highest appointment completion rates
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width='100%' height={350}>
+              <BarChart
+                data={completionRateData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+              >
+                <CartesianGrid
+                  strokeDasharray='3 3'
+                  opacity={0.1}
+                  stroke='#e0e7ff'
+                />
+                <XAxis
+                  dataKey='name'
+                  angle={-45}
+                  textAnchor='end'
+                  height={80}
+                  tick={{ fontSize: 11, fill: '#6b7280' }}
+                  interval={0}
+                />
+                <YAxis
+                  domain={[0, 100]}
+                  tickFormatter={(value) => `${value}%`}
+                  tick={{ fontSize: 12, fill: '#6b7280' }}
+                />
+                <Tooltip
+                  cursor={false}
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload
+                      return (
+                        <div className='bg-background rounded-lg border p-3 shadow-lg'>
+                          <p className='mb-2 font-semibold'>{data.name}</p>
+                          <div className='space-y-1 text-xs'>
+                            <p className='font-medium text-green-600'>
+                              ✓ Completion Rate: {data.rate}%
+                            </p>
+                            <p className='text-muted-foreground'>
+                              Completed: {data.completed} / {data.total}
+                            </p>
+                          </div>
                         </div>
-                      </div>
+                      )
+                    }
+                    return null
+                  }}
+                />
+                <Bar dataKey='rate' radius={[8, 8, 0, 0]} maxBarSize={60}>
+                  {completionRateData.map((entry, index) => {
+                    const intensity = Math.min(entry.rate / 20, 4)
+                    const colors = [
+                      'oklch(0.85 0.08 244.9955)',
+                      'oklch(0.78 0.11 244.9955)',
+                      'oklch(0.6723 0.1606 244.9955)',
+                      'oklch(0.60 0.18 244.9955)',
+                      'oklch(0.52 0.20 244.9955)',
+                    ]
+                    return (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={colors[Math.floor(intensity)]}
+                      />
                     )
-                  }
-                  return null
-                }}
-              />
-              <Bar dataKey='rate' radius={[0, 4, 4, 0]}>
-                {completionRateData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={`hsl(${120 - (100 - entry.rate) * 1.2}, 65%, 50%)`}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
+                  })}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardContent className='flex h-[350px] items-center justify-center'>
+            <p className='text-muted-foreground'>No completion rate data</p>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Status Distribution Pie Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Overall Appointment Status</CardTitle>
-          <CardDescription>
-            Distribution of {totalAppointments.toLocaleString()} total
-            appointments
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width='100%' height={350}>
-            <PieChart>
-              <Pie
-                data={statusDistribution}
-                cx='50%'
-                cy='50%'
-                labelLine={false}
-                label={({ name, percent }) =>
-                  `${name} ${(percent * 100).toFixed(0)}%`
-                }
-                outerRadius={100}
-                fill='#8884d8'
-                dataKey='value'
-              >
-                {statusDistribution.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                content={({ active, payload }) => {
-                  if (active && payload && payload.length) {
-                    const data = payload[0].payload
-                    return (
-                      <div className='bg-background rounded-lg border p-3 shadow-lg'>
-                        <p className='mb-1 font-semibold'>{data.name}</p>
-                        <p className='text-sm'>
-                          {data.value.toLocaleString()} appointments
-                        </p>
-                        <p className='text-muted-foreground text-xs'>
-                          {((data.value / totalAppointments) * 100).toFixed(1)}%
-                          of total
-                        </p>
-                      </div>
-                    )
+      {statusDistribution.length > 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Overall Appointment Status</CardTitle>
+            <CardDescription>
+              Distribution of {totalAppointments.toLocaleString()} total
+              appointments
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width='100%' height={350}>
+              <PieChart>
+                <Pie
+                  data={statusDistribution}
+                  cx='50%'
+                  cy='45%'
+                  labelLine={false}
+                  label={({ name, percent }) =>
+                    `${name} ${(percent * 100).toFixed(0)}%`
                   }
-                  return null
-                }}
-              />
-              <Legend
-                verticalAlign='bottom'
-                height={36}
-                formatter={(value, entry: { payload: { value: number } }) => (
-                  <span className='text-sm'>
-                    {value}: {entry.payload.value.toLocaleString()}
-                  </span>
-                )}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
+                  outerRadius={90}
+                  fill='#8884d8'
+                  dataKey='value'
+                >
+                  {statusDistribution.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload
+                      return (
+                        <div className='bg-background rounded-lg border p-3 shadow-lg'>
+                          <p className='mb-1 font-semibold'>{data.name}</p>
+                          <p className='text-sm'>
+                            {data.value.toLocaleString()} appointments
+                          </p>
+                          <p className='text-muted-foreground text-xs'>
+                            {((data.value / totalAppointments) * 100).toFixed(
+                              1
+                            )}
+                            % of total
+                          </p>
+                        </div>
+                      )
+                    }
+                    return null
+                  }}
+                />
+                <Legend
+                  verticalAlign='bottom'
+                  height={50}
+                  formatter={(value, entry: { payload: { value: number } }) => (
+                    <span className='text-sm'>
+                      {value}: {entry.payload.value.toLocaleString()}
+                    </span>
+                  )}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardContent className='flex h-[350px] items-center justify-center'>
+            <p className='text-muted-foreground'>No status distribution data</p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
