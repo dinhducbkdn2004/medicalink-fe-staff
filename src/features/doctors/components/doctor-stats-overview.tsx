@@ -203,7 +203,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
       </div>
 
       {/* Performance Overview */}
-      {content.averageRating && content.averageRating > 0 && (
+      {content.averageRating && content.averageRating > 0 ? (
         <Card>
           <CardHeader className='pb-3'>
             <CardTitle className='text-sm font-semibold'>
@@ -239,7 +239,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
             </div>
           </CardContent>
         </Card>
-      )}
+      ) : null}
     </div>
   )
 }

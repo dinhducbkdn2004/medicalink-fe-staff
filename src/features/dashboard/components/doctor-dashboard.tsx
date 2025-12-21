@@ -25,10 +25,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { TopNav } from '@/components/layout/top-nav'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { DoctorAppointmentsSection } from './doctor-appointments-section'
+import { Search } from '@/components/search'
 
 function StatsCard({
   title,
@@ -66,26 +66,11 @@ function StatsCard({
 export function DoctorDashboard() {
   const { data: stats, isLoading } = useDoctorMyStats()
 
-  const topNav = [
-    {
-      title: 'Overview',
-      href: '/dashboard',
-      isActive: true,
-      disabled: false,
-    },
-    {
-      title: 'Appointments',
-      href: '/appointments',
-      isActive: false,
-      disabled: false,
-    },
-  ]
-
   return (
     <>
       {/* ===== Top Heading ===== */}
       <Header>
-        <TopNav links={topNav} />
+        <Search/>
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />
@@ -111,7 +96,7 @@ export function DoctorDashboard() {
           defaultValue='overview'
           className='space-y-4'
         >
-          <div className='w-full overflow-x-auto pb-2'>
+          <div className='w-full overflow-x-auto'>
             <TabsList>
               <TabsTrigger value='overview'>Overview</TabsTrigger>
               <TabsTrigger value='appointments'>Appointments</TabsTrigger>

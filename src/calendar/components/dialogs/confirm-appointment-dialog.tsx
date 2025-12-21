@@ -104,7 +104,14 @@ export function ConfirmAppointmentDialog({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button type='button' variant='outline' disabled={isPending}>
+            <Button
+              type='button'
+              variant='outline'
+              disabled={isPending}
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
+            >
               Cancel
             </Button>
           </DialogClose>

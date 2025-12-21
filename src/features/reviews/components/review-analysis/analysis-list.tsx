@@ -101,17 +101,17 @@ export function AnalysisList({ className }: AnalysisListProps) {
         ) : data?.data.length === 0 ? (
           // Empty state
           <div className='flex flex-col items-center justify-center py-12 text-center'>
-            <div className='bg-muted mb-3 flex h-12 w-12 items-center justify-center rounded-full'>
+            <div className='bg-muted mb-4 flex h-12 w-12 items-center justify-center rounded-full'>
               <BarChart3 className='text-muted-foreground h-6 w-6' />
             </div>
-            <h3 className='mb-1 text-sm font-medium'>No analyses yet</h3>
-            <p className='text-muted-foreground mb-4 text-xs'>
-              Generate your first AI-powered review analysis
+            <h3 className='mb-2 text-sm font-medium'>No analyses available</h3>
+            <p className='text-muted-foreground mb-1 max-w-[200px] text-xs'>
+              Create your first AI-powered review analysis
             </p>
-            <Button size='sm' onClick={handleCreateClick}>
-              <Plus className='mr-2 h-4 w-4' />
-              Create Analysis
-            </Button>
+            <p className='text-muted-foreground text-xs'>
+              Use the <span className='font-medium text-blue-600'>"New"</span>{' '}
+              button above to get started
+            </p>
           </div>
         ) : (
           // Analysis list
