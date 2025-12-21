@@ -13,6 +13,7 @@ import {
 import { statusOptions } from '../data/data'
 import type { Question } from '../data/schema'
 import { usePublicSpecialties } from '../data/use-specialties'
+import { canUpdateQuestions, canDeleteQuestion } from '../utils/permissions'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { columns } from './questions-columns'
 import { useQuestions } from './use-questions'
@@ -79,7 +80,6 @@ export function QuestionsTable({
   // Define row actions (context menu)
   const getRowActions = (row: { original: Question }): DataTableAction[] => {
     const question = row.original
-    const isDoctor = useAuthStore.getState().user?.role === 'DOCTOR'
 
     const actions: DataTableAction[] = [
       {
@@ -92,27 +92,30 @@ export function QuestionsTable({
       },
     ]
 
-    if (!isDoctor) {
-      actions.push(
-        {
-          label: 'Edit',
-          icon: Edit,
-          onClick: () => {
-            setCurrentQuestion(question)
-            setOpen('edit')
-          },
+    // Only show Edit action if user has update permission
+    if (canUpdateQuestions()) {
+      actions.push({
+        label: 'Edit',
+        icon: Edit,
+        onClick: () => {
+          setCurrentQuestion(question)
+          setOpen('edit')
         },
-        {
-          label: 'Delete',
-          icon: Trash2,
-          onClick: () => {
-            setCurrentQuestion(question)
-            setOpen('delete')
-          },
-          variant: 'destructive',
-          separator: true,
-        }
-      )
+      })
+    }
+
+    // Only show Delete action if user has delete permission
+    if (canDeleteQuestion({ questionId: question.id })) {
+      actions.push({
+        label: 'Delete',
+        icon: Trash2,
+        onClick: () => {
+          setCurrentQuestion(question)
+          setOpen('delete')
+        },
+        variant: 'destructive',
+        separator: true,
+      })
     }
 
     return actions

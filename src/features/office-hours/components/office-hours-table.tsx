@@ -7,6 +7,7 @@ import { Trash2 } from 'lucide-react'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
 import { DataTable, type DataTableAction } from '@/components/data-table'
 import { type OfficeHour } from '../data/schema'
+import { canDeleteOfficeHour } from '../utils/permissions'
 import { officeHoursColumns as columns } from './office-hours-columns'
 import { useOfficeHoursContext } from './office-hours-provider'
 
@@ -38,8 +39,11 @@ export function OfficeHoursTable({
   const getRowActions = (row: { original: OfficeHour }): DataTableAction[] => {
     const officeHour = row.original
 
-    return [
-      {
+    const actions: DataTableAction[] = []
+
+    // Only show Delete action if user has delete permission
+    if (canDeleteOfficeHour({ officeHourId: officeHour.id })) {
+      actions.push({
         label: 'Delete',
         icon: Trash2,
         onClick: () => {
@@ -47,8 +51,10 @@ export function OfficeHoursTable({
           setOpen('delete')
         },
         variant: 'destructive',
-      },
-    ]
+      })
+    }
+
+    return actions
   }
 
   return (

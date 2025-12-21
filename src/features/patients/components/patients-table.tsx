@@ -12,6 +12,7 @@ import {
 } from '@/components/data-table'
 import { statusOptions, genderOptions } from '../data/data'
 import type { Patient } from '../types'
+import { canDeletePatient, canUpdatePatients } from '../utils/permissions'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { patientsColumns as columns } from './patients-columns'
 import { usePatients } from './patients-provider'
@@ -72,38 +73,47 @@ export function PatientsTable({
   const getRowActions = (row: { original: Patient }): DataTableAction[] => {
     const patient = row.original
 
-    const actions: DataTableAction[] = [
-      {
+    const actions: DataTableAction[] = []
+
+    // Only show Edit action if user has update permission
+    if (canUpdatePatients()) {
+      actions.push({
         label: 'Edit',
         icon: Edit,
         onClick: () => {
           setCurrentRow(patient)
           setOpen('edit')
         },
-      },
-    ]
+      })
+    }
 
     if (patient.deletedAt) {
-      actions.push({
-        label: 'Restore',
-        icon: RotateCcw,
-        onClick: () => {
-          setCurrentRow(patient)
-          setOpen('restore')
-        },
-        separator: true,
-      })
+      // Show Restore action if user has update permission
+      if (canUpdatePatients()) {
+        actions.push({
+          label: 'Restore',
+          icon: RotateCcw,
+          onClick: () => {
+            setCurrentRow(patient)
+            setOpen('restore')
+          },
+          separator: true,
+        })
+      }
     } else {
-      actions.push({
-        label: 'Delete',
-        icon: Trash2,
-        onClick: () => {
-          setCurrentRow(patient)
-          setOpen('delete')
-        },
-        variant: 'destructive',
-        separator: true,
-      })
+      // Only show Delete action if user has delete permission
+      if (canDeletePatient({ patientId: patient.id })) {
+        actions.push({
+          label: 'Delete',
+          icon: Trash2,
+          onClick: () => {
+            setCurrentRow(patient)
+            setOpen('delete')
+          },
+          variant: 'destructive',
+          separator: true,
+        })
+      }
     }
 
     return actions
