@@ -14,6 +14,7 @@ import {
   PieChart,
   Pie,
   Legend,
+  CartesianGrid,
 } from 'recharts'
 import type { DoctorBookingStatsParams } from '@/api/types/stats.types'
 import { useDoctorsBookingStats } from '@/hooks/use-stats'
@@ -141,13 +142,35 @@ export function DoctorBookingChart() {
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width='100%' height={350}>
-            <BarChart data={completionRateData} layout='horizontal'>
+            <BarChart
+              data={completionRateData}
+              layout='horizontal'
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid
+                strokeDasharray='3 3'
+                opacity={0.2}
+                horizontal={true}
+                vertical={false}
+              />
               <XAxis
                 type='number'
                 domain={[0, 100]}
                 tickFormatter={(value) => `${value}%`}
+                tick={{ fontSize: 12, fill: '#6b7280' }}
+                axisLine={{ stroke: '#d1d5db', strokeWidth: 1 }}
+                tickLine={{ stroke: '#d1d5db', strokeWidth: 1 }}
+                ticks={[0, 25, 50, 75, 100]}
               />
-              <YAxis dataKey='name' type='category' width={100} fontSize={11} />
+              <YAxis
+                dataKey='name'
+                type='category'
+                width={100}
+                fontSize={11}
+                tick={{ fontSize: 11, fill: '#6b7280' }}
+                axisLine={{ stroke: '#d1d5db', strokeWidth: 1 }}
+                tickLine={{ stroke: '#d1d5db', strokeWidth: 1 }}
+              />
               <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {

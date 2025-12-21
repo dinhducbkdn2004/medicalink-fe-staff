@@ -104,7 +104,7 @@ export function EventDetailsDialog({
     <Sheet onOpenChange={resetView}>
       <SheetTrigger asChild>{children}</SheetTrigger>
 
-      <SheetContent className='flex w-full flex-col sm:max-w-2xl lg:max-w-4xl'>
+      <SheetContent className='flex w-full flex-col sm:max-w-lg md:max-w-xl lg:max-w-2xl'>
         <SheetHeader>
           <div className='flex items-center gap-2'>
             <div className='flex items-center gap-2'>

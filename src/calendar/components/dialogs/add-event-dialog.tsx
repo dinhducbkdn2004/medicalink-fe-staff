@@ -361,7 +361,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     <Dialog open={isOpen} onOpenChange={onToggle}>
       <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <DialogContent className='max-h-[95vh] w-[90vw] max-w-6xl min-w-[800px] overflow-y-auto'>
+      <DialogContent className='max-h-[95vh] w-[95vw] max-w-6xl sm:min-w-[600px] md:min-w-[700px] lg:min-w-[800px] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>Add New Appointment</DialogTitle>
           <DialogDescription>

@@ -73,7 +73,7 @@ function DashboardContent() {
           defaultValue='overview'
           className='space-y-4'
         >
-          <div className='w-full overflow-x-auto pb-2'>
+          <div className='w-full overflow-x-auto'>
             <TabsList>
               <TabsTrigger value='overview'>Overview</TabsTrigger>
               <TabsTrigger value='booking-stats'>
