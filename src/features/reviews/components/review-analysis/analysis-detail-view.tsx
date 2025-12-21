@@ -36,14 +36,16 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
     return (
       <Card className={cn('flex items-center justify-center', className)}>
         <CardContent className='py-16 text-center'>
-          <div className='bg-muted mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full'>
-            <BarChart3 className='text-muted-foreground h-8 w-8' />
+          <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 dark:border-blue-800 dark:from-blue-950 dark:to-indigo-950'>
+            <BarChart3 className='h-8 w-8 text-blue-600 dark:text-blue-400' />
           </div>
-          <h3 className='mb-2 text-base font-semibold'>No Analysis Selected</h3>
-          <p className='text-muted-foreground mb-4 text-sm'>
-            Select an analysis from the list or create a new one
+          <h3 className='mb-2 text-base font-semibold text-gray-900 dark:text-gray-100'>
+            Select an Analysis
+          </h3>
+          <p className='text-muted-foreground mx-auto max-w-[280px] text-sm leading-relaxed'>
+            Choose an analysis from the list to view detailed AI-powered
+            insights and metrics
           </p>
-          <Button onClick={() => setOpen('create')}>Generate Analysis</Button>
         </CardContent>
       </Card>
     )

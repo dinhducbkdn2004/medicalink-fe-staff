@@ -17,6 +17,7 @@ import {
   PolarRadiusAxis,
   Radar,
   Legend,
+  CartesianGrid,
 } from 'recharts'
 import type { DoctorContentStatsParams } from '@/api/types/stats.types'
 import { useDoctorsContentStats } from '@/hooks/use-stats'
@@ -110,9 +111,35 @@ export function DoctorContentChart() {
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width='100%' height={350}>
-            <BarChart data={ratingChartData} layout='horizontal'>
-              <XAxis type='number' domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]} />
-              <YAxis dataKey='name' type='category' width={100} fontSize={11} />
+            <BarChart
+              data={ratingChartData}
+              layout='horizontal'
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid
+                strokeDasharray='3 3'
+                opacity={0.2}
+                horizontal={true}
+                vertical={false}
+              />
+              <XAxis
+                type='number'
+                domain={[0, 5]}
+                ticks={[0, 1, 2, 3, 4, 5]}
+                tick={{ fontSize: 12, fill: '#6b7280' }}
+                axisLine={{ stroke: '#d1d5db', strokeWidth: 1 }}
+                tickLine={{ stroke: '#d1d5db', strokeWidth: 1 }}
+                tickFormatter={(value) => `${value}★`}
+              />
+              <YAxis
+                dataKey='name'
+                type='category'
+                width={100}
+                fontSize={11}
+                tick={{ fontSize: 11, fill: '#6b7280' }}
+                axisLine={{ stroke: '#d1d5db', strokeWidth: 1 }}
+                tickLine={{ stroke: '#d1d5db', strokeWidth: 1 }}
+              />
               <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
