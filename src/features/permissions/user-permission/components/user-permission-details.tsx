@@ -104,10 +104,14 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
       return
     }
 
+    console.log('Revoking permission:', {
+      userId,
+      permissionId: permission.id,
+    })
+
     await revokeMutation.mutateAsync({
       userId,
       permissionId: permission.id,
-      tenantId: 'global',
     })
   }
 
