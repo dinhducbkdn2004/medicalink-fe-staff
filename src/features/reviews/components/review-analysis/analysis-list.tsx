@@ -76,8 +76,8 @@ export function AnalysisList({ className }: AnalysisListProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value='all'>All Periods</SelectItem>
-              <SelectItem value='mtd'>MTD</SelectItem>
-              <SelectItem value='ytd'>YTD</SelectItem>
+              <SelectItem value='mtd'>Month to Date</SelectItem>
+              <SelectItem value='ytd'>Year to Date</SelectItem>
             </SelectContent>
           </Select>
         </div>

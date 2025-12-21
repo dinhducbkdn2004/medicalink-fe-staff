@@ -104,7 +104,7 @@ export function EventDetailsDialog({
     <Sheet onOpenChange={resetView}>
       <SheetTrigger asChild>{children}</SheetTrigger>
 
-      <SheetContent className='flex w-full flex-col sm:max-w-xl'>
+      <SheetContent className='flex w-full flex-col sm:max-w-2xl lg:max-w-4xl'>
         <SheetHeader>
           <div className='flex items-center gap-2'>
             <div className='flex items-center gap-2'>
@@ -144,94 +144,113 @@ export function EventDetailsDialog({
             />
           ) : (
             <div className='space-y-6'>
-              <div className='flex items-start gap-3'>
-                <User className='text-muted-foreground mt-1 size-5 shrink-0' />
-                <div className='space-y-1'>
-                  <p className='text-sm font-medium'>Patient</p>
-                  <p className='text-sm'>{appointment.patient.fullName}</p>
-                  <p className='text-muted-foreground text-xs'>
-                    DOB:{' '}
-                    {appointment.patient.dateOfBirth
-                      ? format(
-                          parseISO(appointment.patient.dateOfBirth),
-                          'MMM d, yyyy'
-                        )
-                      : 'N/A'}
-                  </p>
-                </div>
-              </div>
+              {/* Main Info Grid - 2 columns */}
+              <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
+                {/* Left Column */}
+                <div className='space-y-4'>
+                  <div className='flex items-start gap-3'>
+                    <User className='text-muted-foreground mt-1 size-5 shrink-0' />
+                    <div className='space-y-1'>
+                      <p className='text-sm font-medium'>Patient</p>
+                      <p className='text-sm'>{appointment.patient.fullName}</p>
+                      <p className='text-muted-foreground text-xs'>
+                        DOB:{' '}
+                        {appointment.patient.dateOfBirth
+                          ? format(
+                              parseISO(appointment.patient.dateOfBirth),
+                              'MMM d, yyyy'
+                            )
+                          : 'N/A'}
+                      </p>
+                    </div>
+                  </div>
 
-              <div className='flex items-start gap-3'>
-                <Stethoscope className='text-muted-foreground mt-1 size-5 shrink-0' />
-                <div className='space-y-1'>
-                  <p className='text-sm font-medium'>Doctor</p>
-                  <p className='text-sm'>
-                    {appointment.doctor?.name || 'Deleted Doctor'}
-                  </p>
-                  {appointment.specialty && (
-                    <p className='text-muted-foreground text-xs'>
-                      Specialty: {appointment.specialty.name}
-                    </p>
+                  <div className='flex items-start gap-3'>
+                    <Stethoscope className='text-muted-foreground mt-1 size-5 shrink-0' />
+                    <div className='space-y-1'>
+                      <p className='text-sm font-medium'>Doctor</p>
+                      <p className='text-sm'>
+                        {appointment.doctor?.name || 'Deleted Doctor'}
+                      </p>
+                      {appointment.specialty && (
+                        <p className='text-muted-foreground text-xs'>
+                          Specialty: {appointment.specialty.name}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {appointment.location && (
+                    <div className='flex items-start gap-3'>
+                      <MapPin className='text-muted-foreground mt-1 size-5 shrink-0' />
+                      <div className='space-y-1'>
+                        <p className='text-sm font-medium'>Location</p>
+                        <p className='text-sm'>{appointment.location.name}</p>
+                        <p className='text-muted-foreground text-xs'>
+                          {appointment.location.address}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Right Column */}
+                <div className='space-y-4'>
+                  <div className='flex items-start gap-3'>
+                    <Calendar className='text-muted-foreground mt-1 size-5 shrink-0' />
+                    <div className='space-y-1'>
+                      <p className='text-sm font-medium'>Date & Time</p>
+                      <p className='text-sm'>
+                        {format(serviceDate, 'EEEE, MMMM d, yyyy')}
+                      </p>
+                      <p className='text-sm'>
+                        {format(
+                          parseISO(appointment.event.timeStart),
+                          'h:mm a'
+                        )}{' '}
+                        -{' '}
+                        {format(parseISO(appointment.event.timeEnd), 'h:mm a')}
+                      </p>
+                    </div>
+                  </div>
+
+                  {appointment.priceAmount && (
+                    <div className='flex items-start gap-3'>
+                      <DollarSign className='text-muted-foreground mt-1 size-5 shrink-0' />
+                      <div className='space-y-1'>
+                        <p className='text-sm font-medium'>Price</p>
+                        <p className='text-sm'>
+                          {appointment.priceAmount.toLocaleString()}{' '}
+                          {appointment.currency}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {appointment.reason && (
+                    <div className='flex items-start gap-3'>
+                      <FileText className='text-muted-foreground mt-1 size-5 shrink-0' />
+                      <div className='space-y-1'>
+                        <p className='text-sm font-medium'>Reason</p>
+                        <p className='text-sm'>{appointment.reason}</p>
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
 
-              {appointment.location && (
-                <div className='flex items-start gap-3'>
-                  <MapPin className='text-muted-foreground mt-1 size-5 shrink-0' />
-                  <div className='space-y-1'>
-                    <p className='text-sm font-medium'>Location</p>
-                    <p className='text-sm'>{appointment.location.name}</p>
-                    <p className='text-muted-foreground text-xs'>
-                      {appointment.location.address}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              <div className='flex items-start gap-3'>
-                <Calendar className='text-muted-foreground mt-1 size-5 shrink-0' />
-                <div className='space-y-1'>
-                  <p className='text-sm font-medium'>Date & Time</p>
-                  <p className='text-sm'>
-                    {format(serviceDate, 'EEEE, MMMM d, yyyy')}
-                  </p>
-                  <p className='text-sm'>
-                    {format(parseISO(appointment.event.timeStart), 'h:mm a')} -{' '}
-                    {format(parseISO(appointment.event.timeEnd), 'h:mm a')}
-                  </p>
-                </div>
-              </div>
-
-              {appointment.priceAmount && (
-                <div className='flex items-start gap-3'>
-                  <DollarSign className='text-muted-foreground mt-1 size-5 shrink-0' />
-                  <div className='space-y-1'>
-                    <p className='text-sm font-medium'>Price</p>
-                    <p className='text-sm'>
-                      {appointment.priceAmount.toLocaleString()}{' '}
-                      {appointment.currency}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {appointment.reason && (
-                <div className='flex items-start gap-3'>
-                  <FileText className='text-muted-foreground mt-1 size-5 shrink-0' />
-                  <div className='space-y-1'>
-                    <p className='text-sm font-medium'>Reason</p>
-                    <p className='text-sm'>{appointment.reason}</p>
-                  </div>
-                </div>
-              )}
-
+              {/* Notes Section - Full width */}
               {appointment.notes && (
-                <div className='flex items-start gap-3'>
-                  <FileText className='text-muted-foreground mt-1 size-5 shrink-0' />
-                  <div className='space-y-1'>
-                    <p className='text-sm font-medium'>Notes</p>
-                    <p className='text-sm'>{appointment.notes}</p>
+                <div className='border-t pt-6'>
+                  <div className='flex items-start gap-3'>
+                    <FileText className='text-muted-foreground mt-1 size-5 shrink-0' />
+                    <div className='flex-1 space-y-1'>
+                      <p className='text-sm font-medium'>Notes</p>
+                      <div
+                        className='prose prose-sm max-w-none text-sm'
+                        dangerouslySetInnerHTML={{ __html: appointment.notes }}
+                      />
+                    </div>
                   </div>
                 </div>
               )}

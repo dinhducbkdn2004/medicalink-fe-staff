@@ -119,10 +119,18 @@ export function InfoSectionsDialog({
                       <div className='flex items-start justify-between gap-2'>
                         <div className='flex-1'>
                           <CardTitle className='text-base'>
-                            {section.title}
+                            {section.name}
                           </CardTitle>
                           <CardDescription className='text-xs'>
-                            Order: {section.order ?? 'N/A'}
+                            Created:{' '}
+                            {new Date(section.createdAt).toLocaleDateString(
+                              'en-US',
+                              {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              }
+                            )}
                           </CardDescription>
                         </div>
                         <div className='flex gap-1'>

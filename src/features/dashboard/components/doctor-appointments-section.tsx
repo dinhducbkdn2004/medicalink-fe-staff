@@ -1,5 +1,6 @@
-
+import { useState } from 'react'
 import { format, addDays, subMonths, addMonths } from 'date-fns'
+import { useNavigate } from '@tanstack/react-router'
 import {
   Calendar,
   Clock,
@@ -20,7 +21,10 @@ import {
 } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useAppointments } from '@/features/appointments/data/hooks'
+import {
+  useAppointments,
+  useConfirmAppointment,
+} from '@/features/appointments/data/hooks'
 
 // Helper to format date range for API
 function getDateRange(startDate: Date, endDate: Date) {
@@ -35,10 +39,12 @@ function getDateRange(startDate: Date, endDate: Date) {
  * Shows booked appointments (need confirmation) from 2 months ago to 2 months ahead
  */
 function PendingAppointmentsCard() {
+  const navigate = useNavigate()
   const now = new Date()
   const twoMonthsAgo = subMonths(now, 2)
   const twoMonthsAhead = addMonths(now, 2)
   const { fromDate, toDate } = getDateRange(twoMonthsAgo, twoMonthsAhead)
+  const [confirmingId, setConfirmingId] = useState<string | null>(null)
 
   const { data, isLoading } = useAppointments({
     status: 'BOOKED' as AppointmentStatus,
@@ -48,8 +54,26 @@ function PendingAppointmentsCard() {
     page: 1,
   })
 
+  const { mutate: confirmAppointment } = useConfirmAppointment()
+
   const appointments = data?.data || []
   const total = data?.meta?.totalItems || 0
+
+  const handleConfirm = (appointmentId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setConfirmingId(appointmentId)
+    confirmAppointment(appointmentId, {
+      onSuccess: () => setConfirmingId(null),
+      onError: () => setConfirmingId(null),
+    })
+  }
+
+  const handleAppointmentClick = (appointmentId: string) => {
+    navigate({
+      to: '/appointments',
+      search: { appointmentId },
+    })
+  }
 
   return (
     <Card>
@@ -86,7 +110,16 @@ function PendingAppointmentsCard() {
               {appointments.map((apt) => (
                 <div
                   key={apt.id}
-                  className='hover:bg-muted/50 rounded-lg border p-4 transition-colors'
+                  className='hover:bg-muted/50 cursor-pointer rounded-lg border p-4 transition-colors'
+                  role='button'
+                  tabIndex={0}
+                  onClick={() => handleAppointmentClick(apt.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      handleAppointmentClick(apt.id)
+                    }
+                  }}
                 >
                   <div className='flex items-start justify-between gap-4'>
                     <div className='flex-1 space-y-2.5'>
@@ -143,18 +176,11 @@ function PendingAppointmentsCard() {
 
                       {/* Location */}
                       {apt.location?.name && (
-                        <div className='text-muted-foreground flex items-start gap-1.5 text-sm'>
-                          <MapPin className='mt-0.5 h-3.5 w-3.5 flex-shrink-0' />
-                          <div className='flex-1'>
-                            <div className='font-medium'>
-                              {apt.location.name}
-                            </div>
-                            {apt.location.address && (
-                              <div className='text-xs'>
-                                {apt.location.address}
-                              </div>
-                            )}
-                          </div>
+                        <div className='text-muted-foreground flex items-center gap-1.5 text-sm'>
+                          <MapPin className='h-3.5 w-3.5 flex-shrink-0' />
+                          <span className='line-clamp-1 font-medium'>
+                            {apt.location.name}
+                          </span>
                         </div>
                       )}
 
@@ -188,8 +214,10 @@ function PendingAppointmentsCard() {
                       size='sm'
                       variant='default'
                       className='flex-shrink-0'
+                      disabled={confirmingId === apt.id}
+                      onClick={(e) => handleConfirm(apt.id, e)}
                     >
-                      Confirm
+                      {confirmingId === apt.id ? 'Confirming...' : 'Confirm'}
                     </Button>
                   </div>
                 </div>
@@ -218,6 +246,7 @@ function PendingAppointmentsCard() {
  * Shows confirmed appointments for today and next 2 days
  */
 function UpcomingAppointmentsCard() {
+  const navigate = useNavigate()
   const now = new Date()
   const twoDaysAhead = addDays(now, 2)
   const { fromDate, toDate } = getDateRange(now, twoDaysAhead)
@@ -232,6 +261,13 @@ function UpcomingAppointmentsCard() {
 
   const appointments = data?.data || []
   const total = data?.meta?.totalItems || 0
+
+  const handleAppointmentClick = (appointmentId: string) => {
+    navigate({
+      to: '/appointments',
+      search: { appointmentId },
+    })
+  }
 
   return (
     <Card>
@@ -268,7 +304,16 @@ function UpcomingAppointmentsCard() {
               {appointments.map((apt) => (
                 <div
                   key={apt.id}
-                  className='hover:bg-muted/50 rounded-lg border border-green-200 bg-green-50/50 p-4 transition-colors dark:border-green-900 dark:bg-green-950/20'
+                  className='hover:bg-muted/50 cursor-pointer rounded-lg border border-green-200 bg-green-50/50 p-4 transition-colors dark:border-green-900 dark:bg-green-950/20'
+                  role='button'
+                  tabIndex={0}
+                  onClick={() => handleAppointmentClick(apt.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      handleAppointmentClick(apt.id)
+                    }
+                  }}
                 >
                   <div className='flex items-start justify-between gap-4'>
                     <div className='flex-1 space-y-2.5'>
@@ -370,6 +415,10 @@ function UpcomingAppointmentsCard() {
                       size='sm'
                       variant='outline'
                       className='flex-shrink-0'
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleAppointmentClick(apt.id)
+                      }}
                     >
                       View
                     </Button>

@@ -52,6 +52,7 @@ function ReviewsContent() {
           pageCount={data?.meta?.totalPages || 0}
           navigate={navigate}
           isLoading={isLoading}
+          search={{}}
         />
       </Main>
 
