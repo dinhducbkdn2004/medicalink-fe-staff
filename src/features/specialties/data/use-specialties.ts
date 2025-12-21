@@ -202,6 +202,9 @@ export function useUpdateInfoSection() {
       queryClient.invalidateQueries({
         queryKey: specialtyKeys.infoSections(variables.specialtyId),
       })
+      queryClient.invalidateQueries({
+        queryKey: specialtyKeys.detail(variables.specialtyId),
+      })
       toast.success('Info section updated successfully')
     },
     onError: (error: Error) => {

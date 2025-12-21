@@ -470,8 +470,16 @@ export function RichTextEditor({
     if (!quill || !isControlled || !isReady || !value) return
 
     const currentContent = quill.getSemanticHTML()
+    // Only update if value is different from current content
+    // Skip if the value matches what's already in the editor to prevent cursor jump
     if (value !== currentContent) {
+      // Additional check: if value matches the last value we emitted via onChange,
+      // it means this update came from user input, so skip
+      if (value === lastValueRef.current) {
+        return
+      }
       setContent(value)
+      lastValueRef.current = value
     }
   }, [quill, value, isControlled, isReady, setContent])
 

@@ -137,7 +137,7 @@ export function DoctorReviewsPage({
           <ReviewsTable
             data={data}
             pageCount={pageCount}
-            search={{}}
+            search={search}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             navigate={navigate as any}
             isLoading={isLoading}
