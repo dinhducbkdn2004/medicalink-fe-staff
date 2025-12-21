@@ -41,7 +41,7 @@ export function Specialties() {
   const { data, isLoading } = useSpecialties(queryParams)
 
   return (
-    <RequirePermission resource='specialties' action='manage'>
+    <RequirePermission resource='specialties' action='read'>
       <SpecialtiesProvider>
         <Header fixed>
           <Search />
