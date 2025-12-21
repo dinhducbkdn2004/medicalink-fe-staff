@@ -100,8 +100,7 @@ export const navGroups: NavGroupWithPermission[] = [
         title: 'Specialties',
         url: '/specialties',
         icon: Stethoscope,
-        // Require manage for configuration pages (Admin/SuperAdmin)
-        permission: { resource: 'specialties', action: 'manage' },
+        permission: { resource: 'specialties', action: 'read' },
       },
       {
         title: 'Work Locations',

@@ -149,7 +149,6 @@ export function RichTextEditor({
   const { uploadMedia, uploading, progress, uploadType } = useMediaUpload()
   const quillInstanceRef = useRef<Quill | null>(null)
   const lastValueRef = useRef<string | undefined>(value || defaultValue)
-  const isControlled = value !== undefined
 
   /**
    * Custom image handler for Cloudinary upload
@@ -417,7 +416,7 @@ export function RichTextEditor({
   }, [quill])
 
   /**
-   * Helper to set content
+   * Helper to set content (only for initialization)
    * Theo hướng dẫn: Hỗ trợ cả Delta format và HTML
    */
   const setContent = useCallback((content: string) => {
@@ -428,52 +427,35 @@ export function RichTextEditor({
       // Kiểm tra nếu content là Delta JSON
       if (content.trim().startsWith('[') || content.trim().startsWith('{')) {
         const delta = JSON.parse(content) as Record<string, unknown>
-        // Sử dụng setContents cho Delta format
         quill.setContents(delta, 'silent')
-        const html = quill.getSemanticHTML()
-        lastValueRef.current = html
       } else {
-        // Content là HTML
-        const currentContent = quill.getSemanticHTML()
-        if (currentContent !== content) {
-          // Set HTML content
-          quill.root.innerHTML = content
-          lastValueRef.current = content
-        }
+        // Content là HTML - convert to delta and set
+        const delta = quill.clipboard.convert({ html: content })
+        quill.setContents(delta, 'silent')
       }
-    } catch (_error) {
-      // Content is not Delta format, treating as HTML
-      const currentContent = quill.getSemanticHTML()
-      if (currentContent !== content) {
-        quill.root.innerHTML = content
-        lastValueRef.current = content
-      }
+      lastValueRef.current = quill.getSemanticHTML()
+    } catch (error) {
+      console.error('Failed to set content:', error)
+      // Fallback
+      quill.root.innerHTML = content
+      lastValueRef.current = content
     }
   }, [])
 
   /**
-   * Set initial content
+   * Set initial content ONCE only
+   * Uncontrolled mode - we don't sync back from value prop after initialization
    */
   useEffect(() => {
     if (!quill || !isReady) return
 
-    const initialValue = value || defaultValue
+    // Only set content on first initialization
+    const initialValue = value ?? defaultValue
     if (initialValue) {
       setContent(initialValue)
     }
-  }, [quill, isReady, defaultValue, value, setContent])
-
-  /**
-   * Update content when value prop changes (controlled mode)
-   */
-  useEffect(() => {
-    if (!quill || !isControlled || !isReady || !value) return
-
-    const currentContent = quill.getSemanticHTML()
-    if (value !== currentContent) {
-      setContent(value)
-    }
-  }, [quill, value, isControlled, isReady, setContent])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quill, isReady])
 
   /**
    * Enable/disable editor

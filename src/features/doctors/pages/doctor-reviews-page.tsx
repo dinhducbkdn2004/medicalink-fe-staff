@@ -8,7 +8,6 @@ import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ReviewsDialogs } from '@/features/reviews/components/reviews-dialogs'
 import { ReviewsProvider } from '@/features/reviews/components/reviews-provider'
@@ -114,7 +113,6 @@ export function DoctorReviewsPage({
   return (
     <ReviewsProvider onReviewDeleted={fetchReviews}>
       <Header fixed>
-        <Search />
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />
@@ -137,7 +135,7 @@ export function DoctorReviewsPage({
           <ReviewsTable
             data={data}
             pageCount={pageCount}
-            search={{}}
+            search={search}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             navigate={navigate as any}
             isLoading={isLoading}

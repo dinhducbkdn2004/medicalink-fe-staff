@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Plus, Edit, Trash2, Loader2 } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -38,6 +39,9 @@ export function InfoSectionsDialog({
     useState<SpecialtyInfoSection | null>(null)
   const [deletingSection, setDeletingSection] =
     useState<SpecialtyInfoSection | null>(null)
+
+  const user = useAuthStore((state) => state.user)
+  const isAdmin = user?.role === 'ADMIN'
 
   const { data: sections, isLoading } = useInfoSections(
     open ? specialty.id : undefined
@@ -143,15 +147,17 @@ export function InfoSectionsDialog({
                             <Edit className='size-4' />
                             <span className='sr-only'>Edit</span>
                           </Button>
-                          <Button
-                            size='sm'
-                            variant='ghost'
-                            onClick={() => setDeletingSection(section)}
-                            className='text-destructive hover:text-destructive size-8 p-0'
-                          >
-                            <Trash2 className='size-4' />
-                            <span className='sr-only'>Delete</span>
-                          </Button>
+                          {!isAdmin && (
+                            <Button
+                              size='sm'
+                              variant='ghost'
+                              onClick={() => setDeletingSection(section)}
+                              className='text-destructive hover:text-destructive size-8 p-0'
+                            >
+                              <Trash2 className='size-4' />
+                              <span className='sr-only'>Delete</span>
+                            </Button>
+                          )}
                         </div>
                       </div>
                     </CardHeader>
