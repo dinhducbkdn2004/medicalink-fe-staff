@@ -1,6 +1,9 @@
 import React from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { ArrowRight, ChevronRight, Laptop, Moon, Sun } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
+import { can } from '@/lib/permission-utils'
+import { filterNavGroups } from '@/lib/sidebar-utils'
 import { useSearch } from '@/context/search-provider'
 import { useTheme } from '@/context/theme-provider'
 import {
@@ -19,6 +22,12 @@ export function CommandMenu() {
   const navigate = useNavigate()
   const { setTheme } = useTheme()
   const { open, setOpen } = useSearch()
+  const { user } = useAuthStore()
+
+  // Filter nav groups based on user permissions
+  const filteredNavGroups = React.useMemo(() => {
+    return filterNavGroups(navGroups, can, user?.role)
+  }, [user?.role])
 
   const runCommand = React.useCallback(
     (command: () => unknown) => {
@@ -34,7 +43,7 @@ export function CommandMenu() {
       <CommandList>
         <ScrollArea type='hover' className='h-72 pe-1'>
           <CommandEmpty>No results found.</CommandEmpty>
-          {navGroups.map((group) => (
+          {filteredNavGroups.map((group) => (
             <CommandGroup key={group.title} heading={group.title}>
               {group.items.map((navItem, i) => {
                 if (navItem.url)
