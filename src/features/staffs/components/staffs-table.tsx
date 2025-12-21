@@ -12,6 +12,7 @@ import {
 } from '@/components/data-table'
 import { staffRoles, genderOptions } from '../data/data'
 import { type Staff } from '../data/schema'
+import { canUpdateStaff, canDeleteSpecificStaff } from '../utils/permissions'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { staffsColumns as columns } from './staffs-columns'
 import { useStaffs } from './staffs-provider'
@@ -77,16 +78,23 @@ export function StaffsTable({
   const getRowActions = (row: { original: Staff }): DataTableAction[] => {
     const staff = row.original
 
-    return [
-      {
+    const actions: DataTableAction[] = []
+
+    // Only show Edit action if user has update permission
+    if (canUpdateStaff()) {
+      actions.push({
         label: 'Edit',
         icon: Edit,
         onClick: () => {
           setCurrentRow(staff)
           setOpen('edit')
         },
-      },
-      {
+      })
+    }
+
+    // Only show Delete action if user has delete permission
+    if (canDeleteSpecificStaff({ staffId: staff.id })) {
+      actions.push({
         label: 'Delete',
         icon: Trash2,
         onClick: () => {
@@ -95,8 +103,10 @@ export function StaffsTable({
         },
         variant: 'destructive',
         separator: true,
-      },
-    ]
+      })
+    }
+
+    return actions
   }
 
   return (

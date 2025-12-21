@@ -12,6 +12,11 @@ import {
 } from '@/components/data-table'
 import { statusOptions, genderOptions } from '../data/data'
 import type { DoctorWithProfile } from '../types'
+import {
+  canUpdateDoctors,
+  canDeleteDoctor,
+  canToggleActive,
+} from '../utils/permissions'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { doctorsColumns as columns } from './doctors-columns'
 import { useDoctors } from './doctors-provider'
@@ -74,7 +79,7 @@ export function DoctorsTable({
   }): DataTableAction[] => {
     const doctor = row.original
 
-    return [
+    const actions: DataTableAction[] = [
       {
         label: 'View Reviews',
         icon: Star,
@@ -95,34 +100,47 @@ export function DoctorsTable({
           } as never)
         },
       },
-      {
+    ]
+
+    // Only show Edit action if user has update permission
+    if (canUpdateDoctors()) {
+      actions.push({
         label: 'Edit',
         icon: Edit,
         onClick: () => {
           setCurrentRow(doctor)
           setOpen('edit')
         },
+      })
+    }
+
+    actions.push({
+      label: 'View Stats',
+      icon: BarChart3,
+      onClick: () => {
+        navigate({
+          to: '/doctors/$doctorId/stats',
+          params: { doctorId: doctor.id },
+        } as never)
       },
-      {
-        label: 'View Stats',
-        icon: BarChart3,
-        onClick: () => {
-          navigate({
-            to: '/doctors/$doctorId/stats',
-            params: { doctorId: doctor.id },
-          } as never)
-        },
-        separator: true,
-      },
-      {
+      separator: true,
+    })
+
+    // Only show Toggle Active if user has toggle permission
+    if (canToggleActive()) {
+      actions.push({
         label: doctor.isActive ? 'Deactivate' : 'Activate',
         icon: Power,
         onClick: () => {
           setCurrentRow(doctor)
           setOpen('toggleActive')
         },
-      },
-      {
+      })
+    }
+
+    // Only show Delete action if user has delete permission
+    if (canDeleteDoctor(false)) {
+      actions.push({
         label: 'Delete',
         icon: Trash2,
         onClick: () => {
@@ -130,8 +148,10 @@ export function DoctorsTable({
           setOpen('delete')
         },
         variant: 'destructive',
-      },
-    ]
+      })
+    }
+
+    return actions
   }
 
   return (

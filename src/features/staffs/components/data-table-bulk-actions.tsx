@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/tooltip'
 import { DataTableBulkActions as BulkActionsToolbar } from '@/components/data-table'
 import type { Staff } from '../data/schema'
+import { canDeleteSpecificStaff } from '../utils/permissions'
 import { StaffsMultiDeleteDialog } from './staffs-multi-delete-dialog'
 
 type DataTableBulkActionsProps = {
@@ -17,6 +18,14 @@ type DataTableBulkActionsProps = {
 
 export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+
+  // Check if user has delete permission
+  const hasDeletePermission = canDeleteSpecificStaff()
+
+  // Don't show bulk actions if user doesn't have delete permission
+  if (!hasDeletePermission) {
+    return null
+  }
 
   return (
     <>

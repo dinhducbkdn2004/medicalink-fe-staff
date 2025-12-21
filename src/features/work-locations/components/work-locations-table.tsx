@@ -11,6 +11,10 @@ import {
 } from '@/components/data-table'
 import { statusOptions } from '../data/data'
 import { type WorkLocation } from '../data/schema'
+import {
+  canUpdateWorkLocations,
+  canDeleteWorkLocation,
+} from '../utils/permissions'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { workLocationsColumns as columns } from './work-locations-columns'
 import { useWorkLocations } from './work-locations-provider'
@@ -61,19 +65,28 @@ export function WorkLocationsTable({
   const { setOpen, setCurrentRow } = useWorkLocations()
 
   // Define row actions (context menu)
-  const getRowActions = (row: { original: WorkLocation }): DataTableAction[] => {
+  const getRowActions = (row: {
+    original: WorkLocation
+  }): DataTableAction[] => {
     const workLocation = row.original
 
-    return [
-      {
+    const actions: DataTableAction[] = []
+
+    // Only show Edit action if user has update permission
+    if (canUpdateWorkLocations()) {
+      actions.push({
         label: 'Edit',
         icon: Edit,
         onClick: () => {
           setCurrentRow(workLocation)
           setOpen('edit')
         },
-      },
-      {
+      })
+    }
+
+    // Only show Delete action if user has delete permission
+    if (canDeleteWorkLocation({ workLocationId: workLocation.id })) {
+      actions.push({
         label: 'Delete',
         icon: Trash2,
         onClick: () => {
@@ -81,8 +94,10 @@ export function WorkLocationsTable({
           setOpen('delete')
         },
         variant: 'destructive',
-      },
-    ]
+      })
+    }
+
+    return actions
   }
 
   return (
@@ -120,4 +135,3 @@ export function WorkLocationsTable({
     />
   )
 }
-
