@@ -5,6 +5,8 @@ import {
   updateAppointmentSchema,
   type TUpdateAppointmentFormData,
 } from '@/calendar/schemas'
+import { useAuthStore } from '@/stores/auth-store'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -22,21 +24,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
 import { useUpdateAppointment } from '@/features/appointments/data/hooks'
+import { RichTextEditor } from '@/features/doctors/components/rich-text-editor'
 
 interface IProps {
-  appointment: IAppointment
-  onCancel: () => void
-  onSuccess: () => void
+  readonly appointment: IAppointment
+  readonly onCancel: () => void
+  readonly onSuccess: () => void
 }
 
 export function AppointmentUpdateForm({
   appointment,
   onCancel,
   onSuccess,
-}: IProps) {
+}: Readonly<IProps>) {
   const { mutate: updateAppointment, isPending } = useUpdateAppointment()
+  const accessToken = useAuthStore((state) => state.accessToken)
 
   const form = useForm<TUpdateAppointmentFormData>({
     resolver: zodResolver(updateAppointmentSchema),
@@ -123,12 +126,22 @@ export function AppointmentUpdateForm({
             <FormItem>
               <FormLabel>Notes</FormLabel>
               <FormControl>
-                <Textarea
-                  {...field}
+                <RichTextEditor
                   value={field.value}
-                  placeholder='Additional notes'
-                  data-invalid={fieldState.invalid}
-                  className='min-h-[100px]'
+                  onChange={field.onChange}
+                  placeholder='Additional notes for the appointment'
+                  accessToken={accessToken || ''}
+                  toolbarOptions='minimal'
+                  enableImageUpload={false}
+                  enableVideoUpload={false}
+                  enableSyntax={false}
+                  enableFormula={false}
+                  size='compact'
+                  className={cn(
+                    'min-h-[120px]',
+                    fieldState.invalid &&
+                      'border-red-500 focus-within:ring-red-500'
+                  )}
                 />
               </FormControl>
               <FormMessage />
@@ -152,7 +165,9 @@ export function AppointmentUpdateForm({
                   value={field.value || ''}
                   onChange={(e) =>
                     field.onChange(
-                      e.target.value ? parseFloat(e.target.value) : undefined
+                      e.target.value
+                        ? Number.parseFloat(e.target.value)
+                        : undefined
                     )
                   }
                 />

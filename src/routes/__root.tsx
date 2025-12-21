@@ -2,6 +2,7 @@ import { type QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { SearchProvider } from '@/context/search-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { NavigationProgress } from '@/components/navigation-progress'
 import { GeneralError } from '@/features/errors/general-error'
@@ -14,7 +15,9 @@ export const Route = createRootRouteWithContext<{
     return (
       <>
         <NavigationProgress />
-        <Outlet />
+        <SearchProvider>
+          <Outlet />
+        </SearchProvider>
         <Toaster richColors duration={5000} />
         {import.meta.env.MODE === 'development' && (
           <>

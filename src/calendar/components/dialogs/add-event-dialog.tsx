@@ -18,6 +18,7 @@ import {
 import type { TimeSlot } from '@/api/services/doctor-profile.service'
 import type { CreateAppointmentRequest } from '@/api/types/appointment.types'
 import { useAuthStore } from '@/stores/auth-store'
+import { cn } from '@/lib/utils'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { Button } from '@/components/ui/button'
 import {
@@ -47,8 +48,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
 import { useCreateAppointment } from '@/features/appointments/data/hooks'
+import { RichTextEditor } from '@/features/doctors/components/rich-text-editor'
 import { AppointmentSchedulerDialog } from './appointment-scheduler-dialog'
 
 interface IProps {
@@ -66,6 +67,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
 
   // Get user role to determine if past dates can be selected
   const user = useAuthStore((state) => state.user)
+  const accessToken = useAuthStore((state) => state.accessToken)
   const allowPastDates = user
     ? user.role === 'ADMIN' || user.role === 'SUPER_ADMIN'
     : false
@@ -359,7 +361,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     <Dialog open={isOpen} onOpenChange={onToggle}>
       <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <DialogContent className='max-h-[85vh] max-w-2xl overflow-y-auto'>
+      <DialogContent className='max-h-[95vh] w-[90vw] max-w-6xl min-w-[800px] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>Add New Appointment</DialogTitle>
           <DialogDescription>
@@ -373,7 +375,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
             id='appointment-form'
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onSubmit={form.handleSubmit(onSubmit as any)}
-            className='grid gap-3 py-3'
+            className='grid gap-6 py-4'
           >
             {/* Step 0: Patient Selection */}
             <FormField
@@ -381,7 +383,9 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               name='patientId'
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Patient *</FormLabel>
+                  <FormLabel>
+                    Patient <span className='text-red-500'>*</span>
+                  </FormLabel>
                   <FormControl>
                     <SearchableSelect
                       value={field.value}
@@ -391,7 +395,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                       placeholder='Search patient by name, email or phone...'
                       emptyMessage='No patient found'
                       isLoading={isLoadingPatients}
-                      className={`${
+                      className={`w-full ${
                         fieldState.invalid
                           ? 'border-destructive focus-visible:border-destructive'
                           : ''
@@ -404,13 +408,15 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
             />
 
             {/* Step 1 & 2: Location and Specialty in 2 columns */}
-            <div className='grid grid-cols-2 gap-3'>
+            <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
               <FormField
                 control={formControl}
                 name='locationId'
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel>Location *</FormLabel>
+                    <FormLabel>
+                      Location <span className='text-red-500'>*</span>
+                    </FormLabel>
                     <FormControl>
                       <Select
                         value={field.value}
@@ -452,7 +458,9 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                 name='specialtyId'
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel>Specialty *</FormLabel>
+                    <FormLabel>
+                      Specialty <span className='text-red-500'>*</span>
+                    </FormLabel>
                     <FormControl>
                       <Select
                         value={field.value}
@@ -492,7 +500,9 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               name='doctorId'
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Doctor *</FormLabel>
+                  <FormLabel>
+                    Doctor <span className='text-red-500'>*</span>
+                  </FormLabel>
                   <FormControl>
                     <Select
                       value={field.value}
@@ -524,7 +534,9 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
 
             {/* Step 4 & 5: Date and Time Selection via Scheduler Dialog */}
             <div className='space-y-1'>
-              <FormLabel>Date & Time *</FormLabel>
+              <FormLabel>
+                Date & Time <span className='text-red-500'>*</span>
+              </FormLabel>
               <AppointmentSchedulerDialog
                 availableDates={availableDates}
                 slots={slots}
@@ -575,13 +587,15 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               </AppointmentSchedulerDialog>
             </div>
 
-            {/* Step 6: Reason, Notes, and Price */}
+            {/* Step 6: Reason */}
             <FormField
               control={formControl}
               name='reason'
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel htmlFor='reason'>Reason *</FormLabel>
+                  <FormLabel htmlFor='reason'>
+                    Reason <span className='text-red-500'>*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       id='reason'
@@ -596,26 +610,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               )}
             />
 
-            <FormField
-              control={formControl}
-              name='notes'
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Notes</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      {...field}
-                      value={field.value}
-                      placeholder='Additional notes'
-                      data-invalid={fieldState.invalid}
-                      rows={2}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+            {/* Price */}
             <FormField
               control={formControl}
               name='priceAmount'
@@ -629,6 +624,44 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                       placeholder='0.00'
                       data-invalid={fieldState.invalid}
                       {...field}
+                      value={field.value || ''}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value
+                            ? Number.parseFloat(e.target.value)
+                            : undefined
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Notes - full width */}
+            <FormField
+              control={formControl}
+              name='notes'
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Notes</FormLabel>
+                  <FormControl>
+                    <RichTextEditor
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder='Additional notes for the appointment'
+                      accessToken={accessToken || ''}
+                      toolbarOptions='minimal'
+                      enableImageUpload={true}
+                      enableVideoUpload={true}
+                      enableSyntax={false}
+                      enableFormula={false}
+                      size='compact'
+                      className={cn(
+                        fieldState.invalid &&
+                          'border-red-500 focus-within:ring-red-500'
+                      )}
                     />
                   </FormControl>
                   <FormMessage />
@@ -638,7 +671,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
           </form>
         </Form>
 
-        <DialogFooter>
+        <DialogFooter className='pt-6'>
           <DialogClose asChild>
             <Button type='button' variant='outline' disabled={isPending}>
               Cancel

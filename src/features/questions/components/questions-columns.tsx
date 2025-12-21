@@ -59,9 +59,14 @@ export const columns: ColumnDef<Question>[] = [
       const title = row.original.title
       return (
         <div className='flex flex-col gap-1'>
-          <div className='font-medium'>{title}</div>
+          <div
+            className='max-w-[220px] overflow-hidden font-medium text-ellipsis whitespace-nowrap'
+            title={title}
+          >
+            {title}
+          </div>
           {row.original.authorName && (
-            <div className='text-muted-foreground text-xs'>
+            <div className='text-muted-foreground max-w-[220px] truncate text-xs'>
               by {row.original.authorName}
             </div>
           )}
@@ -70,22 +75,24 @@ export const columns: ColumnDef<Question>[] = [
     },
     enableSorting: false,
     meta: {
-      className: 'min-w-[300px]',
+      className: 'min-w-[220px] max-w-[220px]',
       thClassName:
         'sticky left-[32px] z-20 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]',
       tdClassName:
         'sticky left-[32px] z-10 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
     },
   },
-  // Author Email (Hidden, for search)
+  // Author Email
   {
     accessorKey: 'authorEmail',
-    enableHiding: true,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Author Email' />
     ),
     filterFn: (row, id, value: string) => {
       return value === row.getValue(id)
+    },
+    meta: {
+      className: 'min-w-[200px]',
     },
   },
   // Specialty
@@ -112,25 +119,16 @@ export const columns: ColumnDef<Question>[] = [
   },
   // Answer Count
   {
-    accessorKey: 'answerCount',
+    accessorKey: 'answersCount',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Answers' />
     ),
     cell: ({ row }) => {
-      const count = row.original.answerCount
-      const acceptedCount = row.original.acceptedAnswerCount || 0
+      const count = row.original.answersCount
       return (
         <div className='flex items-center gap-2'>
           <MessageCircle className='text-muted-foreground size-4' />
           <span className='font-medium'>{count}</span>
-          {acceptedCount > 0 && (
-            <Badge
-              variant='default'
-              className='bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-            >
-              {acceptedCount} accepted
-            </Badge>
-          )}
         </div>
       )
     },
