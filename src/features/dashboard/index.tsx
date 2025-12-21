@@ -276,7 +276,7 @@ function DashboardContent() {
 const topNav = [
   {
     title: 'Overview',
-    href: 'overview',
+    href: '/',
     isActive: true,
     disabled: false,
   },
