@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/tooltip'
 import { DataTableBulkActions as BulkActionsToolbar } from '@/components/data-table'
 import { type Specialty } from '../data/schema'
+import { canDeleteSpecialty } from '../utils/permissions'
 
 interface DataTableBulkActionsProps {
   table: Table<Specialty>
@@ -20,6 +21,14 @@ interface DataTableBulkActionsProps {
 
 export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
   const [showDeleteConfirm] = useState(false)
+
+  // Check if user has delete permission
+  const hasDeletePermission = canDeleteSpecialty()
+
+  // Don't show bulk actions if user doesn't have delete permission
+  if (!hasDeletePermission) {
+    return null
+  }
 
   return (
     <>

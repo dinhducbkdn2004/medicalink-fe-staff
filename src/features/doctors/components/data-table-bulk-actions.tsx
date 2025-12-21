@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/tooltip'
 import { DataTableBulkActions as BulkActionsToolbar } from '@/components/data-table'
 import type { DoctorWithProfile } from '../types'
+import { canDeleteDoctor, canToggleActive } from '../utils/permissions'
 import { DoctorsMultiDeleteDialog } from './doctors-multi-delete-dialog'
 import { useDoctors } from './doctors-provider'
 
@@ -20,6 +21,15 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const { setOpen, setCurrentRow } = useDoctors()
   const selectedRows = table.getFilteredSelectedRowModel().rows
+
+  // Check permissions
+  const hasDeletePermission = canDeleteDoctor(false)
+  const hasTogglePermission = canToggleActive()
+
+  // Don't show bulk actions if user doesn't have any permission
+  if (!hasDeletePermission && !hasTogglePermission) {
+    return null
+  }
 
   const handleBulkToggleActive = (_isActive: boolean) => {
     // For now, just show the first selected doctor in dialog
@@ -35,43 +45,47 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
   return (
     <>
       <BulkActionsToolbar table={table} entityName='doctor'>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant='outline'
-              size='icon'
-              onClick={() => handleBulkToggleActive(false)}
-              className='size-8'
-              aria-label='Deactivate selected doctors'
-              title='Deactivate selected doctors'
-            >
-              <Power />
-              <span className='sr-only'>Deactivate selected doctors</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Deactivate selected doctors</p>
-          </TooltipContent>
-        </Tooltip>
+        {hasTogglePermission && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant='outline'
+                size='icon'
+                onClick={() => handleBulkToggleActive(false)}
+                className='size-8'
+                aria-label='Deactivate selected doctors'
+                title='Deactivate selected doctors'
+              >
+                <Power />
+                <span className='sr-only'>Deactivate selected doctors</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Deactivate selected doctors</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
 
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant='destructive'
-              size='icon'
-              onClick={() => setShowDeleteConfirm(true)}
-              className='size-8'
-              aria-label='Delete selected doctors'
-              title='Delete selected doctors'
-            >
-              <Trash2 />
-              <span className='sr-only'>Delete selected doctors</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Delete selected doctors</p>
-          </TooltipContent>
-        </Tooltip>
+        {hasDeletePermission && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant='destructive'
+                size='icon'
+                onClick={() => setShowDeleteConfirm(true)}
+                className='size-8'
+                aria-label='Delete selected doctors'
+                title='Delete selected doctors'
+              >
+                <Trash2 />
+                <span className='sr-only'>Delete selected doctors</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Delete selected doctors</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
       </BulkActionsToolbar>
 
       <DoctorsMultiDeleteDialog

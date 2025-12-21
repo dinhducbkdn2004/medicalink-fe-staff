@@ -11,6 +11,7 @@ import {
 } from '@/components/data-table'
 import { statusOptions } from '../data/data'
 import { type Specialty } from '../data/schema'
+import { canUpdateSpecialties, canDeleteSpecialty } from '../utils/permissions'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { specialtiesColumns as columns } from './specialties-columns'
 import { useSpecialties } from './specialties-provider'
@@ -64,7 +65,7 @@ export function SpecialtiesTable({
   const getRowActions = (row: { original: Specialty }): DataTableAction[] => {
     const specialty = row.original
 
-    return [
+    const actions: DataTableAction[] = [
       {
         label: 'View Info Sections',
         icon: Info,
@@ -73,7 +74,11 @@ export function SpecialtiesTable({
           setOpen('view-info')
         },
       },
-      {
+    ]
+
+    // Only show Edit action if user has update permission
+    if (canUpdateSpecialties()) {
+      actions.push({
         label: 'Edit',
         icon: Edit,
         onClick: () => {
@@ -81,8 +86,12 @@ export function SpecialtiesTable({
           setOpen('edit')
         },
         separator: true,
-      },
-      {
+      })
+    }
+
+    // Only show Delete action if user has delete permission
+    if (canDeleteSpecialty({ specialtyId: specialty.id })) {
+      actions.push({
         label: 'Delete',
         icon: Trash2,
         onClick: () => {
@@ -90,8 +99,10 @@ export function SpecialtiesTable({
           setOpen('delete')
         },
         variant: 'destructive',
-      },
-    ]
+      })
+    }
+
+    return actions
   }
 
   return (
@@ -129,4 +140,3 @@ export function SpecialtiesTable({
     />
   )
 }
-

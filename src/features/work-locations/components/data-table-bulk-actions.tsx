@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/tooltip'
 import { DataTableBulkActions as BulkActionsToolbar } from '@/components/data-table'
 import { type WorkLocation } from '../data/schema'
+import { canDeleteWorkLocation } from '../utils/permissions'
 
 interface DataTableBulkActionsProps {
   table: Table<WorkLocation>
@@ -20,6 +21,14 @@ interface DataTableBulkActionsProps {
 
 export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
   const [showDeleteConfirm] = useState(false)
+
+  // Check if user has delete permission
+  const hasDeletePermission = canDeleteWorkLocation()
+
+  // Don't show bulk actions if user doesn't have delete permission
+  if (!hasDeletePermission) {
+    return null
+  }
 
   return (
     <>

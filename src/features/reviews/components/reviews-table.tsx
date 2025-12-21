@@ -4,7 +4,6 @@
  */
 import { Eye, Trash2 } from 'lucide-react'
 import type { Review } from '@/api/services/review.service'
-import { useAuthStore } from '@/stores/auth-store'
 // ============================================================================
 // Types
 // ============================================================================
@@ -16,6 +15,7 @@ import {
   type ColumnFilterConfig,
 } from '@/components/data-table'
 import { verifiedOptions } from '../data/data'
+import { canDeleteReview } from '../utils/permissions'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { columns } from './reviews-columns'
 import { useReviews } from './use-reviews'
@@ -65,8 +65,6 @@ export function ReviewsTable({
   isLoading = false,
 }: Readonly<ReviewsTableProps>) {
   const { setOpen, setCurrentReview } = useReviews()
-  const { user } = useAuthStore()
-  const isAdmin = user?.role === 'SUPER_ADMIN' || user?.role === 'ADMIN'
 
   // Define row actions (context menu)
   const getRowActions = (row: { original: Review }): DataTableAction[] => {
@@ -83,8 +81,8 @@ export function ReviewsTable({
       },
     ]
 
-    // Only Admins can delete
-    if (isAdmin) {
+    // Only show Delete action if user has delete permission
+    if (canDeleteReview({ reviewId: review.id })) {
       actions.push({
         label: 'Delete',
         icon: Trash2,
