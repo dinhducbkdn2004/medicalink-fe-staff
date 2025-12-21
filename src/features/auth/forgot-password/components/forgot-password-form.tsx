@@ -40,16 +40,13 @@ export function ForgotPasswordForm({
     setIsLoading(true)
     try {
       await requestPasswordReset({ email: data.email })
+      // Save email to localStorage for resend functionality
+      localStorage.setItem('reset_email', data.email)
       toast.success('If an account exists, a reset code has been sent.')
       navigate({ to: '/otp', search: { email: data.email } })
     } catch (error: unknown) {
-      // Always show success message for security, or handle specific errors if needed
-      // But the API guide says "Always returns success message for security"
-      // However, if it's a network error or 500, we might want to show it.
-      // For now, let's assume the API handles it as per guide.
-      // If the API throws an error for rate limiting, we show it.
-      const err = error as { response?: { data?: { message?: string } } }
-      toast.error(err.response?.data?.message || 'Failed to send reset email')
+      // Error already handled by API interceptor, don't duplicate toast
+      console.error('Password reset request failed:', error)
     } finally {
       setIsLoading(false)
     }

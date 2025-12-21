@@ -100,7 +100,7 @@ export function InfoSectionForm({
       if (isEditMode && section) {
         await updateMutation.mutateAsync({
           id: section.id,
-          _specialtyId: specialty.id,
+          specialtyId: specialty.id,
           data: {
             name: values.name,
             content: values.content || undefined,

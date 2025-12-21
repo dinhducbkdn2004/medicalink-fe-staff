@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff } from 'lucide-react'
+import { toast } from 'sonner'
 import {
   changePasswordSchema,
   type ChangePasswordFormData,
@@ -51,6 +52,11 @@ export function ChangePasswordSection() {
       {
         onSuccess: () => {
           form.reset()
+          toast.success('Password changed successfully')
+        },
+        onError: (error) => {
+          // Additional error handling if needed
+          console.error('Password change error:', error)
         },
       }
     )
