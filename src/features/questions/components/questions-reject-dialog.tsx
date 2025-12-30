@@ -1,7 +1,4 @@
-/**
- * Question Reject Dialog
- * Dialog for rejecting a question
- */
+
 import {
   AlertDialog,
   AlertDialogAction,

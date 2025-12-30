@@ -1,7 +1,4 @@
-/**
- * Create Doctor Dialog
- * Modal for creating a new doctor account
- */
+
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
@@ -55,7 +52,7 @@ export function DoctorsCreateDialog() {
   const onSubmit = (values: CreateDoctorFormData) => {
     const { confirmPassword, ...data } = values
 
-    // Sanitize dateOfBirth: convert empty string to undefined
+    
     const payload = {
       ...data,
       dateOfBirth: data.dateOfBirth || undefined,

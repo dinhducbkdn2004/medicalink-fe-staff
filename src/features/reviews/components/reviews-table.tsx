@@ -1,12 +1,9 @@
-/**
- * Reviews Table
- * Data table component for displaying reviews
- */
+
 import { Eye, Trash2 } from 'lucide-react'
 import type { Review } from '@/api/services/review.service'
-// ============================================================================
-// Types
-// ============================================================================
+
+
+
 
 import { type NavigateFn } from '@/hooks/use-table-url-state'
 import {
@@ -28,9 +25,9 @@ interface ReviewsTableProps {
   isLoading?: boolean
 }
 
-// ============================================================================
-// Column Filter Configs
-// ============================================================================
+
+
+
 
 const columnFilterConfigs: ColumnFilterConfig[] = [
   {
@@ -53,9 +50,9 @@ const columnFilterConfigs: ColumnFilterConfig[] = [
   },
 ]
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function ReviewsTable({
   data,
@@ -66,7 +63,7 @@ export function ReviewsTable({
 }: Readonly<ReviewsTableProps>) {
   const { setOpen, setCurrentReview } = useReviews()
 
-  // Define row actions (context menu)
+  
   const getRowActions = (row: { original: Review }): DataTableAction[] => {
     const review = row.original
 
@@ -81,7 +78,7 @@ export function ReviewsTable({
       },
     ]
 
-    // Only show Delete action if user has delete permission
+    
     if (canDeleteReview({ reviewId: review.id })) {
       actions.push({
         label: 'Delete',
@@ -100,16 +97,16 @@ export function ReviewsTable({
 
   return (
     <DataTable
-      // Required props
+      
       data={data}
       columns={columns}
       search={search}
       navigate={navigate}
-      // Configuration
+      
       pageCount={pageCount}
       isLoading={isLoading}
       entityName='review'
-      // Toolbar - no search bar (don't provide searchKey or searchPlaceholder)
+      
       filters={[
         {
           columnId: 'isPublic',
@@ -121,10 +118,10 @@ export function ReviewsTable({
           })),
         },
       ]}
-      // Actions
+      
       getRowActions={getRowActions}
       renderBulkActions={(table) => <DataTableBulkActions table={table} />}
-      // Advanced
+      
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
       emptyMessage='No reviews found.'

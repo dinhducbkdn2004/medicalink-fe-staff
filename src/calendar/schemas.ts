@@ -1,8 +1,5 @@
 import { z } from 'zod'
 
-/**
- * Appointment Status Schema
- */
 export const appointmentStatusSchema = z.enum([
   'BOOKED',
   'CONFIRMED',
@@ -13,10 +10,6 @@ export const appointmentStatusSchema = z.enum([
   'COMPLETED',
 ])
 
-/**
- * Create Appointment Schema
- * Based on POST /api/appointments endpoint
- */
 export const createAppointmentSchema = z
   .object({
     specialtyId: z.string().min(1, 'Specialty is required'),
@@ -51,10 +44,6 @@ export const createAppointmentSchema = z
     }
   )
 
-/**
- * Update Appointment Schema
- * Based on PATCH /api/appointments/:id endpoint
- */
 export const updateAppointmentSchema = z.object({
   status: appointmentStatusSchema.optional(),
   notes: z.string().optional(),
@@ -65,10 +54,6 @@ export const updateAppointmentSchema = z.object({
     .optional(),
 })
 
-/**
- * Reschedule Appointment Schema
- * Based on PATCH /api/appointments/:id/reschedule endpoint
- */
 export const rescheduleAppointmentSchema = z
   .object({
     doctorId: z.string().optional(),
@@ -96,10 +81,6 @@ export const rescheduleAppointmentSchema = z
     }
   )
 
-/**
- * Cancel Appointment Schema
- * Based on DELETE /api/appointments/:id endpoint
- */
 export const cancelAppointmentSchema = z.object({
   reason: z.string().optional(),
 })

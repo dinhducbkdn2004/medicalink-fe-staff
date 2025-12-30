@@ -40,12 +40,12 @@ export function ForgotPasswordForm({
     setIsLoading(true)
     try {
       await requestPasswordReset({ email: data.email })
-      // Save email to localStorage for resend functionality
+      
       localStorage.setItem('reset_email', data.email)
       toast.success('If an account exists, a reset code has been sent.')
       navigate({ to: '/otp', search: { email: data.email } })
     } catch (error: unknown) {
-      // Error already handled by API interceptor, don't duplicate toast
+      
       console.error('Password reset request failed:', error)
     } finally {
       setIsLoading(false)

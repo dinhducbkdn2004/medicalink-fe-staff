@@ -1,7 +1,4 @@
-/**
- * Patients Context Provider
- * Manages global state for patient management dialogs and actions
- */
+/* eslint-disable react-refresh/only-export-components */
 import React, { useState } from 'react'
 import useDialogState from '@/hooks/use-dialog-state'
 import type { Patient, PatientDialogType } from '../types'
@@ -16,7 +13,7 @@ type PatientsContextType = {
 const PatientsContext = React.createContext<PatientsContextType | null>(null)
 
 export function PatientsProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useDialogState<PatientDialogType>(null)
+  const [open, setOpen] = useDialogState<Exclude<PatientDialogType, null>>(null)
   const [currentRow, setCurrentRow] = useState<Patient | null>(null)
 
   return (
@@ -26,7 +23,6 @@ export function PatientsProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const usePatients = () => {
   const patientsContext = React.useContext(PatientsContext)
 

@@ -15,7 +15,7 @@ export function useAppointments(params?: AppointmentListParams) {
       setError(null)
       try {
         const response = await appointmentService.getList(params)
-        // Normalize appointments to fix time format
+
         const normalized = response.data.map(normalizeAppointment)
         setAppointments(normalized)
       } catch (err) {
@@ -27,6 +27,7 @@ export function useAppointments(params?: AppointmentListParams) {
     }
 
     fetchAppointments()
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(params)])
 

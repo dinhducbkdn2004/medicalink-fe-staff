@@ -1,7 +1,3 @@
-/**
- * Doctor Profile API Hooks
- * TanStack Query hooks for Doctor Profile management
- */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { doctorProfileService } from '@/api/services'
@@ -12,10 +8,6 @@ import type {
 } from '@/api/types/doctor.types'
 import { doctorKeys } from './use-doctors'
 
-// ============================================================================
-// Query Keys
-// ============================================================================
-
 export const doctorProfileKeys = {
   all: ['doctor-profiles'] as const,
   myProfile: () => [...doctorProfileKeys.all, 'me'] as const,
@@ -23,24 +15,14 @@ export const doctorProfileKeys = {
   detail: (id: string) => [...doctorProfileKeys.details(), id] as const,
 }
 
-// ============================================================================
-// Query Hooks
-// ============================================================================
-
-/**
- * Hook to fetch current doctor's own profile
- */
 export function useMyDoctorProfile() {
   return useQuery({
     queryKey: doctorProfileKeys.myProfile(),
     queryFn: () => doctorProfileService.getMyProfile(),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
   })
 }
 
-/**
- * Hook to fetch doctor profile by ID
- */
 export function useDoctorProfile(id: string | undefined) {
   return useQuery({
     queryKey: doctorProfileKeys.detail(id!),
@@ -49,13 +31,6 @@ export function useDoctorProfile(id: string | undefined) {
   })
 }
 
-// ============================================================================
-// Mutation Hooks
-// ============================================================================
-
-/**
- * Hook to create a new doctor profile
- */
 export function useCreateDoctorProfile() {
   const queryClient = useQueryClient()
 
@@ -72,9 +47,6 @@ export function useCreateDoctorProfile() {
   })
 }
 
-/**
- * Hook to update current doctor's own profile
- */
 export function useUpdateMyProfile() {
   const queryClient = useQueryClient()
 
@@ -90,9 +62,6 @@ export function useUpdateMyProfile() {
   })
 }
 
-/**
- * Hook to update doctor profile by ID (admin)
- */
 export function useUpdateDoctorProfile() {
   const queryClient = useQueryClient()
 
@@ -105,7 +74,6 @@ export function useUpdateDoctorProfile() {
       data: UpdateDoctorProfileRequest
     }) => doctorProfileService.updateDoctorProfile(id, data),
     onSuccess: (_, variables) => {
-      // Invalidate both profile and complete doctor data
       queryClient.invalidateQueries({
         queryKey: doctorProfileKeys.detail(variables.id),
       })
@@ -119,9 +87,6 @@ export function useUpdateDoctorProfile() {
   })
 }
 
-/**
- * Hook to toggle doctor profile active status
- */
 export function useToggleDoctorProfileActive() {
   const queryClient = useQueryClient()
 
@@ -137,7 +102,7 @@ export function useToggleDoctorProfileActive() {
       queryClient.invalidateQueries({
         queryKey: doctorProfileKeys.detail(variables.id),
       })
-      // Also invalidate doctor lists to refresh the table
+
       queryClient.invalidateQueries({
         queryKey: doctorKeys.lists(),
       })
@@ -149,9 +114,6 @@ export function useToggleDoctorProfileActive() {
   })
 }
 
-/**
- * Hook to delete a doctor profile
- */
 export function useDeleteDoctorProfile() {
   const queryClient = useQueryClient()
 

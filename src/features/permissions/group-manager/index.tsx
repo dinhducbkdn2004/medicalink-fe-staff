@@ -1,7 +1,4 @@
-/**
- * Group Manager Page
- * Main page for managing permission groups
- */
+
 import { getRouteApi } from '@tanstack/react-router'
 import { Can } from '@/components/auth/permission-gate'
 import { RequirePermission } from '@/components/auth/require-permission'
@@ -38,7 +35,7 @@ export function GroupManager() {
         </Header>
 
         <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-          {/* Page Header */}
+          {}
           <div className='flex flex-wrap items-end justify-between gap-4'>
             <div className='space-y-1'>
               <div className='flex items-center gap-3'>
@@ -56,10 +53,10 @@ export function GroupManager() {
             </Can>
           </div>
 
-          {/* Permission Stats */}
+          {}
           <PermissionStatsCards stats={stats} isLoading={statsLoading} />
 
-          {/* Groups Table */}
+          {}
           <GroupsTable
             data={groups || []}
             search={search}
@@ -68,7 +65,7 @@ export function GroupManager() {
           />
         </Main>
 
-        {/* Dialogs */}
+        {}
         <GroupDialogs />
       </GroupManagerProvider>
     </RequirePermission>

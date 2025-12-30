@@ -1,7 +1,3 @@
-/**
- * Assign User Permission Dialog
- * Dialog for assigning permissions to users
- */
 import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -52,7 +48,8 @@ export function AssignUserPermissionDialog({
   const assignMutation = useAssignUserPermission()
 
   const form = useForm<AssignPermissionFormValues>({
-    resolver: zodResolver(assignPermissionSchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(assignPermissionSchema) as any,
     defaultValues: {
       effect: 'ALLOW',
     },
@@ -69,9 +66,7 @@ export function AssignUserPermissionDialog({
     }
 
     try {
-      // Assign each selected action
       for (const action of selectedActions) {
-        // Find matching permission from system permissions
         const permission = allPermissions.find(
           (p) => p.resource === selectedResource && p.action === action
         )
@@ -90,7 +85,7 @@ export function AssignUserPermissionDialog({
 
       handleClose()
     } catch {
-      // Error handling is done in mutation hook
+      void 0
     }
   }
 

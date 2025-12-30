@@ -1,7 +1,4 @@
-/**
- * Specialties Context Provider
- * Manages dialog states and current selected specialty/info section
- */
+/* eslint-disable react-refresh/only-export-components */
 import React, { useState } from 'react'
 import useDialogState from '@/hooks/use-dialog-state'
 import { type Specialty, type SpecialtyInfoSection } from '../data/schema'
@@ -56,7 +53,6 @@ export function SpecialtiesProvider({
   )
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useSpecialties = () => {
   const specialtiesContext = React.useContext(SpecialtiesContext)
 
@@ -68,4 +64,3 @@ export const useSpecialties = () => {
 
   return specialtiesContext
 }
-

@@ -1,33 +1,22 @@
-/**
- * User Groups Hook
- * Manages user-group memberships
- */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { permissionService } from '@/api/services/permission.service'
 
-// Query key factory
 export const userGroupKeys = {
   all: ['user-groups'] as const,
   user: (userId: string, tenantId?: string) =>
     [...userGroupKeys.all, userId, { tenantId }] as const,
 }
 
-/**
- * Fetch groups that a user belongs to
- */
 export function useUserGroups(userId: string, tenantId?: string) {
   return useQuery({
     queryKey: userGroupKeys.user(userId, tenantId),
     queryFn: () => permissionService.getUserGroups(userId, { tenantId }),
     enabled: !!userId,
-    staleTime: 1 * 60 * 1000, // 1 minute
+    staleTime: 1 * 60 * 1000,
   })
 }
 
-/**
- * Add a user to a group
- */
 export function useAddUserToGroup() {
   const queryClient = useQueryClient()
 
@@ -42,8 +31,6 @@ export function useAddUserToGroup() {
       tenantId?: string
     }) => permissionService.addUserToGroup(userId, { groupId, tenantId }),
     onSuccess: (_, variables) => {
-      // Invalidate all tenant variations for this user
-      // by using the base key prefix up to userId
       queryClient.invalidateQueries({
         queryKey: [...userGroupKeys.all, variables.userId],
       })
@@ -57,9 +44,6 @@ export function useAddUserToGroup() {
   })
 }
 
-/**
- * Remove a user from a group
- */
 export function useRemoveUserFromGroup() {
   const queryClient = useQueryClient()
 

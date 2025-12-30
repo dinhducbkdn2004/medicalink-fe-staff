@@ -1,7 +1,4 @@
-/**
- * Multi-Select Field Component
- * Allows users to select multiple items from a list
- */
+
 import { useState } from 'react'
 import { Check, ChevronsUpDown, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -122,7 +119,7 @@ export function MultiSelectField({
         </PopoverContent>
       </Popover>
 
-      {/* Selected items */}
+      {}
       {selectedOptions.length > 0 && (
         <div className='flex flex-wrap gap-2'>
           {selectedOptions.map((option) => (

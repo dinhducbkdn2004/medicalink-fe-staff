@@ -6,8 +6,5 @@ export const Route = createFileRoute('/_authenticated/')({
 })
 
 function DashboardRoute() {
-  // Dashboard component now handles role-based rendering internally
-  // - Doctor: Shows DoctorDashboard with personal stats
-  // - Admin/SuperAdmin: Shows system-wide dashboard
   return <Dashboard />
 }

@@ -1,43 +1,29 @@
-/**
- * Appointment Utilities
- * Helper functions for transforming and mapping appointment data
- */
 import type { IEvent, IUser } from '@/calendar/interfaces'
 import type { TEventColor } from '@/calendar/types'
 import type { Appointment } from '@/api/types/appointment.types'
 
-/**
- * Map appointment status to calendar event color
- */
 export const getEventColorByStatus = (
   status: Appointment['status']
 ): TEventColor => {
   const statusColorMap: Record<Appointment['status'], TEventColor> = {
-    BOOKED: 'blue', // New booking - blue for pending
-    CONFIRMED: 'green', // Confirmed - green for active/ready
-    CANCELLED_BY_PATIENT: 'red', // Cancelled - red for error/cancelled
-    CANCELLED_BY_STAFF: 'red', // Cancelled - red for error/cancelled
-    COMPLETED: 'gray', // Completed - gray for done/archived
-    NO_SHOW: 'orange', // No show - orange for warning
-    RESCHEDULED: 'purple', // Rescheduled - purple for modified
+    BOOKED: 'blue',
+    CONFIRMED: 'green',
+    CANCELLED_BY_PATIENT: 'red',
+    CANCELLED_BY_STAFF: 'red',
+    COMPLETED: 'gray',
+    NO_SHOW: 'orange',
+    RESCHEDULED: 'purple',
   }
   return statusColorMap[status] || 'blue'
 }
 
-/**
- * Transform Appointment to IEvent for calendar display
- */
 export const transformAppointmentToEvent = (
   appointment: Appointment
 ): IEvent => {
   const { event, doctor, patient, status, reason } = appointment
 
-  // Combine service date with time
-  // Combine service date with time
   const serviceDate = new Date(event.serviceDate)
 
-  // Parse HH:mm time strings
-  // Parse HH:mm time strings or ISO strings
   let startHour: number, startMinute: number
   let endHour: number, endMinute: number
 
@@ -55,7 +41,6 @@ export const transformAppointmentToEvent = (
     ;[endHour, endMinute] = event.timeEnd.split(':').map(Number)
   }
 
-  // Create full datetime by combining date and time
   const startDate = new Date(serviceDate)
   startDate.setHours(startHour, startMinute, 0, 0)
 
@@ -88,27 +73,16 @@ ${appointment.notes ? `Notes: ${appointment.notes}` : ''}
         },
     appointment: {
       ...appointment,
-      // Ensure nested objects match IAppointment interface if needed
-      // The API Appointment type seems compatible with IAppointment for the most part
-      // except maybe for some optional fields or date strings vs Date objects
-      // But looking at interfaces.ts, IAppointment uses strings for dates, same as API
-      // So we can just pass the appointment object
     } as unknown as import('@/calendar/interfaces').IAppointment,
   }
 }
 
-/**
- * Transform array of appointments to calendar events
- */
 export const transformAppointmentsToEvents = (
   appointments: Appointment[]
 ): IEvent[] => {
   return appointments.map(transformAppointmentToEvent)
 }
 
-/**
- * Extract unique users (doctors) from appointments
- */
 export const extractUsersFromAppointments = (
   appointments: Appointment[]
 ): IUser[] => {
@@ -116,7 +90,7 @@ export const extractUsersFromAppointments = (
 
   for (const appointment of appointments) {
     const { doctor } = appointment
-    // Skip appointments with null doctors
+
     if (doctor && !uniqueDoctors.has(doctor.id)) {
       uniqueDoctors.set(doctor.id, {
         id: doctor.id,
@@ -129,10 +103,6 @@ export const extractUsersFromAppointments = (
   return Array.from(uniqueDoctors.values())
 }
 
-/**
- * Format date to YYYY-MM-DD for API queries
- * Uses local timezone to avoid date shifting issues
- */
 export const formatDateForAPI = (date: Date): string => {
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -140,9 +110,6 @@ export const formatDateForAPI = (date: Date): string => {
   return `${year}-${month}-${day}`
 }
 
-/**
- * Get date range for current view
- */
 export const getDateRangeForView = (
   view: 'day' | 'week' | 'month' | 'year' | 'agenda',
   currentDate: Date
@@ -158,34 +125,30 @@ export const getDateRangeForView = (
       break
 
     case 'week': {
-      // Get start of week (Sunday)
       fromDate = new Date(date)
       fromDate.setDate(date.getDate() - date.getDay())
-      // Get end of week (Saturday)
+
       toDate = new Date(fromDate)
       toDate.setDate(fromDate.getDate() + 6)
       break
     }
 
     case 'month': {
-      // Get first day of month
       fromDate = new Date(date.getFullYear(), date.getMonth(), 1)
-      // Get last day of month
+
       toDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
       break
     }
 
     case 'year': {
-      // Get first day of year
       fromDate = new Date(date.getFullYear(), 0, 1)
-      // Get last day of year
+
       toDate = new Date(date.getFullYear(), 11, 31)
       break
     }
 
     case 'agenda':
     default:
-      // For agenda, show next 30 days
       fromDate = new Date(date)
       toDate = new Date(date)
       toDate.setDate(date.getDate() + 30)

@@ -2,7 +2,7 @@ import { cloneElement, Children, forwardRef, useMemo } from 'react'
 import type { ElementRef, HTMLAttributes, ReactElement } from 'react'
 import { cn } from '@/lib/utils'
 
-// ================================== //
+
 
 type TAvatarGroupRef = ElementRef<'div'>
 type TAvatarGroupProps = HTMLAttributes<HTMLDivElement> & {
@@ -56,6 +56,6 @@ const AvatarGroup = forwardRef<TAvatarGroupRef, TAvatarGroupProps>(
 
 AvatarGroup.displayName = 'AvatarGroup'
 
-// ================================== //
+
 
 export { AvatarGroup }

@@ -1,7 +1,3 @@
-/**
- * Answers Feature - React Query Hooks
- * Data fetching and mutations for answers
- */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import {
@@ -12,10 +8,6 @@ import {
 } from '@/api/services'
 import { questionKeys } from './use-questions'
 
-// ============================================================================
-// Query Keys
-// ============================================================================
-
 export const answerKeys = {
   all: ['answers'] as const,
   lists: () => [...answerKeys.all, 'list'] as const,
@@ -25,13 +17,6 @@ export const answerKeys = {
   detail: (id: string) => [...answerKeys.details(), id] as const,
 }
 
-// ============================================================================
-// Queries
-// ============================================================================
-
-/**
- * Get answers for a question (public, only accepted answers)
- */
 export function useAnswersForQuestion(
   questionId: string,
   params: AnswerQueryParams = {}
@@ -40,13 +25,10 @@ export function useAnswersForQuestion(
     queryKey: answerKeys.list(questionId, params),
     queryFn: () => answerService.getAnswersForQuestion(questionId, params),
     enabled: !!questionId,
-    staleTime: 30000, // 30 seconds
+    staleTime: 30000,
   })
 }
 
-/**
- * Get a single answer by ID (public, must be accepted)
- */
 export function useAnswer(answerId: string) {
   return useQuery({
     queryKey: answerKeys.detail(answerId),
@@ -55,13 +37,6 @@ export function useAnswer(answerId: string) {
   })
 }
 
-// ============================================================================
-// Mutations
-// ============================================================================
-
-/**
- * Create an answer (doctors only)
- */
 export function useCreateAnswer() {
   const queryClient = useQueryClient()
 
@@ -90,9 +65,6 @@ export function useCreateAnswer() {
   })
 }
 
-/**
- * Update an answer (admin only)
- */
 export function useUpdateAnswer() {
   const queryClient = useQueryClient()
 
@@ -122,9 +94,6 @@ export function useUpdateAnswer() {
   })
 }
 
-/**
- * Accept an answer (admin only)
- */
 export function useAcceptAnswer() {
   const queryClient = useQueryClient()
 
@@ -148,9 +117,6 @@ export function useAcceptAnswer() {
   })
 }
 
-/**
- * Delete an answer (admin only)
- */
 export function useDeleteAnswer() {
   const queryClient = useQueryClient()
 

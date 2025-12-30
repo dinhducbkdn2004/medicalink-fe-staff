@@ -1,7 +1,4 @@
-/**
- * Question Answer Form
- * Form for creating or updating an answer
- */
+
 import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -19,9 +16,9 @@ import { Textarea } from '@/components/ui/textarea'
 import type { Answer } from '../data/schema'
 import { useCreateAnswer, useUpdateAnswer } from '../data/use-answers'
 
-// ============================================================================
-// Form Schema
-// ============================================================================
+
+
+
 
 const formSchema = z.object({
   body: z
@@ -32,9 +29,9 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-// ============================================================================
-// Props
-// ============================================================================
+
+
+
 
 interface QuestionsAnswerFormProps {
   questionId: string
@@ -43,9 +40,9 @@ interface QuestionsAnswerFormProps {
   onCancel?: () => void
 }
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function QuestionsAnswerForm({
   questionId,

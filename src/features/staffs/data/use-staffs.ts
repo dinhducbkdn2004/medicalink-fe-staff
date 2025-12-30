@@ -1,7 +1,3 @@
-/**
- * Staff API Hooks
- * TanStack Query hooks for Staff Account management
- */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { staffService } from '@/api/services'
@@ -10,10 +6,6 @@ import type {
   CreateStaffRequest,
   UpdateStaffRequest,
 } from '@/api/types/staff.types'
-
-// ============================================================================
-// Query Keys
-// ============================================================================
 
 export const staffKeys = {
   all: ['staffs'] as const,
@@ -24,24 +16,14 @@ export const staffKeys = {
   stats: () => [...staffKeys.all, 'stats'] as const,
 }
 
-// ============================================================================
-// Query Hooks
-// ============================================================================
-
-/**
- * Hook to fetch paginated list of staff accounts with filtering and sorting
- */
 export function useStaffs(params: StaffQueryParams = {}) {
   return useQuery({
     queryKey: staffKeys.list(params),
     queryFn: () => staffService.getStaffs(params),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
   })
 }
 
-/**
- * Hook to fetch single staff account by ID
- */
 export function useStaff(id: string | undefined) {
   return useQuery({
     queryKey: staffKeys.detail(id!),
@@ -50,24 +32,14 @@ export function useStaff(id: string | undefined) {
   })
 }
 
-/**
- * Hook to fetch staff statistics
- */
 export function useStaffStats() {
   return useQuery({
     queryKey: staffKeys.stats(),
     queryFn: () => staffService.getStaffStats(),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
   })
 }
 
-// ============================================================================
-// Mutation Hooks
-// ============================================================================
-
-/**
- * Hook to create a new staff account
- */
 export function useCreateStaff() {
   const queryClient = useQueryClient()
 
@@ -81,9 +53,6 @@ export function useCreateStaff() {
   })
 }
 
-/**
- * Hook to update staff account information
- */
 export function useUpdateStaff() {
   const queryClient = useQueryClient()
 
@@ -101,9 +70,6 @@ export function useUpdateStaff() {
   })
 }
 
-/**
- * Hook to delete a staff account
- */
 export function useDeleteStaff() {
   const queryClient = useQueryClient()
 

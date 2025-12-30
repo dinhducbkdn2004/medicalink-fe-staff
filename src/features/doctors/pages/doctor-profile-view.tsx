@@ -1,8 +1,4 @@
-/**
- * Doctor Profile View Page
- * Displays doctor profile information in read-only mode with collapsible sections
- */
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useParams } from '@tanstack/react-router'
 import { Edit, Mail, Phone, User, ChevronDown, Loader2 } from 'lucide-react'
 import type { CompleteDoctorData } from '@/api/types/doctor.types'
@@ -34,10 +30,6 @@ import { useCompleteDoctor } from '../data/use-doctors'
 import { canEditOwnProfile } from '../utils/permissions'
 import { DoctorProfileForm } from './doctor-profile-form'
 
-// ============================================================================
-// Empty Field Component
-// ============================================================================
-
 function EmptyField({ text = 'No information provided' }: { text?: string }) {
   return (
     <div className='text-muted-foreground flex items-center gap-2 text-xs italic'>
@@ -46,10 +38,6 @@ function EmptyField({ text = 'No information provided' }: { text?: string }) {
     </div>
   )
 }
-
-// ============================================================================
-// Main Component
-// ============================================================================
 
 export function DoctorProfileView() {
   const { doctorId } = useParams({
@@ -60,14 +48,6 @@ export function DoctorProfileView() {
 
   const { data: completeData, isLoading, error } = useCompleteDoctor(doctorId)
 
-  // Log data for debugging (development only)
-  useEffect(() => {
-    if (completeData && import.meta.env.DEV) {
-      // console.log('Complete Doctor Data:', completeData)
-    }
-  }, [completeData])
-
-  // Explicit type assertion to help TypeScript (flat structure from API)
   const doctor = completeData as CompleteDoctorData | undefined
 
   const handleEdit = () => {
@@ -78,7 +58,6 @@ export function DoctorProfileView() {
     setIsEditMode(false)
   }
 
-  // Loading state
   if (isLoading) {
     return (
       <div className='flex h-screen w-full items-center justify-center'>
@@ -90,7 +69,6 @@ export function DoctorProfileView() {
     )
   }
 
-  // Error state
   if (error) {
     return (
       <div className='flex min-h-[400px] items-center justify-center'>
@@ -106,7 +84,6 @@ export function DoctorProfileView() {
     )
   }
 
-  // Not found state
   if (!doctor) {
     return (
       <div className='flex min-h-[400px] items-center justify-center'>
@@ -120,16 +97,13 @@ export function DoctorProfileView() {
     )
   }
 
-  // API returns flat structure (account + profile merged)
   const canEdit = canEditOwnProfile(user, doctorId)
   const hasProfile = Boolean(doctor.degree || doctor.introduction)
 
-  // If in edit mode, show the form
   if (isEditMode) {
     return <DoctorProfileForm onCancel={handleCancelEdit} />
   }
 
-  // View Mode
   return (
     <>
       <Header fixed>
@@ -142,7 +116,7 @@ export function DoctorProfileView() {
       </Header>
 
       <Main className='flex flex-1 flex-col gap-6'>
-        {/* Page Header */}
+        {}
         <div className='flex items-start justify-between'>
           <div>
             <h1 className='text-2xl font-bold tracking-tight'>
@@ -160,7 +134,7 @@ export function DoctorProfileView() {
           )}
         </div>
 
-        {/* Empty Profile Warning */}
+        {}
         {!hasProfile && (
           <Card className='border-yellow-500/50 bg-yellow-500/10'>
             <CardContent>

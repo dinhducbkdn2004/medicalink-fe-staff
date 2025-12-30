@@ -1,19 +1,9 @@
-/**
- * Office Hours Schema
- * Type definitions and validation schemas for office hours
- */
 import { z } from 'zod'
 import type { OfficeHour } from '@/api/services/office-hour.service'
 
-// Re-export API types
 export type { OfficeHour } from '@/api/services/office-hour.service'
 
-// Type aliases for UI components
 export type OfficeHourWithActions = OfficeHour
-
-// ============================================================================
-// Day of Week Constants
-// ============================================================================
 
 export const DAYS_OF_WEEK = [
   { value: 0, label: 'Sunday', short: 'Sun' },
@@ -33,14 +23,10 @@ export function getDayShort(dayOfWeek: number): string {
   return DAYS_OF_WEEK.find((d) => d.value === dayOfWeek)?.short || '?'
 }
 
-// ============================================================================
-// Office Hours Type Constants
-// ============================================================================
-
 export const OFFICE_HOURS_TYPES = {
-  DOCTOR_AT_LOCATION: 'doctor-at-location', // Both doctorId and workLocationId set
-  DOCTOR_ALL_LOCATIONS: 'doctor-all-locations', // Only doctorId set
-  GLOBAL_LOCATION: 'global-location', // Only workLocationId set, isGlobal = true
+  DOCTOR_AT_LOCATION: 'doctor-at-location',
+  DOCTOR_ALL_LOCATIONS: 'doctor-all-locations',
+  GLOBAL_LOCATION: 'global-location',
 } as const
 
 export type OfficeHoursType =
@@ -69,22 +55,12 @@ export function getOfficeHoursTypeLabel(type: OfficeHoursType): string {
   }
 }
 
-// ============================================================================
-// Validation Schemas
-// ============================================================================
-
-// Time validation regex (HH:mm format, 24-hour)
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/
 
-// Custom time validator
 const timeValidator = z.string().regex(timeRegex, {
   message: 'Time must be in HH:mm format (e.g., 08:00, 14:30)',
 })
 
-/**
- * Schema for creating office hours
- * Note: API does not support editing, only create and delete
- */
 export const officeHourFormSchema = z
   .object({
     doctorId: z.string().nullable().optional(),
@@ -100,18 +76,10 @@ export const officeHourFormSchema = z
   })
   .refine(
     (data) => {
-      // Validation based on API Office Hours Types:
-      // 1. Doctor at location: doctorId + workLocationId
-      // 2. Doctor (all locations): doctorId only
-      // 3. Work location: workLocationId only, isGlobal can be true
-      // 4. Global: isGlobal=true, both can be null
-
-      // If isGlobal is true, it's always valid (type 3 or 4)
       if (data.isGlobal) {
         return true
       }
 
-      // If not global, at least one of doctorId or workLocationId must be set
       return data.doctorId || data.workLocationId
     },
     {
@@ -121,7 +89,6 @@ export const officeHourFormSchema = z
   )
   .refine(
     (data) => {
-      // If isGlobal is true and doctorId is set, that's invalid
       if (data.isGlobal && data.doctorId) {
         return false
       }
@@ -134,7 +101,6 @@ export const officeHourFormSchema = z
   )
   .refine(
     (data) => {
-      // startTime must be before endTime
       if (data.startTime && data.endTime) {
         const [startHour, startMin] = data.startTime.split(':').map(Number)
         const [endHour, endMin] = data.endTime.split(':').map(Number)
@@ -152,9 +118,6 @@ export const officeHourFormSchema = z
 
 export type OfficeHourFormValues = z.infer<typeof officeHourFormSchema>
 
-/**
- * Schema for filtering office hours
- */
 export const officeHourFilterSchema = z.object({
   doctorId: z.string().optional(),
   workLocationId: z.string().optional(),

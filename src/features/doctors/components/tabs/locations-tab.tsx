@@ -1,7 +1,4 @@
-/**
- * Locations Tab Component
- * Specialties & Work Locations section
- */
+
 import type { UseFormReturn } from 'react-hook-form'
 import { MapPin } from 'lucide-react'
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
@@ -34,7 +31,7 @@ export function LocationsTab({
           Specialties & Locations
         </h3>
         <div className='space-y-4'>
-        {/* Specialties */}
+        {}
         <FormField
           control={form.control}
           name='specialtyIds'
@@ -62,7 +59,7 @@ export function LocationsTab({
 
         <Separator />
 
-        {/* Work Locations */}
+        {}
         <FormField
           control={form.control}
           name='locationIds'

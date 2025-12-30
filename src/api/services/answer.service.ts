@@ -1,14 +1,5 @@
-/**
- * Answer API Service
- * Handles all API calls related to answers
- * API Base: /api/questions/:id/answers and /api/questions/answers/:answerId
- */
 import { apiClient } from '../core/client'
 import type { PaginatedResponse, PaginationParams } from '../types/common.types'
-
-// ============================================================================
-// Types
-// ============================================================================
 
 export interface Doctor {
   id: string
@@ -22,8 +13,8 @@ export interface Answer {
   questionId: string
   body: string
   authorId: string
-  authorFullName?: string // API response field
-  doctor?: Doctor // Keeping purely for backward compat if needed, but API seems to use authorFullName
+  authorFullName?: string
+  doctor?: Doctor
   publicIds?: string[]
   isAccepted: boolean
   upvotes?: number
@@ -32,7 +23,6 @@ export interface Answer {
 }
 
 export type AnswerQueryParams = PaginationParams
-// Reserved for future filters - can extend with additional properties when needed
 
 export interface CreateAnswerRequest {
   body: string
@@ -46,19 +36,7 @@ export interface UpdateAnswerRequest {
 
 export type AnswerListResponse = PaginatedResponse<Answer>
 
-// ============================================================================
-// Service Class
-// ============================================================================
-
 class AnswerService {
-  // --------------------------------------------------------------------------
-  // Answer CRUD
-  // --------------------------------------------------------------------------
-
-  /**
-   * Get accepted answers for a question (public)
-   * GET /api/questions/:id/answers
-   */
   async getAnswersForQuestion(
     questionId: string,
     params: AnswerQueryParams = {}
@@ -70,10 +48,6 @@ class AnswerService {
     return response.data
   }
 
-  /**
-   * Get a single answer by ID (public, must be accepted)
-   * GET /api/questions/answers/:answerId
-   */
   async getAnswer(answerId: string): Promise<Answer> {
     const response = await apiClient.get<Answer>(
       `/questions/answers/${answerId}`
@@ -81,10 +55,6 @@ class AnswerService {
     return response.data
   }
 
-  /**
-   * Create an answer to a question (doctors only)
-   * POST /api/questions/:id/answers
-   */
   async createAnswer(
     questionId: string,
     data: CreateAnswerRequest
@@ -96,10 +66,6 @@ class AnswerService {
     return response.data
   }
 
-  /**
-   * Update an answer (admin only)
-   * PATCH /api/questions/answers/:answerId
-   */
   async updateAnswer(
     answerId: string,
     data: UpdateAnswerRequest
@@ -111,10 +77,6 @@ class AnswerService {
     return response.data
   }
 
-  /**
-   * Accept an answer (admin only)
-   * PATCH /api/questions/answers/:answerId/accept
-   */
   async acceptAnswer(answerId: string): Promise<Answer> {
     const response = await apiClient.patch<Answer>(
       `/questions/answers/${answerId}/accept`
@@ -122,10 +84,6 @@ class AnswerService {
     return response.data
   }
 
-  /**
-   * Delete an answer (admin only)
-   * DELETE /api/questions/answers/:answerId
-   */
   async deleteAnswer(
     answerId: string
   ): Promise<{ success: boolean; message: string }> {

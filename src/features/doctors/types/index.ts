@@ -1,19 +1,7 @@
-/**
- * Doctor Module Types
- * Based on /api/doctors API specification
- */
 import { z } from 'zod'
 import type { Specialty, WorkLocation } from '@/api/types/doctor.types'
 
-// ============================================================================
-// Base Types - Re-export from API
-// ============================================================================
-
 export type { Specialty, WorkLocation } from '@/api/types/doctor.types'
-
-// ============================================================================
-// Doctor Account Types
-// ============================================================================
 
 export interface DoctorAccount {
   id: string
@@ -47,10 +35,7 @@ export interface DoctorProfile {
   updatedAt: string
 }
 
-// Extended DoctorWithProfile type for GET /api/doctors endpoint
-// Backend returns flat structure with profile fields merged at root level
 export interface DoctorWithProfile {
-  // Account fields
   id: string
   fullName: string
   email: string
@@ -60,10 +45,8 @@ export interface DoctorWithProfile {
   dateOfBirth?: string
   createdAt: string
 
-  // Profile data (optional, may not exist)
   profile?: DoctorProfile
 
-  // Profile fields at root level (merged by backend)
   profileId?: string
   isActive?: boolean
   degree?: string
@@ -83,24 +66,21 @@ export interface DoctorWithProfile {
   accountUpdatedAt?: string
 }
 
-// Complete doctor data - API GET /api/doctors/:id/complete returns flat structure
-// This API always returns complete data (account + profile merged), so fields are NOT optional
 export interface CompleteDoctorData {
-  // From DoctorAccount (required fields)
   id: string
   fullName: string
   email: string
   role: string
-  // From DoctorAccount (optional fields)
+
   phone?: string
   isMale?: boolean
   dateOfBirth?: string
   createdAt?: string
   updatedAt?: string
-  // From DoctorProfile (required fields)
+
   profileId: string
   isActive: boolean
-  // From DoctorProfile (optional fields)
+
   degree?: string
   position?: string[]
   introduction?: string
@@ -116,10 +96,6 @@ export interface CompleteDoctorData {
   profileCreatedAt?: string
   profileUpdatedAt?: string
 }
-
-// ============================================================================
-// API Request/Response Types
-// ============================================================================
 
 export interface DoctorListParams {
   page?: number
@@ -183,10 +159,6 @@ export interface UpdateDoctorAccountRequest {
   dateOfBirth?: string
 }
 
-// ============================================================================
-// Doctor Profile Types
-// ============================================================================
-
 export interface PublicDoctorProfileParams {
   page?: number
   limit?: number
@@ -232,10 +204,6 @@ export interface UpdateDoctorProfileRequest {
 export interface ToggleActiveRequest {
   isActive: boolean
 }
-
-// ============================================================================
-// Zod Validation Schemas
-// ============================================================================
 
 export const createDoctorSchema = z
   .object({

@@ -1,7 +1,4 @@
-/**
- * Navigation User Component
- * Displays authenticated user info with dropdown menu
- */
+
 import { Link } from '@tanstack/react-router'
 import {
   BadgeCheck,

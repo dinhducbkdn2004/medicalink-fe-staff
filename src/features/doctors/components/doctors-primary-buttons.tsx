@@ -1,7 +1,4 @@
-/**
- * Doctors Primary Action Buttons
- * Main action buttons for doctor management page
- */
+
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useDoctors } from './doctors-provider'

@@ -1,7 +1,4 @@
-/**
- * Work Locations Table Component
- * Table view for work location management with API integration
- */
+
 import { Edit, Trash2 } from 'lucide-react'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
 import {
@@ -19,9 +16,9 @@ import { DataTableBulkActions } from './data-table-bulk-actions'
 import { workLocationsColumns as columns } from './work-locations-columns'
 import { useWorkLocations } from './work-locations-provider'
 
-// ============================================================================
-// Types
-// ============================================================================
+
+
+
 
 type WorkLocationsTableProps = {
   data: WorkLocation[]
@@ -31,11 +28,11 @@ type WorkLocationsTableProps = {
   isLoading?: boolean
 }
 
-// ============================================================================
-// Configuration
-// ============================================================================
 
-// Column filter configuration for URL state management
+
+
+
+
 const columnFilterConfigs: ColumnFilterConfig[] = [
   {
     columnId: 'name',
@@ -51,9 +48,9 @@ const columnFilterConfigs: ColumnFilterConfig[] = [
   },
 ]
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function WorkLocationsTable({
   data,
@@ -64,7 +61,7 @@ export function WorkLocationsTable({
 }: WorkLocationsTableProps) {
   const { setOpen, setCurrentRow } = useWorkLocations()
 
-  // Define row actions (context menu)
+  
   const getRowActions = (row: {
     original: WorkLocation
   }): DataTableAction[] => {
@@ -72,7 +69,7 @@ export function WorkLocationsTable({
 
     const actions: DataTableAction[] = []
 
-    // Only show Edit action if user has update permission
+    
     if (canUpdateWorkLocations()) {
       actions.push({
         label: 'Edit',
@@ -84,7 +81,7 @@ export function WorkLocationsTable({
       })
     }
 
-    // Only show Delete action if user has delete permission
+    
     if (canDeleteWorkLocation({ workLocationId: workLocation.id })) {
       actions.push({
         label: 'Delete',
@@ -102,16 +99,16 @@ export function WorkLocationsTable({
 
   return (
     <DataTable
-      // Required props
+      
       data={data}
       columns={columns}
       search={search}
       navigate={navigate}
-      // Configuration
+      
       pageCount={pageCount}
       isLoading={isLoading}
       entityName='work location'
-      // Toolbar
+      
       searchPlaceholder='Search locations by name or address...'
       searchKey='name'
       filters={[
@@ -125,10 +122,10 @@ export function WorkLocationsTable({
           })),
         },
       ]}
-      // Actions
+      
       getRowActions={getRowActions}
       renderBulkActions={(table) => <DataTableBulkActions table={table} />}
-      // Advanced
+      
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
       emptyMessage='No work locations found. Create your first location to get started.'

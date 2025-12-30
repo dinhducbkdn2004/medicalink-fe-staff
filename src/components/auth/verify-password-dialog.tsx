@@ -1,7 +1,4 @@
-/**
- * Verify Password Dialog Component
- * Modal dialog for password verification before sensitive operations
- */
+
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, ShieldCheck } from 'lucide-react'
@@ -57,19 +54,19 @@ export function VerifyPasswordDialog({
     try {
       await verifyPasswordMutation.mutateAsync(data)
 
-      // Reset form and close dialog
+      
       form.reset()
       onOpenChange(false)
 
-      // Call success callback
+      
       onVerified()
     } catch (error) {
-      // Error handling is done in the hook and API client
+      
       console.error('Password verification failed:', error)
     }
   }
 
-  // Reset form when dialog closes
+  
   function handleOpenChange(open: boolean) {
     if (!open) {
       form.reset()

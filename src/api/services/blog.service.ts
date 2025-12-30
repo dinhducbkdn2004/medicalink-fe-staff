@@ -82,9 +82,6 @@ export interface BlogQueryParams {
 class BlogService {
   private readonly BASE_PATH = '/blogs'
 
-  /**
-   * Get all blog categories
-   */
   async getAllCategories(
     params?: BlogCategoryQueryParams
   ): Promise<ApiListResponse<BlogCategory>> {
@@ -97,9 +94,6 @@ class BlogService {
     return response.data
   }
 
-  /**
-   * Create a new blog category
-   */
   async createCategory(
     data: CreateCategoryRequest
   ): Promise<ApiResponse<BlogCategory>> {
@@ -110,9 +104,6 @@ class BlogService {
     return response.data
   }
 
-  /**
-   * Update a blog category
-   */
   async updateCategory(
     id: string,
     data: UpdateCategoryRequest
@@ -124,9 +115,6 @@ class BlogService {
     return response.data
   }
 
-  /**
-   * Delete a blog category
-   */
   async deleteCategory(
     id: string,
     forceBulkDelete?: boolean
@@ -142,13 +130,6 @@ class BlogService {
     return response.data
   }
 
-  // ============================================================================
-  // Blog Posts
-  // ============================================================================
-
-  /**
-   * Get all blogs
-   */
   async getAllBlogs(params?: BlogQueryParams): Promise<ApiListResponse<Blog>> {
     const response = await apiClient.get<ApiListResponse<Blog>>(
       `${this.BASE_PATH}`,
@@ -159,9 +140,6 @@ class BlogService {
     return response.data
   }
 
-  /**
-   * Get a single blog by ID
-   */
   async getBlog(id: string): Promise<ApiResponse<Blog>> {
     const response = await apiClient.get<ApiResponse<Blog>>(
       `${this.BASE_PATH}/${id}`
@@ -169,9 +147,6 @@ class BlogService {
     return response.data
   }
 
-  /**
-   * Create a new blog
-   */
   async createBlog(data: CreateBlogRequest): Promise<ApiResponse<Blog>> {
     const response = await apiClient.post<ApiResponse<Blog>>(
       `${this.BASE_PATH}`,
@@ -180,9 +155,6 @@ class BlogService {
     return response.data
   }
 
-  /**
-   * Update a blog
-   */
   async updateBlog(
     id: string,
     data: UpdateBlogRequest
@@ -194,10 +166,6 @@ class BlogService {
     return response.data
   }
 
-  /**
-   * Update a blog (Doctor only - limited fields)
-   * Doctors can only update: title and content
-   */
   async updateBlogAsDoctor(
     id: string,
     data: Pick<UpdateBlogRequest, 'title' | 'content'>
@@ -209,9 +177,6 @@ class BlogService {
     return response.data
   }
 
-  /**
-   * Delete a blog
-   */
   async deleteBlog(id: string): Promise<ApiResponse<null>> {
     const response = await apiClient.delete<ApiResponse<null>>(
       `${this.BASE_PATH}/${id}`

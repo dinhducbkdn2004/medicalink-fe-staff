@@ -1,8 +1,4 @@
-/**
- * RequireAuth Component
- * Higher-order component for route-level authentication
- * Combines ProtectedRoute with role-based access control
- */
+
 
 import { useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
@@ -26,10 +22,7 @@ interface RequireAuthProps {
   redirectTo?: string
 }
 
-/**
- * Requires authentication and optionally specific roles
- * Shows loading state, redirects if not authenticated, shows error if insufficient permissions
- */
+
 export function RequireAuth({
   children,
   roles,
@@ -38,7 +31,7 @@ export function RequireAuth({
   const { isAuthenticated, isLoading, user } = useAuth()
   const navigate = useNavigate()
 
-  // Check authentication
+  
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       const currentPath = window.location.pathname + window.location.search
@@ -50,7 +43,7 @@ export function RequireAuth({
     }
   }, [isAuthenticated, isLoading, navigate, redirectTo])
 
-  // Show loading state
+  
   if (isLoading) {
     return (
       <div className='flex h-screen w-full items-center justify-center'>
@@ -62,12 +55,12 @@ export function RequireAuth({
     )
   }
 
-  // Not authenticated
+  
   if (!isAuthenticated) {
     return null
   }
 
-  // Check roles if specified
+  
   if (roles && roles.length > 0 && !hasAnyRole(user, roles)) {
     return (
       <div className='flex h-screen w-full items-center justify-center p-4'>
@@ -101,7 +94,7 @@ export function RequireAuth({
     )
   }
 
-  // All checks passed, render children
+  
   return <>{children}</>
 }
 

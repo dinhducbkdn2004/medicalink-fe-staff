@@ -4,8 +4,6 @@ import type { IEvent } from '@/calendar/interfaces'
 export function useUpdateEvent() {
   const { setLocalEvents } = useCalendar()
 
-  // This is just and example, in a real scenario
-  // you would call an API to update the event
   const updateEvent = (event: IEvent) => {
     const newEvent: IEvent = event
 

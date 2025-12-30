@@ -30,7 +30,7 @@ export function UserAuthForm({
   const loginMutation = useLogin()
 
   const form = useForm<LoginFormData>({
-    // @ts-expect-error - Zod v4 compatibility issue with @hookform/resolvers
+    
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
@@ -42,13 +42,13 @@ export function UserAuthForm({
     try {
       await loginMutation.mutateAsync(data)
 
-      // Navigation is handled in useLogin hook
-      // If redirectTo is provided, navigate there instead
+      
+      
       if (redirectTo) {
         navigate({ to: redirectTo, replace: true })
       }
     } catch (error) {
-      // Error handling is done in the hook and API client
+      
       console.error('Login failed:', error)
     }
   }

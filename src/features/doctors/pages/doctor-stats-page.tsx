@@ -64,15 +64,15 @@ function DoctorStatsContent() {
         </Tabs>
       </Main>
 
-      {/* Dialogs */}
+      {}
       <CreateAnalysisDialog />
     </>
   )
 }
 
-// ============================================================================
-// Export
-// ============================================================================
+
+
+
 
 export function DoctorStatsPage() {
   const { doctorId } = useParams({

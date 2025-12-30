@@ -1,8 +1,3 @@
-/**
- * Permission Management Features
- * Export all permission-related features
- */
-
 export * from './components'
 export * from './hooks'
 export { GroupManager } from './group-manager'

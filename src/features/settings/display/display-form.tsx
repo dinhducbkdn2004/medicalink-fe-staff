@@ -49,7 +49,7 @@ const displayFormSchema = z.object({
 
 type DisplayFormValues = z.infer<typeof displayFormSchema>
 
-// This can come from your database or API.
+
 const defaultValues: Partial<DisplayFormValues> = {
   items: ['recents', 'home'],
 }

@@ -1,7 +1,4 @@
-/**
- * Question Approve Dialog
- * Dialog for approving a question
- */
+
 import {
   AlertDialog,
   AlertDialogAction,

@@ -10,7 +10,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 
-// ================================== //
+
 
 type TProps = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -64,6 +64,6 @@ function SingleDayPicker({
   )
 }
 
-// ================================== //
+
 
 export { SingleDayPicker }

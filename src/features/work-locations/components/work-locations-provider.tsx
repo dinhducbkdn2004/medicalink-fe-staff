@@ -1,7 +1,4 @@
-/**
- * Work Locations Context Provider
- * Manages dialog states and current selected work location
- */
+/* eslint-disable react-refresh/only-export-components */
 import React, { useState } from 'react'
 import useDialogState from '@/hooks/use-dialog-state'
 import { type WorkLocation } from '../data/schema'
@@ -15,9 +12,8 @@ type WorkLocationsContextType = {
   setCurrentRow: React.Dispatch<React.SetStateAction<WorkLocation | null>>
 }
 
-const WorkLocationsContext = React.createContext<WorkLocationsContextType | null>(
-  null
-)
+const WorkLocationsContext =
+  React.createContext<WorkLocationsContextType | null>(null)
 
 export function WorkLocationsProvider({
   children,
@@ -41,7 +37,6 @@ export function WorkLocationsProvider({
   )
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useWorkLocations = () => {
   const workLocationsContext = React.useContext(WorkLocationsContext)
 
@@ -53,4 +48,3 @@ export const useWorkLocations = () => {
 
   return workLocationsContext
 }
-

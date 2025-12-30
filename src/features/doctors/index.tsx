@@ -1,7 +1,4 @@
-/**
- * Doctors Management Page
- * Main page for managing doctor accounts
- */
+
 import { getRouteApi } from '@tanstack/react-router'
 import { Can } from '@/components/auth/permission-gate'
 import { RequirePermission } from '@/components/auth/require-permission'
@@ -23,7 +20,7 @@ export function Doctors() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
-  // Fetch doctors with query params
+  
   const queryParams = {
     page: (search.page as number) || 1,
     limit: (search.pageSize as number) || 10,
@@ -49,8 +46,8 @@ export function Doctors() {
   const { data, isLoading } = useDoctors(queryParams)
 
   return (
-    // Require manage permission for the management page
-    // Doctor has doctors:read but should not access management page
+    
+    
     <RequirePermission resource='doctors' action='manage'>
       <DoctorsProvider>
         <Header fixed>

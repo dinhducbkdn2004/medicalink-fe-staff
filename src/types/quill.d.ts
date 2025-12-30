@@ -1,11 +1,4 @@
-/**
- * Type definitions for Quill 2.0.3
- * Provides TypeScript support for Quill editor
- */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
-
+/* eslint-disable */
 declare module 'quill' {
   export interface QuillOptions {
     theme?: string
@@ -76,7 +69,6 @@ declare module 'quill' {
   export default class Quill {
     constructor(container: HTMLElement | string, options?: QuillOptions)
 
-    // Content API
     deleteText(index: number, length: number, source?: Source): Delta
     getContents(index?: number, length?: number): Delta
     getLength(): number
@@ -93,7 +85,6 @@ declare module 'quill' {
     setText(text: string, source?: Source): Delta
     updateContents(delta: Delta, source?: Source): Delta
 
-    // Formatting API
     format(name: string, value: any, source?: Source): Delta
     formatLine(index: number, length: number, source?: Source): Delta
     formatLine(
@@ -127,7 +118,6 @@ declare module 'quill' {
     getFormat(index: number, length?: number): StringMap
     removeFormat(index: number, length: number, source?: Source): Delta
 
-    // Selection API
     getBounds(
       index: number,
       length?: number
@@ -143,7 +133,6 @@ declare module 'quill' {
     setSelection(index: number, length?: number, source?: Source): void
     setSelection(range: Range, source?: Source): void
 
-    // Editor API
     blur(): void
     disable(): void
     enable(enabled?: boolean): void
@@ -151,19 +140,16 @@ declare module 'quill' {
     hasFocus(): boolean
     update(source?: Source): void
 
-    // Events API
     on(eventName: string, handler: (...args: any[]) => void): Quill
     once(eventName: string, handler: (...args: any[]) => void): Quill
     off(eventName: string, handler?: (...args: any[]) => void): Quill
 
-    // Modules API
     getModule(name: 'clipboard'): Clipboard
     getModule(name: 'keyboard'): Keyboard
     getModule(name: 'history'): History
     getModule(name: 'toolbar'): Toolbar
     getModule(name: string): any
 
-    // Extension API
     static debug(level: string | boolean): void
     static find(node: Node, bubble?: boolean): any
     static import(path: string): any
@@ -173,13 +159,11 @@ declare module 'quill' {
       overwrite?: boolean
     ): void
 
-    // Properties
     root: HTMLDivElement
     container: HTMLElement
     scroll: any
     theme: any
 
-    // Additional methods
     getSemanticHTML(index?: number, length?: number): string
   }
 

@@ -1,22 +1,19 @@
-/**
- * Reviews Primary Buttons
- * Action buttons for the reviews page header
- */
+
 import { RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-// ============================================================================
-// Types
-// ============================================================================
+
+
+
 
 interface ReviewsPrimaryButtonsProps {
   onRefresh?: () => void
   isRefreshing?: boolean
 }
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function ReviewsPrimaryButtons({
   onRefresh,

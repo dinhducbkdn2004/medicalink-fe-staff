@@ -1,16 +1,10 @@
 import type { AppointmentStatus } from '@/api/types'
 
-/**
- * Patient Info in Appointment
- */
 export interface IAppointmentPatient {
   fullName: string
   dateOfBirth: string | null
 }
 
-/**
- * Event Info in Appointment
- */
 export interface IAppointmentEvent {
   id: string
   serviceDate: string
@@ -18,9 +12,6 @@ export interface IAppointmentEvent {
   timeEnd: string
 }
 
-/**
- * Doctor Info in Appointment
- */
 export interface IAppointmentDoctor {
   id: string
   staffAccountId: string
@@ -29,26 +20,17 @@ export interface IAppointmentDoctor {
   name: string
 }
 
-/**
- * Specialty Info in Appointment
- */
 export interface IAppointmentSpecialty {
   id: string
   name: string
 }
 
-/**
- * Location Info in Appointment
- */
 export interface IAppointmentLocation {
   id: string
   name: string
   address: string
 }
 
-/**
- * Appointment Data Model
- */
 export interface IAppointment {
   id: string
   patientId: string

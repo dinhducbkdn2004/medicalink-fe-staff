@@ -1,7 +1,4 @@
-/**
- * Professional Tab Component
- * Introduction & Research section
- */
+
 import type { UseFormReturn } from 'react-hook-form'
 import { Stethoscope } from 'lucide-react'
 import {
@@ -33,7 +30,7 @@ export function ProfessionalTab({
           Professional Information
         </h3>
         <div className='space-y-4'>
-          {/* Introduction */}
+          {}
           <FormField
             control={form.control}
             name='introduction'
@@ -66,7 +63,7 @@ export function ProfessionalTab({
 
           <Separator />
 
-          {/* Research & Publications */}
+          {}
           <FormField
             control={form.control}
             name='research'

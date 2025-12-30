@@ -1,7 +1,4 @@
-/**
- * Review Delete Dialog
- * Dialog for deleting a review with confirmation
- */
+
 import { AlertTriangle, Loader2, Trash2 } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -16,9 +13,9 @@ import {
 import { useDeleteReview } from '../data/use-reviews'
 import { useReviews } from './use-reviews'
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function ReviewDeleteDialog() {
   const { openDialog, setOpen, currentReview, onReviewDeleted } = useReviews()
@@ -31,7 +28,7 @@ export function ReviewDeleteDialog() {
     try {
       await deleteMutation.mutateAsync(currentReview.id)
       setOpen(null)
-      // Trigger refetch after successful delete
+      
       onReviewDeleted?.()
     } catch (error) {
       console.error('Failed to delete review:', error)

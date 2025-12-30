@@ -13,14 +13,14 @@ import {
 } from '@/components/ui/select'
 import { useBlogCategories } from '../data/use-blog-categories'
 
-// Status options
+
 const statuses = [
   { label: 'Draft', value: 'DRAFT' },
   { label: 'Published', value: 'PUBLISHED' },
   { label: 'Archived', value: 'ARCHIVED' },
 ]
 
-// Sort options
+
 const sortOptions = [
   { label: 'Newest', value: 'createdAt.desc' },
   { label: 'Oldest', value: 'createdAt.asc' },
@@ -35,7 +35,7 @@ export function BlogFilters() {
   const navigate = useNavigate()
   const search = route.useSearch()
 
-  // @ts-expect-error - Query data type mismatch
+  
   const { data: categoriesData } = useBlogCategories({ limit: 100 })
   const categories = Array.isArray(categoriesData)
     ? (categoriesData as BlogCategory[])
@@ -43,7 +43,7 @@ export function BlogFilters() {
 
   const [searchTerm, setSearchTerm] = useState(search.search || '')
 
-  // Debounce search
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchTerm !== (search.search || '')) {

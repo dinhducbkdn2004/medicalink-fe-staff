@@ -14,7 +14,6 @@ import { ReviewsProvider } from '@/features/reviews/components/reviews-provider'
 import { ReviewsTable } from '@/features/reviews/components/reviews-table'
 
 interface DoctorReviewsPageProps {
-  // If doctorId is provided, it forces the view for that doctor (e.g. Admin view)
   doctorId?: string
 }
 
@@ -23,19 +22,17 @@ export function DoctorReviewsPage({
 }: DoctorReviewsPageProps) {
   const navigate = useNavigate()
   const params = useParams({ strict: false }) as { doctorId?: string }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const search: any = useSearch({ strict: false })
   const { user } = useAuthStore()
 
-  // BREAKING CHANGE: Reviews API now uses staffAccountId instead of profileId
-  // We need to resolve staffAccountId from profileId
   const [resolvedStaffAccountId, setResolvedStaffAccountId] = useState<
     string | undefined
   >(undefined)
 
   useEffect(() => {
     const resolveStaffAccountId = async () => {
-      // If user is doctor viewing their own reviews, use their staff account ID directly
       if (
         !initialDoctorId &&
         !params.doctorId &&
@@ -46,11 +43,9 @@ export function DoctorReviewsPage({
         return
       }
 
-      // If we have a profileId from props or params, fetch the profile to get staffAccountId
       const profileId = initialDoctorId || params.doctorId
       if (profileId) {
         try {
-          // Fetch doctor profile to get staffAccountId
           const profile =
             await doctorProfileService.getDoctorProfileById(profileId)
           if (profile.staffAccountId) {
@@ -69,12 +64,10 @@ export function DoctorReviewsPage({
   const [isLoading, setIsLoading] = useState(true)
   const [pageCount, setPageCount] = useState(0)
 
-  // Derived pagination from search params
   const page = Number(search?.page) || 1
   const limit = Number(search?.limit) || 10
   const isPublic = search?.isPublic ? search.isPublic === 'true' : undefined
 
-  // Fetch reviews logic
   const fetchReviews = useCallback(async () => {
     if (!resolvedStaffAccountId) return
 
@@ -85,12 +78,10 @@ export function DoctorReviewsPage({
         limit,
       }
 
-      // Add isPublic filter if specified
       if (isPublic !== undefined) {
         queryParams.isPublic = isPublic
       }
 
-      // BREAKING CHANGE: Use staffAccountId instead of profileId
       const response = await reviewService.getDoctorReviews(
         resolvedStaffAccountId,
         queryParams

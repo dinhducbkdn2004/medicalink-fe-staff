@@ -1,7 +1,4 @@
-/**
- * Questions Data Table Row Actions
- * Dropdown menu actions for individual question rows
- */
+
 import { MoreHorizontal, Edit, Trash2, Eye } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'

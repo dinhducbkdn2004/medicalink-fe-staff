@@ -1,22 +1,19 @@
-/**
- * Reviews Provider
- * Context provider for reviews management state
- */
+
 import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import type { Review } from '../data/schema'
 import { ReviewsContext } from './reviews-context'
 
 export type { ReviewsContextValue } from './reviews-context'
 
-// ============================================================================
-// Types
-// ============================================================================
+
+
+
 
 type DialogType = 'view' | 'approve' | 'reject' | 'delete' | null
 
-// ============================================================================
-// Provider Component
-// ============================================================================
+
+
+
 
 interface ReviewsProviderProps {
   children: ReactNode

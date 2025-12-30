@@ -1,8 +1,4 @@
-/**
- * Office Hours Table Columns
- * Column definitions for office hours data table
- * Simplified to match API capabilities (no edit, no bulk actions)
- */
+
 import { type ColumnDef } from '@tanstack/react-table'
 import { Clock, Calendar } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -14,10 +10,10 @@ import {
 } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 
-// Helper to format time from ISO DateTime to HH:mm
+
 function formatTime(timeString: string): string {
   try {
-    // Handle both ISO DateTime and HH:mm formats
+    
     if (timeString.includes('T')) {
       const date = new Date(timeString)
       const hours = date.getUTCHours().toString().padStart(2, '0')
@@ -78,7 +74,7 @@ export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
       let typeLabel: string
       let badgeClass: string
 
-      // Determine type based on the 4 categories
+      
       if (officeHour.doctorId && officeHour.workLocationId) {
         _type = 'doctorInLocation'
         typeLabel = 'Doctor + Location'

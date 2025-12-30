@@ -1,7 +1,4 @@
-/**
- * Review Analyses Page
- * AI-powered review analysis for doctors
- */
+
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { ArrowLeft, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -19,9 +16,9 @@ import {
   CreateAnalysisDialog,
 } from './components/review-analysis'
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 function ReviewAnalysesContent() {
   const navigate = useNavigate()
@@ -63,25 +60,25 @@ function ReviewAnalysesContent() {
           </div>
         </div>
 
-        {/* Two-column layout */}
+        {}
         <div className='grid flex-1 grid-cols-1 gap-4 overflow-hidden sm:gap-6 lg:grid-cols-3'>
-          {/* Left column - Analysis list (smaller) */}
+          {}
           <AnalysisList className='max-h-[calc(100vh-16rem)] overflow-hidden lg:col-span-1' />
 
-          {/* Right column - Detail view (larger) */}
+          {}
           <AnalysisDetailView className='max-h-[calc(100vh-16rem)] overflow-y-auto lg:col-span-2' />
         </div>
       </Main>
 
-      {/* Dialogs */}
+      {}
       <CreateAnalysisDialog />
     </>
   )
 }
 
-// ============================================================================
-// Export
-// ============================================================================
+
+
+
 
 export function ReviewAnalyses() {
   const { doctorId } = useParams({

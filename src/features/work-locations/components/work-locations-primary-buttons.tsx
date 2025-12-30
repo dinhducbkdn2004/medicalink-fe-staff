@@ -1,7 +1,4 @@
-/**
- * Work Locations Primary Buttons
- * Action buttons for work locations management
- */
+
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useWorkLocations } from './work-locations-provider'

@@ -1,7 +1,3 @@
-/**
- * Info Section Form
- * Create/Edit info section form dialog
- */
 import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -33,15 +29,11 @@ import {
   useUpdateInfoSection,
 } from '../data/use-specialties'
 
-// ============================================================================
-// Types & Schema
-// ============================================================================
-
 const formSchema = z.object({
-  name: z
+  title: z
     .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(120, 'Name must be at most 120 characters'),
+    .min(2, 'Title must be at least 2 characters')
+    .max(120, 'Title must be at most 120 characters'),
   content: z.string().optional(),
 })
 
@@ -54,10 +46,6 @@ interface InfoSectionFormProps {
   section?: SpecialtyInfoSection | null
 }
 
-// ============================================================================
-// Component
-// ============================================================================
-
 export function InfoSectionForm({
   open,
   onOpenChange,
@@ -69,32 +57,29 @@ export function InfoSectionForm({
   const updateMutation = useUpdateInfoSection()
   const accessToken = useAuthStore((state) => state.accessToken)
 
-  // Form setup
   const form = useForm<FormValues>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(formSchema) as any,
     defaultValues: {
-      name: '',
+      title: '',
       content: '',
     },
   })
 
-  // Load section data in edit mode
   useEffect(() => {
     if (open && isEditMode && section) {
       form.reset({
-        name: section.name,
+        title: section.title,
         content: section.content || '',
       })
     } else if (open && !isEditMode) {
       form.reset({
-        name: '',
+        title: '',
         content: '',
       })
     }
   }, [open, isEditMode, section, form])
 
-  // Handle form submission
   const onSubmit = async (values: FormValues) => {
     try {
       if (isEditMode && section) {
@@ -102,22 +87,21 @@ export function InfoSectionForm({
           id: section.id,
           specialtyId: specialty.id,
           data: {
-            name: values.name,
-            content: values.content || undefined,
+            title: values.title,
+            content: values.content || '',
           },
         })
       } else {
         await createMutation.mutateAsync({
           specialtyId: specialty.id,
-          name: values.name,
-          content: values.content || undefined,
+          title: values.title,
+          content: values.content || '',
         })
       }
 
       onOpenChange()
       form.reset()
     } catch (error) {
-      // Error handling is done in the mutation hooks
       console.error('Form submission error:', error)
     }
   }
@@ -153,13 +137,13 @@ export function InfoSectionForm({
                 onSubmit={form.handleSubmit(onSubmit)}
                 className='space-y-4'
               >
-                {/* Name */}
+                {}
                 <FormField
                   control={form.control}
-                  name='name'
+                  name='title'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Section Name</FormLabel>
+                      <FormLabel>Section Title</FormLabel>
                       <FormControl>
                         <Input
                           placeholder='e.g., Overview, Common Conditions, Treatment Options'
@@ -176,7 +160,7 @@ export function InfoSectionForm({
                   )}
                 />
 
-                {/* Content */}
+                {}
                 <FormField
                   control={form.control}
                   name='content'

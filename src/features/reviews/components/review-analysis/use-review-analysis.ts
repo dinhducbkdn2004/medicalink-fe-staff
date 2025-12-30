@@ -1,7 +1,3 @@
-/**
- * useReviewAnalysis Hook
- * Custom hook to access review analysis context
- */
 import { useContext } from 'react'
 import {
   ReviewAnalysisContext,

@@ -1,7 +1,4 @@
-/**
- * Group Primary Buttons
- * Action buttons for group management
- */
+
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useGroupManager } from './use-group-manager'

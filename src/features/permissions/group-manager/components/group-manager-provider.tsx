@@ -1,7 +1,4 @@
-/**
- * Group Manager Provider
- * Context provider for managing group state and dialogs
- */
+
 import { useMemo, useState, type ReactNode } from 'react'
 import type { PermissionGroup } from '@/api/types/permission.types'
 import { GroupManagerContext } from './group-manager-context'

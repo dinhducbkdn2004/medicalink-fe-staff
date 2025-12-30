@@ -1,7 +1,4 @@
-/**
- * Office Hours Delete Dialog
- * Confirmation dialog for deleting an office hour
- */
+
 import {
   AlertDialog,
   AlertDialogAction,

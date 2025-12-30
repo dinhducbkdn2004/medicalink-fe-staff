@@ -1,7 +1,4 @@
-/**
- * CollapsibleSection Component
- * Reusable collapsible card section with header and content
- */
+
 import { ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'

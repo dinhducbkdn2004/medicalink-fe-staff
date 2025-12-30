@@ -1,22 +1,19 @@
-/**
- * Review Analysis Provider
- * Context provider for review analysis state management
- */
+
 import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import type { ReviewAnalysisListItem } from '@/api/types'
 import { ReviewAnalysisContext } from './context'
 
 export type { ReviewAnalysisContextValue } from './context'
 
-// ============================================================================
-// Types
-// ============================================================================
+
+
+
 
 type DialogType = 'create' | null
 
-// ============================================================================
-// Provider Component
-// ============================================================================
+
+
+
 
 interface ReviewAnalysisProviderProps {
   children: ReactNode

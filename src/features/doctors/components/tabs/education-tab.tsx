@@ -1,7 +1,4 @@
-/**
- * Education Tab Component
- * Training & Experience section
- */
+
 import type { UseFormReturn } from 'react-hook-form'
 import { GraduationCap } from 'lucide-react'
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
@@ -22,7 +19,7 @@ export function EducationTab({ form }: Readonly<EducationTabProps>) {
           Training & Experience
         </h3>
         <div className='space-y-4'>
-        {/* Training Process */}
+        {}
         <FormField
           control={form.control}
           name='trainingProcess'
@@ -44,7 +41,7 @@ export function EducationTab({ form }: Readonly<EducationTabProps>) {
 
         <Separator />
 
-        {/* Professional Experience */}
+        {}
         <FormField
           control={form.control}
           name='experience'
@@ -66,7 +63,7 @@ export function EducationTab({ form }: Readonly<EducationTabProps>) {
 
         <Separator />
 
-        {/* Professional Memberships */}
+        {}
         <FormField
           control={form.control}
           name='memberships'
@@ -88,7 +85,7 @@ export function EducationTab({ form }: Readonly<EducationTabProps>) {
 
         <Separator />
 
-        {/* Awards & Recognition */}
+        {}
         <FormField
           control={form.control}
           name='awards'

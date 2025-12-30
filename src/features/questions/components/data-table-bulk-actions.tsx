@@ -1,7 +1,4 @@
-/**
- * Questions Data Table Bulk Actions
- * Bulk actions for selected questions
- */
+
 import { useState } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { Trash2, CheckCircle, XCircle } from 'lucide-react'
@@ -22,11 +19,11 @@ interface DataTableBulkActionsProps {
 export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
   const [showDeleteConfirm] = useState(false)
 
-  // Check permissions
+  
   const hasUpdatePermission = canUpdateQuestions()
   const hasDeletePermission = canDeleteQuestion()
 
-  // Don't show bulk actions if user doesn't have any permission
+  
   if (!hasUpdatePermission && !hasDeletePermission) {
     return null
   }
@@ -42,7 +39,7 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
                   variant='outline'
                   size='icon'
                   onClick={() => {
-                    // TODO: Implement bulk approve
+                    
                   }}
                   className='size-8'
                   aria-label='Approve selected questions'
@@ -63,7 +60,7 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
                   variant='outline'
                   size='icon'
                   onClick={() => {
-                    // TODO: Implement bulk reject
+                    
                   }}
                   className='size-8'
                   aria-label='Reject selected questions'
@@ -87,7 +84,7 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
                 variant='destructive'
                 size='icon'
                 onClick={() => {
-                  // TODO: Implement bulk delete dialog
+                  
                 }}
                 className='size-8'
                 aria-label='Delete selected questions'
@@ -104,7 +101,7 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
         )}
       </BulkActionsToolbar>
 
-      {/* TODO: Add Multi-Delete Dialog */}
+      {}
       {showDeleteConfirm && <div>Multi-delete dialog placeholder</div>}
     </>
   )

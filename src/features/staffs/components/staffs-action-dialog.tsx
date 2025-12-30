@@ -49,7 +49,7 @@ const formSchema = z
   })
   .refine(
     (data) => {
-      // Password is required for new staff, optional for edit
+      
       if (data.isEdit && !data.password) return true
       return data.password.length > 0
     },
@@ -60,7 +60,7 @@ const formSchema = z
   )
   .refine(
     ({ isEdit, password }) => {
-      // Check password length only if provided
+      
       if (isEdit && !password) return true
       return password.length >= 8
     },
@@ -71,7 +71,7 @@ const formSchema = z
   )
   .refine(
     ({ isEdit, password }) => {
-      // Check uppercase letter
+      
       if (isEdit && !password) return true
       return /[A-Z]/.test(password)
     },
@@ -82,7 +82,7 @@ const formSchema = z
   )
   .refine(
     ({ isEdit, password }) => {
-      // Check lowercase letter
+      
       if (isEdit && !password) return true
       return /[a-z]/.test(password)
     },
@@ -93,7 +93,7 @@ const formSchema = z
   )
   .refine(
     ({ isEdit, password }) => {
-      // Check number
+      
       if (isEdit && !password) return true
       return /\d/.test(password)
     },
@@ -104,7 +104,7 @@ const formSchema = z
   )
   .refine(
     ({ isEdit, password, confirmPassword }) => {
-      // Check password match
+      
       if (isEdit && !password) return true
       return password === confirmPassword
     },
@@ -162,7 +162,7 @@ export function StaffsActionDialog({
 
   const onSubmit = async (values: StaffForm) => {
     try {
-      // Prepare the data according to API schema
+      
       const apiData = {
         fullName: values.fullName,
         email: values.email.toLowerCase(),
@@ -192,7 +192,7 @@ export function StaffsActionDialog({
       form.reset()
       onOpenChange(false)
     } catch (error) {
-      // Error handling is done by the mutation hooks (toast notifications)
+      
       console.error('Failed to save staff member:', error)
     }
   }

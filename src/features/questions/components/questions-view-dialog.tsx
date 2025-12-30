@@ -1,7 +1,4 @@
-/**
- * Question View Dialog
- * Dialog for viewing question details
- */
+
 import { format } from 'date-fns'
 import { X, MessageCircle, Eye, CheckCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -17,9 +14,9 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { useQuestions } from './use-questions'
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function QuestionViewDialog() {
   const { open, setOpen, currentQuestion } = useQuestions()
@@ -84,8 +81,8 @@ export function QuestionViewDialog() {
 
         <div className='flex flex-1 flex-col overflow-y-auto p-4'>
           <div className='space-y-6'>
-            {/* Author & Specialty */}
-            {/* Author & Specialty */}
+            {}
+            {}
             <div className='flex flex-col gap-2 text-sm'>
               {currentQuestion.authorName && (
                 <div className='text-muted-foreground flex items-center gap-2'>
@@ -105,7 +102,7 @@ export function QuestionViewDialog() {
 
             <Separator />
 
-            {/* Question Body */}
+            {}
             <div>
               <h3 className='text-muted-foreground mb-3 text-sm font-medium'>
                 Question Details
@@ -119,7 +116,7 @@ export function QuestionViewDialog() {
 
             <Separator />
 
-            {/* Statistics */}
+            {}
             <div className='grid grid-cols-3 gap-4'>
               <div className='flex flex-col items-center gap-2 rounded-lg border p-4'>
                 <MessageCircle className='text-muted-foreground size-5' />
@@ -150,8 +147,8 @@ export function QuestionViewDialog() {
               </div>
             </div>
 
-            {/* Dates */}
-            {/* Dates */}
+            {}
+            {}
             <div className='text-muted-foreground flex flex-col gap-1 text-sm'>
               <div>
                 Asked on{' '}
@@ -174,8 +171,8 @@ export function QuestionViewDialog() {
           </Button>
           <Button
             onClick={() => {
-              setOpen('view') // Close current
-              setOpen('answers') // Open answers
+              setOpen('view') 
+              setOpen('answers') 
             }}
           >
             <MessageCircle className='mr-2 size-4' />

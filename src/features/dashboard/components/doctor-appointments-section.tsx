@@ -1,11 +1,8 @@
 import { format, addDays, subMonths, addMonths } from 'date-fns'
 import { ConfirmAppointmentDialog } from '@/calendar/components/dialogs/confirm-appointment-dialog'
 import { EventDetailsDialog } from '@/calendar/components/dialogs/event-details-dialog'
-import { Calendar, Clock, User, Stethoscope, FileText } from 'lucide-react'
-import type {
-  AppointmentStatus,
-  Appointment,
-} from '@/api/types/appointment.types'
+import { Calendar, Clock, User, FileText } from 'lucide-react'
+import type { AppointmentStatus } from '@/api/types/appointment.types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,7 +16,6 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAppointments } from '@/features/appointments/data/hooks'
 
-// Helper to format date range for API
 function getDateRange(startDate: Date, endDate: Date) {
   return {
     fromDate: format(startDate, 'yyyy-MM-dd'),
@@ -27,10 +23,6 @@ function getDateRange(startDate: Date, endDate: Date) {
   }
 }
 
-/**
- * Pending Appointments Section
- * Shows booked appointments (need confirmation) from 2 months ago to 2 months ahead
- */
 function PendingAppointmentsCard() {
   const now = new Date()
   const twoMonthsAgo = subMonths(now, 2)
@@ -109,7 +101,7 @@ function PendingAppointmentsCard() {
                   <div className='hover:bg-muted/50 cursor-pointer rounded-lg border p-4 transition-colors'>
                     <div className='flex items-start justify-between gap-4'>
                       <div className='flex-1 space-y-2.5'>
-                        {/* Patient Name */}
+                        {}
                         <div className='flex items-center gap-2'>
                           <User className='text-muted-foreground h-4 w-4 flex-shrink-0' />
                           <span className='text-base font-semibold'>
@@ -125,7 +117,7 @@ function PendingAppointmentsCard() {
                           )}
                         </div>
 
-                        {/* Date and Time */}
+                        {}
                         <div className='text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-sm'>
                           <div className='flex items-center gap-1.5'>
                             <Calendar className='h-3.5 w-3.5' />
@@ -150,17 +142,9 @@ function PendingAppointmentsCard() {
                           )}
                         </div>
 
-                        {/* Specialty */}
-                        {false /* apt.specialty?.name */ && (
-                          <div className='text-muted-foreground flex items-center gap-1.5 text-sm'>
-                            <Stethoscope className='h-3.5 w-3.5 flex-shrink-0' />
-                            <span className='line-clamp-1'>
-                              {'' /* apt.specialty.name */}
-                            </span>
-                          </div>
-                        )}
+                        {}
 
-                        {/* Reason */}
+                        {}
                         {apt.reason && (
                           <div className='text-muted-foreground flex items-start gap-1.5 text-sm'>
                             <FileText className='mt-0.5 h-3.5 w-3.5 flex-shrink-0' />
@@ -170,7 +154,7 @@ function PendingAppointmentsCard() {
                           </div>
                         )}
 
-                        {/* Price */}
+                        {}
                         {apt.priceAmount && (
                           <div className='mt-1'>
                             <Badge
@@ -200,6 +184,7 @@ function PendingAppointmentsCard() {
                               event: apt.event,
                               status: apt.status,
                               reason: apt.reason,
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             } as any
                           }
                         >
@@ -236,10 +221,6 @@ function PendingAppointmentsCard() {
   )
 }
 
-/**
- * Upcoming Appointments Section
- * Shows confirmed appointments for today and next 2 days
- */
 function UpcomingAppointmentsCard() {
   const now = new Date()
   const twoDaysAhead = addDays(now, 2)
@@ -317,7 +298,7 @@ function UpcomingAppointmentsCard() {
                   <div className='hover:bg-muted/50 cursor-pointer rounded-lg border border-green-200 bg-green-50/50 p-4 transition-colors dark:border-green-900 dark:bg-green-950/20'>
                     <div className='flex items-start justify-between gap-4'>
                       <div className='flex-1 space-y-2.5'>
-                        {/* Patient Name */}
+                        {}
                         <div className='flex items-center gap-2'>
                           <User className='text-muted-foreground h-4 w-4 flex-shrink-0' />
                           <span className='text-base font-semibold'>
@@ -333,7 +314,7 @@ function UpcomingAppointmentsCard() {
                           )}
                         </div>
 
-                        {/* Date and Time */}
+                        {}
                         <div className='text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-sm'>
                           <div className='flex items-center gap-1.5'>
                             <Calendar className='h-3.5 w-3.5' />
@@ -358,17 +339,9 @@ function UpcomingAppointmentsCard() {
                           )}
                         </div>
 
-                        {/* Specialty */}
-                        {false /* apt.specialty?.name */ && (
-                          <div className='text-muted-foreground flex items-center gap-1.5 text-sm'>
-                            <Stethoscope className='h-3.5 w-3.5 flex-shrink-0' />
-                            <span className='line-clamp-1'>
-                              {'' /* apt.specialty.name */}
-                            </span>
-                          </div>
-                        )}
+                        {}
 
-                        {/* Reason */}
+                        {}
                         {apt.reason && (
                           <div className='text-muted-foreground flex items-start gap-1.5 text-sm'>
                             <FileText className='mt-0.5 h-3.5 w-3.5 flex-shrink-0' />
@@ -378,7 +351,7 @@ function UpcomingAppointmentsCard() {
                           </div>
                         )}
 
-                        {/* Price */}
+                        {}
                         {apt.priceAmount && (
                           <div className='mt-1'>
                             <Badge
@@ -424,10 +397,6 @@ function UpcomingAppointmentsCard() {
   )
 }
 
-/**
- * Main Doctor Appointments Section
- * Combines pending and upcoming appointments
- */
 export function DoctorAppointmentsSection() {
   return (
     <div className='grid gap-4 lg:grid-cols-2'>

@@ -1,7 +1,4 @@
-/**
- * Work Locations Delete Dialog
- * Confirmation dialog for deleting work locations
- */
+
 import { Loader2 } from 'lucide-react'
 import {
   AlertDialog,
@@ -34,7 +31,7 @@ export function WorkLocationsDeleteDialog({
       await deleteMutation.mutateAsync(currentRow.id)
       onOpenChange()
     } catch (error) {
-      // Error handling is done in the mutation hook
+      
       console.error('Delete error:', error)
     }
   }

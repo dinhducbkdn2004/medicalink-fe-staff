@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-// We only need newPassword and confirmPassword in the form
+
 const formSchema = z
   .object({
     newPassword: z

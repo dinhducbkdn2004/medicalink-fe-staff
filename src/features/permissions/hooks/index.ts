@@ -1,8 +1,3 @@
-/**
- * Permission Hooks
- * Custom hooks for permission management
- */
-
 export * from './use-permission-stats'
 export * from './use-permission-groups'
 export * from './use-group-permissions'

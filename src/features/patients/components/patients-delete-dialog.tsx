@@ -1,7 +1,4 @@
-/**
- * Delete Patient Dialog
- * Confirmation modal for soft-deleting a patient
- */
+
 import {
   AlertDialog,
   AlertDialogAction,

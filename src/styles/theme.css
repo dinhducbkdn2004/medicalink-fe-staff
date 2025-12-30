@@ -128,7 +128,6 @@
   --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0);
   --tracking-normal: 0em;
 
-  /* Auth Background */
   --auth-grid-color: rgba(229, 231, 235, 0.35);
   --auth-gradient-start: #fff;
   --auth-gradient-end: #93c5fd;
@@ -198,7 +197,6 @@
     0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0);
   --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0);
 
-  /* Auth Background */
   --auth-grid-color: rgba(255, 255, 255, 0.05);
   --auth-gradient-start: #020617;
   --auth-gradient-end: #0f172a;

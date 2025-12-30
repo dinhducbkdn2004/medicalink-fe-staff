@@ -1,7 +1,3 @@
-/**
- * User Group Memberships Component
- * Displays and manages groups that a user belongs to
- */
 import { useState } from 'react'
 import {
   UsersRound,
@@ -26,21 +22,21 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card'
-import { useUserGroups, useRemoveUserFromGroup } from '../../hooks'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { RoleGate } from '@/components/auth/role-gate'
+import { useUserGroups, useRemoveUserFromGroup } from '../../hooks'
 import { AddToGroupDialog } from './add-to-group-dialog'
 
 type UserGroupMembershipsProps = {
@@ -64,7 +60,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
       })
       setRemoveGroupId(undefined)
     } catch {
-      // Error handling is done in mutation hook
+      void 0
     }
   }
 
@@ -72,8 +68,8 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
     return (
       <Card className='border-muted/40 shadow-sm'>
         <CardContent className='flex flex-col items-center justify-center gap-4 py-16'>
-          <div className='rounded-full bg-primary/10 p-4'>
-            <UsersRound className='h-10 w-10 text-primary' />
+          <div className='bg-primary/10 rounded-full p-4'>
+            <UsersRound className='text-primary h-10 w-10' />
           </div>
           <div className='text-center'>
             <h3 className='font-semibold'>No User Selected</h3>
@@ -114,8 +110,8 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
           <div className='flex items-start justify-between'>
             <div className='space-y-1'>
               <CardTitle className='flex items-center gap-2 text-lg'>
-                <div className='rounded-lg bg-primary/10 p-2'>
-                  <UsersRound className='h-4 w-4 text-primary' />
+                <div className='bg-primary/10 rounded-lg p-2'>
+                  <UsersRound className='text-primary h-4 w-4' />
                 </div>
                 Group Memberships
               </CardTitle>
@@ -140,8 +136,8 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
         <CardContent className='p-0'>
           {!memberships || memberships.length === 0 ? (
             <div className='flex flex-col items-center justify-center gap-4 py-12'>
-              <div className='rounded-full bg-muted p-3'>
-                <AlertCircle className='h-6 w-6 text-muted-foreground' />
+              <div className='bg-muted rounded-full p-3'>
+                <AlertCircle className='text-muted-foreground h-6 w-6' />
               </div>
               <div className='text-center'>
                 <p className='font-medium'>No group memberships</p>
@@ -170,8 +166,8 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                         <CardContent className='flex items-center justify-between p-4'>
                           <div className='flex-1 space-y-2'>
                             <div className='flex items-center gap-2'>
-                              <div className='rounded-md bg-primary/10 p-1.5'>
-                                <Shield className='h-3.5 w-3.5 text-primary' />
+                              <div className='bg-primary/10 rounded-md p-1.5'>
+                                <Shield className='text-primary h-3.5 w-3.5' />
                               </div>
                               <h4 className='font-semibold'>
                                 {membership.groupName}
@@ -188,17 +184,16 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                                 {membership.groupDescription}
                               </p>
                             )}
-                            <div className='flex items-center gap-1.5 text-xs text-muted-foreground'>
+                            <div className='text-muted-foreground flex items-center gap-1.5 text-xs'>
                               <Calendar className='h-3 w-3' />
                               Joined{' '}
-                              {new Date(membership.createdAt).toLocaleDateString(
-                                'en-US',
-                                {
-                                  year: 'numeric',
-                                  month: 'short',
-                                  day: 'numeric',
-                                }
-                              )}
+                              {new Date(
+                                membership.createdAt
+                              ).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              })}
                             </div>
                           </div>
                           <RoleGate roles={['SUPER_ADMIN']}>
@@ -213,7 +208,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                                   }
                                   disabled={removeMutation.isPending}
                                 >
-                                  <X className='h-4 w-4 text-destructive' />
+                                  <X className='text-destructive h-4 w-4' />
                                 </Button>
                               </TooltipTrigger>
                               <TooltipContent>
@@ -228,8 +223,8 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                       <div className='space-y-3'>
                         <div>
                           <div className='flex items-center gap-2'>
-                            <div className='rounded-md bg-primary/10 p-1.5'>
-                              <Shield className='h-4 w-4 text-primary' />
+                            <div className='bg-primary/10 rounded-md p-1.5'>
+                              <Shield className='text-primary h-4 w-4' />
                             </div>
                             <h4 className='font-semibold'>
                               {membership.groupName}
@@ -261,15 +256,14 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                             </span>
                             <p className='mt-1 flex items-center gap-1.5 text-sm'>
                               <Calendar className='h-3.5 w-3.5' />
-                              {new Date(membership.createdAt).toLocaleDateString(
-                                'en-US',
-                                {
-                                  weekday: 'long',
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric',
-                                }
-                              )}
+                              {new Date(
+                                membership.createdAt
+                              ).toLocaleDateString('en-US', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                              })}
                             </p>
                           </div>
                         </div>
@@ -283,7 +277,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
         </CardContent>
       </Card>
 
-      {/* Add to Group Dialog */}
+      {}
       <AddToGroupDialog
         open={showAddDialog}
         onOpenChange={setShowAddDialog}
@@ -291,7 +285,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
         existingGroupIds={memberships?.map((m) => m.groupId) || []}
       />
 
-      {/* Remove from Group Confirmation */}
+      {}
       <AlertDialog
         open={!!removeGroupId}
         onOpenChange={(open) => !open && setRemoveGroupId(undefined)}
@@ -299,17 +293,17 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <div className='flex items-center gap-3'>
-              <div className='rounded-full bg-destructive/10 p-2'>
-                <AlertCircle className='h-5 w-5 text-destructive' />
+              <div className='bg-destructive/10 rounded-full p-2'>
+                <AlertCircle className='text-destructive h-5 w-5' />
               </div>
               <div>
                 <AlertDialogTitle>Remove from Group</AlertDialogTitle>
               </div>
             </div>
             <AlertDialogDescription className='pt-2'>
-              Are you sure you want to remove this user from this group? They will
-              lose all permissions inherited from this group. This action cannot be
-              undone.
+              Are you sure you want to remove this user from this group? They
+              will lose all permissions inherited from this group. This action
+              cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -1,16 +1,4 @@
-/**
- * TableSkeleton Component
- * Reusable skeleton loading state for tables
- *
- * Usage:
- * ```tsx
- * {isLoading ? (
- *   <TableSkeleton columnCount={5} rowCount={10} />
- * ) : (
- *   // actual table content
- * )}
- * ```
- */
+
 import { Skeleton } from './skeleton'
 import {
   Table,
@@ -22,33 +10,19 @@ import {
 } from './table'
 
 interface TableSkeletonProps {
-  /**
-   * Number of columns to display
-   * @default 5
-   */
+  
   columnCount?: number
 
-  /**
-   * Number of rows to display
-   * @default 10
-   */
+  
   rowCount?: number
 
-  /**
-   * Show checkbox column
-   * @default true
-   */
+  
   showCheckbox?: boolean
 
-  /**
-   * Show actions column
-   * @default true
-   */
+  
   showActions?: boolean
 
-  /**
-   * Custom className for wrapper
-   */
+  
   className?: string
 }
 
@@ -59,7 +33,7 @@ export function TableSkeleton({
   showActions = true,
   className = '',
 }: TableSkeletonProps) {
-  // Calculate actual column count including checkbox and actions
+  
   const actualColumnCount =
     columnCount + (showCheckbox ? 1 : 0) + (showActions ? 1 : 0)
 

@@ -1,7 +1,4 @@
-/**
- * Doctors Context Provider
- * Manages global state for doctor management dialogs and actions
- */
+/* eslint-disable react-refresh/only-export-components */
 import React, { useState } from 'react'
 import useDialogState from '@/hooks/use-dialog-state'
 import type { DoctorWithProfile } from '../types'
@@ -28,7 +25,6 @@ export function DoctorsProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useDoctors = () => {
   const doctorsContext = React.useContext(DoctorsContext)
 

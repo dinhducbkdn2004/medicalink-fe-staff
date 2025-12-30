@@ -45,7 +45,7 @@ function AppointmentsLayoutContent() {
     [view, selectedDate]
   )
 
-  // Fetch appointments with date range filtering
+  
   const { data, isLoading, isError, error } = useAppointments({
     page: 1,
     limit: 100,
@@ -53,7 +53,7 @@ function AppointmentsLayoutContent() {
     toDate,
   })
 
-  // Loading state
+  
   if (isLoading) {
     return (
       <div className='flex h-screen items-center justify-center'>
@@ -67,7 +67,7 @@ function AppointmentsLayoutContent() {
     )
   }
 
-  // Error state
+  
   if (isError) {
     return (
       <div className='flex h-screen items-center justify-center p-4'>
@@ -83,7 +83,7 @@ function AppointmentsLayoutContent() {
     )
   }
 
-  // Transform API data to calendar format
+  
   const appointments = data?.data || []
   const events = transformAppointmentsToEvents(appointments)
   const users = extractUsersFromAppointments(appointments)
@@ -130,9 +130,7 @@ function AppointmentsLayoutContent() {
   )
 }
 
-/**
- * Appointments Layout with permission guard
- */
+
 export function AppointmentsLayout() {
   return (
     <RequirePermission resource='appointments' action='read'>

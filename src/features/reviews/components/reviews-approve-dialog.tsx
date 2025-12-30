@@ -1,7 +1,4 @@
-/**
- * Review Approve Dialog
- * Dialog for approving a review (updates status to APPROVED)
- */
+
 import { CheckCircle, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,9 +12,9 @@ import {
 import { useUpdateReview } from '../data/use-reviews'
 import { useReviews } from './use-reviews'
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function ReviewApproveDialog() {
   const { openDialog, setOpen, currentReview } = useReviews()

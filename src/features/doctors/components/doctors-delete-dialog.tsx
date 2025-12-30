@@ -1,7 +1,4 @@
-/**
- * Delete Doctor Dialog
- * Confirmation dialog for deleting doctor account
- */
+
 
 import { Button } from '@/components/ui/button'
 import {
