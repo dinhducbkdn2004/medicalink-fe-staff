@@ -1,7 +1,4 @@
-/**
- * Reviews Management Page
- * Main page for managing doctor reviews
- */
+
 import { useNavigate } from '@tanstack/react-router'
 import { RequirePermission } from '@/components/auth/require-permission'
 import { ConfigDrawer } from '@/components/config-drawer'
@@ -15,14 +12,14 @@ import { ReviewsProvider } from './components/reviews-provider'
 import { ReviewsTable } from './components/reviews-table'
 import { useReviews as useReviewsData } from './data/use-reviews'
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 function ReviewsContent() {
   const navigate = useNavigate()
 
-  // Fetch reviews
+  
   const { data, isLoading } = useReviewsData({})
 
   return (
@@ -61,9 +58,9 @@ function ReviewsContent() {
   )
 }
 
-// ============================================================================
-// Export
-// ============================================================================
+
+
+
 
 export function Reviews() {
   return (

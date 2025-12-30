@@ -1,7 +1,4 @@
-/**
- * Doctors Stats Dialog Wrapper
- * Wrapper component for DoctorStatsDialog with context integration
- */
+
 import { DoctorStatsDialog } from './doctor-stats-dialog'
 import { useDoctors } from './doctors-provider'
 

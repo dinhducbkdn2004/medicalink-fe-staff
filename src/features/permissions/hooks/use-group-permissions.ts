@@ -1,7 +1,3 @@
-/**
- * Group Permissions Hook
- * Manages permissions assigned to groups
- */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { permissionService } from '@/api/services/permission.service'
@@ -11,9 +7,6 @@ import type {
 } from '@/api/types/permission.types'
 import { permissionGroupKeys } from './use-permission-groups'
 
-/**
- * Fetch permissions for a specific group
- */
 export function useGroupPermissions(groupId: string, tenantId?: string) {
   return useQuery({
     queryKey: [...permissionGroupKeys.detail(groupId), 'permissions', tenantId],
@@ -23,13 +16,10 @@ export function useGroupPermissions(groupId: string, tenantId?: string) {
         tenantId ? { tenantId } : undefined
       ),
     enabled: !!groupId,
-    staleTime: 1 * 60 * 1000, // 1 minute
+    staleTime: 1 * 60 * 1000,
   })
 }
 
-/**
- * Assign a permission to a group
- */
 export function useAssignGroupPermission() {
   const queryClient = useQueryClient()
 
@@ -57,9 +47,6 @@ export function useAssignGroupPermission() {
   })
 }
 
-/**
- * Revoke a permission from a group
- */
 export function useRevokeGroupPermission() {
   const queryClient = useQueryClient()
 

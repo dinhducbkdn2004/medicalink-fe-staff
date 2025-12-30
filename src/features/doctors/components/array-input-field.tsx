@@ -1,7 +1,4 @@
-/**
- * Array Input Field Component
- * Allows users to add/edit/remove string array items dynamically
- */
+
 import { X, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'

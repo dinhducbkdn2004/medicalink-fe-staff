@@ -50,8 +50,8 @@ export function BlogCategories() {
         </div>
 
         <CategoryList
-          //@ts-expect-error - Handle both array and paginated response
-          data={Array.isArray(data) ? data : data?.data || []}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          data={(Array.isArray(data) ? data : data?.data || []) as any}
           isLoading={isLoading}
           onEdit={(category) => setEditingCategory(category)}
           onDelete={(category) => setDeletingCategory(category)}
@@ -64,8 +64,6 @@ export function BlogCategories() {
           if (!open) {
             setIsCreateOpen(false)
             setEditingCategory(null)
-          } else {
-            // If we are opening via state change, ensure we don't accidentally close
           }
         }}
         category={editingCategory}

@@ -1,7 +1,4 @@
-/**
- * Work Locations Table Columns
- * Column definitions for work locations data table
- */
+
 import { type ColumnDef } from '@tanstack/react-table'
 import { MapPin, Phone, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'

@@ -1,7 +1,4 @@
-/**
- * Staffs Management Page
- * Main page for managing staff accounts (Admin and Super Admin)
- */
+
 import { getRouteApi } from '@tanstack/react-router'
 import { StaffRole } from '@/api/types/staff.types'
 import { Can } from '@/components/auth/permission-gate'
@@ -24,7 +21,7 @@ export function Staffs() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
-  // Fetch staffs with query params
+  
   const queryParams = {
     page: (search.page as number) || 1,
     limit: (search.pageSize as number) || 10,

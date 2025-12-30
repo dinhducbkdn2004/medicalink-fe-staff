@@ -1,35 +1,6 @@
-/**
- * Enhanced Rich Text Editor Component using Quill 2.0.3
- *
- * Triển khai theo hướng dẫn: docs/HUONG_DAN_SU_DUNG_QUILL.md
- *
- * Đầy đủ tính năng:
- * ✅ Upload ảnh lên Cloudinary (với custom handler)
- * ✅ Upload video lên Cloudinary (với custom handler)
- * ✅ Đầy đủ các công cụ định dạng văn bản (bold, italic, underline, etc.)
- * ✅ Syntax Highlighting với highlight.js (code blocks)
- * ✅ Math Formula với KaTeX
- * ✅ Drag & Drop support để upload ảnh
- * ✅ Paste image from clipboard
- * ✅ Progress tracking khi upload
- * ✅ TypeScript support đầy đủ
- * ✅ Multiple toolbar options (full, basic, minimal)
- * ✅ History module (Undo/Redo)
- * ✅ Clipboard module
- * ✅ Events handling (text-change, selection-change)
- * ✅ Read-only mode support
- *
- * API Methods được hỗ trợ:
- * - getSemanticHTML(): Lấy nội dung HTML
- * - insertEmbed(): Chèn image/video
- * - getSelection(): Lấy vùng được chọn
- * - setSelection(): Set cursor position
- * - enable/disable(): Bật/tắt editor
- */
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { ImageIcon, Loader2, Video } from 'lucide-react'
 import type Quill from 'quill'
-// Note: Quill loaded from CDN in index.html
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useQuill } from '@/hooks/use-quill'
@@ -38,10 +9,6 @@ import {
   validateImageFile,
   validateVideoFile,
 } from '../utils/cloudinary'
-
-// ============================================================================
-// Types
-// ============================================================================
 
 export interface RichTextEditorProps {
   value?: string
@@ -54,59 +21,39 @@ export interface RichTextEditorProps {
   toolbarOptions?: 'full' | 'basic' | 'minimal' | unknown[]
   enableImageUpload?: boolean
   enableVideoUpload?: boolean
-  enableSyntax?: boolean // Enable syntax highlighting
-  enableFormula?: boolean // Enable math formulas
-  size?: 'compact' | 'medium' | 'large' // Editor size
+  enableSyntax?: boolean
+  enableFormula?: boolean
+  size?: 'compact' | 'medium' | 'large'
 }
 
-// ============================================================================
-// Toolbar Configurations
-// Theo hướng dẫn: Toolbar Đầy Đủ với tất cả các tính năng
-// Bao gồm: syntax highlighting và formula
-// ============================================================================
-
 const TOOLBAR_CONFIGS = {
-  // Full toolbar với đầy đủ tính năng (bao gồm code-block)
   full: [
-    // Headers (h1-h6)
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
 
-    // Font family & size
     [{ font: [] }],
     [{ size: ['small', false, 'large', 'huge'] }],
 
-    // Text formatting
     ['bold', 'italic', 'underline', 'strike'],
 
-    // Text color and background
     [{ color: [] }, { background: [] }],
 
-    // Superscript/subscript
     [{ script: 'sub' }, { script: 'super' }],
 
-    // Lists
     [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
 
-    // Indent
     [{ indent: '-1' }, { indent: '+1' }],
 
-    // Alignment
     [{ align: [] }],
 
-    // Direction (RTL)
     [{ direction: 'rtl' }],
 
-    // Blockquote and code block (syntax highlighting)
     ['blockquote', 'code-block'],
 
-    // Links, images, videos
     ['link', 'image', 'video'],
 
-    // Clean formatting
     ['clean'],
   ],
 
-  // Basic toolbar cho sử dụng thông thường
   basic: [
     [{ header: [1, 2, 3, false] }],
     ['bold', 'italic', 'underline', 'strike'],
@@ -118,7 +65,6 @@ const TOOLBAR_CONFIGS = {
     ['clean'],
   ],
 
-  // Minimal toolbar cho nhu cầu đơn giản
   minimal: [
     ['bold', 'italic', 'underline'],
     [{ list: 'ordered' }, { list: 'bullet' }],
@@ -126,10 +72,6 @@ const TOOLBAR_CONFIGS = {
     ['clean'],
   ],
 }
-
-// ============================================================================
-// Component
-// ============================================================================
 
 export function RichTextEditor({
   value,
@@ -150,17 +92,12 @@ export function RichTextEditor({
   const quillInstanceRef = useRef<Quill | null>(null)
   const lastValueRef = useRef<string | undefined>(value || defaultValue)
 
-  /**
-   * Custom image handler for Cloudinary upload
-   * Theo hướng dẫn: Chèn hình ảnh với custom handler
-   */
   const imageHandler = useCallback(() => {
     if (!enableImageUpload) {
       toast.warning('Upload images is disabled')
       return
     }
 
-    // Tạo input file ẩn
     const input = document.createElement('input')
     input.setAttribute('type', 'file')
     input.setAttribute('accept', 'image/jpeg,image/png,image/webp,image/gif')
@@ -171,21 +108,18 @@ export function RichTextEditor({
       const file = input.files?.[0]
       if (!file) return
 
-      // Validate file
       const validation = validateImageFile(file)
       if (!validation.valid) {
         toast.error(validation.error || 'Invalid file')
         return
       }
 
-      // Get Quill instance first
       const quill = quillInstanceRef.current
       if (!quill) {
         toast.error('Editor is not ready')
         return
       }
 
-      // Get current cursor position before upload
       const range = quill.getSelection(true)
       if (!range) {
         toast.error('Please click in the editor first')
@@ -195,22 +129,16 @@ export function RichTextEditor({
       const cursorPosition = range.index
 
       try {
-        // Disable editor during upload
         quill.enable(false)
 
-        // Show loading toast
         toast.loading('Uploading image...', { id: 'image-upload' })
 
-        // Upload lên Cloudinary
         const result = await uploadMedia(file, accessToken)
 
-        // Insert actual image at cursor position
         quill.insertEmbed(cursorPosition, 'image', result.secure_url)
 
-        // Move cursor after image
         quill.setSelection(cursorPosition + 1)
 
-        // Trigger onChange with HTML content
         if (onChange) {
           const html = quill.getSemanticHTML()
           lastValueRef.current = html
@@ -225,23 +153,17 @@ export function RichTextEditor({
           { id: 'image-upload' }
         )
       } finally {
-        // Re-enable editor
         quill.enable(true)
       }
     }
   }, [uploadMedia, accessToken, onChange, enableImageUpload])
 
-  /**
-   * Custom video handler for Cloudinary upload
-   * Theo hướng dẫn: Chèn video với custom handler
-   */
   const videoHandler = useCallback(() => {
     if (!enableVideoUpload) {
       toast.warning('Upload video is disabled')
       return
     }
 
-    // Tạo input file ẩn
     const input = document.createElement('input')
     input.setAttribute('type', 'file')
     input.setAttribute('accept', 'video/mp4,video/webm,video/quicktime')
@@ -252,21 +174,18 @@ export function RichTextEditor({
       const file = input.files?.[0]
       if (!file) return
 
-      // Validate file
       const validation = validateVideoFile(file)
       if (!validation.valid) {
         toast.error(validation.error || 'Invalid file')
         return
       }
 
-      // Get Quill instance first
       const quill = quillInstanceRef.current
       if (!quill) {
         toast.error('Editor is not ready')
         return
       }
 
-      // Get current cursor position before upload
       const range = quill.getSelection(true)
       if (!range) {
         toast.error('Please click in the editor first')
@@ -276,24 +195,18 @@ export function RichTextEditor({
       const cursorPosition = range.index
 
       try {
-        // Disable editor during upload
         quill.enable(false)
 
-        // Show loading toast
         toast.loading('Uploading video... This may take a few minutes.', {
           id: 'video-upload',
         })
 
-        // Upload lên Cloudinary
         const result = await uploadMedia(file, accessToken)
 
-        // Insert actual video at cursor position
         quill.insertEmbed(cursorPosition, 'video', result.secure_url)
 
-        // Move cursor after video
         quill.setSelection(cursorPosition + 1)
 
-        // Trigger onChange with HTML content
         if (onChange) {
           const html = quill.getSemanticHTML()
           lastValueRef.current = html
@@ -308,16 +221,11 @@ export function RichTextEditor({
           { id: 'video-upload' }
         )
       } finally {
-        // Re-enable editor
         quill.enable(true)
       }
     }
   }, [uploadMedia, accessToken, onChange, enableVideoUpload])
 
-  /**
-   * Toolbar configuration
-   * Theo hướng dẫn: Tùy chỉnh toolbar theo nhu cầu
-   */
   const toolbarContainer = useMemo(() => {
     if (Array.isArray(toolbarOptions)) {
       return toolbarOptions
@@ -325,7 +233,6 @@ export function RichTextEditor({
 
     let config = TOOLBAR_CONFIGS[toolbarOptions]
 
-    // Filter out image/video if disabled
     if (!enableImageUpload || !enableVideoUpload) {
       config = config.map((row: unknown) => {
         if (Array.isArray(row)) {
@@ -342,14 +249,6 @@ export function RichTextEditor({
     return config
   }, [toolbarOptions, enableImageUpload, enableVideoUpload])
 
-  /**
-   * Quill modules configuration
-   * Theo hướng dẫn: Cấu hình các module của Quill
-   * - Toolbar: Custom handlers cho image/video
-   * - Clipboard: Xử lý copy/paste
-   * - History: Undo/Redo với delay 1s, max 100 actions
-   * - Syntax: Code syntax highlighting với highlight.js
-   */
   const modules = useMemo(
     () => ({
       toolbar: {
@@ -363,29 +262,22 @@ export function RichTextEditor({
         matchVisual: false,
       },
       history: {
-        delay: 1000, // Thời gian delay giữa các thao tác (ms)
-        maxStack: 100, // Số lượng thao tác tối đa được lưu
-        userOnly: true, // Chỉ lưu thao tác của user
+        delay: 1000,
+        maxStack: 100,
+        userOnly: true,
       },
     }),
     [toolbarContainer, imageHandler, videoHandler]
   )
 
-  /**
-   * Text change handler
-   * Theo hướng dẫn: Sử dụng event text-change để theo dõi thay đổi
-   */
   const handleTextChange = useCallback(
     (_delta: unknown, _oldDelta: unknown, source: string) => {
       const quill = quillInstanceRef.current
       if (!quill) return
 
-      // Chỉ trigger onChange cho thay đổi từ user
       if (source === 'user' && onChange) {
-        // Lấy HTML bằng getSemanticHTML() (recommended method)
         let html = quill.getSemanticHTML()
 
-        // Replace &nbsp; with regular space to prevent UI issues
         if (html) {
           html = html.replace(/&nbsp;/g, ' ')
         }
@@ -397,9 +289,6 @@ export function RichTextEditor({
     [onChange]
   )
 
-  /**
-   * Initialize Quill
-   */
   const { quill, quillRef, isReady } = useQuill({
     theme: 'snow',
     modules,
@@ -410,56 +299,42 @@ export function RichTextEditor({
     onTextChange: handleTextChange,
   })
 
-  // Keep quill instance ref updated
   useEffect(() => {
     quillInstanceRef.current = quill
   }, [quill])
 
-  /**
-   * Helper to set content (only for initialization)
-   * Theo hướng dẫn: Hỗ trợ cả Delta format và HTML
-   */
   const setContent = useCallback((content: string) => {
     const quill = quillInstanceRef.current
     if (!quill || !content) return
 
     try {
-      // Kiểm tra nếu content là Delta JSON
       if (content.trim().startsWith('[') || content.trim().startsWith('{')) {
         const delta = JSON.parse(content) as Record<string, unknown>
         quill.setContents(delta, 'silent')
       } else {
-        // Content là HTML - convert to delta and set
         const delta = quill.clipboard.convert({ html: content })
         quill.setContents(delta, 'silent')
       }
       lastValueRef.current = quill.getSemanticHTML()
     } catch (error) {
       console.error('Failed to set content:', error)
-      // Fallback
+
       quill.root.innerHTML = content
       lastValueRef.current = content
     }
   }, [])
 
-  /**
-   * Set initial content ONCE only
-   * Uncontrolled mode - we don't sync back from value prop after initialization
-   */
   useEffect(() => {
     if (!quill || !isReady) return
 
-    // Only set content on first initialization
     const initialValue = value ?? defaultValue
     if (initialValue) {
       setContent(initialValue)
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quill, isReady])
 
-  /**
-   * Enable/disable editor
-   */
   useEffect(() => {
     if (!quill) return
 
@@ -470,15 +345,10 @@ export function RichTextEditor({
     }
   }, [quill, disabled, uploading])
 
-  /**
-   * Handle paste image from clipboard
-   * Theo hướng dẫn: Paste Image From Clipboard
-   */
   useEffect(() => {
     if (!quill || !enableImageUpload) return
 
     const uploadImageFromBlob = async (blob: File) => {
-      // Get cursor position before upload
       const range = quill.getSelection(true)
       if (!range) {
         toast.error('Please click in the editor first')
@@ -488,23 +358,18 @@ export function RichTextEditor({
       const cursorPosition = range.index
 
       try {
-        // Disable editor during upload
         quill.enable(false)
 
-        // Show loading toast
         toast.loading('Uploading image from clipboard...', {
           id: 'clipboard-upload',
         })
 
         const result = await uploadMedia(blob, accessToken)
 
-        // Insert actual image
         quill.insertEmbed(cursorPosition, 'image', result.secure_url)
 
-        // Move cursor after image
         quill.setSelection(cursorPosition + 1)
 
-        // Trigger onChange
         if (onChange) {
           const html = quill.getSemanticHTML()
           lastValueRef.current = html
@@ -518,7 +383,6 @@ export function RichTextEditor({
           id: 'clipboard-upload',
         })
       } finally {
-        // Re-enable editor
         quill.enable(true)
       }
     }
@@ -545,10 +409,6 @@ export function RichTextEditor({
     }
   }, [quill, uploadMedia, accessToken, onChange, enableImageUpload])
 
-  /**
-   * Handle drag and drop file upload
-   * Theo hướng dẫn: Drag and Drop Upload
-   */
   useEffect(() => {
     if (!quill || !enableImageUpload) return
 
@@ -558,14 +418,11 @@ export function RichTextEditor({
       const files = e.dataTransfer?.files
       if (!files || files.length === 0) return
 
-      // Lấy vị trí drop
       const range = quill.getSelection(true)
       let index = range ? range.index : quill.getLength()
 
-      // Xử lý từng file
       for (const file of Array.from(files)) {
         if (file.type.startsWith('image/')) {
-          // Validate
           const validation = validateImageFile(file)
           if (!validation.valid) {
             toast.error(validation.error || 'File is not valid')
@@ -576,7 +433,6 @@ export function RichTextEditor({
             toast.info('Uploading image...')
             const result = await uploadMedia(file, accessToken)
 
-            // Chèn hình ảnh
             quill.insertEmbed(index, 'image', result.secure_url)
             index++
 
@@ -588,14 +444,12 @@ export function RichTextEditor({
         }
       }
 
-      // Trigger onChange
       if (onChange) {
         const html = quill.getSemanticHTML()
         lastValueRef.current = html
         onChange(html)
       }
 
-      // Set cursor tại vị trí cuối
       quill.setSelection(index)
     }
 
@@ -623,7 +477,7 @@ export function RichTextEditor({
 
   return (
     <div className={cn('rich-text-editor-wrapper relative', className)}>
-      {/* Editor container */}
+      {}
       <div
         ref={quillRef}
         className={cn(
@@ -633,7 +487,7 @@ export function RichTextEditor({
         )}
       />
 
-      {/* Upload loading overlay */}
+      {}
       {uploading && (
         <div className='absolute inset-0 z-10 flex items-center justify-center rounded-md bg-white/90 backdrop-blur-sm dark:bg-gray-900/90'>
           <div className='flex flex-col items-center gap-3'>
@@ -673,18 +527,11 @@ export function RichTextEditor({
   )
 }
 
-// ============================================================================
-// Display Component (Read-only)
-// ============================================================================
-
 export interface RichTextDisplayProps {
   content: string
   className?: string
 }
 
-/**
- * Display rich text content in read-only mode
- */
 export function RichTextDisplay({
   content,
   className = '',
@@ -693,10 +540,10 @@ export function RichTextDisplay({
     <div
       className={cn(
         'prose prose-sm dark:prose-invert max-w-none',
-        // Video styling
+
         'prose-video:aspect-video prose-video:w-full prose-video:max-w-2xl',
         'prose-video:rounded-lg prose-video:border prose-video:border-border',
-        // Image styling
+
         'prose-img:rounded-lg prose-img:shadow-sm',
         className
       )}

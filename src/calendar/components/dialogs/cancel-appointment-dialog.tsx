@@ -30,17 +30,15 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { useCancelAppointment } from '@/features/appointments/data/hooks'
 
-/**
- * Format time string (HH:mm or ISO) to HH:mm format
- */
+
 const formatTime = (timeStr: string): string => {
   if (timeStr.includes('T')) {
-    // ISO timestamp like "1970-01-01T16:30:00.000Z"
+    
     const timePart = timeStr.split('T')[1]
     const [hour, minute] = timePart.split(':').map(Number)
     return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
   }
-  // Already in HH:mm format
+  
   return timeStr
 }
 

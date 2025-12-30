@@ -1,7 +1,3 @@
-/**
- * Questions Feature - Static Data
- * Filter options and static data for questions
- */
 import { Clock, XCircle, MessageCircle } from 'lucide-react'
 
 export const statusOptions = [

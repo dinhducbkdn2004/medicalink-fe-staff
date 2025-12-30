@@ -1,7 +1,4 @@
-/**
- * Specialties Table Columns
- * Column definitions for specialties data table
- */
+
 import { type ColumnDef } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'

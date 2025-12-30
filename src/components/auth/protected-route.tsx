@@ -1,7 +1,4 @@
-/**
- * Protected Route Component
- * Wrapper component that ensures user is authenticated before rendering children
- */
+
 import { useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
@@ -21,7 +18,7 @@ export function ProtectedRoute({
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      // Store current location for redirect after login
+      
       const currentPath = window.location.pathname + window.location.search
 
       navigate({
@@ -32,7 +29,7 @@ export function ProtectedRoute({
     }
   }, [isAuthenticated, isLoading, navigate, redirectTo])
 
-  // Show loading state while checking authentication
+  
   if (isLoading) {
     return (
       <div className='flex h-screen w-full items-center justify-center'>
@@ -44,11 +41,11 @@ export function ProtectedRoute({
     )
   }
 
-  // If not authenticated, return null (navigation will happen in useEffect)
+  
   if (!isAuthenticated) {
     return null
   }
 
-  // User is authenticated, render children
+  
   return <>{children}</>
 }

@@ -1,7 +1,4 @@
-/**
- * Questions Table Columns
- * Column definitions for the questions data table
- */
+
 import type { ColumnDef } from '@tanstack/react-table'
 import { Clock, XCircle, MessageCircle, Eye } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -12,12 +9,12 @@ import type { Question } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 import { SpecialtyCell } from './specialty-cell'
 
-// ============================================================================
-// Column Definitions
-// ============================================================================
+
+
+
 
 export const columns: ColumnDef<Question>[] = [
-  // Select checkbox
+  
   {
     id: 'select',
     header: ({ table }) => (
@@ -49,7 +46,7 @@ export const columns: ColumnDef<Question>[] = [
         'sticky left-0 z-10 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
     },
   },
-  // Title
+  
   {
     accessorKey: 'title',
     header: ({ column }) => (
@@ -82,7 +79,7 @@ export const columns: ColumnDef<Question>[] = [
         'sticky left-[32px] z-10 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
     },
   },
-  // Author Email
+  
   {
     accessorKey: 'authorEmail',
     header: ({ column }) => (
@@ -95,7 +92,7 @@ export const columns: ColumnDef<Question>[] = [
       className: 'min-w-[200px]',
     },
   },
-  // Specialty
+  
   {
     accessorKey: 'specialtyId',
     header: ({ column }) => (
@@ -117,7 +114,7 @@ export const columns: ColumnDef<Question>[] = [
       className: 'min-w-[140px]',
     },
   },
-  // Answer Count
+  
   {
     accessorKey: 'answersCount',
     header: ({ column }) => (
@@ -136,7 +133,7 @@ export const columns: ColumnDef<Question>[] = [
       className: 'w-[140px]',
     },
   },
-  // View Count
+  
   {
     accessorKey: 'viewCount',
     header: ({ column }) => (
@@ -155,7 +152,7 @@ export const columns: ColumnDef<Question>[] = [
       className: 'w-[100px]',
     },
   },
-  // Status
+  
   {
     accessorKey: 'status',
     header: ({ column }) => (
@@ -189,7 +186,7 @@ export const columns: ColumnDef<Question>[] = [
 
       const config = statusConfig[status]
 
-      // Handle unknown status
+      
       if (!config) {
         return (
           <div className='flex justify-center'>
@@ -219,7 +216,7 @@ export const columns: ColumnDef<Question>[] = [
       className: 'w-[120px]',
     },
   },
-  // Created At
+  
   {
     accessorKey: 'createdAt',
     header: ({ column }) => (
@@ -241,7 +238,7 @@ export const columns: ColumnDef<Question>[] = [
       className: 'w-[120px]',
     },
   },
-  // Actions
+  
   {
     id: 'actions',
     enablePinning: true,

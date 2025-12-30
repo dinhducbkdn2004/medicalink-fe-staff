@@ -1,7 +1,3 @@
-/**
- * Group Delete Dialog
- * Confirmation dialog for deleting permission groups
- */
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,7 +30,7 @@ export function GroupDeleteDialog({
       await deleteMutation.mutateAsync(currentGroup.id)
       handleClose()
     } catch {
-      // Error handling is done in mutation hook
+      void 0
     }
   }
 

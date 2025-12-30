@@ -1,7 +1,4 @@
-/**
- * Info Section Delete Dialog
- * Confirmation dialog for deleting an info section
- */
+
 import { Loader2 } from 'lucide-react'
 import {
   AlertDialog,
@@ -38,7 +35,7 @@ export function InfoSectionDeleteDialog({
       })
       onOpenChange()
     } catch (error) {
-      // Error handling is done in the mutation hook
+      
       console.error('Delete error:', error)
     }
   }

@@ -147,7 +147,7 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    {/* Hide status selector for doctors - they can't change status */}
+                    {}
                     {isDoctor ? (
                       <span
                         className={cn(

@@ -1,7 +1,3 @@
-/**
- * Group Form Dialog
- * Dialog for creating or editing permission groups
- */
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -58,7 +54,8 @@ export function GroupFormDialog({
   const updateMutation = useUpdatePermissionGroup()
 
   const form = useForm<GroupFormValues>({
-    resolver: zodResolver(groupFormSchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(groupFormSchema) as any,
     defaultValues: {
       name: currentGroup?.name || '',
       description: currentGroup?.description || '',
@@ -81,7 +78,7 @@ export function GroupFormDialog({
       }
       handleClose()
     } catch {
-      // Error handling is done in mutation hooks
+      void 0
     }
   }
 

@@ -1,7 +1,4 @@
-/**
- * Questions Dialogs
- * All dialog components for questions management
- */
+
 import { QuestionAnswersDialog } from './questions-answers-dialog'
 import { QuestionsApproveDialog } from './questions-approve-dialog'
 import { QuestionsDeleteDialog } from './questions-delete-dialog'

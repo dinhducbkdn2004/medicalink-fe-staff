@@ -1,10 +1,5 @@
-/**
- * Questions Table
- * Data table component for displaying questions
- */
 import type { UseNavigateResult } from '@tanstack/react-router'
 import { Edit, Trash2, Eye } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth-store'
 import {
   DataTable,
   type DataTableAction,
@@ -18,10 +13,6 @@ import { DataTableBulkActions } from './data-table-bulk-actions'
 import { columns } from './questions-columns'
 import { useQuestions } from './use-questions'
 
-// ============================================================================
-// Types
-// ============================================================================
-
 interface QuestionsTableProps {
   data: Question[]
   pageCount?: number
@@ -29,10 +20,6 @@ interface QuestionsTableProps {
   navigate: UseNavigateResult<string>
   isLoading?: boolean
 }
-
-// ============================================================================
-// Column Filter Configs
-// ============================================================================
 
 const columnFilterConfigs: ColumnFilterConfig[] = [
   {
@@ -62,10 +49,6 @@ const columnFilterConfigs: ColumnFilterConfig[] = [
   },
 ]
 
-// ============================================================================
-// Component
-// ============================================================================
-
 export function QuestionsTable({
   data,
   pageCount = 0,
@@ -77,7 +60,6 @@ export function QuestionsTable({
   const { data: specialtiesData } = usePublicSpecialties({ limit: 100 })
   const specialties = specialtiesData?.data || []
 
-  // Define row actions (context menu)
   const getRowActions = (row: { original: Question }): DataTableAction[] => {
     const question = row.original
 
@@ -92,7 +74,6 @@ export function QuestionsTable({
       },
     ]
 
-    // Only show Edit action if user has update permission
     if (canUpdateQuestions()) {
       actions.push({
         label: 'Edit',
@@ -104,7 +85,6 @@ export function QuestionsTable({
       })
     }
 
-    // Only show Delete action if user has delete permission
     if (canDeleteQuestion({ questionId: question.id })) {
       actions.push({
         label: 'Delete',
@@ -123,16 +103,13 @@ export function QuestionsTable({
 
   return (
     <DataTable
-      // Required props
       data={data}
       columns={columns}
       search={search}
       navigate={navigate as never}
-      // Configuration
       pageCount={pageCount}
       isLoading={isLoading}
       entityName='question'
-      // Toolbar
       searchPlaceholder='Search by author email...'
       searchKey='authorEmail'
       filters={[
@@ -154,10 +131,8 @@ export function QuestionsTable({
           })),
         },
       ]}
-      // Actions
       getRowActions={getRowActions}
       renderBulkActions={(table) => <DataTableBulkActions table={table} />}
-      // Advanced
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
       emptyMessage='No questions found.'

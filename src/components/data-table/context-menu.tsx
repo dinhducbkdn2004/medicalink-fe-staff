@@ -1,7 +1,4 @@
-/**
- * Data Table Context Menu
- * Right-click context menu for table rows
- */
+
 import * as React from 'react'
 import { type Row } from '@tanstack/react-table'
 import {
@@ -28,23 +25,7 @@ type DataTableContextMenuProps<TData> = {
   children: React.ReactNode
 }
 
-/**
- * Context menu component for table rows
- *
- * @example
- * ```tsx
- * <DataTableContextMenu
- *   row={row}
- *   actions={[
- *     { label: 'View', icon: Eye, onClick: handleView },
- *     { label: 'Edit', icon: Edit, onClick: handleEdit },
- *     { label: 'Delete', icon: Trash, onClick: handleDelete, variant: 'destructive', separator: true },
- *   ]}
- * >
- *   <TableRow>...</TableRow>
- * </DataTableContextMenu>
- * ```
- */
+
 export function DataTableContextMenu<TData>({
   row: _row,
   actions,

@@ -18,7 +18,7 @@ export function Analytics() {
 
   return (
     <div className='space-y-6'>
-      {/* Quick Stats Cards */}
+      {}
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
@@ -165,7 +165,7 @@ export function Analytics() {
         </Card>
       </div>
 
-      {/* Doctor Stats Section - Main Focus */}
+      {}
       <div className='space-y-6'>
         <div>
           <h2 className='mb-1 text-xl font-bold'>
@@ -176,19 +176,19 @@ export function Analytics() {
           </p>
         </div>
 
-        {/* Booking Charts */}
+        {}
         <div className='space-y-4'>
           <h3 className='text-lg font-semibold'>Booking Performance</h3>
           <DoctorBookingChart />
         </div>
 
-        {/* Content Charts */}
+        {}
         <div className='space-y-4'>
           <h3 className='text-lg font-semibold'>Content Performance</h3>
           <DoctorContentChart />
         </div>
 
-        {/* Detailed Tables */}
+        {}
         <div className='space-y-4'>
           <h3 className='text-lg font-semibold'>Detailed Statistics</h3>
           <AdminDoctorBookingStats />

@@ -69,7 +69,7 @@ export function PatientsEditDialog() {
   const onSubmit = (data: UpdatePatientFormData) => {
     if (!currentRow) return
 
-    // Clean empty strings to undefined
+    
     const cleanedData = {
       ...data,
       email: data.email || undefined,

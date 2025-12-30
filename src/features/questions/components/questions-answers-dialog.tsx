@@ -1,7 +1,4 @@
-/**
- * Question Answers Dialog
- * Dialog for viewing and managing answers to a question
- */
+
 import { useState } from 'react'
 import { format } from 'date-fns'
 import { CheckCircle, Trash2, X, ThumbsUp, User } from 'lucide-react'
@@ -36,9 +33,9 @@ import {
 import { QuestionsAnswerForm } from './questions-answer-form'
 import { useQuestions } from './use-questions'
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function QuestionAnswersDialog() {
   const { open, setOpen, currentQuestion } = useQuestions()
@@ -50,7 +47,7 @@ export function QuestionAnswersDialog() {
   const [isCreating, setIsCreating] = useState(false)
   const [deleteAnswerId, setDeleteAnswerId] = useState<string | null>(null)
 
-  // Fetch answers
+  
   const { data: answersData, isLoading } = useAnswersForQuestion(
     currentQuestion?.id || '',
     { page: 1, limit: 50 }
@@ -109,7 +106,7 @@ export function QuestionAnswersDialog() {
           </DrawerHeader>
 
           <div className='flex flex-1 flex-col gap-4 overflow-y-auto p-4'>
-            {/* Create Answer Section */}
+            {}
             {!isCreating && !editingAnswerId ? (
               <Button
                 onClick={() => setIsCreating(true)}

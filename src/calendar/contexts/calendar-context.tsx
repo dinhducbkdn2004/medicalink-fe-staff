@@ -71,7 +71,7 @@ export function CalendarProvider({
       workingHours,
       setWorkingHours,
       events,
-      setLocalEvents: () => {}, // No-op since we use props directly
+      setLocalEvents: () => {}, 
     }),
     [
       selectedDate,

@@ -27,7 +27,7 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { NewChat } from './components/new-chat'
 import { type ChatUser, type Convo } from './data/chat-types'
-// Fake Data
+
 import { conversations } from './data/convo.json'
 
 export function Chats() {
@@ -39,7 +39,7 @@ export function Chats() {
   const [createConversationDialogOpened, setCreateConversationDialog] =
     useState(false)
 
-  // Filtered data based on the search query
+  
   const filteredChatList = conversations.filter(({ fullName }) =>
     fullName.toLowerCase().includes(search.trim().toLowerCase())
   )
@@ -48,12 +48,12 @@ export function Chats() {
     (acc: Record<string, Convo[]>, obj) => {
       const key = format(obj.timestamp, 'd MMM, yyyy')
 
-      // Create an array for the category if it doesn't exist
+      
       if (!acc[key]) {
         acc[key] = []
       }
 
-      // Push the current object to the array
+      
       acc[key].push(obj)
 
       return acc
@@ -65,7 +65,7 @@ export function Chats() {
 
   return (
     <>
-      {/* ===== Top Heading ===== */}
+      {}
       <Header>
         <Search />
         <div className='ms-auto flex items-center space-x-4'>
@@ -77,7 +77,7 @@ export function Chats() {
 
       <Main fixed>
         <section className='flex h-full gap-6'>
-          {/* Left Side */}
+          {}
           <div className='flex w-full flex-col gap-2 sm:w-56 lg:w-72 2xl:w-80'>
             <div className='bg-background sticky top-0 z-10 -mx-4 px-4 pb-3 shadow-md sm:static sm:z-auto sm:mx-0 sm:p-0 sm:shadow-none'>
               <div className='flex items-center justify-between py-2'>
@@ -158,7 +158,7 @@ export function Chats() {
             </ScrollArea>
           </div>
 
-          {/* Right Side */}
+          {}
           {selectedUser ? (
             <div
               className={cn(
@@ -166,9 +166,9 @@ export function Chats() {
                 mobileSelectedUser && 'start-0 flex'
               )}
             >
-              {/* Top Part */}
+              {}
               <div className='bg-card mb-1 flex flex-none justify-between p-4 shadow-lg sm:rounded-t-md'>
-                {/* Left */}
+                {}
                 <div className='flex gap-3'>
                   <Button
                     size='icon'
@@ -197,7 +197,7 @@ export function Chats() {
                   </div>
                 </div>
 
-                {/* Right */}
+                {}
                 <div className='-me-1 flex items-center gap-1 lg:gap-2'>
                   <Button
                     size='icon'
@@ -223,7 +223,7 @@ export function Chats() {
                 </div>
               </div>
 
-              {/* Conversation */}
+              {}
               <div className='flex flex-1 flex-col gap-2 rounded-md px-4 pt-0 pb-4'>
                 <div className='flex size-full flex-1'>
                   <div className='chat-text-container relative -me-4 flex flex-1 flex-col overflow-y-hidden'>

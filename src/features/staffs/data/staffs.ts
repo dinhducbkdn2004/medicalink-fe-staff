@@ -1,9 +1,5 @@
 import { type Staff } from './schema'
 
-/**
- * Mock staff data for development and testing
- * This would be replaced with actual API calls in production
- */
 export const staffs: Staff[] = [
   {
     id: 'staff_001',

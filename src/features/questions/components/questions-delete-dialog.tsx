@@ -1,7 +1,4 @@
-/**
- * Question Delete Dialog
- * Confirmation dialog for deleting a question
- */
+
 import {
   AlertDialog,
   AlertDialogAction,

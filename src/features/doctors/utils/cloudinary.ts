@@ -1,13 +1,5 @@
-/**
- * Cloudinary Upload Utility
- * Based on /api/utilities/upload-signature specification
- */
 import { useState } from 'react'
 import { apiClient } from '@/api/core/client'
-
-// ============================================================================
-// Types
-// ============================================================================
 
 export interface CloudinarySignature {
   signature: string
@@ -33,27 +25,15 @@ export interface UploadError {
   code?: string
 }
 
-// ============================================================================
-// Constants
-// ============================================================================
-
-const MAX_IMAGE_SIZE = 10 * 1024 * 1024 // 10MB
-const MAX_VIDEO_SIZE = 50 * 1024 * 1024 // 50MB
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024
+const MAX_VIDEO_SIZE = 50 * 1024 * 1024
 const ALLOWED_IMAGE_TYPES = [
   'image/jpeg',
   'image/png',
   'image/webp',
   'image/gif',
 ]
-const ALLOWED_VIDEO_TYPES = [
-  'video/mp4',
-  'video/webm',
-  'video/quicktime', // .mov
-]
-
-// ============================================================================
-// Validation
-// ============================================================================
+const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime']
 
 export function validateImageFile(file: File): {
   valid: boolean
@@ -124,13 +104,6 @@ export function validateMediaFile(file: File): {
   }
 }
 
-// ============================================================================
-// API Functions
-// ============================================================================
-
-/**
- * Request upload signature from backend using API client
- */
 export async function getUploadSignature(): Promise<CloudinarySignature> {
   const response = await apiClient.post<CloudinarySignature>(
     '/utilities/upload-signature',
@@ -139,10 +112,6 @@ export async function getUploadSignature(): Promise<CloudinarySignature> {
   return response.data
 }
 
-/**
- * Upload file to Cloudinary using signed upload
- * @param resourceType - 'image' or 'video'
- */
 export async function uploadToCloudinary(
   file: File,
   signature: CloudinarySignature,
@@ -159,7 +128,6 @@ export async function uploadToCloudinary(
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
 
-    // Track upload progress
     if (onProgress) {
       xhr.upload.addEventListener('progress', (e) => {
         if (e.lengthComputable) {
@@ -195,75 +163,45 @@ export async function uploadToCloudinary(
       reject(new Error('Upload aborted'))
     })
 
-    // Use appropriate endpoint based on resource type
     const endpoint = `https://api.cloudinary.com/v1_1/${signature.cloudName}/${resourceType}/upload`
     xhr.open('POST', endpoint)
     xhr.send(formData)
   })
 }
 
-/**
- * Complete image upload workflow: validate, get signature, and upload
- * This is a convenience function that combines all steps
- *
- * @param file - The image file to upload
- * @param _accessToken - User's access token (not used, kept for compatibility)
- * @param onProgress - Optional callback for upload progress (0-100)
- * @returns The secure URL of the uploaded image
- */
 export async function uploadImageToCloudinary(
   file: File,
   _accessToken: string,
   onProgress?: (progress: number) => void
 ): Promise<string> {
-  // Validate file
   const validation = validateImageFile(file)
   if (!validation.valid) {
     throw new Error(validation.error)
   }
 
-  // Get upload signature from backend (uses apiClient with auth)
   const signature = await getUploadSignature()
 
-  // Upload to Cloudinary
   const result = await uploadToCloudinary(file, signature, 'image', onProgress)
 
-  // Return the secure URL
   return result.secure_url
 }
 
-/**
- * Complete video upload workflow: validate, get signature, and upload
- *
- * @param file - The video file to upload
- * @param _accessToken - User's access token (not used, kept for compatibility)
- * @param onProgress - Optional callback for upload progress (0-100)
- * @returns The secure URL of the uploaded video
- */
 export async function uploadVideoToCloudinary(
   file: File,
   _accessToken: string,
   onProgress?: (progress: number) => void
 ): Promise<string> {
-  // Validate file
   const validation = validateVideoFile(file)
   if (!validation.valid) {
     throw new Error(validation.error)
   }
 
-  // Get upload signature from backend (uses apiClient with auth)
   const signature = await getUploadSignature()
 
-  // Upload to Cloudinary
   const result = await uploadToCloudinary(file, signature, 'video', onProgress)
 
-  // Return the secure URL
   return result.secure_url
 }
-
-// ============================================================================
-// React Hooks
-// ============================================================================
 
 export interface UseCloudinaryUploadResult {
   uploadImage: (
@@ -276,21 +214,6 @@ export interface UseCloudinaryUploadResult {
   reset: () => void
 }
 
-/**
- * React hook for Cloudinary image uploads with progress tracking
- *
- * @example
- * const { uploadImage, uploading, progress, error } = useCloudinaryUpload();
- *
- * const handleFileChange = async (file: File) => {
- *   try {
- *     const result = await uploadImage(file, accessToken);
- *     console.log('Uploaded:', result.secure_url);
- *   } catch (err) {
- *     console.error('Upload failed:', err);
- *   }
- * };
- */
 export function useCloudinaryUpload(): UseCloudinaryUploadResult {
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -300,22 +223,18 @@ export function useCloudinaryUpload(): UseCloudinaryUploadResult {
     file: File,
     _accessToken: string
   ): Promise<CloudinaryUploadResult> => {
-    // Reset state
     setUploading(true)
     setProgress(0)
     setError(null)
 
     try {
-      // Validate file
       const validation = validateImageFile(file)
       if (!validation.valid) {
         throw new Error(validation.error)
       }
 
-      // Get signature from backend (uses apiClient with auth)
       const signature = await getUploadSignature()
 
-      // Upload to Cloudinary with progress tracking
       const result = await uploadToCloudinary(
         file,
         signature,
@@ -357,21 +276,6 @@ export interface UseMediaUploadResult {
   reset: () => void
 }
 
-/**
- * React hook for Cloudinary media (image & video) uploads with progress tracking
- *
- * @example
- * const { uploadMedia, uploading, progress, uploadType } = useMediaUpload();
- *
- * const handleFileChange = async (file: File) => {
- *   try {
- *     const result = await uploadMedia(file, accessToken);
- *     console.log('Uploaded:', result.secure_url, 'Type:', uploadType);
- *   } catch (err) {
- *     console.error('Upload failed:', err);
- *   }
- * };
- */
 export function useMediaUpload(): UseMediaUploadResult {
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -382,14 +286,12 @@ export function useMediaUpload(): UseMediaUploadResult {
     file: File,
     _accessToken: string
   ): Promise<CloudinaryUploadResult> => {
-    // Reset state
     setUploading(true)
     setProgress(0)
     setError(null)
     setUploadType(null)
 
     try {
-      // Validate file and determine type
       const validation = validateMediaFile(file)
       if (!validation.valid) {
         throw new Error(validation.error)
@@ -398,10 +300,8 @@ export function useMediaUpload(): UseMediaUploadResult {
       const mediaType = validation.type as 'image' | 'video'
       setUploadType(mediaType)
 
-      // Get signature from backend (uses apiClient with auth)
       const signature = await getUploadSignature()
 
-      // Upload to Cloudinary with progress tracking
       const result = await uploadToCloudinary(
         file,
         signature,

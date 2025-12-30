@@ -1,8 +1,3 @@
-/**
- * Office Hours API Hooks
- * TanStack Query hooks for Office Hours management
- * Only includes hooks for API endpoints that exist: GET, POST, DELETE
- */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { officeHourService } from '@/api/services'
@@ -11,10 +6,6 @@ import type {
   CreateOfficeHourRequest,
 } from '@/api/services/office-hour.service'
 
-// ============================================================================
-// Query Keys
-// ============================================================================
-
 export const officeHourKeys = {
   all: ['office-hours'] as const,
   lists: () => [...officeHourKeys.all, 'list'] as const,
@@ -22,22 +13,13 @@ export const officeHourKeys = {
     [...officeHourKeys.lists(), params] as const,
 }
 
-// ============================================================================
-// Query Hooks
-// ============================================================================
-
-/**
- * Hook to fetch office hours with filtering
- * Returns grouped office hours data as per API specification
- */
 export function useOfficeHours(params: OfficeHourQueryParams = {}) {
   return useQuery({
     queryKey: officeHourKeys.list(params),
     queryFn: () => officeHourService.getOfficeHours(params),
-    // Keep the grouped structure from API
-    staleTime: 1000 * 60 * 5, // 5 minutes
+
+    staleTime: 1000 * 60 * 5,
     retry: (failureCount, error: unknown) => {
-      // Don't retry on 401/403 (permission errors)
       const axiosError = error as { response?: { status?: number } }
       if (
         axiosError?.response?.status === 401 ||
@@ -50,14 +32,6 @@ export function useOfficeHours(params: OfficeHourQueryParams = {}) {
   })
 }
 
-// ============================================================================
-// Mutation Hooks
-// ============================================================================
-
-/**
- * Hook to create a new office hour entry
- * POST /api/office-hours
- */
 export function useCreateOfficeHour() {
   const queryClient = useQueryClient()
 
@@ -69,7 +43,6 @@ export function useCreateOfficeHour() {
       toast.success('Office hours created successfully')
     },
     onError: (error: unknown) => {
-      // Handle specific error cases
       const axiosError = error as {
         response?: {
           status?: number
@@ -79,7 +52,6 @@ export function useCreateOfficeHour() {
       }
 
       if (axiosError?.response?.status === 404) {
-        // Doctor or Work Location not found
         const errorMessage =
           axiosError.response.data?.message || 'Record not found'
         if (errorMessage.includes('Doctor')) {
@@ -105,10 +77,6 @@ export function useCreateOfficeHour() {
   })
 }
 
-/**
- * Hook to delete an office hour entry
- * DELETE /api/office-hours/:id
- */
 export function useDeleteOfficeHour() {
   const queryClient = useQueryClient()
 

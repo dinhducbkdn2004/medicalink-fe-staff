@@ -1,7 +1,3 @@
-/**
- * Hooks for appointment form data fetching
- * Correct Flow: Patient → Location → Specialty → Doctor → Date → Time Slots
- */
 import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import {
@@ -17,19 +13,12 @@ import type { Patient } from '@/api/types'
 import type { PublicDoctorProfile } from '@/api/types/doctor.types'
 import { useAuthStore } from '@/stores/auth-store'
 
-// ============================================================================
-// Helper: Check if user can use allowPast
-// Only ADMIN and SUPER_ADMIN can select past dates, DOCTOR cannot
-// ============================================================================
 const canAllowPastDates = (): boolean => {
   const user = useAuthStore.getState().user
   if (!user) return false
   return user.role === 'ADMIN' || user.role === 'SUPER_ADMIN'
 }
 
-// ============================================================================
-// Global Cache for static data to prevent repeated API calls
-// ============================================================================
 let workLocationsCache: { data: WorkLocation[]; timestamp: number } | null =
   null
 let specialtiesCache: { data: Specialty[]; timestamp: number } | null = null
@@ -40,22 +29,17 @@ let publicDoctorsCache: {
 let isFetchingLocations = false
 let isFetchingSpecialties = false
 let isFetchingPublicDoctors = false
-const CACHE_DURATION = 10 * 60 * 1000 // 10 minutes
+const CACHE_DURATION = 10 * 60 * 1000
 
-// Cache for initial patients list (empty search)
 let initialPatientsCache: { data: Patient[]; timestamp: number } | null = null
 let isFetchingPatients = false
 
-// ============================================================================
-// Hook: Search Patients
-// ============================================================================
 export function usePatients(search?: string) {
   const [patients, setPatients] = useState<Patient[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchPatients = async (searchTerm: string) => {
-      // For empty search, check cache first
       if (
         !searchTerm &&
         initialPatientsCache &&
@@ -65,7 +49,6 @@ export function usePatients(search?: string) {
         return
       }
 
-      // Prevent multiple simultaneous fetches for initial load
       if (!searchTerm && isFetchingPatients) {
         return
       }
@@ -76,8 +59,6 @@ export function usePatients(search?: string) {
 
       setIsLoading(true)
       try {
-        // If no search term, fetch latest 10 patients
-        // If search term exists, fetch matched patients
         const params = searchTerm
           ? { page: 1, limit: 20, search: searchTerm }
           : {
@@ -86,13 +67,11 @@ export function usePatients(search?: string) {
               sortBy: 'createdAt',
               sortOrder: 'desc',
               includedDeleted: true,
-              search: '', // Explicit empty search
+              search: '',
             }
 
-        // @ts-expect-error - params type mismatch for overloading
         const response = await patientService.getPatients(params)
 
-        // Cache initial patients list
         if (!searchTerm) {
           initialPatientsCache = {
             data: response.data,
@@ -112,12 +91,11 @@ export function usePatients(search?: string) {
       }
     }
 
-    // Debounce search - increase delay for user typing
     const timeoutId = setTimeout(
       () => {
         fetchPatients(search || '')
       },
-      search ? 800 : 0 // 800ms for search typing, immediate for initial load
+      search ? 800 : 0
     )
 
     return () => clearTimeout(timeoutId)
@@ -126,12 +104,8 @@ export function usePatients(search?: string) {
   return { patients, isLoading }
 }
 
-// ============================================================================
-// Hook: Fetch Public Work Locations (Step 1)
-// ============================================================================
 export function useWorkLocations() {
   const [locations, setLocations] = useState<WorkLocation[]>(() => {
-    // Initialize with cached data if available and fresh
     if (
       workLocationsCache &&
       Date.now() - workLocationsCache.timestamp < CACHE_DURATION
@@ -144,7 +118,6 @@ export function useWorkLocations() {
 
   useEffect(() => {
     const fetchLocations = async () => {
-      // Check cache first
       if (
         workLocationsCache &&
         Date.now() - workLocationsCache.timestamp < CACHE_DURATION
@@ -153,7 +126,6 @@ export function useWorkLocations() {
         return
       }
 
-      // Prevent multiple simultaneous fetches
       if (isFetchingLocations) {
         return
       }
@@ -165,7 +137,7 @@ export function useWorkLocations() {
           page: 1,
           limit: 100,
         })
-        // Update cache
+
         workLocationsCache = {
           data: response.data,
           timestamp: Date.now(),
@@ -180,17 +152,13 @@ export function useWorkLocations() {
     }
 
     fetchLocations()
-  }, []) // Empty deps - only fetch once on mount
+  }, [])
 
   return { locations, isLoading }
 }
 
-// ============================================================================
-// Hook: Fetch Initial Public Doctors (for "Select Doctor First")
-// ============================================================================
 export function usePublicDoctors() {
   const [doctors, setDoctors] = useState<PublicDoctorProfile[]>(() => {
-    // Initialize with cached data if available and fresh
     if (
       publicDoctorsCache &&
       Date.now() - publicDoctorsCache.timestamp < CACHE_DURATION
@@ -203,7 +171,6 @@ export function usePublicDoctors() {
 
   useEffect(() => {
     const fetchDoctors = async () => {
-      // Check cache first
       if (
         publicDoctorsCache &&
         Date.now() - publicDoctorsCache.timestamp < CACHE_DURATION
@@ -212,7 +179,6 @@ export function usePublicDoctors() {
         return
       }
 
-      // Prevent multiple simultaneous fetches
       if (isFetchingPublicDoctors) {
         return
       }
@@ -226,7 +192,7 @@ export function usePublicDoctors() {
           sortBy: 'createdAt',
           sortOrder: 'desc',
         })
-        // Update cache
+
         publicDoctorsCache = {
           data: response.data,
           timestamp: Date.now(),
@@ -241,17 +207,13 @@ export function usePublicDoctors() {
     }
 
     fetchDoctors()
-  }, []) // Empty deps - only fetch once on mount
+  }, [])
 
   return { doctors, isLoading }
 }
 
-// ============================================================================
-// Hook: Fetch Public Specialties (Step 2)
-// ============================================================================
 export function useSpecialties() {
   const [specialties, setSpecialties] = useState<Specialty[]>(() => {
-    // Initialize with cached data if available and fresh
     if (
       specialtiesCache &&
       Date.now() - specialtiesCache.timestamp < CACHE_DURATION
@@ -264,7 +226,6 @@ export function useSpecialties() {
 
   useEffect(() => {
     const fetchSpecialties = async () => {
-      // Check cache first
       if (
         specialtiesCache &&
         Date.now() - specialtiesCache.timestamp < CACHE_DURATION
@@ -273,7 +234,6 @@ export function useSpecialties() {
         return
       }
 
-      // Prevent multiple simultaneous fetches
       if (isFetchingSpecialties) {
         return
       }
@@ -285,7 +245,7 @@ export function useSpecialties() {
           page: 1,
           limit: 100,
         })
-        // Update cache
+
         specialtiesCache = {
           data: response.data,
           timestamp: Date.now(),
@@ -300,14 +260,11 @@ export function useSpecialties() {
     }
 
     fetchSpecialties()
-  }, []) // Empty deps - only fetch once on mount
+  }, [])
 
   return { specialties, isLoading }
 }
 
-// ============================================================================
-// Hook: Fetch Doctors by Location AND Specialty (Step 3)
-// ============================================================================
 export function useDoctorsByLocationAndSpecialty(
   locationId?: string,
   specialtyId?: string
@@ -316,7 +273,6 @@ export function useDoctorsByLocationAndSpecialty(
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    // Both location and specialty must be selected
     if (!locationId || !specialtyId) {
       setDoctors([])
       return
@@ -345,10 +301,6 @@ export function useDoctorsByLocationAndSpecialty(
   return { doctors, isLoading }
 }
 
-// ============================================================================
-// Hook: Fetch Available Dates (Step 3.5)
-// UPDATED: Now uses month-slots API to avoid spamming slots endpoint
-// ============================================================================
 export function useDoctorAvailableDates(
   profileId?: string,
   locationId?: string
@@ -357,7 +309,6 @@ export function useDoctorAvailableDates(
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    // Both profile and location must be selected
     if (!profileId || !locationId) {
       setAvailableDates([])
       return
@@ -366,12 +317,10 @@ export function useDoctorAvailableDates(
     const fetchAvailableDates = async () => {
       setIsLoading(true)
       try {
-        // Get current month and next 2 months to provide a good date range
         const today = new Date()
-        const currentMonth = today.getMonth() + 1 // JavaScript months are 0-indexed
+        const currentMonth = today.getMonth() + 1
         const currentYear = today.getFullYear()
 
-        // Fetch available dates for current month and next 2 months
         const monthsToFetch = [
           { month: currentMonth, year: currentYear },
           {
@@ -384,7 +333,6 @@ export function useDoctorAvailableDates(
           },
         ]
 
-        // Fetch all months in parallel using the new month-slots API
         const results = await Promise.allSettled(
           monthsToFetch.map((period) =>
             doctorProfileService.getDoctorMonthSlots(
@@ -392,12 +340,11 @@ export function useDoctorAvailableDates(
               period.month,
               period.year,
               locationId,
-              canAllowPastDates() // Only ADMIN/SUPER_ADMIN can see past dates
+              canAllowPastDates()
             )
           )
         )
 
-        // Combine all available dates from all months
         const allDates: string[] = []
         results.forEach((result) => {
           if (result.status === 'fulfilled' && result.value.availableDates) {
@@ -405,7 +352,6 @@ export function useDoctorAvailableDates(
           }
         })
 
-        // Sort dates chronologically and remove duplicates
         const uniqueDates = [...new Set(allDates)].sort((a, b) =>
           a.localeCompare(b)
         )
@@ -424,9 +370,6 @@ export function useDoctorAvailableDates(
   return { availableDates, isLoading }
 }
 
-// ============================================================================
-// Hook: Fetch Available Time Slots (Step 4)
-// ============================================================================
 export function useAvailableSlots(
   profileId?: string,
   locationId?: string,
@@ -436,7 +379,6 @@ export function useAvailableSlots(
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    // All parameters must be provided
     if (!profileId || !locationId || !serviceDate) {
       setSlots([])
       return
@@ -450,7 +392,7 @@ export function useAvailableSlots(
           profileId,
           locationId,
           formattedDate,
-          canAllowPastDates() // Only ADMIN/SUPER_ADMIN can see past dates
+          canAllowPastDates()
         )
         setSlots(response)
       } catch (error) {
@@ -467,14 +409,6 @@ export function useAvailableSlots(
   return { slots, isLoading }
 }
 
-// ============================================================================
-// DEPRECATED HOOKS (For backward compatibility with reschedule form)
-// ============================================================================
-
-/**
- * @deprecated Use useDoctorsByLocationAndSpecialty instead
- * This hook is kept for backward compatibility with the reschedule form
- */
 export function useDoctorsBySpecialty(specialtyId?: string) {
   const [doctors, setDoctors] = useState<PublicDoctorProfile[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -507,10 +441,6 @@ export function useDoctorsBySpecialty(specialtyId?: string) {
   return { doctors, isLoading }
 }
 
-/**
- * @deprecated Use useWorkLocations instead
- * This hook is kept for backward compatibility with the reschedule form
- */
 export function useLocationsByDoctor(doctorId?: string) {
   const [locations, setLocations] = useState<WorkLocation[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -524,8 +454,6 @@ export function useLocationsByDoctor(doctorId?: string) {
     const fetchLocations = async () => {
       setIsLoading(true)
       try {
-        // Return all public work locations
-        // In a real scenario, we would filter by doctor's associated locations
         const locationsResponse =
           await workLocationService.getPublicWorkLocations({
             page: 1,

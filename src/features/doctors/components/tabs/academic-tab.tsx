@@ -1,7 +1,4 @@
-/**
- * Academic Tab Component
- * Academic Titles & Positions section
- */
+
 import type { UseFormReturn } from 'react-hook-form'
 import { Briefcase } from 'lucide-react'
 import {
@@ -30,7 +27,7 @@ export function AcademicTab({ form }: Readonly<AcademicTabProps>) {
           Academic Titles & Positions
         </h3>
         <div className='space-y-4'>
-        {/* Academic Degree */}
+        {}
         <FormField
           control={form.control}
           name='degree'
@@ -57,7 +54,7 @@ export function AcademicTab({ form }: Readonly<AcademicTabProps>) {
 
         <Separator />
 
-        {/* Positions */}
+        {}
         <FormField
           control={form.control}
           name='position'

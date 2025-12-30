@@ -42,7 +42,7 @@ export function AccountForm() {
   const currentUser = profile || user
 
   const form = useForm({
-    // @ts-expect-error - Zod v4 compatibility issue with @hookform/resolvers
+    
     resolver: zodResolver(accountFormSchema),
     defaultValues: {
       fullName: currentUser?.fullName || '',
@@ -61,7 +61,7 @@ export function AccountForm() {
   })
 
   function onSubmit(data: AccountFormValues) {
-    // Validate phone number if provided
+    
     if (data.phone && data.phone.trim() !== '') {
       const phoneRegex = /^[0-9]{10,11}$/
       if (!phoneRegex.test(data.phone)) {
@@ -70,7 +70,7 @@ export function AccountForm() {
       }
     }
 
-    // TODO: Implement update profile API
+    
     toast.success('Profile updated successfully')
   }
 

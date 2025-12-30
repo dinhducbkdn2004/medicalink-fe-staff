@@ -6,21 +6,21 @@ import { Skeleton } from '@/components/ui/skeleton'
 export function Overview() {
   const { data: revenueStats, isLoading } = useRevenueStats()
 
-  // Process data to have a single value field for the chart - memoized
+  
   const chartData = useMemo(() => {
     if (!revenueStats) return []
     return revenueStats.map((item) => ({
       name: item.name,
-      value: item.total.VND || (item.total['$'] || 0) * 25000, // Fallback conversion if needed or just prioritize VND
+      value: item.total.VND || (item.total['$'] || 0) * 25000, 
     }))
   }, [revenueStats])
 
-  // Show skeleton while loading
+  
   if (isLoading) {
     return <Skeleton className='h-[350px] w-full' />
   }
 
-  // Don't render chart if no data
+  
   if (chartData.length === 0) {
     return (
       <div className='text-muted-foreground flex h-[350px] items-center justify-center'>

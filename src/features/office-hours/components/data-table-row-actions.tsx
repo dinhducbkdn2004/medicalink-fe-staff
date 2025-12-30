@@ -1,7 +1,4 @@
-/**
- * Office Hours Data Table Row Actions
- * Context menu for individual office hour rows
- */
+
 import type { Row } from '@tanstack/react-table'
 import { MoreHorizontal, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'

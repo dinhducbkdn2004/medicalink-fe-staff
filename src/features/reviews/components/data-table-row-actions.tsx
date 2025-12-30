@@ -1,7 +1,4 @@
-/**
- * Reviews Row Actions
- * Actions menu for individual review rows
- */
+
 import type { Row } from '@tanstack/react-table'
 import { Eye, Trash2, CheckCircle, MoreHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -15,17 +12,17 @@ import {
 import type { Review } from '../data/schema'
 import { useReviews } from './use-reviews'
 
-// ============================================================================
-// Types
-// ============================================================================
+
+
+
 
 interface DataTableRowActionsProps {
   row: Row<Review>
 }
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function DataTableRowActions({
   row,

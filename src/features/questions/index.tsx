@@ -1,7 +1,4 @@
-/**
- * Questions & Answers Management Page
- * Main page for managing questions and answers
- */
+
 import { useMemo } from 'react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { RequirePermission } from '@/components/auth/require-permission'
@@ -17,15 +14,15 @@ import { QuestionsTable } from './components/questions-table'
 import type { QuestionQueryParams } from './data/schema'
 import { useQuestions as useQuestionsData } from './data/use-questions'
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 function QuestionsContent() {
   const navigate = useNavigate()
   const search = useSearch({ from: '/_authenticated/questions/' })
 
-  // Build query params
+  
   const queryParams = useMemo<QuestionQueryParams>(() => {
     const params: QuestionQueryParams = {
       page: search.page || 1,
@@ -44,7 +41,7 @@ function QuestionsContent() {
     return params
   }, [search])
 
-  // Fetch questions
+  
   const { data, isLoading } = useQuestionsData(queryParams)
 
   return (
@@ -83,9 +80,9 @@ function QuestionsContent() {
   )
 }
 
-// ============================================================================
-// Export
-// ============================================================================
+
+
+
 
 export function Questions() {
   return (

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from 'react'
 import { fonts } from '@/config/fonts'
 import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
@@ -5,7 +6,7 @@ import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
 type Font = (typeof fonts)[number]
 
 const FONT_COOKIE_NAME = 'font'
-const FONT_COOKIE_MAX_AGE = 60 * 60 * 24 * 365 // 1 year
+const FONT_COOKIE_MAX_AGE = 60 * 60 * 24 * 365
 
 type FontContextType = {
   font: Font
@@ -48,7 +49,6 @@ export function FontProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useFont = () => {
   const context = useContext(FontContext)
   if (!context) {

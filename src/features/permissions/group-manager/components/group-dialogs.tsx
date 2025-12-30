@@ -1,7 +1,4 @@
-/**
- * Group Dialogs
- * Container for all group management dialogs
- */
+
 import { GroupDeleteDialog } from './group-delete-dialog'
 import { GroupFormDialog } from './group-form-dialog'
 import { GroupPermissionsDialog } from './group-permissions-dialog'

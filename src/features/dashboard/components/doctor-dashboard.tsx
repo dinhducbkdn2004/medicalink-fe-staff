@@ -1,8 +1,4 @@
-/**
- * Doctor Dashboard Component
- * Personal dashboard for doctors with statistics and appointments
- * Based on API_DOCTOR_STATS.md specifications
- */
+
 import {
   Calendar,
   Star,
@@ -68,7 +64,7 @@ export function DoctorDashboard() {
 
   return (
     <>
-      {/* ===== Top Heading ===== */}
+      {}
       <Header>
         <Search/>
         <div className='ms-auto flex items-center space-x-4'>
@@ -78,7 +74,7 @@ export function DoctorDashboard() {
         </div>
       </Header>
 
-      {/* ===== Main ===== */}
+      {}
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
           <div>
@@ -103,10 +99,10 @@ export function DoctorDashboard() {
             </TabsList>
           </div>
 
-          {/* Overview Tab */}
+          {}
           <TabsContent value='overview' className='space-y-4'>
             <div className='space-y-4'>
-              {/* Booking Stats */}
+              {}
               <div>
                 <h2 className='mb-3 text-lg font-semibold'>Booking Stats</h2>
                 <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
@@ -145,7 +141,7 @@ export function DoctorDashboard() {
                 </div>
               </div>
 
-              {/* Content Stats */}
+              {}
               <div>
                 <h2 className='mb-3 text-lg font-semibold'>Content Stats</h2>
                 <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
@@ -184,7 +180,7 @@ export function DoctorDashboard() {
                 </div>
               </div>
 
-              {/* Additional Stats Cards */}
+              {}
               <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
                 <Card>
                   <CardHeader>
@@ -287,12 +283,12 @@ export function DoctorDashboard() {
             </div>
           </TabsContent>
 
-          {/* Appointments Tab - TODO: Add appointment lists */}
+          {}
           <TabsContent value='appointments' className='space-y-4'>
             <DoctorAppointmentsSection />
           </TabsContent>
 
-          {/* Content Tab - TODO: Add content lists */}
+          {}
           <TabsContent value='content' className='space-y-4'>
             <Card>
               <CardHeader>

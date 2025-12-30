@@ -1,7 +1,3 @@
-/**
- * Reviews Feature - React Query Hooks
- * Data fetching and mutations for reviews
- */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import {
@@ -9,10 +5,6 @@ import {
   type CreateReviewRequest,
   type ReviewQueryParams,
 } from '@/api/services'
-
-// ============================================================================
-// Query Keys
-// ============================================================================
 
 export const reviewKeys = {
   all: ['reviews'] as const,
@@ -24,13 +16,6 @@ export const reviewKeys = {
     [...reviewKeys.all, 'doctor', doctorId, params] as const,
 }
 
-// ============================================================================
-// Queries
-// ============================================================================
-
-/**
- * Get paginated list of reviews
- */
 export function useReviews(params: ReviewQueryParams = {}) {
   return useQuery({
     queryKey: reviewKeys.list(params),
@@ -38,10 +23,8 @@ export function useReviews(params: ReviewQueryParams = {}) {
       try {
         return await reviewService.getReviews(params)
       } catch (error: unknown) {
-        // Handle 404 specifically
         const err = error as { response?: { status?: number } }
         if (err?.response?.status === 404) {
-          // Return empty data structure to prevent UI crashes
           return {
             data: [],
             meta: {
@@ -57,9 +40,8 @@ export function useReviews(params: ReviewQueryParams = {}) {
         throw error
       }
     },
-    staleTime: 30000, // 30 seconds
+    staleTime: 30000,
     retry: (failureCount, error: unknown) => {
-      // Don't retry on 404 errors
       const err = error as { response?: { status?: number } }
       if (err?.response?.status === 404) {
         return false
@@ -69,9 +51,6 @@ export function useReviews(params: ReviewQueryParams = {}) {
   })
 }
 
-/**
- * Get reviews for a specific doctor
- */
 export function useDoctorReviews(
   doctorId: string,
   params: ReviewQueryParams = {}
@@ -84,9 +63,6 @@ export function useDoctorReviews(
   })
 }
 
-/**
- * Get a single review by ID
- */
 export function useReview(id: string) {
   return useQuery({
     queryKey: reviewKeys.detail(id),
@@ -95,13 +71,6 @@ export function useReview(id: string) {
   })
 }
 
-// ============================================================================
-// Mutations
-// ============================================================================
-
-/**
- * Create a new review (public)
- */
 export function useCreateReview() {
   const queryClient = useQueryClient()
 
@@ -122,11 +91,6 @@ export function useCreateReview() {
   })
 }
 
-/**
- * Update review status (admin only - for approve/reject)
- * Note: Since API doesn't have explicit update endpoint, we simulate it
- * In real implementation, you'd call reviewService.updateReview
- */
 export function useUpdateReview() {
   const queryClient = useQueryClient()
 
@@ -138,9 +102,6 @@ export function useUpdateReview() {
       id: string
       status: 'APPROVED' | 'REJECTED'
     }) => {
-      // TODO: Replace with actual API call when endpoint is available
-      // return reviewService.updateReview(id, { status })
-      // Update review: id, status
       return Promise.resolve({ id, status })
     },
     onSuccess: () => {
@@ -155,9 +116,6 @@ export function useUpdateReview() {
   })
 }
 
-/**
- * Delete a review (admin only)
- */
 export function useDeleteReview() {
   const queryClient = useQueryClient()
 
@@ -173,7 +131,6 @@ export function useDeleteReview() {
         message?: string
       }
 
-      // Handle 404 specifically for unverified reviews
       if (err?.response?.status === 404) {
         toast.error('Cannot delete review', {
           description:

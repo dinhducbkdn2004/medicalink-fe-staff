@@ -1,7 +1,3 @@
-/**
- * Add to Group Dialog Component
- * Dialog for adding a user to permission groups
- */
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -53,12 +49,12 @@ export function AddToGroupDialog({
   const { data: allGroups } = usePermissionGroups()
   const addMutation = useAddUserToGroup()
 
-  // Filter out groups user is already a member of
   const availableGroups =
     allGroups?.filter((group) => !existingGroupIds.includes(group.id)) || []
 
   const form = useForm<z.infer<typeof addToGroupSchema>>({
-    resolver: zodResolver(addToGroupSchema) as never,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(addToGroupSchema) as any,
     defaultValues: {
       groupId: '',
       tenantId: 'global',
@@ -75,7 +71,7 @@ export function AddToGroupDialog({
       form.reset()
       onOpenChange(false)
     } catch {
-      // Error handling is done in mutation hook
+      void 0
     }
   }
 

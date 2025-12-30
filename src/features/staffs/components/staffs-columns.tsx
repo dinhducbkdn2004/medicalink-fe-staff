@@ -52,7 +52,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
         </div>
       )
     },
-    enableSorting: true, // API supports sorting
+    enableSorting: true, 
     meta: {
       className: 'min-w-[150px]',
       thClassName:
@@ -75,7 +75,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
         </div>
       )
     },
-    enableSorting: true, // API supports sorting
+    enableSorting: true, 
     meta: {
       className: 'min-w-[200px]',
     },
@@ -106,7 +106,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
     filterFn: (row, id, value: string[]) => {
       return value.includes(row.getValue(id))
     },
-    enableSorting: false, // API does not support sorting by role
+    enableSorting: false, 
     meta: {
       className: 'min-w-[140px]',
     },
@@ -124,7 +124,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
         </span>
       )
     },
-    enableSorting: false, // API does not support sorting by phone
+    enableSorting: false, 
     meta: {
       className: 'min-w-[140px]',
     },
@@ -150,14 +150,14 @@ export const staffsColumns: ColumnDef<Staff>[] = [
       const isMale = row.original.isMale
       return value.includes(isMale)
     },
-    enableSorting: false, // API does not support sorting by gender
+    enableSorting: false, 
     meta: {
       className: 'min-w-[100px]',
     },
   },
   {
     accessorKey: 'createdAt',
-    id: 'createdAt', // Map to API sortBy field
+    id: 'createdAt', 
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Created At' />
     ),
@@ -176,7 +176,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
         </span>
       )
     },
-    enableSorting: true, // API supports sorting
+    enableSorting: true, 
     meta: {
       className: 'min-w-[130px]',
     },

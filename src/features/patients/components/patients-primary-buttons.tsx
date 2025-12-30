@@ -1,7 +1,4 @@
-/**
- * Patients Primary Action Buttons
- * Main action buttons for patient management page
- */
+
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { usePatients } from './patients-provider'

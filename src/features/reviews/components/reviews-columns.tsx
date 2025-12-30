@@ -1,7 +1,4 @@
-/**
- * Reviews Table Columns
- * Column definitions for the reviews data table
- */
+
 import type { ColumnDef } from '@tanstack/react-table'
 import { User } from 'lucide-react'
 import type { Review } from '@/api/services/review.service'
@@ -9,16 +6,16 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { RatingStars } from './rating-stars'
 
-// ============================================================================
-// Column Definitions
-// ============================================================================
 
-// ============================================================================
-// Column Definitions
-// ============================================================================
+
+
+
+
+
+
 
 export const columns: ColumnDef<Review>[] = [
-  // Select checkbox
+  
   {
     id: 'select',
     header: ({ table }) => (
@@ -46,7 +43,7 @@ export const columns: ColumnDef<Review>[] = [
       className: 'w-[40px]',
     },
   },
-    // Author
+    
   {
     accessorKey: 'authorName',
     header: ({ column }) => (
@@ -72,7 +69,7 @@ export const columns: ColumnDef<Review>[] = [
       className: 'min-w-[180px]',
     },
   },
-  // Rating
+  
   {
     accessorKey: 'rating',
     header: ({ column }) => (
@@ -87,7 +84,7 @@ export const columns: ColumnDef<Review>[] = [
       className: 'w-[140px]',
     },
   },
-  // Public Status (Verified)
+  
   {
     accessorKey: 'isPublic',
     header: ({ column }) => (
@@ -117,7 +114,7 @@ export const columns: ColumnDef<Review>[] = [
       className: 'w-[120px]',
     },
   },
-  // Title & Body Preview
+  
   {
     accessorKey: 'title',
     header: ({ column }) => (
@@ -141,7 +138,7 @@ export const columns: ColumnDef<Review>[] = [
       className: 'min-w-[300px]',
     },
   },
-  // Created At
+  
   {
     accessorKey: 'createdAt',
     header: ({ column }) => (

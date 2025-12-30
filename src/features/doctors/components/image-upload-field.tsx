@@ -1,12 +1,4 @@
-/**
- * Image Upload Field Component
- * Handles image upload to Cloudinary directly (no crop)
- *
- * Features:
- * - Drag & drop support
- * - Preview with hover actions
- * - Compact UI for better space usage
- */
+
 import { useState, useRef, type DragEvent } from 'react'
 import { Upload, X, Loader2, Image as ImageIcon } from 'lucide-react'
 import { toast } from 'sonner'
@@ -23,7 +15,7 @@ interface ImageUploadFieldProps {
   accessToken: string
   disabled?: boolean
   aspectRatio?: 'square' | 'portrait' | 'landscape'
-  compact?: boolean // Compact mode for smaller previews
+  compact?: boolean 
 }
 
 export function ImageUploadField({
@@ -42,41 +34,39 @@ export function ImageUploadField({
   const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Aspect ratio classes for preview (visual only now)
+  
   const aspectRatioClasses = {
     square: 'aspect-square max-h-48',
     portrait: 'aspect-[3/4] max-h-64',
     landscape: 'aspect-[4/3] max-h-48',
   }
 
-  /**
-   * Handle file selection - upload directly
-   */
+  
   const handleFileSelected = async (file: File) => {
-    // Validate file type
+    
     if (!file.type.startsWith('image/')) {
       toast.error('Vui lòng chọn file ảnh')
       return
     }
 
-    // Validate file size (max 5MB - reduced for lighter uploads since no crop)
+    
     if (file.size > 5 * 1024 * 1024) {
       toast.error('Kích thước ảnh phải nhỏ hơn 5MB')
       return
     }
 
-    // Show preview immediately using FileReader
+    
     const reader = new FileReader()
     reader.onload = (e) => {
       setPreview(e.target?.result as string)
     }
     reader.readAsDataURL(file)
 
-    // Upload to Cloudinary with progress
+    
     setUploading(true)
     setProgress(0)
 
-    // Simulate progress
+    
     const progressInterval = setInterval(() => {
       setProgress((prev) => Math.min(prev + 10, 90))
     }, 200)
@@ -86,11 +76,11 @@ export function ImageUploadField({
       setProgress(100)
       onChange(imageUrl)
       toast.success('Upload successful')
-      // Update preview with final URL
+      
       setPreview(imageUrl)
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Upload failed')
-      // Revert preview
+      
       setPreview(value)
     } finally {
       clearInterval(progressInterval)
@@ -107,7 +97,7 @@ export function ImageUploadField({
     await handleFileSelected(file)
   }
 
-  // Drag and drop handlers
+  
   const handleDragEnter = (e: DragEvent<HTMLButtonElement>) => {
     e.preventDefault()
     e.stopPropagation()
@@ -162,7 +152,7 @@ export function ImageUploadField({
       </div>
 
       <div className='space-y-4'>
-        {/* Preview - Compact Design */}
+        {}
         {preview ? (
           <div className='group relative'>
             <div
@@ -177,10 +167,10 @@ export function ImageUploadField({
                 alt='Preview'
                 className='h-full w-full object-cover'
               />
-              {/* Hover Overlay */}
+              {}
               <div className='absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100' />
 
-              {/* Action Buttons */}
+              {}
               <div className='absolute inset-0 flex items-center justify-center gap-2 opacity-0 transition-opacity group-hover:opacity-100'>
                 <Button
                   type='button'
@@ -205,7 +195,7 @@ export function ImageUploadField({
               </div>
             </div>
 
-            {/* Upload Progress Bar */}
+            {}
             {uploading && (
               <div className='absolute right-0 bottom-0 left-0 h-1 overflow-hidden rounded-b-lg bg-gray-200'>
                 <div
@@ -216,7 +206,7 @@ export function ImageUploadField({
             )}
           </div>
         ) : (
-          /* Upload Button with Drag & Drop - Compact */
+          
           <button
             type='button'
             onClick={handleClick}

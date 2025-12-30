@@ -177,7 +177,7 @@ export function InfoSectionsDialog({
         </DrawerContent>
       </Drawer>
 
-      {/* Info Section Form Dialog */}
+      {}
       {showForm && (
         <InfoSectionForm
           open={showForm}
@@ -187,7 +187,7 @@ export function InfoSectionsDialog({
         />
       )}
 
-      {/* Delete Confirmation Dialog */}
+      {}
       {deletingSection && (
         <InfoSectionDeleteDialog
           open={!!deletingSection}

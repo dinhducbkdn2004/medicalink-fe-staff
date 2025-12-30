@@ -1,14 +1,8 @@
-/**
- * Pagination parameters
- */
 export interface PaginationParams {
   page?: number
   limit?: number
 }
 
-/**
- * Pagination metadata (matches backend response)
- */
 export interface PaginationMeta {
   page: number
   limit: number
@@ -18,17 +12,11 @@ export interface PaginationMeta {
   hasPrev: boolean
 }
 
-/**
- * Paginated response wrapper
- */
 export interface PaginatedResponse<T> {
   data: T[]
   meta: PaginationMeta
 }
 
-/**
- * API error response
- */
 export interface ApiErrorResponse {
   success: false
   message: string
@@ -39,9 +27,6 @@ export interface ApiErrorResponse {
   method: string
 }
 
-/**
- * API success response
- */
 export interface ApiSuccessResponse<T = unknown> {
   success: true
   message: string

@@ -1,7 +1,3 @@
-/**
- * Patient API Hooks
- * TanStack Query hooks for Patient management
- */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { patientService } from '@/api/services'
@@ -10,10 +6,6 @@ import type {
   CreatePatientRequest,
   UpdatePatientRequest,
 } from '@/api/types/patient.types'
-
-// ============================================================================
-// Query Keys
-// ============================================================================
 
 export const patientKeys = {
   all: ['patients'] as const,
@@ -24,24 +16,14 @@ export const patientKeys = {
   detail: (id: string) => [...patientKeys.details(), id] as const,
 }
 
-// ============================================================================
-// Query Hooks
-// ============================================================================
-
-/**
- * Hook to fetch paginated list of patients with filtering and sorting
- */
 export function usePatients(params: PatientQueryParams = {}) {
   return useQuery({
     queryKey: patientKeys.list(params),
     queryFn: () => patientService.getPatients(params),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
   })
 }
 
-/**
- * Hook to fetch single patient by ID
- */
 export function usePatient(id: string | undefined) {
   return useQuery({
     queryKey: patientKeys.detail(id!),
@@ -50,13 +32,6 @@ export function usePatient(id: string | undefined) {
   })
 }
 
-// ============================================================================
-// Mutation Hooks
-// ============================================================================
-
-/**
- * Hook to create a new patient
- */
 export function useCreatePatient() {
   const queryClient = useQueryClient()
 
@@ -78,9 +53,6 @@ export function useCreatePatient() {
   })
 }
 
-/**
- * Hook to update a patient
- */
 export function useUpdatePatient() {
   const queryClient = useQueryClient()
 
@@ -105,9 +77,6 @@ export function useUpdatePatient() {
   })
 }
 
-/**
- * Hook to delete a patient (soft delete)
- */
 export function useDeletePatient() {
   const queryClient = useQueryClient()
 
@@ -128,9 +97,6 @@ export function useDeletePatient() {
   })
 }
 
-/**
- * Hook to restore a soft-deleted patient
- */
 export function useRestorePatient() {
   const queryClient = useQueryClient()
 
@@ -151,9 +117,6 @@ export function useRestorePatient() {
   })
 }
 
-/**
- * Hook to bulk delete patients
- */
 export function useBulkDeletePatients() {
   const queryClient = useQueryClient()
 

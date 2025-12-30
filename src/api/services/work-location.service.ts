@@ -1,14 +1,5 @@
-/**
- * Work Location API Service
- * Handles all API calls related to work locations
- * API Base: /api/work-locations
- */
 import { apiClient } from '../core/client'
 import type { PaginatedResponse, PaginationParams } from '../types/common.types'
-
-// ============================================================================
-// Types
-// ============================================================================
 
 export interface WorkLocation {
   id: string
@@ -55,19 +46,7 @@ export interface WorkLocationStats {
 
 export type WorkLocationListResponse = PaginatedResponse<WorkLocation>
 
-// ============================================================================
-// Service Class
-// ============================================================================
-
 class WorkLocationService {
-  // --------------------------------------------------------------------------
-  // Work Location CRUD
-  // --------------------------------------------------------------------------
-
-  /**
-   * Get all work locations with pagination and filtering
-   * GET /api/work-locations
-   */
   async getWorkLocations(
     params: WorkLocationQueryParams = {}
   ): Promise<WorkLocationListResponse> {
@@ -78,10 +57,6 @@ class WorkLocationService {
     return response.data
   }
 
-  /**
-   * Get all active work locations (no pagination, for dropdowns)
-   * GET /api/work-locations?isActive=true&limit=100
-   */
   async getAllActiveWorkLocations(): Promise<WorkLocation[]> {
     try {
       const response = await apiClient.get<WorkLocationListResponse>(
@@ -89,7 +64,7 @@ class WorkLocationService {
         {
           params: {
             isActive: true,
-            limit: 100, // Get active locations (backend may have max limit)
+            limit: 100,
             sortBy: 'name',
             sortOrder: 'asc',
           },
@@ -97,7 +72,6 @@ class WorkLocationService {
       )
       return response.data.data
     } catch (_error) {
-      // Fallback: try without isActive filter if it fails
       try {
         const response = await apiClient.get<WorkLocationListResponse>(
           '/work-locations',
@@ -109,19 +83,13 @@ class WorkLocationService {
             },
           }
         )
-        // Filter active on client side
         return response.data.data.filter((l) => l.isActive)
       } catch (_fallbackError) {
-        // Silent fallback - return empty array
         return []
       }
     }
   }
 
-  /**
-   * Get work location statistics
-   * GET /api/work-locations/stats
-   */
   async getWorkLocationStats(): Promise<WorkLocationStats> {
     const response = await apiClient.get<WorkLocationStats>(
       '/work-locations/stats'
@@ -129,19 +97,11 @@ class WorkLocationService {
     return response.data
   }
 
-  /**
-   * Get a single work location by ID
-   * GET /api/work-locations/:id
-   */
   async getWorkLocation(id: string): Promise<WorkLocation> {
     const response = await apiClient.get<WorkLocation>(`/work-locations/${id}`)
     return response.data
   }
 
-  /**
-   * Create a new work location
-   * POST /api/work-locations
-   */
   async createWorkLocation(
     data: CreateWorkLocationRequest
   ): Promise<WorkLocation> {
@@ -149,10 +109,6 @@ class WorkLocationService {
     return response.data
   }
 
-  /**
-   * Update a work location
-   * PATCH /api/work-locations/:id
-   */
   async updateWorkLocation(
     id: string,
     data: UpdateWorkLocationRequest
@@ -164,10 +120,6 @@ class WorkLocationService {
     return response.data
   }
 
-  /**
-   * Delete a work location (soft delete)
-   * DELETE /api/work-locations/:id
-   */
   async deleteWorkLocation(
     id: string
   ): Promise<{ success: boolean; message: string }> {
@@ -178,10 +130,6 @@ class WorkLocationService {
     return response.data
   }
 
-  /**
-   * Get public work locations (no authentication required)
-   * GET /api/work-locations/public
-   */
   async getPublicWorkLocations(
     params: WorkLocationQueryParams = {}
   ): Promise<WorkLocationListResponse> {

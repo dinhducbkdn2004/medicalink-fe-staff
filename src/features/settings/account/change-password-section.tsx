@@ -34,7 +34,7 @@ export function ChangePasswordSection() {
   const changePasswordMutation = useChangePassword()
 
   const form = useForm<ChangePasswordFormData>({
-    // @ts-expect-error - Zod v4 compatibility issue with @hookform/resolvers
+    
     resolver: zodResolver(changePasswordSchema),
     defaultValues: {
       currentPassword: '',
@@ -55,7 +55,7 @@ export function ChangePasswordSection() {
           toast.success('Password changed successfully')
         },
         onError: (error) => {
-          // Additional error handling if needed
+          
           console.error('Password change error:', error)
         },
       }

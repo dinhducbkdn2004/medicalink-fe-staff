@@ -1,7 +1,4 @@
-/**
- * Work Locations Data Table Row Actions
- * Context menu for individual work location rows
- */
+
 import type { Row } from '@tanstack/react-table'
 import { Edit, MoreHorizontal, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'

@@ -28,7 +28,7 @@ function isValidDate(date: Date | undefined) {
   return !isNaN(date.getTime())
 }
 
-// Parse ISO string theo local timezone (không phải UTC)
+
 function parseLocalDate(dateString: string): Date | undefined {
   if (!dateString) return undefined
 
@@ -39,7 +39,7 @@ function parseLocalDate(dateString: string): Date | undefined {
   return date
 }
 
-// Convert Date thành ISO string (YYYY-MM-DD) theo local date
+
 function toLocalISOString(date: Date | undefined): string {
   if (!date || !isValidDate(date)) return ''
 

@@ -75,7 +75,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
 
   useEffect(() => {
     if (initialData && categories.length > 0) {
-      // Determine the correct category ID from available fields
+      
       const categoryId =
         initialData.categoryId || initialData.category?.id || ''
 
@@ -91,9 +91,9 @@ export function BlogForm({ initialData }: BlogFormProps) {
 
   const onSubmit = (values: BlogFormValues) => {
     if (initialData) {
-      // Use doctor-specific API if user is a doctor
+      
       if (isDoctor) {
-        // Doctors can only update title and content
+        
         const doctorData = {
           title: values.title,
           content: values.content,
@@ -122,7 +122,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
 
   return (
     <div className='relative pb-24'>
-      {/* Header */}
+      {}
       <div className='mb-6 flex items-center justify-between'>
         <h1 className='text-2xl font-bold tracking-tight'>
           {initialData ? 'Edit Blog Post' : 'Create Blog Post'}
@@ -131,14 +131,14 @@ export function BlogForm({ initialData }: BlogFormProps) {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-          {/* Section 1: Basic Information */}
+          {}
           <div className='bg-card rounded-lg border p-6 shadow-sm'>
             <h2 className='mb-4 text-lg font-semibold'>Basic Information</h2>
 
             <div className='grid gap-6 lg:grid-cols-3'>
-              {/* Left: Title + Category + Status (2/3 width) */}
+              {}
               <div className='space-y-4 lg:col-span-2'>
-                {/* Title */}
+                {}
                 <FormField
                   control={form.control}
                   name='title'
@@ -157,7 +157,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                   )}
                 />
 
-                {/* Category and Status in same row */}
+                {}
                 <div className='grid gap-4 sm:grid-cols-2'>
                   <FormField
                     control={form.control}
@@ -188,7 +188,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                     )}
                   />
 
-                  {/* Hide status field for doctors */}
+                  {}
                   {initialData && !isDoctor && (
                     <FormField
                       control={form.control}
@@ -232,7 +232,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                 </div>
               </div>
 
-              {/* Right: Thumbnail (1/3 width) */}
+              {}
               <div className='lg:col-span-1'>
                 <FormField
                   control={form.control}
@@ -255,7 +255,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
             </div>
           </div>
 
-          {/* Section 2: Content Editor */}
+          {}
           <div className='bg-card rounded-lg border p-6 shadow-sm'>
             <h2 className='mb-4 text-lg font-semibold'>Content</h2>
             <FormField
@@ -284,7 +284,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
             />
           </div>
 
-          {/* Sticky Footer with Actions */}
+          {}
           <div className='bg-background/95 supports-backdrop-filter:bg-background/60 fixed inset-x-0 bottom-0 z-50 border-t backdrop-blur'>
             <div className='container flex h-16 items-center justify-between'>
               <div className='text-muted-foreground text-sm'>

@@ -1,7 +1,3 @@
-/**
- * Assign Permission Form
- * Form for assigning new permissions to a group
- */
 import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -56,9 +52,7 @@ export function AssignPermissionForm({
     }
 
     try {
-      // Assign each selected action
       for (const action of selectedActions) {
-        // Find matching permission from system permissions
         const permission = allPermissions.find(
           (p) => p.resource === selectedResource && p.action === action
         )
@@ -78,14 +72,13 @@ export function AssignPermissionForm({
         })
       }
 
-      // Reset form
       setSelectedResource(undefined)
       setSelectedActions([])
       form.reset()
 
       onSuccess?.()
     } catch {
-      // Error handling is done in mutation hook
+      void 0
     }
   }
 

@@ -1,7 +1,4 @@
-/**
- * Doctor Stats Overview Component
- * Displays comprehensive statistics for a specific doctor
- */
+
 import { useQuery } from '@tanstack/react-query'
 import {
   Calendar,
@@ -15,9 +12,9 @@ import { getDoctorStatsById } from '@/api/services/stats.service'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 interface DoctorStatsOverviewProps {
   readonly doctorId: string
@@ -63,7 +60,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
 
   return (
     <div className='space-y-5'>
-      {/* Booking Stats Section */}
+      {}
       <div>
         <h3 className='mb-3 text-sm font-semibold'>Appointment Statistics</h3>
         <div className='grid gap-3 md:grid-cols-2 lg:grid-cols-4'>
@@ -127,7 +124,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
         </div>
       </div>
 
-      {/* Content Stats Section */}
+      {}
       <div>
         <h3 className='mb-3 text-sm font-semibold'>Content & Engagement</h3>
         <div className='grid gap-3 md:grid-cols-2 lg:grid-cols-4'>
@@ -202,7 +199,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
         </div>
       </div>
 
-      {/* Performance Overview */}
+      {}
       {content.averageRating && content.averageRating > 0 ? (
         <Card>
           <CardHeader className='pb-3'>

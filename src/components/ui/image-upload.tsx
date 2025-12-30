@@ -38,9 +38,9 @@ export function ImageUpload({
       onChange(url)
     } catch (error) {
       console.error('Failed to upload image', error)
-      // Ideally show toast error here
+      
     } finally {
-      // Reset input so same file can be selected again if needed
+      
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }

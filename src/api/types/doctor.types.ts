@@ -1,8 +1,5 @@
 import type { PaginationParams, PaginatedResponse } from './common.types'
 
-/**
- * Doctor account data
- */
 export interface DoctorAccount {
   id: string
   fullName: string
@@ -15,9 +12,6 @@ export interface DoctorAccount {
   updatedAt: string
 }
 
-/**
- * Specialty data
- */
 export interface Specialty {
   id: string
   name: string
@@ -25,9 +19,6 @@ export interface Specialty {
   description?: string
 }
 
-/**
- * Work location data (matches backend response)
- */
 export interface WorkLocation {
   id: string
   name: string
@@ -41,9 +32,6 @@ export interface WorkLocation {
   updatedAt?: string
 }
 
-/**
- * Doctor profile data
- */
 export interface DoctorProfile {
   id: string
   staffAccountId: string
@@ -64,12 +52,7 @@ export interface DoctorProfile {
   updatedAt: string
 }
 
-/**
- * Doctor with profile (composite - flat structure from backend)
- * Backend returns a flattened structure with both account and profile fields
- */
 export interface DoctorWithProfile {
-  // Account fields
   id: string
   fullName: string
   email: string
@@ -78,7 +61,6 @@ export interface DoctorWithProfile {
   dateOfBirth?: string
   role: 'DOCTOR'
 
-  // Profile fields (flattened)
   profileId?: string
   isActive?: boolean
   degree?: string
@@ -94,36 +76,27 @@ export interface DoctorWithProfile {
   specialties?: Specialty[]
   workLocations?: WorkLocation[]
 
-  // Timestamps
   createdAt: string
   accountUpdatedAt: string
   profileCreatedAt?: string
   profileUpdatedAt?: string
 }
 
-/**
- * Complete doctor data (account + profile merged - flat structure from API)
- * API GET /api/doctors/:id/complete returns flat structure
- */
 export interface CompleteDoctorData {
-  // From DoctorAccount (required fields)
   id: string
   fullName: string
   email: string
   role: string
 
-  // From DoctorAccount (optional fields)
   phone?: string
   isMale?: boolean
   dateOfBirth?: string
   createdAt?: string
   updatedAt?: string
 
-  // From DoctorProfile (required fields)
   profileId: string
   isActive: boolean
 
-  // From DoctorProfile (optional fields)
   degree?: string
   position?: string[]
   introduction?: string
@@ -140,9 +113,6 @@ export interface CompleteDoctorData {
   profileUpdatedAt?: string
 }
 
-/**
- * Public doctor profile (for patients/visitors)
- */
 export interface PublicDoctorProfile {
   id: string
   staffAccountId: string
@@ -155,9 +125,6 @@ export interface PublicDoctorProfile {
   workLocations: Pick<WorkLocation, 'id' | 'name' | 'slug'>[]
 }
 
-/**
- * Doctor statistics
- */
 export interface DoctorStats {
   total: number
   active: number
@@ -165,9 +132,6 @@ export interface DoctorStats {
   recentlyCreated: number
 }
 
-/**
- * Doctor query parameters
- */
 export interface DoctorQueryParams extends PaginationParams {
   search?: string
   email?: string
@@ -180,9 +144,6 @@ export interface DoctorQueryParams extends PaginationParams {
   specialtyIds?: string
 }
 
-/**
- * Create doctor request (saga pattern - creates both account and profile)
- */
 export interface CreateDoctorRequest {
   fullName: string
   email: string
@@ -193,9 +154,6 @@ export interface CreateDoctorRequest {
   dateOfBirth?: string
 }
 
-/**
- * Create doctor response
- */
 export interface CreateDoctorResponse {
   success: true
   message: string
@@ -206,9 +164,6 @@ export interface CreateDoctorResponse {
   }
 }
 
-/**
- * Update doctor account request
- */
 export interface UpdateDoctorAccountRequest {
   fullName?: string
   email?: string
@@ -218,9 +173,6 @@ export interface UpdateDoctorAccountRequest {
   dateOfBirth?: string
 }
 
-/**
- * Create doctor profile request
- */
 export interface CreateDoctorProfileRequest {
   staffAccountId: string
   isActive?: boolean
@@ -238,9 +190,6 @@ export interface CreateDoctorProfileRequest {
   locationIds?: string[]
 }
 
-/**
- * Update doctor profile request
- */
 export interface UpdateDoctorProfileRequest {
   degree?: string
   position?: string[]
@@ -256,20 +205,11 @@ export interface UpdateDoctorProfileRequest {
   locationIds?: string[]
 }
 
-/**
- * Toggle doctor profile active status request
- */
 export interface ToggleDoctorProfileActiveRequest {
   isActive: boolean
 }
 
-/**
- * Doctor list response
- */
 export type DoctorListResponse = PaginatedResponse<DoctorWithProfile>
 
-/**
- * Public doctor profile list response
- */
 export type PublicDoctorProfileListResponse =
   PaginatedResponse<PublicDoctorProfile>

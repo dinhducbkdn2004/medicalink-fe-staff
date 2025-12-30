@@ -1,7 +1,3 @@
-/**
- * User Permissions Hook
- * Manages user-specific permissions
- */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { permissionService } from '@/api/services/permission.service'
@@ -10,28 +6,21 @@ import type {
   RevokeUserPermissionRequest,
 } from '@/api/types/permission.types'
 
-// Query key factory
 export const userPermissionKeys = {
   all: ['user-permissions'] as const,
   user: (userId: string, tenantId?: string) =>
     [...userPermissionKeys.all, userId, { tenantId }] as const,
 }
 
-/**
- * Fetch permissions for a specific user
- */
 export function useUserPermissions(userId: string, tenantId?: string) {
   return useQuery({
     queryKey: userPermissionKeys.user(userId, tenantId),
     queryFn: () => permissionService.getUserPermissions(userId, { tenantId }),
     enabled: !!userId,
-    staleTime: 1 * 60 * 1000, // 1 minute
+    staleTime: 1 * 60 * 1000,
   })
 }
 
-/**
- * Assign a permission to a user
- */
 export function useAssignUserPermission() {
   const queryClient = useQueryClient()
 
@@ -39,7 +28,6 @@ export function useAssignUserPermission() {
     mutationFn: (data: AssignUserPermissionRequest) =>
       permissionService.assignUserPermission(data),
     onSuccess: (_, variables) => {
-      // Invalidate all tenant variations for this user
       queryClient.invalidateQueries({
         queryKey: [...userPermissionKeys.all, variables.userId],
       })
@@ -52,9 +40,6 @@ export function useAssignUserPermission() {
   })
 }
 
-/**
- * Revoke a permission from a user
- */
 export function useRevokeUserPermission() {
   const queryClient = useQueryClient()
 
@@ -74,9 +59,6 @@ export function useRevokeUserPermission() {
   })
 }
 
-/**
- * Refresh user permission cache
- */
 export function useRefreshUserPermissionCache() {
   const queryClient = useQueryClient()
 

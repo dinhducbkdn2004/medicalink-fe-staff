@@ -1,7 +1,4 @@
-/**
- * Office Hours Context Provider
- * Manages dialog states and current selected office hour
- */
+/* eslint-disable react-refresh/only-export-components */
 import React, { useState, useMemo } from 'react'
 import useDialogState from '@/hooks/use-dialog-state'
 import { type OfficeHour } from '../data/schema'
@@ -44,7 +41,6 @@ export function OfficeHoursProvider({
   )
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useOfficeHoursContext = () => {
   const officeHoursContext = React.useContext(OfficeHoursContext)
 

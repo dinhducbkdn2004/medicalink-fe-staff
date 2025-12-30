@@ -1,7 +1,3 @@
-/**
- * Analysis Detail View Component
- * Right column displaying full analysis details
- */
 import { format } from 'date-fns'
 import { useQuery } from '@tanstack/react-query'
 import { BarChart3, ArrowUp, ArrowDown, Minus } from 'lucide-react'
@@ -9,22 +5,17 @@ import { reviewService } from '@/api/services'
 import { sanitizeHTML } from '@/lib/sanitize-html'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useReviewAnalysis } from './use-review-analysis'
-
-// ============================================================================
-// Component
-// ============================================================================
 
 interface AnalysisDetailViewProps {
   className?: string
 }
 
 export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
-  const { currentAnalysis, setOpen } = useReviewAnalysis()
+  const { currentAnalysis } = useReviewAnalysis()
 
   const { data: fullAnalysis, isLoading } = useQuery({
     queryKey: ['review-analysis-detail', currentAnalysis?.id],
@@ -102,9 +93,9 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
       </CardHeader>
 
       <CardContent className='space-y-5 py-5'>
-        {/* Statistics Dashboard */}
+        {}
         <div className='grid grid-cols-3 gap-3'>
-          {/* Average Rating Card */}
+          {}
           <Card className='border-muted'>
             <CardContent className='pt-4 pb-4'>
               <div>
@@ -145,7 +136,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
             </CardContent>
           </Card>
 
-          {/* Total Reviews Card */}
+          {}
           <Card className='border-muted'>
             <CardContent className='pt-4 pb-4'>
               <div>
@@ -187,7 +178,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
             </CardContent>
           </Card>
 
-          {/* Change Percentage Card */}
+          {}
           <Card className='border-muted'>
             <CardContent className='pt-4 pb-4'>
               <div>
@@ -253,7 +244,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
 
         <Separator />
 
-        {/* Summary Section */}
+        {}
         <div className='space-y-2'>
           <h3 className='text-sm font-semibold'>Summary</h3>
           <div
@@ -266,7 +257,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
 
         <Separator />
 
-        {/* Advantages Section */}
+        {}
         <div className='space-y-2'>
           <h3 className='text-sm font-semibold text-green-600'>
             Key Strengths
@@ -281,7 +272,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
 
         <Separator />
 
-        {/* Disadvantages Section */}
+        {}
         <div className='space-y-2'>
           <h3 className='text-sm font-semibold text-amber-600'>
             Areas for Improvement
@@ -296,7 +287,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
 
         <Separator />
 
-        {/* Changes Section */}
+        {}
         <div className='space-y-2'>
           <h3 className='text-sm font-semibold text-blue-600'>
             Notable Changes
@@ -311,7 +302,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
 
         <Separator />
 
-        {/* Recommendations Section */}
+        {}
         <div className='space-y-2'>
           <h3 className='text-sm font-semibold text-purple-600'>
             Recommendations

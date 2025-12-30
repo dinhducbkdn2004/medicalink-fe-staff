@@ -1,39 +1,18 @@
-/**
- * PageLoader Component
- * Full-page loading spinner with optional message
- *
- * Usage:
- * ```tsx
- * if (isLoading) {
- *   return <PageLoader message="Loading data..." />
- * }
- * ```
- */
+
 import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface PageLoaderProps {
-  /**
-   * Loading message to display
-   * @default "Loading..."
-   */
+  
   message?: string
 
-  /**
-   * Size of the spinner
-   * @default "default"
-   */
+  
   size?: 'sm' | 'default' | 'lg'
 
-  /**
-   * Full screen height
-   * @default true
-   */
+  
   fullScreen?: boolean
 
-  /**
-   * Custom className
-   */
+  
   className?: string
 }
 
@@ -67,9 +46,7 @@ export function PageLoader({
   )
 }
 
-/**
- * Inline spinner for buttons or smaller areas
- */
+
 export function InlineLoader({
   message,
   size = 'sm',

@@ -1,7 +1,4 @@
-/**
- * User List Component
- * Displays list of users for permission management
- */
+
 import { useState } from 'react'
 import { Search, Users, UserCircle2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -36,7 +33,7 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [roleFilter, setRoleFilter] = useState<string>('all')
 
-  // Fetch staffs (admins and doctors have staff accounts)
+  
   const { data, isLoading } = useStaffs({
     page: 1,
     limit: 50,

@@ -1,7 +1,4 @@
-/**
- * Analysis List Component
- * Left column displaying list of review analyses
- */
+
 import { useState } from 'react'
 import { format } from 'date-fns'
 import { useQuery } from '@tanstack/react-query'
@@ -23,9 +20,9 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useReviewAnalysis } from './use-review-analysis'
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 interface AnalysisListProps {
   className?: string
@@ -85,7 +82,7 @@ export function AnalysisList({ className }: AnalysisListProps) {
 
       <CardContent className='space-y-2 p-3'>
         {isLoading ? (
-          // Loading skeleton
+          
           <>
             {[...Array(3)].map((_, i) => (
               <Card key={i} className='p-4'>
@@ -99,7 +96,7 @@ export function AnalysisList({ className }: AnalysisListProps) {
             ))}
           </>
         ) : data?.data.length === 0 ? (
-          // Empty state
+          
           <div className='flex flex-col items-center justify-center py-12 text-center'>
             <div className='bg-muted mb-4 flex h-12 w-12 items-center justify-center rounded-full'>
               <BarChart3 className='text-muted-foreground h-6 w-6' />
@@ -114,7 +111,7 @@ export function AnalysisList({ className }: AnalysisListProps) {
             </p>
           </div>
         ) : (
-          // Analysis list
+          
           data?.data.map((analysis) => (
             <Card
               key={analysis.id}

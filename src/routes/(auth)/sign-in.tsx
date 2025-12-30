@@ -10,10 +10,8 @@ export const Route = createFileRoute('/(auth)/sign-in')({
   component: SignIn,
   validateSearch: searchSchema,
   beforeLoad: () => {
-    // Check if user is already authenticated
     const accessToken = localStorage.getItem('access_token')
 
-    // If authenticated, redirect to home
     if (accessToken) {
       throw redirect({ to: '/' })
     }

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components, react-hooks/exhaustive-deps */
 import {
   createContext,
   useContext,
@@ -24,47 +25,19 @@ interface PermissionContextValue {
     context?: Record<string, unknown>
   ) => boolean
 
-  /**
-   * Check if user has any of the specified permissions
-   */
   canAny: (permissions: Array<{ resource: string; action: string }>) => boolean
 
-  /**
-   * Check if user has all of the specified permissions
-   */
   canAll: (permissions: Array<{ resource: string; action: string }>) => boolean
 
-  /**
-   * Whether permissions are loaded
-   */
   isLoaded: boolean
 
-  /**
-   * Whether permissions are loading
-   */
   isLoading: boolean
 
-  /**
-   * Refresh permissions from API
-   */
   refetch: () => void
 }
 
-// ============================================================================
-// Context
-// ============================================================================
-
 const PermissionContext = createContext<PermissionContextValue | null>(null)
 
-// ============================================================================
-// Hook
-// ============================================================================
-
-/**
- * Use permission context
- * Must be used within PermissionProvider
- */
-// eslint-disable-next-line react-refresh/only-export-components
 export function usePermissions() {
   const context = useContext(PermissionContext)
 
@@ -75,16 +48,9 @@ export function usePermissions() {
   return context
 }
 
-// ============================================================================
-// Provider
-// ============================================================================
-
 interface PermissionProviderProps {
   children: ReactNode
-  /**
-   * Show loading spinner while permissions are loading
-   * @default true
-   */
+
   showLoading?: boolean
 }
 
@@ -92,27 +58,24 @@ export function PermissionProvider({ children }: PermissionProviderProps) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const isLoaded = useIsPermissionLoaded()
   const isLoadingState = useIsPermissionLoading()
-  // Subscribe to permissionMap changes to ensure callbacks update when permissions change
+
   const permissionMap = usePermissionStore((state) => state.permissionMap)
   const { isLoading: isQueryLoading, refetch } = useMyPermissions()
 
-  // Use ref to get stable reference to store actions
   const storeRef = useRef(usePermissionStore.getState())
 
-  // Clear permissions when user logs out
   useEffect(() => {
     if (!isAuthenticated) {
       storeRef.current.clearPermissions()
     }
   }, [isAuthenticated])
 
-  // Create stable callback functions
   const can = useCallback(
     (resource: string, action: string) => {
       if (!isLoaded) return false
       return usePermissionStore.getState().can(resource, action)
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [isLoaded, permissionMap]
   )
 
@@ -123,7 +86,7 @@ export function PermissionProvider({ children }: PermissionProviderProps) {
         .getState()
         .canWithContext(resource, action, context)
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [isLoaded, permissionMap]
   )
 
@@ -133,7 +96,7 @@ export function PermissionProvider({ children }: PermissionProviderProps) {
       const state = usePermissionStore.getState()
       return permissions.some((p) => state.can(p.resource, p.action))
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [isLoaded, permissionMap]
   )
 
@@ -143,13 +106,12 @@ export function PermissionProvider({ children }: PermissionProviderProps) {
       const state = usePermissionStore.getState()
       return permissions.every((p) => state.can(p.resource, p.action))
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [isLoaded, permissionMap]
   )
 
   const isLoading = isLoadingState || isQueryLoading
 
-  // Memoize context value
   const contextValue = useMemo<PermissionContextValue>(
     () => ({
       can,
@@ -163,10 +125,8 @@ export function PermissionProvider({ children }: PermissionProviderProps) {
     [can, canWithContext, canAny, canAll, isLoaded, isLoading, refetch]
   )
 
-  // Show loading state while permissions are being fetched on initial load
-  // Only show loader if authenticated and permissions haven't been loaded yet
   if (isAuthenticated && !isLoaded && isLoading) {
-    return null // Return null instead of loader to prevent flash
+    return null
   }
 
   return (

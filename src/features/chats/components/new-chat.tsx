@@ -43,7 +43,7 @@ export function NewChat({ users, onOpenChange, open }: NewChatProps) {
 
   const handleOpenChange = (newOpen: boolean) => {
     onOpenChange(newOpen)
-    // Reset selected users when dialog closes
+    
     if (!newOpen) {
       setSelectedUsers([])
     }

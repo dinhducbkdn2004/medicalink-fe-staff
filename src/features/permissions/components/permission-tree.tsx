@@ -1,7 +1,4 @@
-/**
- * Permission Tree Component
- * Displays hierarchical permission structure with checkboxes
- */
+
 import { useState } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { RESOURCES, ACTIONS, type GroupPermission } from '@/api/types/permission.types'
@@ -38,7 +35,7 @@ export function PermissionTree({
     new Set(RESOURCES)
   )
 
-  // Group permissions by resource
+  
   const permissionNodes: PermissionNode[] = RESOURCES.map((resource) => {
     const resourcePermissions = permissions.filter(
       (p) => p.resource === resource
@@ -96,7 +93,7 @@ export function PermissionTree({
 
         return (
           <div key={node.resource} className='rounded-md border'>
-            {/* Resource Header */}
+            {}
             <button
               onClick={() => toggleResource(node.resource)}
               className='hover:bg-muted/50 flex w-full items-center justify-between p-3 text-left transition-colors'
@@ -116,7 +113,7 @@ export function PermissionTree({
               </div>
             </button>
 
-            {/* Actions List */}
+            {}
             {isExpanded && (
               <div className='bg-muted/20 border-t p-3'>
                 <div className='space-y-2'>

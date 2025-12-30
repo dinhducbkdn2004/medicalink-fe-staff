@@ -1,7 +1,4 @@
-/**
- * Change Password Form Component
- * Allows authenticated users to change their password
- */
+
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, Lock } from 'lucide-react'
@@ -41,7 +38,7 @@ export function ChangePasswordForm({
   const changePasswordMutation = useChangePassword()
 
   const form = useForm<ChangePasswordFormData>({
-    // @ts-expect-error - Zod v4 compatibility issue with @hookform/resolvers
+    
     resolver: zodResolver(changePasswordSchema),
     defaultValues: {
       currentPassword: '',
@@ -57,15 +54,15 @@ export function ChangePasswordForm({
         newPassword: data.newPassword,
       })
 
-      // Reset form on success
+      
       form.reset()
 
-      // Call optional success callback
+      
       if (onSuccess) {
         onSuccess()
       }
     } catch (error) {
-      // Error handling is done in the hook and API client
+      
       console.error('Change password failed:', error)
     }
   }

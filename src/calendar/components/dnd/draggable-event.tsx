@@ -28,7 +28,7 @@ export function DraggableEvent({
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
   }))
 
-  // Hide the default drag preview
+  
   useEffect(() => {
     preview(getEmptyImage(), { captureDraggingState: true })
   }, [preview])

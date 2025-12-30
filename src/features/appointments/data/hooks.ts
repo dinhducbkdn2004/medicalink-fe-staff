@@ -1,7 +1,3 @@
-/**
- * Appointment Hooks
- * React Query hooks for appointment data fetching and mutations
- */
 import {
   useQuery,
   useMutation,
@@ -23,9 +19,6 @@ import type {
   AppointmentActionResponse,
 } from '@/api/types/appointment.types'
 
-/**
- * Query key factory for appointments
- */
 export const appointmentKeys = {
   all: ['appointments'] as const,
   lists: () => [...appointmentKeys.all, 'list'] as const,
@@ -34,9 +27,6 @@ export const appointmentKeys = {
   detail: (id: string) => [...appointmentKeys.all, 'detail', id] as const,
 }
 
-/**
- * Hook to fetch appointments list
- */
 export const useAppointments = (
   params?: AppointmentListParams,
   options?: {
@@ -49,14 +39,11 @@ export const useAppointments = (
     queryFn: () => appointmentService.getList(params),
     enabled: options?.enabled ?? true,
     refetchInterval: options?.refetchInterval,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,
   })
 }
 
-/**
- * Hook to fetch a single appointment by ID
- */
 export const useAppointment = (
   id: string,
   options?: {
@@ -67,13 +54,10 @@ export const useAppointment = (
     queryKey: appointmentKeys.detail(id),
     queryFn: () => appointmentService.getById(id),
     enabled: options?.enabled ?? true,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
   })
 }
 
-/**
- * Hook to create a new appointment
- */
 export const useCreateAppointment = (): UseMutationResult<
   Appointment,
   Error,
@@ -85,7 +69,6 @@ export const useCreateAppointment = (): UseMutationResult<
     mutationFn: (data: CreateAppointmentRequest) =>
       appointmentService.create(data),
     onSuccess: () => {
-      // Invalidate and refetch appointments list
       queryClient.invalidateQueries({ queryKey: appointmentKeys.lists() })
       toast.success('Appointment created successfully')
     },
@@ -97,9 +80,6 @@ export const useCreateAppointment = (): UseMutationResult<
   })
 }
 
-/**
- * Hook to update an appointment
- */
 export const useUpdateAppointment = (): UseMutationResult<
   Appointment,
   Error,
@@ -116,7 +96,6 @@ export const useUpdateAppointment = (): UseMutationResult<
       data: UpdateAppointmentRequest
     }) => appointmentService.update(id, data),
     onSuccess: (_, variables) => {
-      // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: appointmentKeys.lists() })
       queryClient.invalidateQueries({
         queryKey: appointmentKeys.detail(variables.id),
@@ -131,9 +110,6 @@ export const useUpdateAppointment = (): UseMutationResult<
   })
 }
 
-/**
- * Hook to reschedule an appointment
- */
 export const useRescheduleAppointment = (): UseMutationResult<
   Appointment,
   Error,
@@ -164,9 +140,6 @@ export const useRescheduleAppointment = (): UseMutationResult<
   })
 }
 
-/**
- * Hook to confirm an appointment
- */
 export const useConfirmAppointment = (): UseMutationResult<
   AppointmentActionResponse,
   Error,
@@ -189,9 +162,6 @@ export const useConfirmAppointment = (): UseMutationResult<
   })
 }
 
-/**
- * Hook to complete an appointment
- */
 export const useCompleteAppointment = (): UseMutationResult<
   AppointmentActionResponse,
   Error,
@@ -214,9 +184,6 @@ export const useCompleteAppointment = (): UseMutationResult<
   })
 }
 
-/**
- * Hook to cancel an appointment
- */
 export const useCancelAppointment = (): UseMutationResult<
   AppointmentActionResponse,
   Error,

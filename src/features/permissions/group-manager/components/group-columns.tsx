@@ -1,7 +1,4 @@
-/**
- * Group Manager Table Columns
- * Column definitions for permission groups table
- */
+
 import { type ColumnDef } from '@tanstack/react-table'
 import type { PermissionGroup } from '@/api/types/permission.types'
 import { Checkbox } from '@/components/ui/checkbox'

@@ -24,7 +24,7 @@ export function CommandMenu() {
   const { open, setOpen } = useSearch()
   const { user } = useAuthStore()
 
-  // Filter nav groups based on user permissions
+  
   const filteredNavGroups = React.useMemo(() => {
     return filterNavGroups(navGroups, can, user?.role)
   }, [user?.role])

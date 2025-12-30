@@ -29,7 +29,7 @@ export function StaffsDeleteDialog({
       onOpenChange(false)
       setValue('')
     } catch (error) {
-      // Error handling is done by the mutation hook (toast notifications)
+      
       console.error('Failed to delete staff member:', error)
     }
   }

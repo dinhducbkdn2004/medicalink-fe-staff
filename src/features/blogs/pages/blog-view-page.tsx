@@ -42,7 +42,7 @@ export function BlogViewPage() {
 
       <Main>
         <div className='mx-auto max-w-4xl space-y-8 pb-12'>
-          {/* Header Section */}
+          {}
           <div className='space-y-4'>
             <div className='text-muted-foreground flex items-center gap-2 text-sm'>
               <span className='bg-muted rounded-md px-2 py-1 text-xs font-medium'>
@@ -80,7 +80,7 @@ export function BlogViewPage() {
             </div>
           </div>
 
-          {/* Thumbnail */}
+          {}
           {blog.thumbnailUrl && (
             <div className='bg-muted aspect-video w-full overflow-hidden rounded-lg border'>
               <img
@@ -91,7 +91,7 @@ export function BlogViewPage() {
             </div>
           )}
 
-          {/* Content */}
+          {}
           <article
             className='prose prose-stone dark:prose-invert lg:prose-lg max-w-none [&_img]:mx-auto [&_img]:block'
             dangerouslySetInnerHTML={{ __html: blog.content }}

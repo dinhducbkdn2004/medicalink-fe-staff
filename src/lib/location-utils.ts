@@ -1,11 +1,3 @@
-/**
- * Location Utilities
- * Helper functions for address and Google Maps integration
- */
-
-/**
- * Generate Google Maps URL from address
- */
 export function generateGoogleMapsUrl(address: string): string {
   if (!address || address.trim().length === 0) {
     return ''
@@ -15,11 +7,8 @@ export function generateGoogleMapsUrl(address: string): string {
   return `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`
 }
 
-/**
- * Validate Google Maps URL
- */
 export function isValidGoogleMapsUrl(url: string): boolean {
-  if (!url) return true // Empty is valid (optional field)
+  if (!url) return true
 
   try {
     const urlObj = new URL(url)
@@ -38,28 +27,22 @@ export function isValidGoogleMapsUrl(url: string): boolean {
   }
 }
 
-/**
- * Extract address from Google Maps URL (best effort)
- */
 export function extractAddressFromMapsUrl(url: string): string | null {
   if (!url) return null
 
   try {
     const urlObj = new URL(url)
 
-    // Try to get 'query' parameter
     const query = urlObj.searchParams.get('query')
     if (query) {
       return decodeURIComponent(query)
     }
 
-    // Try to get 'q' parameter
     const q = urlObj.searchParams.get('q')
     if (q) {
       return decodeURIComponent(q)
     }
 
-    // Try to parse from path (for share links)
     const pathMatch = url.match(/place\/([^/]+)/)
     if (pathMatch && pathMatch[1]) {
       return decodeURIComponent(pathMatch[1].replace(/\+/g, ' '))
@@ -71,22 +54,16 @@ export function extractAddressFromMapsUrl(url: string): string | null {
   }
 }
 
-/**
- * Open Google Maps URL in new tab
- */
 export function openGoogleMaps(url: string): void {
   if (!url) return
 
   try {
     window.open(url, '_blank', 'noopener,noreferrer')
   } catch {
-    // Silently fail - browser may have blocked popup
+    void 0
   }
 }
 
-/**
- * Format address for display (truncate if too long)
- */
 export function formatAddress(address: string, maxLength: number = 50): string {
   if (!address) return ''
 
@@ -95,10 +72,6 @@ export function formatAddress(address: string, maxLength: number = 50): string {
   return `${address.substring(0, maxLength - 3)}...`
 }
 
-/**
- * Parse address components (simple implementation)
- * For production, consider using Google Places API
- */
 export interface AddressComponents {
   street?: string
   city?: string

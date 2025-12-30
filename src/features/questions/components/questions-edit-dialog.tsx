@@ -1,7 +1,4 @@
-/**
- * Question Edit Dialog
- * Dialog for editing question details (Admin only)
- */
+
 import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -35,9 +32,9 @@ import { useUpdateQuestion } from '../data/use-questions'
 import { usePublicSpecialties } from '../data/use-specialties'
 import { useQuestions } from './use-questions'
 
-// ============================================================================
-// Form Schema
-// ============================================================================
+
+
+
 
 const formSchema = z.object({
   status: z.enum(['PENDING', 'ANSWERED', 'CLOSED']),
@@ -46,9 +43,9 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function QuestionsEditDialog() {
   const { open, setOpen, currentQuestion } = useQuestions()
@@ -65,7 +62,7 @@ export function QuestionsEditDialog() {
     },
   })
 
-  // Update form values when current question changes
+  
   useEffect(() => {
     if (currentQuestion) {
       form.reset({
@@ -81,7 +78,7 @@ export function QuestionsEditDialog() {
     try {
       await updateQuestionMutation.mutateAsync({
         id: currentQuestion.id,
-        // Send status and specialtyId
+        
         data: {
           status: values.status,
           specialtyId: values.specialtyId,
@@ -93,7 +90,7 @@ export function QuestionsEditDialog() {
     }
   }
 
-  // Handle dialog open change
+  
   const handleOpenChange = () => {
     setOpen('edit')
   }

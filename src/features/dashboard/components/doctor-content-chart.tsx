@@ -1,7 +1,4 @@
-/**
- * Doctor Content Chart Component - Vertical Layout Fix
- * Visualizes doctor content statistics with focused charts
- */
+
 import { useMemo } from 'react'
 import { Star } from 'lucide-react'
 import {
@@ -47,7 +44,7 @@ export function DoctorContentChart() {
     sortOrder: 'DESC',
   } as DoctorContentStatsParams)
 
-  // Top 10 doctors by rating
+  
   const ratingChartData = useMemo(() => {
     if (!data?.data || data.data.length === 0) return []
 
@@ -68,7 +65,7 @@ export function DoctorContentChart() {
       .filter((item) => item.rating > 0)
   }, [data])
 
-  // Content metrics radar chart - top 5 doctors
+  
   const radarChartData = useMemo(() => {
     if (!data?.data || data.data.length === 0) return []
 
@@ -123,7 +120,7 @@ export function DoctorContentChart() {
 
   return (
     <div className='grid gap-6 lg:grid-cols-2'>
-      {/* Average Rating Chart - VERTICAL */}
+      {}
       {ratingChartData.length > 0 ? (
         <Card>
           <CardHeader>
@@ -206,7 +203,7 @@ export function DoctorContentChart() {
         </Card>
       )}
 
-      {/* Content Metrics Radar Chart */}
+      {}
       {radarChartData.length > 0 ? (
         <Card>
           <CardHeader>

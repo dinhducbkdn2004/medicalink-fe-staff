@@ -163,7 +163,7 @@ export function CategoryList({
       entityName='category'
       searchPlaceholder='Search categories...'
       hideToolbar={true}
-      // @ts-expect-error - getRowActions is not strictly typed in DataTableProps yet
+      
       getRowActions={getRowActions}
     />
   )

@@ -1,8 +1,4 @@
-/**
- * Doctors Table Component
- * Table view for doctor account management with API integration
- * Refactored to use the generic DataTable component
- */
+
 import { Eye, Edit, Trash2, Power, Star, BarChart3 } from 'lucide-react'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
 import {
@@ -21,9 +17,9 @@ import { DataTableBulkActions } from './data-table-bulk-actions'
 import { doctorsColumns as columns } from './doctors-columns'
 import { useDoctors } from './doctors-provider'
 
-// ============================================================================
-// Types
-// ============================================================================
+
+
+
 
 type DoctorsTableProps = {
   data: DoctorWithProfile[]
@@ -33,11 +29,11 @@ type DoctorsTableProps = {
   isLoading?: boolean
 }
 
-// ============================================================================
-// Configuration
-// ============================================================================
 
-// Column filter configuration for URL state management
+
+
+
+
 const columnFilterConfigs: ColumnFilterConfig[] = [
   {
     columnId: 'fullName',
@@ -60,9 +56,9 @@ const columnFilterConfigs: ColumnFilterConfig[] = [
   },
 ]
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function DoctorsTable({
   data,
@@ -73,7 +69,7 @@ export function DoctorsTable({
 }: DoctorsTableProps) {
   const { setOpen, setCurrentRow } = useDoctors()
 
-  // Define row actions (context menu)
+  
   const getRowActions = (row: {
     original: DoctorWithProfile
   }): DataTableAction[] => {
@@ -102,7 +98,7 @@ export function DoctorsTable({
       },
     ]
 
-    // Only show Edit action if user has update permission
+    
     if (canUpdateDoctors()) {
       actions.push({
         label: 'Edit',
@@ -126,7 +122,7 @@ export function DoctorsTable({
       separator: true,
     })
 
-    // Only show Toggle Active if user has toggle permission
+    
     if (canToggleActive()) {
       actions.push({
         label: doctor.isActive ? 'Deactivate' : 'Activate',
@@ -138,7 +134,7 @@ export function DoctorsTable({
       })
     }
 
-    // Only show Delete action if user has delete permission
+    
     if (canDeleteDoctor(false)) {
       actions.push({
         label: 'Delete',
@@ -156,16 +152,16 @@ export function DoctorsTable({
 
   return (
     <DataTable
-      // Required props
+      
       data={data}
       columns={columns}
       search={search}
       navigate={navigate}
-      // Configuration
+      
       pageCount={pageCount}
       isLoading={isLoading}
       entityName='doctor'
-      // Toolbar
+      
       searchPlaceholder='Search doctors...'
       searchKey='fullName'
       filters={[
@@ -188,10 +184,10 @@ export function DoctorsTable({
           })),
         },
       ]}
-      // Actions
+      
       getRowActions={getRowActions}
       renderBulkActions={(table) => <DataTableBulkActions table={table} />}
-      // Advanced
+      
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
       emptyMessage='No doctors found.'

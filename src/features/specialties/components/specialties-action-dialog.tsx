@@ -1,7 +1,4 @@
-/**
- * Specialties Action Dialog
- * Create/Edit specialty form dialog
- */
+
 import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -31,9 +28,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { type Specialty } from '../data/schema'
 import { useCreateSpecialty, useUpdateSpecialty } from '../data/use-specialties'
 
-// ============================================================================
-// Types & Schema
-// ============================================================================
+
+
+
 
 const formSchema = z.object({
   name: z
@@ -52,9 +49,9 @@ interface SpecialtiesActionDialogProps {
   currentRow?: Specialty
 }
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function SpecialtiesActionDialog({
   open,
@@ -65,7 +62,7 @@ export function SpecialtiesActionDialog({
   const createMutation = useCreateSpecialty()
   const updateMutation = useUpdateSpecialty()
 
-  // Form setup
+  
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,7 +72,7 @@ export function SpecialtiesActionDialog({
     },
   })
 
-  // Load current row data in edit mode
+  
   useEffect(() => {
     if (open && isEditMode && currentRow) {
       form.reset({
@@ -92,7 +89,7 @@ export function SpecialtiesActionDialog({
     }
   }, [open, isEditMode, currentRow, form])
 
-  // Handle form submission
+  
   const onSubmit = async (values: FormValues) => {
     try {
       const data = {
@@ -110,7 +107,7 @@ export function SpecialtiesActionDialog({
       onOpenChange()
       form.reset()
     } catch (error) {
-      // Error handling is done in the mutation hooks
+      
       console.error('Form submission error:', error)
     }
   }
@@ -133,7 +130,7 @@ export function SpecialtiesActionDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-            {/* Name */}
+            {}
             <FormField
               control={form.control}
               name='name'
@@ -157,7 +154,7 @@ export function SpecialtiesActionDialog({
               )}
             />
 
-            {/* Description */}
+            {}
             <FormField
               control={form.control}
               name='description'
@@ -180,7 +177,7 @@ export function SpecialtiesActionDialog({
               )}
             />
 
-            {/* Icon URL (Image Upload) */}
+            {}
             <FormField
               control={form.control}
               name='iconUrl'

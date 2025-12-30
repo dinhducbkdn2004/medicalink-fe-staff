@@ -1,7 +1,4 @@
-/**
- * Doctor Booking Chart Component - Vertical Layout Fix
- * Visualizes doctor booking statistics with focused charts
- */
+
 import { useMemo } from 'react'
 import {
   Bar,
@@ -42,7 +39,7 @@ export function DoctorBookingChart() {
     sortOrder: 'DESC',
   } as DoctorBookingStatsParams)
 
-  // Top 10 doctors by completion rate
+  
   const completionRateData = useMemo(() => {
     if (!data?.data || data.data.length === 0) return []
 
@@ -64,7 +61,7 @@ export function DoctorBookingChart() {
       .filter((item) => item.total > 0)
   }, [data])
 
-  // Overall status distribution (pie chart)
+  
   const statusDistribution = useMemo(() => {
     if (!data?.data || data.data.length === 0) return []
 
@@ -140,7 +137,7 @@ export function DoctorBookingChart() {
 
   return (
     <div className='grid gap-6 lg:grid-cols-2'>
-      {/* Completion Rate Chart - VERTICAL */}
+      {}
       {completionRateData.length > 0 ? (
         <Card>
           <CardHeader>
@@ -225,7 +222,7 @@ export function DoctorBookingChart() {
         </Card>
       )}
 
-      {/* Status Distribution Pie Chart */}
+      {}
       {statusDistribution.length > 0 ? (
         <Card>
           <CardHeader>

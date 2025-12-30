@@ -1,7 +1,3 @@
-/**
- * Permission Groups Hook
- * Fetches and manages permission groups
- */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { permissionService } from '@/api/services/permission.service'
@@ -10,7 +6,6 @@ import type {
   UpdatePermissionGroupRequest,
 } from '@/api/types/permission.types'
 
-// Query key factory
 export const permissionGroupKeys = {
   all: ['permission-groups'] as const,
   lists: () => [...permissionGroupKeys.all, 'list'] as const,
@@ -20,20 +15,14 @@ export const permissionGroupKeys = {
   detail: (id: string) => [...permissionGroupKeys.details(), id] as const,
 }
 
-/**
- * Fetch all permission groups
- */
 export function usePermissionGroups(tenantId?: string) {
   return useQuery({
     queryKey: permissionGroupKeys.list(tenantId),
     queryFn: () => permissionService.getPermissionGroups({ tenantId }),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 2 * 60 * 1000,
   })
 }
 
-/**
- * Create a new permission group
- */
 export function useCreatePermissionGroup() {
   const queryClient = useQueryClient()
 
@@ -51,9 +40,6 @@ export function useCreatePermissionGroup() {
   })
 }
 
-/**
- * Update a permission group
- */
 export function useUpdatePermissionGroup() {
   const queryClient = useQueryClient()
 
@@ -78,9 +64,6 @@ export function useUpdatePermissionGroup() {
   })
 }
 
-/**
- * Delete a permission group
- */
 export function useDeletePermissionGroup() {
   const queryClient = useQueryClient()
 

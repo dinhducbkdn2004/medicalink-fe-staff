@@ -29,7 +29,6 @@
   word-break: break-word;
 }
 
-/* Size variants */
 .ql-editor-compact .ql-editor {
   min-height: 200px;
 }

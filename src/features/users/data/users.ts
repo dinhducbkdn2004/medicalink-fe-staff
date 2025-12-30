@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker'
 
-// Set a fixed seed for consistent data generation
 faker.seed(67890)
 
 export const users = Array.from({ length: 500 }, () => {

@@ -1,22 +1,19 @@
-/**
- * Questions Provider
- * Context provider for managing questions state
- */
+
 import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import type { Question, Answer } from '../data/schema'
 import { QuestionsContext } from './questions-context'
 
 export type { QuestionsContextValue } from './questions-context'
 
-// ============================================================================
-// Types
-// ============================================================================
+
+
+
 
 type DialogType = 'view' | 'edit' | 'delete' | 'answer' | 'close' | 'answers'
 
-// ============================================================================
-// Provider
-// ============================================================================
+
+
+
 
 interface QuestionsProviderProps {
   children: ReactNode

@@ -144,9 +144,9 @@ export function EventDetailsDialog({
             />
           ) : (
             <div className='space-y-6'>
-              {/* Main Info Grid - 2 columns */}
+              {}
               <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
-                {/* Left Column */}
+                {}
                 <div className='space-y-4'>
                   <div className='flex items-start gap-3'>
                     <User className='text-muted-foreground mt-1 size-5 shrink-0' />
@@ -194,7 +194,7 @@ export function EventDetailsDialog({
                   )}
                 </div>
 
-                {/* Right Column */}
+                {}
                 <div className='space-y-4'>
                   <div className='flex items-start gap-3'>
                     <Calendar className='text-muted-foreground mt-1 size-5 shrink-0' />
@@ -239,7 +239,7 @@ export function EventDetailsDialog({
                 </div>
               </div>
 
-              {/* Notes Section - Full width */}
+              {}
               {appointment.notes && (
                 <div className='border-t pt-6'>
                   <div className='flex items-start gap-3'>

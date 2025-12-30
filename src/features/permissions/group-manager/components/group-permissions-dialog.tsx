@@ -1,7 +1,4 @@
-/**
- * Group Permissions Dialog
- * Dialog for viewing and managing group permissions
- */
+import { RefreshCw } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -19,7 +16,6 @@ import {
 } from '../../hooks'
 import { AssignPermissionForm } from './assign-permission-form'
 import { useGroupManager } from './use-group-manager'
-import { RefreshCw } from 'lucide-react'
 
 type GroupPermissionsDialogProps = {
   open: boolean
@@ -48,7 +44,6 @@ export function GroupPermissionsDialog({
   ) => {
     if (!currentGroup || !allPermissions) return
 
-    // Find matching permission from system permissions
     const permission = allPermissions.find(
       (p) => p.resource === resource && p.action === action
     )
@@ -60,7 +55,6 @@ export function GroupPermissionsDialog({
 
     try {
       if (granted) {
-        // Assign permission
         await assignMutation.mutateAsync({
           groupId: currentGroup.id,
           data: {
@@ -70,7 +64,6 @@ export function GroupPermissionsDialog({
           },
         })
       } else {
-        // Revoke permission
         await revokeMutation.mutateAsync({
           groupId: currentGroup.id,
           data: {
@@ -80,7 +73,7 @@ export function GroupPermissionsDialog({
         })
       }
     } catch {
-      // Error handling is done in mutation hooks
+      void 0
     }
   }
 

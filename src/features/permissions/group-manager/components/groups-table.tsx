@@ -1,7 +1,4 @@
-/**
- * Groups Table Component
- * Table view for permission groups management
- */
+
 import { Edit, Trash2, Shield } from 'lucide-react'
 import type { PermissionGroup } from '@/api/types/permission.types'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
@@ -25,7 +22,7 @@ export function GroupsTable({
 }: Readonly<GroupsTableProps>) {
   const { setOpen, setCurrentGroup } = useGroupManager()
 
-  // Define row actions (context menu)
+  
   const getRowActions = (row: {
     original: PermissionGroup
   }): DataTableAction[] => {
@@ -63,19 +60,19 @@ export function GroupsTable({
 
   return (
     <DataTable
-      // Required props
+      
       data={data}
       columns={groupColumns}
       search={search}
       navigate={navigate}
-      // Configuration
+      
       isLoading={isLoading}
       entityName='permission group'
-      // Toolbar
-      // Actions
+      
+      
       getRowActions={getRowActions}
       renderBulkActions={(table) => <DataTableBulkActions table={table} />}
-      // Advanced
+      
       enableRowSelection={true}
       emptyMessage='No permission groups found.'
       hideToolbar={true}

@@ -1,7 +1,4 @@
-/**
- * Permission Stats Cards Component
- * Displays statistics overview for permission system
- */
+
 import { Shield, UsersRound, Key, UserPlus } from 'lucide-react'
 import type { PermissionStats } from '@/api/types/permission.types'
 import { Card, CardContent } from '@/components/ui/card'

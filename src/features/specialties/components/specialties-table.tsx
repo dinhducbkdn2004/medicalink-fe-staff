@@ -1,7 +1,4 @@
-/**
- * Specialties Table Component
- * Table view for specialty management with API integration
- */
+
 import { Edit, Trash2, Info } from 'lucide-react'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
 import {
@@ -16,9 +13,9 @@ import { DataTableBulkActions } from './data-table-bulk-actions'
 import { specialtiesColumns as columns } from './specialties-columns'
 import { useSpecialties } from './specialties-provider'
 
-// ============================================================================
-// Types
-// ============================================================================
+
+
+
 
 type SpecialtiesTableProps = {
   data: Specialty[]
@@ -28,11 +25,11 @@ type SpecialtiesTableProps = {
   isLoading?: boolean
 }
 
-// ============================================================================
-// Configuration
-// ============================================================================
 
-// Column filter configuration for URL state management
+
+
+
+
 const columnFilterConfigs: ColumnFilterConfig[] = [
   {
     columnId: 'name',
@@ -48,9 +45,9 @@ const columnFilterConfigs: ColumnFilterConfig[] = [
   },
 ]
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function SpecialtiesTable({
   data,
@@ -61,7 +58,7 @@ export function SpecialtiesTable({
 }: SpecialtiesTableProps) {
   const { setOpen, setCurrentRow } = useSpecialties()
 
-  // Define row actions (context menu)
+  
   const getRowActions = (row: { original: Specialty }): DataTableAction[] => {
     const specialty = row.original
 
@@ -76,7 +73,7 @@ export function SpecialtiesTable({
       },
     ]
 
-    // Only show Edit action if user has update permission
+    
     if (canUpdateSpecialties()) {
       actions.push({
         label: 'Edit',
@@ -89,7 +86,7 @@ export function SpecialtiesTable({
       })
     }
 
-    // Only show Delete action if user has delete permission
+    
     if (canDeleteSpecialty({ specialtyId: specialty.id })) {
       actions.push({
         label: 'Delete',
@@ -107,16 +104,16 @@ export function SpecialtiesTable({
 
   return (
     <DataTable
-      // Required props
+      
       data={data}
       columns={columns}
       search={search}
       navigate={navigate}
-      // Configuration
+      
       pageCount={pageCount}
       isLoading={isLoading}
       entityName='specialty'
-      // Toolbar
+      
       searchPlaceholder='Search specialties by name...'
       searchKey='name'
       filters={[
@@ -130,10 +127,10 @@ export function SpecialtiesTable({
           })),
         },
       ]}
-      // Actions
+      
       getRowActions={getRowActions}
       renderBulkActions={(table) => <DataTableBulkActions table={table} />}
-      // Advanced
+      
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
       emptyMessage='No specialties found. Create your first specialty to get started.'

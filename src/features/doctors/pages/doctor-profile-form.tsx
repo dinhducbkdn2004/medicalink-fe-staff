@@ -1,8 +1,4 @@
-/**
- * Doctor Profile Edit Form
- * Comprehensive form for editing doctor profile with all fields
- * API: PATCH /api/doctors/profile/:id
- */
+
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -59,7 +55,7 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
   const { user } = useAuth()
   const accessToken = useAuthStore((state) => state.accessToken)
 
-  // Data fetching - MUST be called before any early returns
+  
   const { data: completeData, isLoading } = useCompleteDoctor(doctorId)
   const { data: specialties = [], isLoading: loadingSpecialties } =
     useActiveSpecialties()
@@ -68,12 +64,12 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
   const { mutate: updateProfile, isPending: isUpdating } =
     useUpdateDoctorProfile()
 
-  // Explicit type assertion to help TypeScript (flat structure from API)
+  
   const doctor = completeData as CompleteDoctorData | undefined
 
-  // Form setup
+  
   const form = useForm<UpdateDoctorProfileFormData>({
-    // @ts-expect-error Zod version mismatch with @hookform/resolvers (known issue)
+    
     resolver: zodResolver(updateDoctorProfileSchema),
     defaultValues: {
       degree: '',
@@ -91,7 +87,7 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
     },
   })
 
-  // Load existing data from flat structure (API returns merged account + profile)
+  
   useEffect(() => {
     if (doctor) {
       form.reset({
@@ -111,7 +107,7 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
     }
   }, [doctor, form])
 
-  // Check permissions AFTER all hooks
+  
   const hasPermission = canEditOwnProfile(user, doctorId)
   if (!hasPermission) {
     return (
@@ -162,7 +158,7 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
     )
   }
 
-  // Not found state
+  
   if (!doctor) {
     return (
       <div className='flex min-h-[400px] items-center justify-center'>
@@ -176,7 +172,7 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
     )
   }
 
-  // API returns flat structure (account + profile merged) - already typed above
+  
 
   return (
     <>
@@ -190,7 +186,7 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
       </Header>
 
       <Main className='flex flex-1 flex-col gap-6'>
-        {/* Page Header */}
+        {}
         <div className='flex items-start justify-between'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
@@ -208,14 +204,14 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
             <div className='grid gap-4 md:grid-cols-[300px_1fr]'>
-              {/* LEFT COLUMN - Enhanced Profile Sidebar */}
+              {}
               <ProfileSidebar
                 form={form}
                 doctor={doctor}
                 accessToken={accessToken || ''}
               />
 
-              {/* RIGHT COLUMN - Tabbed Profile Details */}
+              {}
               <div className='space-y-4'>
                 <Card>
                   <CardContent className='p-6'>
@@ -251,12 +247,12 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
                         </TabsTrigger>
                       </TabsList>
 
-                      {/* Tab 1: Academic & Professional Titles */}
+                      {}
                       <TabsContent value='academic' className='pt-4'>
                         <AcademicTab form={form} />
                       </TabsContent>
 
-                      {/* Tab 2: Professional Info (Introduction & Research) */}
+                      {}
                       <TabsContent value='professional' className='pt-4'>
                         <ProfessionalTab
                           form={form}
@@ -264,12 +260,12 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
                         />
                       </TabsContent>
 
-                      {/* Tab 3: Education & Experience */}
+                      {}
                       <TabsContent value='education' className='pt-4'>
                         <EducationTab form={form} />
                       </TabsContent>
 
-                      {/* Tab 4: Specialties & Work Locations */}
+                      {}
                       <TabsContent value='locations' className='pt-4'>
                         <LocationsTab
                           form={form}
@@ -285,9 +281,9 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
               </div>
             </div>
 
-            {/* Enhanced Sticky Footer Actions */}
+            {}
             <div className='bg-background/95 sticky bottom-0 z-10 flex items-center justify-between gap-4 border-t px-6 py-4 shadow-lg backdrop-blur-sm'>
-              {/* Left side - Unsaved changes indicator */}
+              {}
               <div className='flex items-center gap-2'>
                 {form.formState.isDirty && !isUpdating && (
                   <div className='flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400'>
@@ -303,7 +299,7 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
                 )}
               </div>
 
-              {/* Right side - Action buttons */}
+              {}
               <div className='flex gap-3'>
                 <Button
                   type='button'

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { type Table } from '@tanstack/react-table'
+import { useDebounce } from '@/hooks/use-debounce'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useDebounce } from '@/hooks/use-debounce'
 import { DataTableFacetedFilter } from './faceted-filter'
 import { DataTableViewOptions } from './view-options'
 
@@ -28,7 +28,6 @@ export function DataTableToolbar<TData>({
   searchKey,
   filters = [],
 }: DataTableToolbarProps<TData>) {
-  // Local state for search input (for immediate UI feedback)
   const [searchValue, setSearchValue] = useState(() => {
     if (searchKey) {
       return (table.getColumn(searchKey)?.getFilterValue() as string) ?? ''
@@ -36,30 +35,30 @@ export function DataTableToolbar<TData>({
     return table.getState().globalFilter ?? ''
   })
 
-  // Debounced search value (for API calls)
   const debouncedSearchValue = useDebounce(searchValue, 300)
 
-  // Sync debounced value to table filter
   useEffect(() => {
     if (searchKey) {
-      table.getColumn(searchKey)?.setFilterValue(debouncedSearchValue || undefined)
+      table
+        .getColumn(searchKey)
+        ?.setFilterValue(debouncedSearchValue || undefined)
     } else {
       table.setGlobalFilter(debouncedSearchValue || undefined)
     }
   }, [debouncedSearchValue, searchKey, table])
 
-  // Sync external filter changes back to local state
-  // Only when URL changes externally (not from typing)
   useEffect(() => {
     const currentValue = searchKey
-      ? (table.getColumn(searchKey)?.getFilterValue() as string) ?? ''
-      : table.getState().globalFilter ?? ''
-    
-    // Only update if different AND not currently typing
-    // Check if the current filter value is different from BOTH searchValue and debouncedSearchValue
-    if (currentValue !== debouncedSearchValue && searchValue === debouncedSearchValue) {
+      ? ((table.getColumn(searchKey)?.getFilterValue() as string) ?? '')
+      : (table.getState().globalFilter ?? '')
+
+    if (
+      currentValue !== debouncedSearchValue &&
+      searchValue === debouncedSearchValue
+    ) {
       setSearchValue(currentValue)
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchKey, table.getState().columnFilters, table.getState().globalFilter])
 
