@@ -1,7 +1,4 @@
-/**
- * Doctors Table Columns Definition
- * Column definitions for doctor account management table
- */
+
 import { format } from 'date-fns'
 import { type ColumnDef } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
@@ -55,7 +52,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
         </span>
       </div>
     ),
-    enableSorting: true, // API supports sorting
+    enableSorting: true, 
     meta: {
       className: 'min-w-[150px]',
       thClassName:
@@ -76,7 +73,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
         </span>
       </div>
     ),
-    enableSorting: true, // API supports sorting
+    enableSorting: true, 
     meta: {
       className: 'min-w-[200px]',
     },
@@ -102,7 +99,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
       <DataTableColumnHeader column={column} title='Specialties' />
     ),
     cell: ({ row }) => {
-      // Backend returns flat structure with specialties at root level
+      
       const specialties = row.original.specialties || []
       if (specialties.length === 0)
         return <span className='text-muted-foreground'>-</span>
@@ -130,7 +127,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
       <DataTableColumnHeader column={column} title='Work Locations' />
     ),
     cell: ({ row }) => {
-      // Backend returns flat structure with workLocations at root level
+      
       const locations = row.original.workLocations || []
       if (locations.length === 0)
         return <span className='text-muted-foreground'>-</span>
@@ -180,7 +177,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
       <DataTableColumnHeader column={column} title='Status' />
     ),
     cell: ({ row }) => {
-      // Backend returns flat structure with isActive at root level
+      
       const isActive = row.getValue<boolean>('isActive')
       return (
         <Badge
@@ -196,7 +193,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
       )
     },
     filterFn: (row, _id, value) => {
-      // Backend returns flat structure with isActive at root level
+      
       const isActive = row.original.isActive ?? false
       return value.includes(isActive)
     },
@@ -205,7 +202,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
   },
   {
     accessorKey: 'createdAt',
-    id: 'createdAt', // Map to API sortBy field (API expects 'createdAt', not 'createdAt')
+    id: 'createdAt', 
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Created At' />
     ),
@@ -219,7 +216,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
         </div>
       )
     },
-    enableSorting: true, // API supports sorting
+    enableSorting: true, 
   },
   {
     id: 'actions',

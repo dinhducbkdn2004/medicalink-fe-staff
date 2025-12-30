@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
-// Static sample data - in production, this would come from an API
+
 const SAMPLE_DATA = [
   { name: 'Mon', clicks: 523, uniques: 412 },
   { name: 'Tue', clicks: 687, uniques: 534 },
@@ -13,7 +13,7 @@ const SAMPLE_DATA = [
 ]
 
 export function AnalyticsChart() {
-  // Memoize data to prevent unnecessary re-renders
+  
   const data = useMemo(() => SAMPLE_DATA, [])
 
   return (

@@ -1,19 +1,11 @@
-/**
- * Timezone Data & Utilities
- * Comprehensive list of timezones grouped by region with GMT offsets
- */
-
 export interface TimezoneOption {
-  value: string // IANA timezone identifier
-  label: string // Display name with GMT offset
-  region: string // Geographic region
-  offset: number // UTC offset in minutes
-  gmtLabel: string // GMT+X format
+  value: string
+  label: string
+  region: string
+  offset: number
+  gmtLabel: string
 }
 
-/**
- * Get current user's timezone
- */
 export function getUserTimezone(): string {
   try {
     return (
@@ -24,15 +16,11 @@ export function getUserTimezone(): string {
   }
 }
 
-/**
- * Get GMT offset for a timezone
- */
 export function getGMTOffset(timezone: string): string {
   try {
     const now = new Date()
     const utcOffset = -now.getTimezoneOffset()
 
-    // Create a date in the target timezone
     const formatter = new Intl.DateTimeFormat('en-US', {
       timeZone: timezone,
       timeZoneName: 'longOffset',
@@ -45,7 +33,6 @@ export function getGMTOffset(timezone: string): string {
       return offsetPart.value.replace('GMT', 'GMT ')
     }
 
-    // Fallback calculation
     const targetDate = new Date(
       now.toLocaleString('en-US', { timeZone: timezone })
     )
@@ -60,11 +47,7 @@ export function getGMTOffset(timezone: string): string {
   }
 }
 
-/**
- * Popular timezones grouped by region
- */
 export const timezoneData: TimezoneOption[] = [
-  // Asia
   {
     value: 'Asia/Ho_Chi_Minh',
     label: 'Ho Chi Minh City',
@@ -164,7 +147,6 @@ export const timezoneData: TimezoneOption[] = [
     gmtLabel: 'GMT+2',
   },
 
-  // Europe
   {
     value: 'Europe/London',
     label: 'London',
@@ -236,7 +218,6 @@ export const timezoneData: TimezoneOption[] = [
     gmtLabel: 'GMT+3',
   },
 
-  // Americas
   {
     value: 'America/New_York',
     label: 'New York',
@@ -301,7 +282,6 @@ export const timezoneData: TimezoneOption[] = [
     gmtLabel: 'GMT-3',
   },
 
-  // Pacific
   {
     value: 'Pacific/Auckland',
     label: 'Auckland',
@@ -338,7 +318,6 @@ export const timezoneData: TimezoneOption[] = [
     gmtLabel: 'GMT-10',
   },
 
-  // Africa
   {
     value: 'Africa/Cairo',
     label: 'Cairo',
@@ -369,9 +348,6 @@ export const timezoneData: TimezoneOption[] = [
   },
 ]
 
-/**
- * Group timezones by region
- */
 export function getGroupedTimezones(): Record<string, TimezoneOption[]> {
   const grouped: Record<string, TimezoneOption[]> = {}
 
@@ -382,7 +358,6 @@ export function getGroupedTimezones(): Record<string, TimezoneOption[]> {
     grouped[tz.region].push(tz)
   })
 
-  // Sort each group by offset
   Object.keys(grouped).forEach((region) => {
     grouped[region].sort((a, b) => a.offset - b.offset)
   })
@@ -390,23 +365,16 @@ export function getGroupedTimezones(): Record<string, TimezoneOption[]> {
   return grouped
 }
 
-/**
- * Find timezone by value
- */
 export function findTimezone(value: string): TimezoneOption | undefined {
   return timezoneData.find((tz) => tz.value === value)
 }
 
-/**
- * Format timezone for display
- */
 export function formatTimezone(timezone: string): string {
   const tz = findTimezone(timezone)
   if (tz) {
     return `${tz.label} (${tz.gmtLabel})`
   }
 
-  // Fallback for custom timezones
   const offset = getGMTOffset(timezone)
   const label = timezone.split('/').pop()?.replace(/_/g, ' ') || timezone
   return `${label} (${offset})`

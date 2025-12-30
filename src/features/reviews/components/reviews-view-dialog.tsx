@@ -1,7 +1,4 @@
-/**
- * Review View Dialog
- * Dialog for viewing review details
- */
+
 import { format } from 'date-fns'
 import { Star, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -15,9 +12,9 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { useReviews } from './use-reviews'
 
-// ============================================================================
-// Helper Components
-// ============================================================================
+
+
+
 
 function RatingStars({ rating }: Readonly<{ rating: number }>) {
   return (
@@ -38,9 +35,9 @@ function RatingStars({ rating }: Readonly<{ rating: number }>) {
   )
 }
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function ReviewViewDialog() {
   const { openDialog, setOpen, currentReview } = useReviews()
@@ -56,7 +53,7 @@ export function ReviewViewDialog() {
         </DialogHeader>
 
         <div className='space-y-4'>
-          {/* Doctor Info */}
+          {}
           {currentReview.doctor && (
             <>
               <div>
@@ -94,7 +91,7 @@ export function ReviewViewDialog() {
             </>
           )}
 
-          {/* Author Info */}
+          {}
           <div>
             <h3 className='text-muted-foreground mb-2 text-sm font-medium'>
               Author Information
@@ -114,7 +111,7 @@ export function ReviewViewDialog() {
 
           <Separator />
 
-          {/* Rating */}
+          {}
           <div>
             <h3 className='text-muted-foreground mb-2 text-sm font-medium'>
               Rating
@@ -124,7 +121,7 @@ export function ReviewViewDialog() {
 
           <Separator />
 
-          {/* Review Content */}
+          {}
           <div>
             <h3 className='text-muted-foreground mb-2 text-sm font-medium'>
               Review Content
@@ -141,7 +138,7 @@ export function ReviewViewDialog() {
             </div>
           </div>
 
-          {/* Meta Info */}
+          {}
           <div className='text-muted-foreground flex items-center justify-between text-xs'>
             <div>
               Submitted on{' '}

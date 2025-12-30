@@ -1,8 +1,4 @@
-/**
- * Doctor Stats Dialog Component
- * Dialog hiển thị thống kê chi tiết của một doctor cụ thể
- * Based on API_DOCTOR_STATS.md - Endpoint 2
- */
+
 import {
   Calendar,
   Star,
@@ -39,7 +35,7 @@ export function DoctorStatsDialog({
   open,
   onOpenChange,
 }: DoctorStatsDialogProps) {
-  // Fetch stats using doctor's staff account ID
+  
   const { data: stats, isLoading } = useDoctorStatsById(
     doctor?.id || '',
     open && !!doctor
@@ -61,7 +57,7 @@ export function DoctorStatsDialog({
         </DialogHeader>
 
         <div className='space-y-8 pt-4'>
-          {/* Booking Statistics Section */}
+          {}
           <div className='space-y-4'>
             <div className='flex items-center gap-3'>
               <div className='bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg'>
@@ -75,7 +71,7 @@ export function DoctorStatsDialog({
               </div>
             </div>
 
-            {/* Key Metrics Grid */}
+            {}
             <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
               <MetricCard
                 title='Total Appointments'
@@ -107,7 +103,7 @@ export function DoctorStatsDialog({
               />
             </div>
 
-            {/* Performance Details */}
+            {}
             <Card className='border-2'>
               <CardHeader>
                 <CardTitle className='flex items-center gap-2 text-lg'>
@@ -123,7 +119,7 @@ export function DoctorStatsDialog({
                   </div>
                 ) : (
                   <>
-                    {/* Completion Rate */}
+                    {}
                     <div className='space-y-3'>
                       <div className='flex items-center justify-between'>
                         <div className='flex items-center gap-2'>
@@ -151,7 +147,7 @@ export function DoctorStatsDialog({
 
                     <Separator />
 
-                    {/* Cancelled Count */}
+                    {}
                     <div className='flex items-center justify-between rounded-lg bg-red-50 p-4 dark:bg-red-950/20'>
                       <div className='flex items-center gap-3'>
                         <div className='flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30'>
@@ -178,7 +174,7 @@ export function DoctorStatsDialog({
 
           <Separator className='my-8' />
 
-          {/* Content Statistics Section */}
+          {}
           <div className='space-y-4'>
             <div className='flex items-center gap-3'>
               <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-500/10'>
@@ -192,7 +188,7 @@ export function DoctorStatsDialog({
               </div>
             </div>
 
-            {/* Content Metrics Grid */}
+            {}
             <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
               <MetricCard
                 title='Total Reviews'
@@ -229,7 +225,7 @@ export function DoctorStatsDialog({
               />
             </div>
 
-            {/* Content Details */}
+            {}
             <Card className='border-2'>
               <CardHeader>
                 <CardTitle className='flex items-center gap-2 text-lg'>
@@ -245,7 +241,7 @@ export function DoctorStatsDialog({
                   </div>
                 ) : (
                   <>
-                    {/* Average Rating Display */}
+                    {}
                     <div className='flex items-center justify-between rounded-lg bg-yellow-50 p-4 dark:bg-yellow-950/20'>
                       <div className='flex items-center gap-3'>
                         <div className='flex h-10 w-10 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900/30'>
@@ -272,7 +268,7 @@ export function DoctorStatsDialog({
 
                     <Separator />
 
-                    {/* Answer Acceptance Rate */}
+                    {}
                     <div className='space-y-3'>
                       <div className='flex items-center justify-between'>
                         <div className='flex items-center gap-2'>
@@ -312,7 +308,7 @@ export function DoctorStatsDialog({
   )
 }
 
-// Enhanced Metric Card Component
+
 function MetricCard({
   title,
   value,

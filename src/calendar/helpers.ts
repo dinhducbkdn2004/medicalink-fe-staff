@@ -32,19 +32,10 @@ import type {
   TWorkingHours,
 } from '@/calendar/types'
 
-// ================ API Data Helpers ================ //
-
-/**
- * Convert API appointment to calendar event format
- * API returns time as full ISO datetime, we need just HH:mm
- */
 export function formatAppointmentTime(isoTime: string): string {
   return format(parseISO(isoTime), 'HH:mm')
 }
 
-/**
- * Convert API appointment to display format
- */
 export function normalizeAppointment(appointment: IAppointment): IAppointment {
   if (!appointment.event) return appointment
 
@@ -61,8 +52,6 @@ export function normalizeAppointment(appointment: IAppointment): IAppointment {
     },
   }
 }
-
-// ================ Header helper functions ================ //
 
 export function rangeText(view: TCalendarView, date: Date) {
   const formatString = 'MMM d, yyyy'
@@ -128,8 +117,6 @@ export function getEventsCount(
     compareFns[view](new Date(event.startDate), date)
   ).length
 }
-
-// ================ Week and day view helper functions ================ //
 
 export function getCurrentEvents(events: IEvent[]) {
   const now = new Date()
@@ -233,8 +220,6 @@ export function getVisibleHours(
 
   return { hours, earliestEventHour, latestEventHour }
 }
-
-// ================ Month view helper functions ================ //
 
 export function getCalendarCells(selectedDate: Date): ICalendarCell[] {
   const currentYear = selectedDate.getFullYear()

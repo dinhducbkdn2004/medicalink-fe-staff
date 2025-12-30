@@ -1,7 +1,3 @@
-/**
- * User Permission Details Component
- * Displays permission details for selected user
- */
 import { useMemo, useState } from 'react'
 import {
   Shield,
@@ -58,17 +54,15 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
   const { data: allPermissions } = usePermissions()
   const { data: permissions, isLoading } = useUserPermissions(userId || '')
   const revokeMutation = useRevokeUserPermission()
-  // const refreshCacheMutation = useRefreshUserPermissionCache() // Unused
+
   const [filterResource, setFilterResource] = useState<string>('all')
   const [filterEffect, setFilterEffect] = useState<string>('all')
 
-  // Get unique resources for filter
   const resources = useMemo(() => {
     if (!permissions) return []
     return Array.from(new Set(permissions.map((p) => p.resource)))
   }, [permissions])
 
-  // Filter permissions
   const filteredPermissions = useMemo(() => {
     if (!permissions) return []
     return permissions.filter((perm) => {
@@ -79,7 +73,6 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
     })
   }, [permissions, filterResource, filterEffect])
 
-  // Group permissions by resource
   const groupedPermissions = useMemo(() => {
     const groups: Record<string, typeof filteredPermissions> = {}
     filteredPermissions.forEach((perm) => {
@@ -94,7 +87,6 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
   const handleRevoke = async (resource: string, action: string) => {
     if (!userId || !allPermissions) return
 
-    // Find actual permission ID from system permissions
     const permission = allPermissions.find(
       (p) => p.resource === resource && p.action === action
     )
@@ -103,11 +95,6 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
       console.warn(`Permission not found for ${resource}:${action}`)
       return
     }
-
-    console.log('Revoking permission:', {
-      userId,
-      permissionId: permission.id,
-    })
 
     await revokeMutation.mutateAsync({
       userId,
@@ -184,7 +171,7 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
           </RoleGate>
         </div>
 
-        {/* Filters */}
+        {}
         {permissions && permissions.length > 0 && (
           <>
             <Separator />

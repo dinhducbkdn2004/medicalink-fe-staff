@@ -1,8 +1,4 @@
-/**
- * Address Input Component
- * Enhanced address input with search functionality
- * Ready for Google Places API integration
- */
+
 import { useState } from 'react'
 import { MapPin, Search, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -36,17 +32,17 @@ export function AddressInput({
     setIsSearching(true)
     
     try {
-      // TODO: Integrate with Google Places API
-      // For now, just simulate a search
+      
+      
       await new Promise(resolve => setTimeout(resolve, 500))
       
-      // If you have Google Places API key, you can implement it here:
-      // const results = await searchAddress(value)
-      // if (results && results.length > 0) {
-      //   onAddressSelect?.(results[0].formatted_address)
-      // }
       
-      // For now, just callback with the current value
+      
+      
+      
+      
+      
+      
       onAddressSelect?.(value)
     } catch (error) {
       console.error('Address search error:', error)
@@ -85,7 +81,7 @@ export function AddressInput({
         </Button>
       </div>
       
-      {/* Info text for future Google Places integration */}
+      {}
       <p className='text-muted-foreground mt-1 text-xs'>
         💡 Tip: Click search to validate address (Google Places integration ready)
       </p>

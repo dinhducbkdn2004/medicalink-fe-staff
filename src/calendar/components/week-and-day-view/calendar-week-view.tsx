@@ -55,7 +55,7 @@ export function CalendarWeekView({
             multiDayEvents={multiDayEvents}
           />
 
-          {/* Week header */}
+          {}
           <div className='relative z-20 flex border-b'>
             <div className='w-18'></div>
             <div className='grid flex-1 grid-cols-7 divide-x border-l'>
@@ -76,7 +76,7 @@ export function CalendarWeekView({
 
         <ScrollArea className='h-[736px]' type='always'>
           <div className='flex overflow-hidden'>
-            {/* Hours column */}
+            {}
             <div className='relative w-18'>
               {hours.map((hour, index) => (
                 <div
@@ -95,7 +95,7 @@ export function CalendarWeekView({
               ))}
             </div>
 
-            {/* Week grid */}
+            {}
             <div className='relative flex-1 border-l'>
               <div className='grid grid-cols-7 divide-x'>
                 {weekDays.map((day) => {

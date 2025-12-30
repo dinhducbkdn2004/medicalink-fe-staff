@@ -1,7 +1,4 @@
-/**
- * Work Locations Action Dialog
- * Create/Edit work location form dialog with enhanced UX
- */
+
 import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm, useWatch } from 'react-hook-form'
@@ -36,9 +33,9 @@ import {
 import { GoogleMapsInput } from './google-maps-input'
 import { TimezoneCombobox } from './timezone-combobox'
 
-// ============================================================================
-// Types & Schema
-// ============================================================================
+
+
+
 
 const formSchema = z.object({
   name: z
@@ -75,9 +72,9 @@ interface WorkLocationsActionDialogProps {
   currentRow?: WorkLocation
 }
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function WorkLocationsActionDialog({
   open,
@@ -88,25 +85,25 @@ export function WorkLocationsActionDialog({
   const createMutation = useCreateWorkLocation()
   const updateMutation = useUpdateWorkLocation()
 
-  // Form setup
+  
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
       address: '',
       phone: '',
-      timezone: getUserTimezone(), // Auto-detect user timezone
+      timezone: getUserTimezone(), 
       googleMapUrl: '',
     },
   })
 
-  // Watch address field for auto-generating Google Maps URL
+  
   const addressValue = useWatch({
     control: form.control,
     name: 'address',
   })
 
-  // Load current row data in edit mode
+  
   useEffect(() => {
     if (open && isEditMode && currentRow) {
       form.reset({
@@ -121,13 +118,13 @@ export function WorkLocationsActionDialog({
         name: '',
         address: '',
         phone: '',
-        timezone: getUserTimezone(), // Auto-detect on create
+        timezone: getUserTimezone(), 
         googleMapUrl: '',
       })
     }
   }, [open, isEditMode, currentRow, form])
 
-  // Handle form submission
+  
   const onSubmit = async (values: FormValues) => {
     try {
       const data = {
@@ -147,7 +144,7 @@ export function WorkLocationsActionDialog({
       onOpenChange()
       form.reset()
     } catch (error) {
-      // Error handling is done in the mutation hooks
+      
       console.error('Form submission error:', error)
     }
   }
@@ -170,7 +167,7 @@ export function WorkLocationsActionDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-            {/* Name */}
+            {}
             <FormField
               control={form.control}
               name='name'
@@ -191,7 +188,7 @@ export function WorkLocationsActionDialog({
               )}
             />
 
-            {/* Address */}
+            {}
             <FormField
               control={form.control}
               name='address'
@@ -211,7 +208,7 @@ export function WorkLocationsActionDialog({
               )}
             />
 
-            {/* Phone */}
+            {}
             <FormField
               control={form.control}
               name='phone'
@@ -231,7 +228,7 @@ export function WorkLocationsActionDialog({
               )}
             />
 
-            {/* Timezone - Searchable Select */}
+            {}
             <FormField
               control={form.control}
               name='timezone'
@@ -250,7 +247,7 @@ export function WorkLocationsActionDialog({
               )}
             />
 
-            {/* Google Maps URL with Open & Auto-generate */}
+            {}
             <FormField
               control={form.control}
               name='googleMapUrl'

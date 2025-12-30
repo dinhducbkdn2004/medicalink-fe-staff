@@ -1,7 +1,4 @@
-/**
- * Timezone Combobox Component
- * Searchable select for timezones with regional grouping
- */
+
 import { useState } from 'react'
 import { Check, ChevronsUpDown, Globe } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -44,7 +41,7 @@ export function TimezoneCombobox({
   
   const groupedTimezones = getGroupedTimezones()
   
-  // Filter timezones based on search
+  
   const filteredTimezones = search
     ? timezoneData.filter(
         (tz) =>
@@ -55,7 +52,7 @@ export function TimezoneCombobox({
       )
     : null
   
-  // Get display value
+  
   const displayValue = value ? formatTimezone(value) : placeholder
   
   const handleSelect = (timezone: TimezoneOption) => {
@@ -94,7 +91,7 @@ export function TimezoneCombobox({
             <CommandEmpty>No timezone found.</CommandEmpty>
             
             {filteredTimezones ? (
-              // Show filtered results (ungrouped)
+              
               <CommandGroup>
                 {filteredTimezones.map((tz) => (
                   <CommandItem
@@ -119,7 +116,7 @@ export function TimezoneCombobox({
                 ))}
               </CommandGroup>
             ) : (
-              // Show grouped results
+              
               <>
                 {Object.entries(groupedTimezones).map(([region, timezones]) => (
                   <CommandGroup key={region} heading={region}>

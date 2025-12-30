@@ -1,7 +1,4 @@
-/**
- * Permission Stats Cards Component
- * Display permission system statistics in card format
- */
+
 import { Shield, Users, ShieldCheck, UserCog, TrendingUp } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'

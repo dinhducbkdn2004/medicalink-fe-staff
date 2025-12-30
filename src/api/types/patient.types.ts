@@ -1,9 +1,5 @@
 import type { PaginationParams, PaginatedResponse } from './common.types'
 
-/**
- * Patient data structure
- * Based on /api/patients API specification
- */
 export interface Patient {
   id: string
   fullName: string
@@ -19,9 +15,6 @@ export interface Patient {
   deletedAt?: string | null
 }
 
-/**
- * Patient query parameters for listing/searching
- */
 export interface PatientQueryParams extends PaginationParams {
   search?: string
   sortBy?: 'dateOfBirth' | 'createdAt' | 'updatedAt'
@@ -29,14 +22,8 @@ export interface PatientQueryParams extends PaginationParams {
   includedDeleted?: boolean
 }
 
-/**
- * Patient list response
- */
 export type PatientListResponse = PaginatedResponse<Patient>
 
-/**
- * Create patient request body
- */
 export interface CreatePatientRequest {
   fullName: string
   email?: string
@@ -48,10 +35,6 @@ export interface CreatePatientRequest {
   province?: string
 }
 
-/**
- * Update patient request body
- * All fields optional for updates
- */
 export interface UpdatePatientRequest {
   fullName?: string
   email?: string

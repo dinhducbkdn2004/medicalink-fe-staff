@@ -1,7 +1,4 @@
-/**
- * Specialties Management Page
- * Main page for managing medical specialties
- */
+
 import { getRouteApi } from '@tanstack/react-router'
 import { Can } from '@/components/auth/permission-gate'
 import { RequirePermission } from '@/components/auth/require-permission'
@@ -23,7 +20,7 @@ export function Specialties() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
-  // Fetch specialties with query params
+  
   const queryParams = {
     page: (search.page as number) || 1,
     limit: (search.pageSize as number) || 10,

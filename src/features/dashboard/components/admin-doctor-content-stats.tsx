@@ -1,8 +1,4 @@
-/**
- * Admin Doctor Content Stats Component
- * Display content statistics for all doctors with pagination & sorting
- * Based on API_DOCTOR_STATS.md - Endpoint 4
- */
+
 import { useState } from 'react'
 import {
   ChevronLeft,
@@ -83,7 +79,7 @@ export function AdminDoctorContentStats() {
     }))
   }
 
-  // Rating stars component
+  
   const RatingDisplay = ({ rating }: { rating: number }) => {
     return (
       <div className='flex items-center gap-1'>
@@ -111,7 +107,7 @@ export function AdminDoctorContentStats() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {/* Filters */}
+        {}
         <div className='mb-4 flex flex-wrap items-center gap-4'>
           <div className='flex items-center gap-2'>
             <label className='text-sm font-medium'>Sort by:</label>
@@ -152,14 +148,14 @@ export function AdminDoctorContentStats() {
           </div>
         </div>
 
-        {/* Error State */}
+        {}
         {error && (
           <div className='bg-destructive/10 text-destructive rounded-md p-4'>
             Error loading stats: {error.message}
           </div>
         )}
 
-        {/* Table */}
+        {}
         <div className='rounded-md border'>
           <Table>
             <TableHeader>
@@ -175,7 +171,7 @@ export function AdminDoctorContentStats() {
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                // Loading skeleton
+                
                 Array.from({ length: params.limit || 10 }).map((_, index) => (
                   <TableRow key={index}>
                     <TableCell>
@@ -248,7 +244,7 @@ export function AdminDoctorContentStats() {
           </Table>
         </div>
 
-        {/* Pagination */}
+        {}
         {data && (
           <div className='mt-4 flex items-center justify-between'>
             <div className='text-muted-foreground text-sm'>

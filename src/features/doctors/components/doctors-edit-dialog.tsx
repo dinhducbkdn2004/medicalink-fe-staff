@@ -71,7 +71,7 @@ export function DoctorsEditDialog() {
   const onSubmit = (data: UpdateDoctorAccountFormData) => {
     if (!currentRow) return
 
-    // Remove empty/unchanged fields
+    
     const updateData: UpdateDoctorAccountRequest = {}
     if (data.fullName && data.fullName !== currentRow.fullName) {
       updateData.fullName = data.fullName

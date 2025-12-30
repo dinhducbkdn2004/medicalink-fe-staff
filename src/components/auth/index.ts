@@ -1,8 +1,3 @@
-/**
- * Authentication Components
- * Export all auth-related components
- */
-
 export { ProtectedRoute } from './protected-route'
 export { RoleGate } from './role-gate'
 export { RequireAuth } from './require-auth'

@@ -65,7 +65,6 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     undefined
   )
 
-  // Get user role to determine if past dates can be selected
   const user = useAuthStore((state) => state.user)
   const accessToken = useAuthStore((state) => state.accessToken)
   const allowPastDates = user
@@ -75,8 +74,8 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
   const { mutate: createAppointment, isPending } = useCreateAppointment()
 
   const form = useForm<TCreateAppointmentFormData>({
-    // @ts-expect-error - Zod v4 type compatibility issue with zodResolver
-    resolver: zodResolver(createAppointmentSchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(createAppointmentSchema) as any,
     defaultValues: {
       patientId: '',
       locationId: '',
@@ -93,53 +92,41 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formControl = form.control as any
 
-  // Watch form values for dependent selects
   const selectedLocationId = form.watch('locationId')
   const selectedSpecialtyId = form.watch('specialtyId')
   const selectedDoctorId = form.watch('doctorId')
   const selectedServiceDate = form.watch('serviceDate')
 
-  // Track previous values to detect actual changes
   const prevLocationRef = useRef<string | undefined>(undefined)
   const prevSpecialtyRef = useRef<string | undefined>(undefined)
   const prevDoctorRef = useRef<string | undefined>(undefined)
 
-  // Fetch data
   const { patients, isLoading: isLoadingPatients } = usePatients(patientSearch)
   const { locations, isLoading: isLoadingLocations } = useWorkLocations()
   const { specialties, isLoading: isLoadingSpecialties } = useSpecialties()
 
-  // 1. Fetch ALL public doctors for initial selection (when no filters)
   const { doctors: allDoctors, isLoading: isLoadingAllDoctors } =
     usePublicDoctors()
 
-  // 2. Fetch FILTERED doctors when filters are active
   const { doctors: filteredDoctors, isLoading: isLoadingFilteredDoctors } =
     useDoctorsByLocationAndSpecialty(selectedLocationId, selectedSpecialtyId)
-
-  // Determine which doctors list to show
-  // Show filtered list only if BOTH location and specialty are selected
-  // Otherwise show all doctors (to allow "Select Doctor First")
   const showFilteredDoctors = selectedLocationId && selectedSpecialtyId
   const displayDoctors = showFilteredDoctors ? filteredDoctors : allDoctors
   const isLoadingDoctors = showFilteredDoctors
     ? isLoadingFilteredDoctors
     : isLoadingAllDoctors
 
-  // Fetch available dates when doctor and location are selected
   const { availableDates, isLoading: isLoadingDates } = useDoctorAvailableDates(
     selectedDoctorId,
     selectedLocationId
   )
 
-  // Only fetch slots when doctor, location, and date are all selected
   const { slots, isLoading: isLoadingSlots } = useAvailableSlots(
     selectedDoctorId,
     selectedLocationId,
     selectedServiceDate
   )
 
-  // Reset dependent fields only when VALUES ACTUALLY CHANGE
   useEffect(() => {
     const locationChanged =
       prevLocationRef.current !== undefined &&
@@ -149,32 +136,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
       prevSpecialtyRef.current !== selectedSpecialtyId
 
     if (locationChanged || specialtyChanged) {
-      // If filters change, we might need to reset doctor
-      // BUT if we just auto-filled them from a doctor selection, we shouldn't reset.
-      // We can check if the current doctor is still valid for the new filters?
-      // For now, keep the reset behavior implies "filtering down".
-      // Note: If user selects doctor first -> location/specialty filled.
-      // If user then changes location -> doctor might need reset if not in new location.
-      // For simplicity, reset doctor if filters change manually.
-      // To distinguish manual change vs auto-fill:
-      // When auto-fill happens, we set location, specialty AND doctor roughly same time.
-      // But standard interaction is: user picks doctor -> we set loc/spec.
-      // If user picks loc/spec -> we reset doctor.
-      // We verify validity in the doctorOptions logic? No.
       if (selectedDoctorId) {
-        // If doctor is selected, checks if he is still in the new filtered list?
-        // It's complex to check validity async.
-        // Let's rely on the user to re-select if needed, OR
-        // If the change was triggered by "Select Doctor First", we don't want to reset immediately.
-        // But here we are detecting change in location/specialty.
-        // If I select doctor, I update location/specialty. This effect runs.
-        // It sees change. It resets doctor. BAD.
-        // Fix: Don't reset doctor if the location/specialty matches the current doctor's work places?
-        // Or simply: check if we are in "auto-filling" state? No easy way.
-        // Better: Check if the currently selected doctor supports the new location/specialty.
-        // But we don't have the full doctor object here easily unless we find it in allDoctors.
-
-        // Let's find the doctor in allDoctors (or displayDoctors)
         const currentDoc =
           displayDoctors.find((d) => d.id === selectedDoctorId) ||
           allDoctors.find((d) => d.id === selectedDoctorId)
@@ -188,7 +150,6 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
             currentDoc.specialties.some((s) => s.id === selectedSpecialtyId)
 
           if (hasLocation && hasSpecialty) {
-            // Doctor is still valid, don't reset
             prevLocationRef.current = selectedLocationId
             prevSpecialtyRef.current = selectedSpecialtyId
             return
@@ -197,13 +158,14 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
       }
 
       form.setValue('doctorId', '')
-      // @ts-expect-error - allow undefined for time reset
-      form.setValue('timeStart', undefined)
-      // @ts-expect-error - allow undefined for time reset
-      form.setValue('timeEnd', undefined)
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      form.setValue('timeStart', undefined as any)
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      form.setValue('timeEnd', undefined as any)
     }
 
-    // Update refs
     prevLocationRef.current = selectedLocationId
     prevSpecialtyRef.current = selectedSpecialtyId
   }, [
@@ -213,7 +175,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     selectedDoctorId,
     displayDoctors,
     allDoctors,
-  ]) // Added deps
+  ])
 
   useEffect(() => {
     const doctorChanged =
@@ -221,35 +183,33 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
       prevDoctorRef.current !== selectedDoctorId
 
     if (doctorChanged) {
-      // AUTO-FILL LOGIC: If doctor selected, and location/specialty missing, fill them.
       if (selectedDoctorId) {
         const doctor =
           allDoctors.find((d) => d.id === selectedDoctorId) ||
           filteredDoctors.find((d) => d.id === selectedDoctorId)
 
         if (doctor) {
-          // Fill Location if undefined or empty
           if (!selectedLocationId && doctor.workLocations.length > 0) {
             form.setValue('locationId', doctor.workLocations[0].id)
           }
-          // Fill Specialty if undefined or empty
+
           if (!selectedSpecialtyId && doctor.specialties.length > 0) {
             form.setValue('specialtyId', doctor.specialties[0].id)
           }
         }
       }
 
-      // Reset date and slot when doctor changes
-      // @ts-expect-error - allow undefined for date reset
-      form.setValue('serviceDate', undefined)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      form.setValue('serviceDate', undefined as any)
       setSelectedSlot(undefined)
-      // @ts-expect-error - allow undefined for time reset
-      form.setValue('timeStart', undefined)
-      // @ts-expect-error - allow undefined for time reset
-      form.setValue('timeEnd', undefined)
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      form.setValue('timeStart', undefined as any)
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      form.setValue('timeEnd', undefined as any)
     }
 
-    // Update ref
     prevDoctorRef.current = selectedDoctorId
   }, [
     selectedDoctorId,
@@ -260,7 +220,6 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     selectedSpecialtyId,
   ])
 
-  // Memoized placeholder functions
   const getSpecialtyPlaceholder = useCallback(() => {
     if (isLoadingSpecialties) return 'Loading...'
     return 'Select a specialty'
@@ -272,7 +231,6 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     return 'Select a doctor'
   }, [isLoadingDoctors, displayDoctors.length])
 
-  // Memoized options for better performance
   const patientOptions = useMemo(
     () =>
       patients.map((patient) => ({
@@ -303,12 +261,11 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
 
   const doctorOptions = useMemo(() => {
     return displayDoctors.map((doctor) => ({
-      value: doctor.id, // Use profile ID for slots and appointment creation
+      value: doctor.id,
       label: doctor.fullName,
     }))
   }, [displayDoctors])
 
-  // Memoized button text for scheduler dialog
   const schedulerButtonText = useMemo(() => {
     if (isLoadingDates) return 'Loading appointment dates...'
     if (selectedServiceDate && selectedSlot) {
@@ -339,7 +296,6 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     [createAppointment, onClose, form]
   )
 
-  // Reset form when dialog opens
   useEffect(() => {
     if (isOpen) {
       setSelectedSlot(undefined)
@@ -361,7 +317,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     <Dialog open={isOpen} onOpenChange={onToggle}>
       <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <DialogContent className='max-h-[95vh] w-[95vw] max-w-6xl sm:min-w-[600px] md:min-w-[700px] lg:min-w-[800px] overflow-y-auto'>
+      <DialogContent className='max-h-[95vh] w-[95vw] max-w-6xl overflow-y-auto sm:min-w-[600px] md:min-w-[700px] lg:min-w-[800px]'>
         <DialogHeader>
           <DialogTitle>Add New Appointment</DialogTitle>
           <DialogDescription>
@@ -377,7 +333,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
             onSubmit={form.handleSubmit(onSubmit as any)}
             className='grid gap-6 py-4'
           >
-            {/* Step 0: Patient Selection */}
+            {}
             <FormField
               control={formControl}
               name='patientId'
@@ -407,7 +363,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               )}
             />
 
-            {/* Step 1 & 2: Location and Specialty in 2 columns */}
+            {}
             <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
               <FormField
                 control={formControl}
@@ -494,7 +450,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               />
             </div>
 
-            {/* Step 3: Doctor Selection (Auto-enabled) */}
+            {}
             <FormField
               control={formControl}
               name='doctorId'
@@ -532,7 +488,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               )}
             />
 
-            {/* Step 4 & 5: Date and Time Selection via Scheduler Dialog */}
+            {}
             <div className='space-y-1'>
               <FormLabel>
                 Date & Time <span className='text-red-500'>*</span>
@@ -546,15 +502,16 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                 disabled={
                   !selectedDoctorId || !selectedLocationId || isLoadingDates
                 }
-                allowPast={allowPastDates} // Only ADMIN/SUPER_ADMIN can select past dates
+                allowPast={allowPastDates}
                 onDateSelect={(date) => {
                   form.setValue('serviceDate', date)
                   setSelectedSlot(undefined)
-                  // Reset time when date changes
-                  // @ts-expect-error - allow undefined for time reset
-                  form.setValue('timeStart', undefined)
-                  // @ts-expect-error - allow undefined for time reset
-                  form.setValue('timeEnd', undefined)
+
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  form.setValue('timeStart', undefined as any)
+
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  form.setValue('timeEnd', undefined as any)
                 }}
                 onSlotSelect={(slot) => {
                   setSelectedSlot(slot)
@@ -587,7 +544,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               </AppointmentSchedulerDialog>
             </div>
 
-            {/* Step 6: Reason */}
+            {}
             <FormField
               control={formControl}
               name='reason'
@@ -610,7 +567,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               )}
             />
 
-            {/* Price */}
+            {}
             <FormField
               control={formControl}
               name='priceAmount'
@@ -639,7 +596,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               )}
             />
 
-            {/* Notes - full width */}
+            {}
             <FormField
               control={formControl}
               name='notes'

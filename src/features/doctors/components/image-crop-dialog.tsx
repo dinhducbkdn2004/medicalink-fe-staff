@@ -1,13 +1,4 @@
-/**
- * Image Crop Dialog Component
- * Uses react-image-crop for cropping images before upload
- *
- * Features:
- * - Aspect ratio presets (square, portrait, landscape)
- * - Preview cropped image
- * - Responsive design
- * - TypeScript support
- */
+
 import { useState, useRef, useCallback } from 'react'
 import { Loader2 } from 'lucide-react'
 import ReactCrop, {
@@ -27,27 +18,25 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 
-// ============================================================================
-// Types
-// ============================================================================
+
+
+
 
 export interface ImageCropDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   imageSrc: string
-  aspectRatio?: number // e.g., 1 for square, 4/3 for landscape, 3/4 for portrait
+  aspectRatio?: number 
   onCropComplete: (croppedImageBlob: Blob) => void | Promise<void>
   title?: string
   description?: string
 }
 
-// ============================================================================
-// Helper Functions
-// ============================================================================
 
-/**
- * Generate cropped image blob from canvas
- */
+
+
+
+
 function getCroppedImg(
   image: HTMLImageElement,
   crop: PixelCrop
@@ -61,11 +50,11 @@ function getCroppedImg(
     return Promise.reject(new Error('No 2d context'))
   }
 
-  // Set canvas size to crop size
+  
   canvas.width = crop.width
   canvas.height = crop.height
 
-  // Draw the cropped image
+  
   ctx.drawImage(
     image,
     crop.x * scaleX,
@@ -78,7 +67,7 @@ function getCroppedImg(
     crop.height
   )
 
-  // Convert canvas to blob
+  
   return new Promise((resolve, reject) => {
     canvas.toBlob(
       (blob) => {
@@ -94,15 +83,15 @@ function getCroppedImg(
   })
 }
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function ImageCropDialog({
   open,
   onOpenChange,
   imageSrc,
-  aspectRatio = 1, // Default to square
+  aspectRatio = 1, 
   onCropComplete,
   title = 'Crop Image',
   description = 'Adjust the crop area to fit your image',
@@ -112,15 +101,12 @@ export function ImageCropDialog({
   const [processing, setProcessing] = useState(false)
   const imgRef = useRef<HTMLImageElement>(null)
 
-  /**
-   * Initialize crop when image loads
-   * Theo hướng dẫn: centerCrop và makeAspectCrop
-   */
+  
   const onImageLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
       const { width, height } = e.currentTarget
 
-      // Create centered crop with aspect ratio
+      
       const newCrop = centerCrop(
         makeAspectCrop(
           {
@@ -140,9 +126,7 @@ export function ImageCropDialog({
     [aspectRatio]
   )
 
-  /**
-   * Handle crop completion and generate blob
-   */
+  
   const handleCropComplete = async () => {
     if (!completedCrop || !imgRef.current) {
       return

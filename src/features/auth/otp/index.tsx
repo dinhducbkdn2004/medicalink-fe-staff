@@ -19,7 +19,7 @@ export function Otp() {
   const handleResendCode = async () => {
     try {
       setIsResending(true)
-      // Get email from localStorage (saved during forgot password flow)
+      
       const email = localStorage.getItem('reset_email')
       if (!email) {
         toast.error(
@@ -31,7 +31,7 @@ export function Otp() {
       await authService.requestPasswordReset({ email })
       toast.success('A new verification code has been sent to your email')
     } catch (error) {
-      // Error already handled by API interceptor
+      
       console.error('Resend code error:', error)
     } finally {
       setIsResending(false)

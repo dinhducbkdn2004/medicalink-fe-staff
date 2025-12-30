@@ -1,7 +1,4 @@
-/**
- * Specialties Delete Dialog
- * Confirmation dialog for deleting a specialty
- */
+
 import { Loader2, AlertTriangle } from 'lucide-react'
 
 import {
@@ -35,7 +32,7 @@ export function SpecialtiesDeleteDialog({
       await deleteMutation.mutateAsync(currentRow.id)
       onOpenChange()
     } catch (error) {
-      // Error handling is done in the mutation hook
+      
       console.error('Delete error:', error)
     }
   }

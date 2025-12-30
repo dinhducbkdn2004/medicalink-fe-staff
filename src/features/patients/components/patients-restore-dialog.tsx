@@ -1,7 +1,4 @@
-/**
- * Restore Patient Dialog
- * Confirmation modal for restoring a soft-deleted patient
- */
+
 import {
   AlertDialog,
   AlertDialogAction,

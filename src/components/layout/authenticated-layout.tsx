@@ -13,16 +13,7 @@ type AuthenticatedLayoutProps = {
   children?: React.ReactNode
 }
 
-/**
- * Authenticated Layout
- *
- * Wraps the application with necessary providers for authenticated users:
- * - ProtectedRoute: Ensures user is authenticated
- * - PermissionProvider: Loads and provides permission context
- * - SearchProvider: Global search functionality
- * - LayoutProvider: Layout configuration
- * - SidebarProvider: Sidebar state management
- */
+
 export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
   const defaultOpen = getCookie('sidebar_state') !== 'false'
 
@@ -36,15 +27,15 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
               <AppSidebar />
               <SidebarInset
                 className={cn(
-                  // Set content container, so we can use container queries
+                  
                   '@container/content',
 
-                  // If layout is fixed, set the height
-                  // to 100svh to prevent overflow
+                  
+                  
                   'has-[[data-layout=fixed]]:h-svh',
 
-                  // If layout is fixed and sidebar is inset,
-                  // set the height to 100svh - spacing (total margins) to prevent overflow
+                  
+                  
                   'peer-data-[variant=inset]:has-[[data-layout=fixed]]:h-[calc(100svh-(var(--spacing)*4))]'
                 )}
               >

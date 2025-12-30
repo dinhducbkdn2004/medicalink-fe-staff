@@ -1,7 +1,3 @@
-/**
- * Specialty API Hooks
- * TanStack Query hooks for Specialty data management
- */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { specialtyService } from '@/api/services'
@@ -12,10 +8,6 @@ import type {
   CreateInfoSectionRequest,
   UpdateInfoSectionRequest,
 } from '@/api/services/specialty.service'
-
-// ============================================================================
-// Query Keys
-// ============================================================================
 
 export const specialtyKeys = {
   all: ['specialties'] as const,
@@ -30,13 +22,6 @@ export const specialtyKeys = {
     [...specialtyKeys.detail(specialtyId), 'info-sections'] as const,
 }
 
-// ============================================================================
-// Query Hooks
-// ============================================================================
-
-/**
- * Hook to fetch specialties with pagination
- */
 export function useSpecialties(params: SpecialtyQueryParams = {}) {
   return useQuery({
     queryKey: specialtyKeys.list(params),
@@ -44,33 +29,24 @@ export function useSpecialties(params: SpecialtyQueryParams = {}) {
   })
 }
 
-/**
- * Hook to fetch all active specialties (for dropdowns/selects)
- */
 export function useActiveSpecialties() {
   return useQuery({
     queryKey: specialtyKeys.active(),
     queryFn: () => specialtyService.getAllActiveSpecialties(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 2, // Retry twice on failure
-    retryDelay: 1000, // Wait 1 second between retries
+    staleTime: 5 * 60 * 1000,
+    retry: 2,
+    retryDelay: 1000,
   })
 }
 
-/**
- * Hook to fetch specialty statistics
- */
 export function useSpecialtyStats() {
   return useQuery({
     queryKey: specialtyKeys.stats(),
     queryFn: () => specialtyService.getSpecialtyStats(),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 2 * 60 * 1000,
   })
 }
 
-/**
- * Hook to fetch a single specialty
- */
 export function useSpecialty(id: string | undefined) {
   return useQuery({
     queryKey: specialtyKeys.detail(id!),
@@ -79,9 +55,6 @@ export function useSpecialty(id: string | undefined) {
   })
 }
 
-/**
- * Hook to fetch info sections for a specialty
- */
 export function useSpecialtyInfoSections(specialtyId: string | undefined) {
   return useQuery({
     queryKey: specialtyKeys.infoSections(specialtyId!),
@@ -90,13 +63,6 @@ export function useSpecialtyInfoSections(specialtyId: string | undefined) {
   })
 }
 
-// ============================================================================
-// Mutation Hooks
-// ============================================================================
-
-/**
- * Hook to create a new specialty
- */
 export function useCreateSpecialty() {
   const queryClient = useQueryClient()
 
@@ -115,9 +81,6 @@ export function useCreateSpecialty() {
   })
 }
 
-/**
- * Hook to update a specialty
- */
 export function useUpdateSpecialty() {
   const queryClient = useQueryClient()
 
@@ -138,9 +101,6 @@ export function useUpdateSpecialty() {
   })
 }
 
-/**
- * Hook to delete a specialty
- */
 export function useDeleteSpecialty() {
   const queryClient = useQueryClient()
 
@@ -158,13 +118,6 @@ export function useDeleteSpecialty() {
   })
 }
 
-// ============================================================================
-// Info Section Mutation Hooks
-// ============================================================================
-
-/**
- * Hook to create an info section
- */
 export function useCreateInfoSection() {
   const queryClient = useQueryClient()
 
@@ -186,9 +139,6 @@ export function useCreateInfoSection() {
   })
 }
 
-/**
- * Hook to update an info section
- */
 export function useUpdateInfoSection() {
   const queryClient = useQueryClient()
 
@@ -217,9 +167,6 @@ export function useUpdateInfoSection() {
   })
 }
 
-/**
- * Hook to delete an info section
- */
 export function useDeleteInfoSection() {
   const queryClient = useQueryClient()
 

@@ -1,8 +1,5 @@
-/**
- * Group Multi Delete Dialog Component
- * Dialog for bulk deleting permission groups
- */
 import { type Table } from '@tanstack/react-table'
+import { type PermissionGroup } from '@/api/types/permission.types'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +10,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { type PermissionGroup } from '@/api/types/permission.types'
 import { useDeletePermissionGroup } from '../../hooks'
 
 type GroupMultiDeleteDialogProps = {
@@ -33,16 +29,14 @@ export function GroupMultiDeleteDialog({
 
   const handleDelete = async () => {
     try {
-      // Delete each selected group
       for (const row of selectedRows) {
         await deleteMutation.mutateAsync(row.original.id)
       }
 
-      // Clear selection after successful delete
       table.resetRowSelection()
       onOpenChange(false)
     } catch {
-      // Error handling is done in mutation hook
+      void 0
     }
   }
 
@@ -90,4 +84,3 @@ export function GroupMultiDeleteDialog({
     </AlertDialog>
   )
 }
-

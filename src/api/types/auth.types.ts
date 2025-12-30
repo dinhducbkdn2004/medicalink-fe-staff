@@ -1,17 +1,7 @@
-/**
- * Authentication API Types
- * Based on API specification: /api/auth
- */
 import { z } from 'zod'
 
-/**
- * User roles in the system
- */
 export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'DOCTOR'
 
-/**
- * User object returned from authentication endpoints
- */
 export interface User {
   id: string
   fullName: string
@@ -24,64 +14,39 @@ export interface User {
   updatedAt: string
 }
 
-/**
- * Login request body
- */
 export interface LoginRequest {
   email: string
   password: string
 }
-
-/**
- * Login response
- */
 export interface LoginResponse {
   access_token: string
   refresh_token: string
   user: User
 }
 
-/**
- * Token refresh request body
- */
 export interface RefreshTokenRequest {
   refresh_token: string
 }
 
-/**
- * Token refresh response
- */
 export interface RefreshTokenResponse {
   access_token: string
   refresh_token: string
 }
 
-/**
- * Change password request body
- */
 export interface ChangePasswordRequest {
   currentPassword: string
   newPassword: string
 }
 
-/**
- * Verify password request body
- */
 export interface VerifyPasswordRequest {
   password: string
 }
 
-/**
- * Success response for operations that don't return data
- */
 export interface SuccessResponse {
   success: true
   message: string
 }
 
-/**
- * Error response structure
- */
 export interface ErrorResponse {
   success: false
   message: string
@@ -92,18 +57,12 @@ export interface ErrorResponse {
   method: string
 }
 
-/**
- * Validation error detail
- */
 export interface ValidationErrorDetail {
   property: string
   value: string
   constraints: Record<string, string>
 }
 
-/**
- * Validation error response
- */
 export interface ValidationErrorResponse {
   message: string
   error: string
@@ -111,15 +70,6 @@ export interface ValidationErrorResponse {
   details: ValidationErrorDetail[]
 }
 
-// ============================================
-// Zod Schemas for Validation
-// ============================================
-
-/**
- * Login form schema
- * - email: Valid email format, converted to lowercase
- * - password: 6-50 characters
- */
 export const loginSchema = z.object({
   email: z
     .string()
@@ -135,11 +85,6 @@ export const loginSchema = z.object({
 
 export type LoginFormData = z.infer<typeof loginSchema>
 
-/**
- * Change password form schema
- * - currentPassword: 6-50 characters
- * - newPassword: 8-50 characters with strength requirements
- */
 export const changePasswordSchema = z
   .object({
     currentPassword: z
@@ -165,9 +110,6 @@ export const changePasswordSchema = z
 
 export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>
 
-/**
- * Verify password schema
- */
 export const verifyPasswordSchema = z.object({
   password: z
     .string()
@@ -178,9 +120,6 @@ export const verifyPasswordSchema = z.object({
 
 export type VerifyPasswordFormData = z.infer<typeof verifyPasswordSchema>
 
-/**
- * User response schema for validation
- */
 export const userSchema = z.object({
   id: z.string(),
   fullName: z.string(),
@@ -193,46 +132,27 @@ export const userSchema = z.object({
   updatedAt: z.string(),
 })
 
-/**
- * Login response schema for validation
- */
 export const loginResponseSchema = z.object({
   access_token: z.string(),
   refresh_token: z.string(),
   user: userSchema,
 })
 
-// ============================================
-// Password Reset Types & Schemas
-// ============================================
-
-/**
- * Request password reset body
- */
 export interface RequestPasswordResetRequest {
   email: string
 }
 
-/**
- * Verify reset code body
- */
 export interface VerifyResetCodeRequest {
   email: string
   code: string
 }
 
-/**
- * Confirm password reset body
- */
 export interface ConfirmPasswordResetRequest {
   email: string
   code: string
   newPassword: string
 }
 
-/**
- * Request password reset schema
- */
 export const requestPasswordResetSchema = z.object({
   email: z
     .string()
@@ -245,9 +165,6 @@ export type RequestPasswordResetFormData = z.infer<
   typeof requestPasswordResetSchema
 >
 
-/**
- * Verify reset code schema
- */
 export const verifyResetCodeSchema = z.object({
   email: z.string().email(),
   code: z
@@ -259,9 +176,6 @@ export const verifyResetCodeSchema = z.object({
 
 export type VerifyResetCodeFormData = z.infer<typeof verifyResetCodeSchema>
 
-/**
- * Confirm password reset schema
- */
 export const confirmPasswordResetSchema = z
   .object({
     email: z.string().email(),

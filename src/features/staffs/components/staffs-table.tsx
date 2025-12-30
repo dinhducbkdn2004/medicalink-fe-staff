@@ -1,8 +1,4 @@
-/**
- * Staffs Table Component
- * Table view for staff account management with API integration
- * Refactored to use the generic DataTable component
- */
+
 import { Edit, Trash2 } from 'lucide-react'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
 import {
@@ -17,9 +13,9 @@ import { DataTableBulkActions } from './data-table-bulk-actions'
 import { staffsColumns as columns } from './staffs-columns'
 import { useStaffs } from './staffs-provider'
 
-// ============================================================================
-// Types
-// ============================================================================
+
+
+
 
 type StaffsTableProps = {
   data: Staff[]
@@ -29,11 +25,11 @@ type StaffsTableProps = {
   isLoading?: boolean
 }
 
-// ============================================================================
-// Configuration
-// ============================================================================
 
-// Column filter configuration for URL state management
+
+
+
+
 const columnFilterConfigs: ColumnFilterConfig[] = [
   {
     columnId: 'fullName',
@@ -61,9 +57,9 @@ const columnFilterConfigs: ColumnFilterConfig[] = [
   },
 ]
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function StaffsTable({
   data,
@@ -74,13 +70,13 @@ export function StaffsTable({
 }: StaffsTableProps) {
   const { setOpen, setCurrentRow } = useStaffs()
 
-  // Define row actions (context menu)
+  
   const getRowActions = (row: { original: Staff }): DataTableAction[] => {
     const staff = row.original
 
     const actions: DataTableAction[] = []
 
-    // Only show Edit action if user has update permission
+    
     if (canUpdateStaff()) {
       actions.push({
         label: 'Edit',
@@ -92,7 +88,7 @@ export function StaffsTable({
       })
     }
 
-    // Only show Delete action if user has delete permission
+    
     if (canDeleteSpecificStaff({ staffId: staff.id })) {
       actions.push({
         label: 'Delete',
@@ -111,16 +107,16 @@ export function StaffsTable({
 
   return (
     <DataTable
-      // Required props
+      
       data={data}
       columns={columns}
       search={search}
       navigate={navigate}
-      // Configuration
+      
       pageCount={pageCount}
       isLoading={isLoading}
       entityName='staff member'
-      // Toolbar
+      
       searchPlaceholder='Filter staff members...'
       searchKey='fullName'
       filters={[
@@ -142,10 +138,10 @@ export function StaffsTable({
           })),
         },
       ]}
-      // Actions
+      
       getRowActions={getRowActions}
       renderBulkActions={(table) => <DataTableBulkActions table={table} />}
-      // Advanced
+      
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
       emptyMessage='No staff members found.'

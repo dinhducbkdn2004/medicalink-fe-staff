@@ -1,7 +1,3 @@
-/**
- * Specialty Schema
- * Type definitions matching API response
- */
 export type {
   Specialty,
   SpecialtyInfoSection,

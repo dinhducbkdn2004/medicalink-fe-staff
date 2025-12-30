@@ -57,7 +57,7 @@ export function CalendarDayView({
             multiDayEvents={multiDayEvents}
           />
 
-          {/* Day header */}
+          {}
           <div className='relative z-20 flex border-b'>
             <div className='w-18'></div>
             <span className='text-muted-foreground flex-1 border-l py-2 text-center text-xs font-medium'>
@@ -71,7 +71,7 @@ export function CalendarDayView({
 
         <ScrollArea className='h-[800px]' type='always'>
           <div className='flex'>
-            {/* Hours column */}
+            {}
             <div className='relative w-18'>
               {hours.map((hour, index) => (
                 <div key={hour} className='relative' style={{ height: '96px' }}>
@@ -86,7 +86,7 @@ export function CalendarDayView({
               ))}
             </div>
 
-            {/* Day grid */}
+            {}
             <div className='relative flex-1 border-l'>
               <div className='relative'>
                 {hours.map((hour, index) => {

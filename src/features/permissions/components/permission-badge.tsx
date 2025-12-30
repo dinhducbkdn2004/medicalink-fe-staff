@@ -1,7 +1,4 @@
-/**
- * Permission Badge Component
- * Visual indicators for permission states and sources
- */
+
 import { Shield, Users, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'

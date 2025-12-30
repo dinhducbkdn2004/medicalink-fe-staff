@@ -1,8 +1,3 @@
-/**
- * API Services
- * Central export point for all API service modules
- */
-
 export * from './auth.service'
 export * from './stats.service'
 export * from './staff.service'
@@ -18,7 +13,6 @@ export * from './permission.service'
 export * from './patient.service'
 export * from './appointment.service'
 
-// Question service - rename Specialty to QuestionSpecialty to avoid conflict with specialty.service
 export type {
   Specialty as QuestionSpecialty,
   Question,
@@ -29,7 +23,6 @@ export type {
 } from './question.service'
 export { questionService } from './question.service'
 
-// Answer service - rename Doctor to AnswerDoctor to avoid conflict with review.service
 export type {
   Doctor as AnswerDoctor,
   Answer,

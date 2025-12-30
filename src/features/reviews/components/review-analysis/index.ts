@@ -1,7 +1,3 @@
-/**
- * Review Analysis Components
- * Central export for all review analysis components
- */
 export { ReviewAnalysisProvider } from './provider'
 export { useReviewAnalysis } from './use-review-analysis'
 export { CreateAnalysisDialog } from './create-analysis-dialog'

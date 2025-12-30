@@ -5,12 +5,9 @@ import { Patients } from '@/features/patients'
 const patientsSearchSchema = z.object({
   page: z.number().optional().catch(1),
   pageSize: z.number().optional().catch(10),
-  // Per-column text filter for search (fullName, email, phone)
   search: z.string().optional().catch(''),
-  // Facet filters
   isMale: z.string().optional().catch(''),
   includedDeleted: z.boolean().optional().catch(false),
-  // Sorting
   sortBy: z
     .enum(['dateOfBirth', 'createdAt', 'updatedAt'])
     .optional()

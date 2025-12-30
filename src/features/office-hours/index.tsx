@@ -1,7 +1,4 @@
-/**
- * Office Hours Management Page
- * Main page for managing office hours and schedules
- */
+
 import { getRouteApi } from '@tanstack/react-router'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -34,14 +31,14 @@ function OfficeHoursContent() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
-  // Fetch filter options
+  
   const { data: doctorsData } = useDoctors({ limit: 100 })
   const { data: locationsData } = useWorkLocations({ limit: 100 })
 
   const doctors = doctorsData?.data || []
   const locations = locationsData?.data || []
 
-  // Filter handlers
+  
   const handleDoctorChange = (doctorId: string) => {
     navigate({
       search: {
@@ -60,7 +57,7 @@ function OfficeHoursContent() {
     })
   }
 
-  // Fetch all office hours (API returns grouped data)
+  
   const queryParams = {
     doctorId: (search.doctorId as string) || undefined,
     workLocationId: (search.workLocationId as string) || undefined,
@@ -68,8 +65,8 @@ function OfficeHoursContent() {
 
   const { data, isLoading, error } = useOfficeHours(queryParams)
 
-  // Extract and categorize office hours data
-  // Note: Backend may return all records in 'global' array, so we categorize client-side
+  
+  
   const categorizeOfficeHours = (apiData: typeof data) => {
     if (!apiData) {
       return {
@@ -80,7 +77,7 @@ function OfficeHoursContent() {
       }
     }
 
-    // Collect all office hours from API response (might be in wrong categories)
+    
     const allOfficeHours = [
       ...(apiData.global || []),
       ...(apiData.workLocation || []),
@@ -88,7 +85,7 @@ function OfficeHoursContent() {
       ...(apiData.doctorInLocation || []),
     ]
 
-    // Re-categorize based on actual field values
+    
     return {
       global: allOfficeHours.filter(
         (oh) =>
@@ -106,14 +103,14 @@ function OfficeHoursContent() {
 
   const groupedData = categorizeOfficeHours(data)
 
-  // Calculate totals for badges
+  
   const totalAll =
     groupedData.global.length +
     groupedData.workLocation.length +
     groupedData.doctor.length +
     groupedData.doctorInLocation.length
 
-  // Check for permission errors
+  
   const isPermissionError =
     error &&
     typeof error === 'object' &&
@@ -151,7 +148,7 @@ function OfficeHoursContent() {
           )}
         </div>
 
-        {/* Filter Controls */}
+        {}
         <div className='flex flex-wrap gap-4'>
           <Select
             value={(search.doctorId as string) || 'all'}

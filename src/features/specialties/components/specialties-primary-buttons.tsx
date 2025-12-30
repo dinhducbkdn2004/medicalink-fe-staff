@@ -1,7 +1,4 @@
-/**
- * Specialties Primary Buttons
- * Main action buttons for the specialties page
- */
+
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useSpecialties } from './specialties-provider'

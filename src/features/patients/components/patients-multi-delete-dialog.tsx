@@ -1,7 +1,4 @@
-/**
- * Bulk Delete Patients Dialog
- * Confirmation modal for deleting multiple patients at once
- */
+
 import { useState } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { AlertTriangle } from 'lucide-react'

@@ -1,7 +1,4 @@
-/**
- * Work Locations Management Page
- * Main page for managing work locations
- */
+
 import { getRouteApi } from '@tanstack/react-router'
 import { Can } from '@/components/auth/permission-gate'
 import { RequirePermission } from '@/components/auth/require-permission'
@@ -23,7 +20,7 @@ export function WorkLocations() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
-  // Fetch work locations with query params
+  
   const queryParams = {
     page: (search.page as number) || 1,
     limit: (search.pageSize as number) || 10,

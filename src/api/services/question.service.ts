@@ -1,14 +1,5 @@
-/**
- * Question API Service
- * Handles all API calls related to questions
- * API Base: /api/questions
- */
 import { apiClient } from '../core/client'
 import type { PaginatedResponse, PaginationParams } from '../types/common.types'
-
-// ============================================================================
-// Types
-// ============================================================================
 
 export interface Specialty {
   id: string
@@ -61,19 +52,7 @@ export interface UpdateQuestionRequest {
 
 export type QuestionListResponse = PaginatedResponse<Question>
 
-// ============================================================================
-// Service Class
-// ============================================================================
-
 class QuestionService {
-  // --------------------------------------------------------------------------
-  // Question CRUD
-  // --------------------------------------------------------------------------
-
-  /**
-   * Get all questions with pagination and filtering
-   * GET /api/questions
-   */
   async getQuestions(
     params: QuestionQueryParams = {}
   ): Promise<QuestionListResponse> {
@@ -82,29 +61,15 @@ class QuestionService {
     })
     return response.data
   }
-
-  /**
-   * Get a single question by ID
-   * GET /api/questions/:id
-   */
   async getQuestion(id: string): Promise<Question> {
     const response = await apiClient.get<Question>(`/questions/${id}`)
     return response.data
   }
-
-  /**
-   * Create a new question (public, rate-limited)
-   * POST /api/questions
-   */
   async createQuestion(data: CreateQuestionRequest): Promise<Question> {
     const response = await apiClient.post<Question>('/questions', data)
     return response.data
   }
 
-  /**
-   * Update a question (admin only)
-   * PATCH /api/questions/:id
-   */
   async updateQuestion(
     id: string,
     data: UpdateQuestionRequest
@@ -113,10 +78,6 @@ class QuestionService {
     return response.data
   }
 
-  /**
-   * Delete a question (admin only)
-   * DELETE /api/questions/:id
-   */
   async deleteQuestion(
     id: string
   ): Promise<{ success: boolean; message: string }> {

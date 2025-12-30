@@ -1,7 +1,3 @@
-/**
- * Questions Feature - React Query Hooks
- * Data fetching and mutations for questions
- */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import {
@@ -10,10 +6,6 @@ import {
   type UpdateQuestionRequest,
   type QuestionQueryParams,
 } from '@/api/services'
-
-// ============================================================================
-// Query Keys
-// ============================================================================
 
 export const questionKeys = {
   all: ['questions'] as const,
@@ -24,24 +16,14 @@ export const questionKeys = {
   detail: (id: string) => [...questionKeys.details(), id] as const,
 }
 
-// ============================================================================
-// Queries
-// ============================================================================
-
-/**
- * Get paginated list of questions
- */
 export function useQuestions(params: QuestionQueryParams = {}) {
   return useQuery({
     queryKey: questionKeys.list(params),
     queryFn: () => questionService.getQuestions(params),
-    staleTime: 30000, // 30 seconds
+    staleTime: 30000,
   })
 }
 
-/**
- * Get a single question by ID
- */
 export function useQuestion(id: string) {
   return useQuery({
     queryKey: questionKeys.detail(id),
@@ -50,13 +32,6 @@ export function useQuestion(id: string) {
   })
 }
 
-// ============================================================================
-// Mutations
-// ============================================================================
-
-/**
- * Create a new question (public)
- */
 export function useCreateQuestion() {
   const queryClient = useQueryClient()
 
@@ -78,9 +53,6 @@ export function useCreateQuestion() {
   })
 }
 
-/**
- * Update a question (admin only)
- */
 export function useUpdateQuestion() {
   const queryClient = useQueryClient()
 
@@ -102,9 +74,6 @@ export function useUpdateQuestion() {
   })
 }
 
-/**
- * Delete a question (admin only)
- */
 export function useDeleteQuestion() {
   const queryClient = useQueryClient()
 

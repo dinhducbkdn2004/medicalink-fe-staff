@@ -1,7 +1,4 @@
-/**
- * User Group Page
- * Manage user-group memberships (user-centric view)
- */
+
 import { useState } from 'react'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
@@ -27,7 +24,7 @@ export function UserGroup() {
       </Header>
 
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        {/* Page Header */}
+        {}
         <div className='flex flex-wrap items-end justify-between gap-4'>
           <div className='space-y-1'>
             <h2 className='text-2xl font-bold tracking-tight'>
@@ -40,15 +37,15 @@ export function UserGroup() {
           </div>
         </div>
 
-        {/* Main Content: Two Column Layout */}
+        {}
         <div className='grid grid-cols-1 gap-4 lg:grid-cols-[380px_1fr]'>
-          {/* Left: User List */}
+          {}
           <UserList
             selectedUserId={selectedUserId}
             onSelectUser={setSelectedUserId}
           />
 
-          {/* Right: User Group Memberships */}
+          {}
           <UserGroupMemberships userId={selectedUserId} />
         </div>
       </Main>

@@ -1,7 +1,4 @@
-/**
- * Patients Management Page
- * Main page for managing patient records
- */
+
 import { getRouteApi } from '@tanstack/react-router'
 import { Can } from '@/components/auth/permission-gate'
 import { RequirePermission } from '@/components/auth/require-permission'
@@ -23,7 +20,7 @@ export function Patients() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
-  // Fetch patients with query params
+  
   const queryParams = {
     page: (search.page as number) || 1,
     limit: (search.pageSize as number) || 10,
@@ -40,7 +37,7 @@ export function Patients() {
   return (
     <RequirePermission resource='patients' action='read'>
       <PatientsProvider>
-        {/* Header */}
+        {}
         <Header fixed>
           <Search />
           <div className='ml-auto flex items-center space-x-4'>
@@ -50,7 +47,7 @@ export function Patients() {
           </div>
         </Header>
 
-        {/* Main Content */}
+        {}
         <Main>
           <div className='mb-2 flex items-center justify-between space-y-2'>
             <div>
@@ -66,7 +63,7 @@ export function Patients() {
             </Can>
           </div>
 
-          {/* Error State */}
+          {}
           {error && (
             <div className='rounded-md border border-red-200 bg-red-50 p-4'>
               <p className='text-sm text-red-800'>
@@ -75,7 +72,7 @@ export function Patients() {
             </div>
           )}
 
-          {/* Table */}
+          {}
           <PatientsTable
             data={patientsData?.data || []}
             pageCount={patientsData?.meta?.totalPages || 0}
@@ -84,7 +81,7 @@ export function Patients() {
             isLoading={isLoading}
           />
 
-          {/* Dialogs */}
+          {}
           <PatientsDialogs />
         </Main>
       </PatientsProvider>

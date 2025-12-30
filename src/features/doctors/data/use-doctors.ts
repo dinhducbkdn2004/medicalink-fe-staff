@@ -1,7 +1,3 @@
-/**
- * Doctor API Hooks
- * TanStack Query hooks for Doctor Account management
- */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { doctorService } from '@/api/services'
@@ -11,10 +7,6 @@ import type {
   UpdateDoctorAccountRequest,
   CompleteDoctorData,
 } from '@/api/types/doctor.types'
-
-// ============================================================================
-// Query Keys
-// ============================================================================
 
 export const doctorKeys = {
   all: ['doctors'] as const,
@@ -26,35 +18,22 @@ export const doctorKeys = {
   stats: () => [...doctorKeys.all, 'stats'] as const,
 }
 
-// ============================================================================
-// Query Hooks
-// ============================================================================
-
-/**
- * Hook to fetch paginated list of doctors with filtering and sorting
- */
 export function useDoctors(params: DoctorQueryParams = {}) {
   return useQuery({
     queryKey: doctorKeys.list(params),
     queryFn: () => doctorService.getDoctors(params),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
   })
 }
 
-/**
- * Hook to search doctors with complete data (account + profile merged)
- */
 export function useSearchCompleteDoctors(params: DoctorQueryParams = {}) {
   return useQuery({
     queryKey: [...doctorKeys.lists(), 'complete', params] as const,
     queryFn: () => doctorService.searchCompleteDoctors(params),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
   })
 }
 
-/**
- * Hook to fetch single doctor account by ID
- */
 export function useDoctor(id: string | undefined) {
   return useQuery({
     queryKey: doctorKeys.detail(id!),
@@ -63,9 +42,6 @@ export function useDoctor(id: string | undefined) {
   })
 }
 
-/**
- * Hook to fetch complete doctor data (account + profile)
- */
 export function useCompleteDoctor(id: string | undefined, skipCache = true) {
   return useQuery<CompleteDoctorData>({
     queryKey: [...doctorKeys.complete(id!), skipCache] as const,
@@ -74,24 +50,14 @@ export function useCompleteDoctor(id: string | undefined, skipCache = true) {
   })
 }
 
-/**
- * Hook to fetch doctor statistics
- */
 export function useDoctorStats() {
   return useQuery({
     queryKey: doctorKeys.stats(),
     queryFn: () => doctorService.getDoctorStats(),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
   })
 }
 
-// ============================================================================
-// Mutation Hooks
-// ============================================================================
-
-/**
- * Hook to create a new doctor account
- */
 export function useCreateDoctor() {
   const queryClient = useQueryClient()
 
@@ -105,9 +71,6 @@ export function useCreateDoctor() {
   })
 }
 
-/**
- * Hook to update doctor account information
- */
 export function useUpdateDoctor() {
   const queryClient = useQueryClient()
 
@@ -132,9 +95,6 @@ export function useUpdateDoctor() {
   })
 }
 
-/**
- * Hook to delete a doctor account
- */
 export function useDeleteDoctor() {
   const queryClient = useQueryClient()
 

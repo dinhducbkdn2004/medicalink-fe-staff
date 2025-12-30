@@ -36,7 +36,7 @@ interface AppointmentSchedulerDialogProps {
   readonly selectedDate?: Date
   readonly selectedSlot?: TimeSlot
   readonly disabled?: boolean
-  readonly allowPast?: boolean // Allow selecting past dates (for staff portal)
+  readonly allowPast?: boolean
 }
 
 export function AppointmentSchedulerDialog({
@@ -107,7 +107,7 @@ export function AppointmentSchedulerDialog({
           Choose an available date from the calendar and then select a time slot
         </DialogDescription>
         <div className='flex-1 overflow-y-auto p-4 pt-10'>
-          {/* Calendar Header */}
+          {}
           <div className='mb-4 grid grid-cols-3 items-center gap-2'>
             <Button
               type='button'
@@ -132,7 +132,7 @@ export function AppointmentSchedulerDialog({
             </Button>
           </div>
 
-          {/* Day of Week Headers */}
+          {}
           <div className='text-muted-foreground mb-2 grid grid-cols-7 gap-1 text-center text-xs font-medium'>
             <div>T2</div>
             <div>T3</div>
@@ -143,22 +143,22 @@ export function AppointmentSchedulerDialog({
             <div>CN</div>
           </div>
 
-          {/* Calendar Grid */}
+          {}
           <div className='mb-4 grid grid-cols-7 gap-1'>
-            {/* Empty cells for days before month start */}
+            {}
             {Array.from({ length: (monthStart.getDay() + 6) % 7 }).map(
               (_, i) => (
                 <div key={`empty-${monthStart.getTime()}-${i}`} />
               )
             )}
 
-            {/* Days of month */}
+            {}
             {daysInMonth.map((date) => {
               const dateStr = format(date, 'yyyy-MM-dd')
               const isAvailable = availableDates.includes(dateStr)
               const isSelected = selectedDate && isSameDay(date, selectedDate)
               const isPast = isBefore(date, startOfDay(new Date()))
-              // Only disable past dates if allowPast is false
+              
               const isDisabled = !isAvailable || (isPast && !allowPast)
 
               return (
@@ -186,7 +186,7 @@ export function AppointmentSchedulerDialog({
             })}
           </div>
 
-          {/* Legend */}
+          {}
           <div className='mb-4 flex items-center gap-2 text-xs'>
             <div className='h-1 w-1 rounded-full bg-blue-600' />
             <span className='font-semibold'>
@@ -194,7 +194,7 @@ export function AppointmentSchedulerDialog({
             </span>
           </div>
 
-          {/* Time Slots Section */}
+          {}
           <div className='space-y-2'>
             <div className='font-semibold'>Select appointment time slot</div>
 
@@ -254,7 +254,7 @@ export function AppointmentSchedulerDialog({
             )}
           </div>
 
-          {/* Confirm Button */}
+          {}
           <Button
             type='button'
             onClick={handleConfirm}

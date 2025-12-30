@@ -1,7 +1,4 @@
-/**
- * Create Analysis Dialog
- * Dialog form for generating AI-powered review analysis
- */
+
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AlertCircle } from 'lucide-react'
@@ -24,9 +21,9 @@ import { Progress } from '@/components/ui/progress'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useReviewAnalysis } from './use-review-analysis'
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function CreateAnalysisDialog() {
   const { openDialog, setOpen, doctorId, onAnalysisCreated } =

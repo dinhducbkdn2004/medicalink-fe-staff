@@ -58,7 +58,7 @@ export function OtpForm({ className, ...props }: Readonly<OtpFormProps>) {
         search: { email: search.email, code: data.otp },
       })
     } catch (error: unknown) {
-      // Error already handled by API interceptor, don't duplicate toast
+      
       console.error('OTP verification failed:', error)
     } finally {
       setIsLoading(false)

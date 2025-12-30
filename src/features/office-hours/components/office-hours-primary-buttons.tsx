@@ -1,7 +1,4 @@
-/**
- * Office Hours Primary Action Buttons
- * Main action buttons for the office hours page
- */
+
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useOfficeHoursContext } from './office-hours-provider'

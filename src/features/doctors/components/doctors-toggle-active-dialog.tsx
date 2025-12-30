@@ -1,7 +1,4 @@
-/**
- * Toggle Doctor Active Status Dialog
- * Confirmation dialog for activating/deactivating doctor profile
- */
+
 
 import { Button } from '@/components/ui/button'
 import {
@@ -19,7 +16,7 @@ export function DoctorsToggleActiveDialog() {
   const { open, setOpen, currentRow } = useDoctors()
   const { mutate: toggleActive, isPending } = useToggleDoctorProfileActive()
 
-  // Backend returns flat structure with profileId and isActive at root level
+  
   const isActive = currentRow?.isActive ?? false
   const profileId = currentRow?.profileId
 

@@ -1,7 +1,4 @@
-/**
- * Resource & Action Selector Component
- * Multi-select component for choosing resources and actions
- */
+
 import {
   RESOURCES,
   ACTIONS,
@@ -43,7 +40,7 @@ export function ResourceActionSelector({
 
   return (
     <div className='space-y-4'>
-      {/* Resource Selector */}
+      {}
       <div className='space-y-2'>
         <Label>Resource</Label>
         <Select
@@ -64,7 +61,7 @@ export function ResourceActionSelector({
         </Select>
       </div>
 
-      {/* Actions Selector */}
+      {}
       {selectedResource && (
         <div className='space-y-2'>
           <Label>Actions</Label>

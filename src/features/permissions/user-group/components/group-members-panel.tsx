@@ -1,7 +1,3 @@
-/**
- * Group Members Panel Component
- * Displays and manages members of a permission group
- */
 import { useState } from 'react'
 import { UsersRound, UserPlus, X } from 'lucide-react'
 import {
@@ -37,7 +33,6 @@ export function GroupMembersPanel({ groupId }: GroupMembersPanelProps) {
   const [showAddDialog, setShowAddDialog] = useState(false)
   const [removeMemberId, setRemoveMemberId] = useState<string>()
 
-  // Fetch all staffs to check group memberships
   const { data: staffsData, isLoading } = useStaffs({
     page: 1,
     limit: 100,
@@ -45,8 +40,6 @@ export function GroupMembersPanel({ groupId }: GroupMembersPanelProps) {
 
   const removeMutation = useRemoveUserFromGroup()
 
-  // Filter members who belong to the selected group
-  // Note: This is a simplified approach. In production, you might want a dedicated API endpoint
   const members = staffsData?.data || []
 
   const handleRemove = async () => {
@@ -59,7 +52,7 @@ export function GroupMembersPanel({ groupId }: GroupMembersPanelProps) {
       })
       setRemoveMemberId(undefined)
     } catch {
-      // Error handling is done in mutation hook
+      void 0
     }
   }
 
@@ -152,14 +145,14 @@ export function GroupMembersPanel({ groupId }: GroupMembersPanelProps) {
         </CardContent>
       </Card>
 
-      {/* Add Members Dialog */}
+      {}
       <AddMembersDialog
         open={showAddDialog}
         onOpenChange={setShowAddDialog}
         groupId={groupId}
       />
 
-      {/* Remove Member Confirmation */}
+      {}
       <AlertDialog
         open={!!removeMemberId}
         onOpenChange={(open) => !open && setRemoveMemberId(undefined)}

@@ -1,7 +1,3 @@
-/**
- * Specialty API Service
- * Handles API calls related to specialties
- */
 import { apiClient } from '../core/client'
 import type { PaginatedResponse, PaginationParams } from '../types/common.types'
 
@@ -51,10 +47,6 @@ export type UpdateInfoSectionRequest = Partial<
 >
 
 class SpecialtyService {
-  /**
-   * Get all specialties
-   * GET /api/specialties
-   */
   async getSpecialties(
     params: SpecialtyQueryParams = {}
   ): Promise<SpecialtyListResponse> {
@@ -67,10 +59,6 @@ class SpecialtyService {
     return response.data
   }
 
-  /**
-   * Get all public specialties
-   * GET /api/specialties/public
-   */
   async getPublicSpecialties(
     params: SpecialtyQueryParams = {}
   ): Promise<SpecialtyListResponse> {
@@ -83,10 +71,6 @@ class SpecialtyService {
     return response.data
   }
 
-  /**
-   * Get all active specialties (no pagination, for dropdowns)
-   * GET /api/specialties?isActive=true&limit=100
-   */
   async getAllActiveSpecialties(): Promise<Specialty[]> {
     try {
       const response = await apiClient.get<SpecialtyListResponse>(
@@ -94,7 +78,7 @@ class SpecialtyService {
         {
           params: {
             isActive: true,
-            limit: 100, // Get active specialties (backend may have max limit)
+            limit: 100,
             sortBy: 'name',
             sortOrder: 'asc',
           },
@@ -102,7 +86,6 @@ class SpecialtyService {
       )
       return response.data.data
     } catch (_error) {
-      // Fallback: try without isActive filter if it fails
       try {
         const response = await apiClient.get<SpecialtyListResponse>(
           '/specialties',
@@ -114,36 +97,22 @@ class SpecialtyService {
             },
           }
         )
-        // Filter active on client side if API doesn't support filtering
-        // Logic: if 'isActive' property exists, filter by it. Otherwise return all.
-        // Assuming Specialty interface might not strictly enforce isActive locally but backend returns it.
-        // If Specialty interface needs update, we should check that too.
         return response.data.data
       } catch (_fallbackError) {
         return []
       }
     }
   }
-
-  /**
-   * Get specialty by ID
-   */
   async getSpecialty(id: string): Promise<Specialty> {
     const response = await apiClient.get<Specialty>(`/specialties/${id}`)
     return response.data
   }
 
-  /**
-   * Create new specialty
-   */
   async createSpecialty(data: CreateSpecialtyRequest): Promise<Specialty> {
     const response = await apiClient.post<Specialty>('/specialties', data)
     return response.data
   }
 
-  /**
-   * Update specialty
-   */
   async updateSpecialty(
     id: string,
     data: UpdateSpecialtyRequest
@@ -155,25 +124,16 @@ class SpecialtyService {
     return response.data
   }
 
-  /**
-   * Delete specialty
-   */
   async deleteSpecialty(id: string): Promise<void> {
     await apiClient.delete(`/specialties/${id}`)
   }
 
-  /**
-   * Get specialty statistics
-   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getSpecialtyStats(): Promise<any> {
     const response = await apiClient.get('/specialties/stats')
     return response.data
   }
 
-  /**
-   * Get info sections for a specialty
-   */
   async getInfoSections(specialtyId: string): Promise<SpecialtyInfoSection[]> {
     const response = await apiClient.get<SpecialtyInfoSection[]>(
       `/specialties/${specialtyId}/info-sections`
@@ -181,9 +141,6 @@ class SpecialtyService {
     return response.data
   }
 
-  /**
-   * Create info section
-   */
   async createInfoSection(
     data: CreateInfoSectionRequest
   ): Promise<SpecialtyInfoSection> {
@@ -194,9 +151,6 @@ class SpecialtyService {
     return response.data
   }
 
-  /**
-   * Update info section
-   */
   async updateInfoSection(
     id: string,
     data: UpdateInfoSectionRequest
@@ -208,9 +162,6 @@ class SpecialtyService {
     return response.data
   }
 
-  /**
-   * Delete info section
-   */
   async deleteInfoSection(id: string): Promise<void> {
     await apiClient.delete(`/specialties/info-sections/${id}`)
   }

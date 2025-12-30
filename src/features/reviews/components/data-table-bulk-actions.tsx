@@ -1,23 +1,20 @@
-/**
- * Reviews Bulk Actions
- * Actions for selected rows in the reviews table
- */
+
 import type { Table } from '@tanstack/react-table'
 import { Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { Review } from '../data/schema'
 
-// ============================================================================
-// Types
-// ============================================================================
+
+
+
 
 interface DataTableBulkActionsProps {
   table: Table<Review>
 }
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
   const selectedRows = table.getFilteredSelectedRowModel().rows
@@ -33,8 +30,8 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
         size='sm'
         className='border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground'
         onClick={() => {
-          // TODO: Implement bulk delete
-          // Bulk delete reviews: selectedRows.map((r) => r.original.id)
+          
+          
         }}
       >
         <Trash2 className='mr-2 size-4' />

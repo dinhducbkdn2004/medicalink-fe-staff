@@ -9,7 +9,6 @@ import type {
 } from '@/api/services/blog.service'
 import { blogKeys } from './use-blog-categories'
 
-// Extend base keys
 export const blogPostKeys = {
   ...blogKeys,
   posts: () => [...blogKeys.all, 'posts'] as const,

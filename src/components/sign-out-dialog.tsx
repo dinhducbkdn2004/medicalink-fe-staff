@@ -1,7 +1,4 @@
-/**
- * Sign Out Dialog Component
- * Confirmation dialog for user sign out
- */
+
 import { useLogout } from '@/hooks/use-auth'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 

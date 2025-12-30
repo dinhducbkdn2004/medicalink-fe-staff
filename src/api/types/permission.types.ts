@@ -1,12 +1,3 @@
-/**
- * Permission Management Types
- * Based on Permission Management API specification
- */
-
-// ============================================================================
-// Base Permission Types
-// ============================================================================
-
 export type Permission = {
   id: string
   resource: string
@@ -22,13 +13,6 @@ export type PermissionCondition = {
 
 export type PermissionEffect = 'ALLOW' | 'DENY'
 
-// ============================================================================
-// User Permission Types
-// ============================================================================
-
-/**
- * User Permission Item - format returned by API
- */
 export type UserPermissionItem = {
   resource: string
   action: string
@@ -36,23 +20,19 @@ export type UserPermissionItem = {
   conditions?: PermissionCondition[]
 }
 
-/**
- * User Permission Snapshot - format returned by GET /api/permissions/users/:userId
- * ACTUAL API FORMAT: Returns array of permission objects, not the snapshot format in docs
- */
 export type UserPermissionSnapshot = UserPermissionItem[]
 
 export type AssignUserPermissionRequest = {
   userId: string
-  permissionId: string // Changed from resource/action to permissionId
+  permissionId: string
   tenantId?: string
-  effect?: PermissionEffect // Changed from granted to effect
+  effect?: PermissionEffect
   conditions?: PermissionCondition[]
 }
 
 export type RevokeUserPermissionRequest = {
   userId: string
-  permissionId: string // Changed from resource/action to permissionId
+  permissionId: string
   tenantId?: string
 }
 
@@ -65,10 +45,6 @@ export type CheckPermissionRequest = {
 }
 
 export type CheckPermissionResponse = boolean
-
-// ============================================================================
-// Permission Group Types
-// ============================================================================
 
 export type PermissionGroup = {
   id: string
@@ -98,10 +74,6 @@ export type UpdatePermissionGroupRequest = {
 
 export type PermissionGroupListResponse = PermissionGroup[]
 
-// ============================================================================
-// Group Permission Types
-// ============================================================================
-
 export type GroupPermission = {
   id: string
   permissionId: string
@@ -125,10 +97,6 @@ export type RevokeGroupPermissionRequest = {
   tenantId?: string
 }
 
-// ============================================================================
-// User Group Membership Types
-// ============================================================================
-
 export type UserGroupMembership = {
   id: string
   groupId: string
@@ -144,10 +112,6 @@ export type AddUserToGroupRequest = {
 }
 
 export type UserGroupMembershipListResponse = UserGroupMembership[]
-
-// ============================================================================
-// Permission Stats Types
-// ============================================================================
 
 export type MostUsedPermission = {
   permissionId: string
@@ -172,10 +136,6 @@ export type PermissionStats = {
   largestGroups: LargestGroup[]
 }
 
-// ============================================================================
-// Common Response Types
-// ============================================================================
-
 export type SuccessResponse = {
   success: boolean
   message: string
@@ -187,10 +147,6 @@ export type CacheResponse = {
   cacheKey?: string
 }
 
-// ============================================================================
-// Query Parameter Types
-// ============================================================================
-
 export type PermissionQueryParams = {
   tenantId?: string
 }
@@ -199,10 +155,6 @@ export type UserPermissionQueryParams = {
   userId: string
   tenantId?: string
 }
-
-// ============================================================================
-// Resource and Action Constants
-// ============================================================================
 
 export const RESOURCES = [
   'doctors',

@@ -77,7 +77,7 @@ export function BlogsPage() {
         </div>
 
         <BlogList
-          //@ts-expect-error - Data type mismatch
+          
           data={Array.isArray(data) ? data : data?.data || []}
           isLoading={isLoading}
           onDelete={setDeletingBlog}

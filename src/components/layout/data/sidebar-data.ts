@@ -22,15 +22,6 @@ import {
 } from 'lucide-react'
 import type { NavGroupWithPermission } from '@/lib/sidebar-utils'
 
-/**
- * Permission-based sidebar navigation configuration
- *
- * Each item can specify:
- * - permission: { resource, action } - Required permission to see this item
- * - No permission = visible to all authenticated users
- *
- * The 'manage' action implies all CRUD actions (create, read, update, delete)
- */
 export const navGroups: NavGroupWithPermission[] = [
   {
     title: 'Dashboard',
@@ -39,8 +30,6 @@ export const navGroups: NavGroupWithPermission[] = [
         title: 'Dashboard',
         url: '/',
         icon: LayoutDashboard,
-        // Dashboard is visible to all authenticated users
-        // Different content shown based on role
       },
     ],
   },
@@ -61,8 +50,7 @@ export const navGroups: NavGroupWithPermission[] = [
             title: 'Doctor Accounts',
             url: '/doctors',
             icon: Stethoscope,
-            // Require manage permission (not just read) to see management page
-            // Doctor has doctors:read but not doctors:manage
+
             permission: { resource: 'doctors', action: 'manage' },
           },
         ],
@@ -112,7 +100,7 @@ export const navGroups: NavGroupWithPermission[] = [
         title: 'Office Hours',
         url: '/office-hours',
         icon: Clock,
-        // Require manage for office hours configuration
+
         permission: { resource: 'office-hours', action: 'manage' },
       },
     ],
@@ -200,9 +188,6 @@ export const navGroups: NavGroupWithPermission[] = [
   },
 ]
 
-/**
- * Default teams configuration
- */
 export const teams = [
   {
     name: 'MedicaLink',
@@ -216,9 +201,6 @@ export const teams = [
   },
 ]
 
-/**
- * Get sidebar data
- */
 export function getSidebarData() {
   return {
     teams,

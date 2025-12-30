@@ -19,10 +19,10 @@ type DataTableBulkActionsProps = {
 export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
-  // Check if user has delete permission
+  
   const hasDeletePermission = canDeletePatient()
 
-  // Don't show bulk actions if user doesn't have delete permission
+  
   if (!hasDeletePermission) {
     return null
   }

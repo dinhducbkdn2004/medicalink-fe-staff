@@ -1,29 +1,3 @@
-/**
- * Generic DataTable Component
- * Reusable table with built-in features:
- * - Server-side pagination, sorting, filtering
- * - URL state management
- * - Context menu actions
- * - Bulk actions
- * - Skeleton loading
- * - Empty state
- *
- * Usage:
- * ```tsx
- * <DataTable
- *   data={doctors}
- *   columns={doctorsColumns}
- *   pageCount={10}
- *   isLoading={isLoading}
- *   search={search}
- *   navigate={navigate}
- *   entityName="doctor"
- *   searchPlaceholder="Search doctors..."
- *   getRowActions={(row) => [...actions]}
- *   renderBulkActions={(table) => <YourBulkActions />}
- * />
- * ```
- */
 import { useEffect, useState } from 'react'
 import {
   type ColumnDef,
@@ -51,10 +25,6 @@ import { DataTableContextMenu } from './context-menu'
 import { DataTablePagination } from './pagination'
 import { DataTableToolbar } from './toolbar'
 
-// ============================================================================
-// Types
-// ============================================================================
-
 export interface DataTableAction {
   label: string
   icon: LucideIcon
@@ -74,7 +44,6 @@ export interface DataTableFilter {
   }[]
 }
 
-// Re-export type from useTableUrlState for external use
 export type ColumnFilterConfig =
   | {
       columnId: string
@@ -92,43 +61,32 @@ export type ColumnFilterConfig =
     }
 
 export interface DataTableProps<TData> {
-  // Required props
   data: TData[]
   columns: ColumnDef<TData, unknown>[]
   search: Record<string, unknown>
   navigate: NavigateFn
 
-  // Optional props
   pageCount?: number
   isLoading?: boolean
   entityName?: string
 
-  // Toolbar configuration
   searchPlaceholder?: string
   searchKey?: string
   filters?: DataTableFilter[]
 
-  // Actions
   getRowActions?: (row: Row<TData>) => DataTableAction[]
   renderBulkActions?: (
     table: ReturnType<typeof useReactTable<TData>>
   ) => React.ReactNode
 
-  // Table configuration
   enableRowSelection?: boolean
   columnFilterConfigs?: ColumnFilterConfig[]
 
-  // Empty state
   emptyMessage?: string
 
-  // Styling
   className?: string
   hideToolbar?: boolean
 }
-
-// ============================================================================
-// Component
-// ============================================================================
 
 export function DataTable<TData>({
   data,
@@ -149,14 +107,9 @@ export function DataTable<TData>({
   className,
   hideToolbar = false,
 }: DataTableProps<TData>) {
-  // ============================================================================
-  // State Management
-  // ============================================================================
-
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
-  // Initialize sorting from URL params
   const [sorting, setSorting] = useState<SortingState>(() => {
     const sortBy = search.sortBy as string | undefined
     const sortOrder = search.sortOrder as 'asc' | 'desc' | undefined
@@ -167,7 +120,6 @@ export function DataTable<TData>({
     return []
   })
 
-  // URL state management
   const {
     columnFilters,
     onColumnFiltersChange,
@@ -181,10 +133,6 @@ export function DataTable<TData>({
     globalFilter: { enabled: false },
     columnFilters: columnFilterConfigs,
   })
-
-  // ============================================================================
-  // Table Instance
-  // ============================================================================
 
   const table = useReactTable({
     data,
@@ -212,16 +160,10 @@ export function DataTable<TData>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
-  // ============================================================================
-  // Effects
-  // ============================================================================
-
-  // Ensure page is in valid range
   useEffect(() => {
     ensurePageInRange(table.getPageCount())
   }, [table, ensurePageInRange])
 
-  // Sync URL params to sorting state
   useEffect(() => {
     const sortBy = search.sortBy as string | undefined
     const sortOrder = search.sortOrder as 'asc' | 'desc' | undefined
@@ -234,10 +176,10 @@ export function DataTable<TData>({
     } else if (sorting.length > 0) {
       setSorting([])
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search.sortBy, search.sortOrder])
 
-  // Sync sorting state to URL
   useEffect(() => {
     if (sorting.length > 0) {
       const sort = sorting[0]
@@ -266,12 +208,9 @@ export function DataTable<TData>({
         replace: true,
       })
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sorting])
-
-  // ============================================================================
-  // Render
-  // ============================================================================
 
   const defaultEmptyMessage = `No ${entityName}s found.`
 
@@ -283,7 +222,7 @@ export function DataTable<TData>({
         className
       )}
     >
-      {/* Toolbar */}
+      {}
       {!hideToolbar && (
         <DataTableToolbar
           table={table}
@@ -293,7 +232,7 @@ export function DataTable<TData>({
         />
       )}
 
-      {/* Table */}
+      {}
       <div className='overflow-hidden rounded-md border'>
         <Table>
           <TableHeader>
@@ -322,7 +261,6 @@ export function DataTable<TData>({
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              // Loading skeleton rows
               Array.from({ length: pagination.pageSize || 10 }).map(
                 (_, index) => (
                   <TableRow key={`skeleton-${index}`}>
@@ -411,10 +349,10 @@ export function DataTable<TData>({
         </Table>
       </div>
 
-      {/* Pagination */}
+      {}
       <DataTablePagination table={table} className='mt-auto' />
 
-      {/* Bulk Actions */}
+      {}
       {renderBulkActions?.(table)}
     </div>
   )

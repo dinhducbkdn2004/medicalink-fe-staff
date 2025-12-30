@@ -1,12 +1,5 @@
-/**
- * Appointment Form Schemas
- * Zod schemas for appointment form validation
- */
 import { z } from 'zod'
 
-/**
- * Schema for creating a new appointment
- */
 export const createAppointmentSchema = z
   .object({
     specialtyId: z.string().min(1, 'Specialty is required'),
@@ -44,9 +37,6 @@ export const createAppointmentSchema = z
 
 export type CreateAppointmentFormData = z.infer<typeof createAppointmentSchema>
 
-/**
- * Schema for updating an appointment
- */
 export const updateAppointmentSchema = z.object({
   status: z
     .enum([
@@ -66,9 +56,6 @@ export const updateAppointmentSchema = z.object({
 
 export type UpdateAppointmentFormData = z.infer<typeof updateAppointmentSchema>
 
-/**
- * Schema for rescheduling an appointment
- */
 export const rescheduleAppointmentSchema = z
   .object({
     doctorId: z.string().optional(),
@@ -90,7 +77,6 @@ export const rescheduleAppointmentSchema = z
   })
   .refine(
     (data) => {
-      // Only validate times if both are provided
       if (data.timeStart && data.timeEnd) {
         const startMinutes = data.timeStart.hour * 60 + data.timeStart.minute
         const endMinutes = data.timeEnd.hour * 60 + data.timeEnd.minute
@@ -108,9 +94,6 @@ export type RescheduleAppointmentFormData = z.infer<
   typeof rescheduleAppointmentSchema
 >
 
-/**
- * Schema for cancelling an appointment
- */
 export const cancelAppointmentSchema = z.object({
   reason: z.string().optional(),
 })

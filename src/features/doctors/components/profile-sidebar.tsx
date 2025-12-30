@@ -30,10 +30,10 @@ export function ProfileSidebar({
 }: Readonly<ProfileSidebarProps>) {
   return (
     <div className='space-y-4'>
-      {/* Profile Images Card - Combined Avatar & Portrait */}
+      {}
       <Card className='overflow-hidden'>
         <CardContent className='space-y-4 p-4'>
-          {/* Avatar Upload */}
+          {}
           <FormField
             control={form.control}
             name='avatarUrl'
@@ -57,7 +57,7 @@ export function ProfileSidebar({
 
           <Separator />
 
-          {/* Portrait Upload */}
+          {}
           <FormField
             control={form.control}
             name='portrait'

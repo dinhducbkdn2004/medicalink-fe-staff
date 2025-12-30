@@ -1,7 +1,4 @@
-/**
- * Google Maps URL Input Component
- * Input with "Open Map" button and auto-generate functionality
- */
+
 import { ExternalLink, Wand2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -56,7 +53,7 @@ export function GoogleMapsInput({
           className={cn('flex-1', className)}
         />
 
-        {/* Auto-generate button */}
+        {}
         {canAutoGenerate && (
           <Button
             type='button'
@@ -71,7 +68,7 @@ export function GoogleMapsInput({
           </Button>
         )}
 
-        {/* Open map button */}
+        {}
         {value && (
           <Button
             type='button'

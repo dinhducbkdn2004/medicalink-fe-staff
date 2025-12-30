@@ -1,16 +1,10 @@
 import type { PaginationParams, PaginatedResponse } from './common.types'
 
-/**
- * Staff role enumeration
- */
 export enum StaffRole {
   SUPER_ADMIN = 'SUPER_ADMIN',
   ADMIN = 'ADMIN',
 }
 
-/**
- * Staff account data
- */
 export interface Staff {
   id: string
   fullName: string
@@ -23,9 +17,6 @@ export interface Staff {
   updatedAt: string
 }
 
-/**
- * Staff statistics
- */
 export interface StaffStats {
   total: number
   active: number
@@ -37,9 +28,6 @@ export interface StaffStats {
   }
 }
 
-/**
- * Staff query parameters
- */
 export interface StaffQueryParams extends PaginationParams {
   role?: StaffRole
   search?: string
@@ -52,9 +40,6 @@ export interface StaffQueryParams extends PaginationParams {
   sortOrder?: 'asc' | 'desc'
 }
 
-/**
- * Create staff request
- */
 export interface CreateStaffRequest {
   fullName: string
   email: string
@@ -65,9 +50,6 @@ export interface CreateStaffRequest {
   dateOfBirth?: string
 }
 
-/**
- * Update staff request
- */
 export interface UpdateStaffRequest {
   fullName?: string
   email?: string
@@ -78,7 +60,4 @@ export interface UpdateStaffRequest {
   dateOfBirth?: string
 }
 
-/**
- * Staff paginated response
- */
 export type StaffListResponse = PaginatedResponse<Staff>

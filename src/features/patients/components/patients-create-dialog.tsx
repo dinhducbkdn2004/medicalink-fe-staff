@@ -1,7 +1,4 @@
-/**
- * Create Patient Dialog
- * Modal for creating a new patient record
- */
+
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
@@ -53,7 +50,7 @@ export function PatientsCreateDialog() {
   })
 
   const onSubmit = (data: CreatePatientFormData) => {
-    // Clean empty strings to undefined
+    
     const cleanedData = {
       ...data,
       email: data.email || undefined,

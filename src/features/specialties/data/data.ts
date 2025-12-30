@@ -1,10 +1,5 @@
-/**
- * Specialty Data Definitions
- * Static data for filters, options, etc.
- */
 import { CheckCircle, XCircle } from 'lucide-react'
 
-// Status options for filtering
 export const statusOptions = [
   {
     label: 'Active',
@@ -18,7 +13,6 @@ export const statusOptions = [
   },
 ]
 
-// Sort options
 export const sortOptions = [
   {
     label: 'Name',

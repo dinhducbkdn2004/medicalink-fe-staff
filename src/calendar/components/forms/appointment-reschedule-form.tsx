@@ -53,7 +53,7 @@ export function AppointmentRescheduleForm({
     undefined
   )
 
-  // Extract default values
+  
   const serviceDate = appointment?.event
     ? parseISO(appointment.event.serviceDate)
     : new Date()
@@ -65,7 +65,7 @@ export function AppointmentRescheduleForm({
     : [10, 0]
 
   const form = useForm<TRescheduleAppointmentFormData>({
-    // @ts-expect-error - Zod v4 type compatibility issue with zodResolver
+    
     resolver: zodResolver(rescheduleAppointmentSchema),
     defaultValues: {
       doctorId: appointment?.doctorId || '',
@@ -76,40 +76,40 @@ export function AppointmentRescheduleForm({
     },
   })
 
-  // Watch values for fetching slots
+  
   const selectedDoctorId = form.watch('doctorId')
   const selectedLocationId = form.watch('locationId')
   const selectedDate = form.watch('serviceDate')
 
-  // Fetch doctors based on appointment specialty
+  
   const { doctors, isLoading: isLoadingDoctors } = useDoctorsBySpecialty(
     appointment?.specialtyId
   )
 
-  // Fetch locations based on selected doctor
+  
   const { locations, isLoading: isLoadingLocations } =
     useLocationsByDoctor(selectedDoctorId)
 
-  // Fetch available dates
+  
   const { availableDates, isLoading: isLoadingDates } = useDoctorAvailableDates(
     selectedDoctorId,
     selectedLocationId
   )
 
-  // Fetch available slots for selected date
+  
   const { slots, isLoading: isLoadingSlots } = useAvailableSlots(
     selectedDoctorId,
     selectedLocationId,
     selectedDate
   )
 
-  // Get user role for allowPast
+  
   const user = useAuthStore((state) => state.user)
   const allowPastDates = user
     ? user.role === 'ADMIN' || user.role === 'SUPER_ADMIN'
     : false
 
-  // Reset location if doctor changes
+  
   useEffect(() => {
     if (
       selectedDoctorId !== appointment.doctorId &&
@@ -240,7 +240,7 @@ export function AppointmentRescheduleForm({
           />
         </div>
 
-        {/* Date & Time Picker with Available Slots */}
+        {}
         <FormField
           control={form.control}
           name='serviceDate'

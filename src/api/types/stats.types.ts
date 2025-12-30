@@ -1,20 +1,9 @@
-/**
- * Stats API Types
- * Based on API specification for stats endpoints
- */
-
-/**
- * Staff stats by role
- */
 export interface StaffStatsByRole {
   SUPER_ADMIN: number
   ADMIN: number
   DOCTOR: number
 }
 
-/**
- * Staff stats response
- */
 export interface StaffStats {
   total: number
   byRole: StaffStatsByRole
@@ -22,18 +11,12 @@ export interface StaffStats {
   deleted: number
 }
 
-/**
- * Doctor stats by role (all should be DOCTOR)
- */
 export interface DoctorStatsByRole {
   DOCTOR: number
   ADMIN: number
   SUPER_ADMIN: number
 }
 
-/**
- * Doctor stats response
- */
 export interface DoctorStats {
   total: number
   byRole: DoctorStatsByRole
@@ -89,13 +72,6 @@ export interface QAOverviewStats {
   answerRate: number
 }
 
-// ============================================================================
-// Doctor Stats Types (New endpoints from API_DOCTOR_STATS.md)
-// ============================================================================
-
-/**
- * Booking stats for a doctor
- */
 export interface DoctorBookingStats {
   total: number
   bookedCount: number
@@ -105,9 +81,6 @@ export interface DoctorBookingStats {
   completedRate: number
 }
 
-/**
- * Content stats for a doctor (reviews, answers, blogs)
- */
 export interface DoctorContentStats {
   totalReviews: number
   averageRating: number
@@ -117,33 +90,21 @@ export interface DoctorContentStats {
   totalBlogs: number
 }
 
-/**
- * Complete stats for a doctor (booking + content)
- */
 export interface DoctorStats {
   booking: DoctorBookingStats
   content: DoctorContentStats
 }
 
-/**
- * Doctor info for stats responses
- */
 export interface DoctorStatsInfo {
   id: string
   fullName: string
 }
 
-/**
- * Deleted doctor placeholder
- */
 export interface DeletedDoctorInfo {
   id: 'invalid-id'
   fullName: 'Deleted Doctor'
 }
 
-/**
- * Doctor booking stats item (for admin list)
- */
 export interface DoctorBookingStatsItem {
   doctorStaffAccountId: string
   total: number
@@ -155,9 +116,6 @@ export interface DoctorBookingStatsItem {
   doctor: DoctorStatsInfo | DeletedDoctorInfo
 }
 
-/**
- * Doctor content stats item (for admin list)
- */
 export interface DoctorContentStatsItem {
   doctorStaffAccountId: string
   totalReviews: number
@@ -169,9 +127,6 @@ export interface DoctorContentStatsItem {
   doctor: DoctorStatsInfo | DeletedDoctorInfo
 }
 
-/**
- * Pagination metadata for stats lists
- */
 export interface StatsPaginationMeta {
   page: number
   limit: number
@@ -181,9 +136,6 @@ export interface StatsPaginationMeta {
   hasPrev: boolean
 }
 
-/**
- * Sort options for doctor booking stats
- */
 export type DoctorBookingSortBy =
   | 'booked'
   | 'confirmed'
@@ -191,9 +143,6 @@ export type DoctorBookingSortBy =
   | 'completed'
   | 'completedRate'
 
-/**
- * Sort options for doctor content stats
- */
 export type DoctorContentSortBy =
   | 'totalReviews'
   | 'averageRating'
@@ -201,9 +150,6 @@ export type DoctorContentSortBy =
   | 'totalAcceptedAnswers'
   | 'totalBlogs'
 
-/**
- * Query parameters for doctor booking stats
- */
 export interface DoctorBookingStatsParams {
   page?: number
   limit?: number
@@ -211,9 +157,6 @@ export interface DoctorBookingStatsParams {
   sortOrder?: 'ASC' | 'DESC'
 }
 
-/**
- * Query parameters for doctor content stats
- */
 export interface DoctorContentStatsParams {
   page?: number
   limit?: number
@@ -221,17 +164,11 @@ export interface DoctorContentStatsParams {
   sortOrder?: 'ASC' | 'DESC'
 }
 
-/**
- * Response for doctor booking stats list
- */
 export interface DoctorBookingStatsResponse {
   data: DoctorBookingStatsItem[]
   meta: StatsPaginationMeta
 }
 
-/**
- * Response for doctor content stats list
- */
 export interface DoctorContentStatsResponse {
   data: DoctorContentStatsItem[]
   meta: StatsPaginationMeta

@@ -10,7 +10,7 @@ import { BlogForm } from '../components/blog-form'
 import { useBlog } from '../data/use-blogs'
 
 export function BlogDetailsPage() {
-  // @ts-expect-error - params type mismatch
+  
   const { blogId } = useParams({ strict: false })
   const { data: blog, isLoading } = useBlog(blogId)
 
@@ -30,7 +30,7 @@ export function BlogDetailsPage() {
       </Header>
 
       <Main>
-        {/* @ts-expect-error - blog type mismatch */}
+        {}
         <BlogForm initialData={blog?.data || blog} />
       </Main>
     </>

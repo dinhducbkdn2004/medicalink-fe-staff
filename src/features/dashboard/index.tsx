@@ -31,7 +31,7 @@ import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 
 function DashboardContent() {
-  // Use permission-based check instead of role
+  
   const canViewStats = useCan('staff', 'read')
 
   const { data: staffStats, isLoading: isLoadingStaff } =
@@ -43,16 +43,16 @@ function DashboardContent() {
   const { data: revenueStats, isLoading: isLoadingRevenue } =
     useRevenueStats(canViewStats)
 
-  // Calculate total revenue from current year/month if data is available (assuming API returns array of months)
-  // Or just display "N/A" if aggregate not provided directly.
-  // Based on API response example: revenueStats is array of months.
+  
+  
+  
   const totalRevenue = revenueStats?.reduce((acc, curr) => {
     return acc + (curr.total.VND || 0)
   }, 0)
 
   return (
     <>
-      {/* ===== Top Heading ===== */}
+      {}
       <Header>
         <TopNav links={topNav} />
         <div className='ms-auto flex items-center space-x-4'>
@@ -63,7 +63,7 @@ function DashboardContent() {
         </div>
       </Header>
 
-      {/* ===== Main ===== */}
+      {}
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
           <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
@@ -288,20 +288,16 @@ const topNav = [
   },
 ]
 
-/**
- * Dashboard page with role-based routing
- * - Doctor role: Shows DoctorDashboard with personal stats
- * - Admin/SuperAdmin roles: Shows DashboardContent with system-wide stats
- */
+
 export function Dashboard() {
   const { user } = useAuth()
 
-  // If user is a doctor, show doctor dashboard
+  
   if (user?.role === 'DOCTOR') {
     return <DoctorDashboard />
   }
 
-  // For Admin/SuperAdmin, show dashboard directly without permission guard
-  // since role-based check is already done above
+  
+  
   return <DashboardContent />
 }

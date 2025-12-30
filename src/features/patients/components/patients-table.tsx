@@ -1,8 +1,4 @@
-/**
- * Patients Table Component
- * Table view for patient management with API integration
- * Uses the generic DataTable component
- */
+
 import { Edit, Trash2, RotateCcw } from 'lucide-react'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
 import {
@@ -17,9 +13,9 @@ import { DataTableBulkActions } from './data-table-bulk-actions'
 import { patientsColumns as columns } from './patients-columns'
 import { usePatients } from './patients-provider'
 
-// ============================================================================
-// Types
-// ============================================================================
+
+
+
 
 type PatientsTableProps = {
   data: Patient[]
@@ -29,11 +25,11 @@ type PatientsTableProps = {
   isLoading?: boolean
 }
 
-// ============================================================================
-// Configuration
-// ============================================================================
 
-// Column filter configuration for URL state management
+
+
+
+
 const columnFilterConfigs: ColumnFilterConfig[] = [
   {
     columnId: 'fullName',
@@ -56,9 +52,9 @@ const columnFilterConfigs: ColumnFilterConfig[] = [
   },
 ]
 
-// ============================================================================
-// Component
-// ============================================================================
+
+
+
 
 export function PatientsTable({
   data,
@@ -69,13 +65,13 @@ export function PatientsTable({
 }: PatientsTableProps) {
   const { setOpen, setCurrentRow } = usePatients()
 
-  // Define row actions (context menu)
+  
   const getRowActions = (row: { original: Patient }): DataTableAction[] => {
     const patient = row.original
 
     const actions: DataTableAction[] = []
 
-    // Only show Edit action if user has update permission
+    
     if (canUpdatePatients()) {
       actions.push({
         label: 'Edit',
@@ -88,7 +84,7 @@ export function PatientsTable({
     }
 
     if (patient.deletedAt) {
-      // Show Restore action if user has update permission
+      
       if (canUpdatePatients()) {
         actions.push({
           label: 'Restore',
@@ -101,7 +97,7 @@ export function PatientsTable({
         })
       }
     } else {
-      // Only show Delete action if user has delete permission
+      
       if (canDeletePatient({ patientId: patient.id })) {
         actions.push({
           label: 'Delete',
@@ -121,16 +117,16 @@ export function PatientsTable({
 
   return (
     <DataTable
-      // Required props
+      
       data={data}
       columns={columns}
       search={search}
       navigate={navigate}
-      // Configuration
+      
       pageCount={pageCount}
       isLoading={isLoading}
       entityName='patient'
-      // Toolbar
+      
       searchPlaceholder='Search patients...'
       searchKey='fullName'
       filters={[
@@ -153,10 +149,10 @@ export function PatientsTable({
           })),
         },
       ]}
-      // Actions
+      
       getRowActions={getRowActions}
       renderBulkActions={(table) => <DataTableBulkActions table={table} />}
-      // Advanced
+      
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
       emptyMessage='No patients found.'

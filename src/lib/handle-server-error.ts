@@ -2,8 +2,6 @@ import { AxiosError } from 'axios'
 import { toast } from 'sonner'
 
 export function handleServerError(error: unknown) {
-  // console.log(error)
-
   let errMsg = 'Something went wrong!'
 
   if (

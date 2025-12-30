@@ -1,7 +1,4 @@
-/**
- * Questions Primary Buttons
- * Primary action buttons for the questions page
- */
+
 import { Button } from '@/components/ui/button'
 import { RefreshCcw } from 'lucide-react'
 

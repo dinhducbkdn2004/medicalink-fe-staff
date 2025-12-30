@@ -1,12 +1,4 @@
-/**
- * Reviews Feature - Static Data
- * Filter options and constants
- */
 import { CheckCircle, Clock, XCircle, Star, ShieldCheck } from 'lucide-react'
-
-// ============================================================================
-// Filter Options
-// ============================================================================
 
 export const statusOptions = [
   {

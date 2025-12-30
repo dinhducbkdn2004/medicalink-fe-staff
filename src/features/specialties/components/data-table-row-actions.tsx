@@ -1,7 +1,4 @@
-/**
- * Data Table Row Actions
- * Dropdown menu for individual row actions
- */
+
 import type { Row } from '@tanstack/react-table'
 import { MoreHorizontal, Edit, Trash2, Info } from 'lucide-react'
 import { Button } from '@/components/ui/button'

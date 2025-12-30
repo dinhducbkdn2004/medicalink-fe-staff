@@ -1,7 +1,3 @@
-/**
- * Work Location API Hooks
- * TanStack Query hooks for Work Location data management
- */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { workLocationService } from '@/api/services'
@@ -10,10 +6,6 @@ import type {
   UpdateWorkLocationRequest,
   WorkLocationQueryParams,
 } from '@/api/services/work-location.service'
-
-// ============================================================================
-// Query Keys
-// ============================================================================
 
 export const workLocationKeys = {
   all: ['work-locations'] as const,
@@ -26,13 +18,6 @@ export const workLocationKeys = {
   detail: (id: string) => [...workLocationKeys.details(), id] as const,
 }
 
-// ============================================================================
-// Query Hooks
-// ============================================================================
-
-/**
- * Hook to fetch work locations with pagination
- */
 export function useWorkLocations(params: WorkLocationQueryParams = {}) {
   return useQuery({
     queryKey: workLocationKeys.list(params),
@@ -40,33 +25,24 @@ export function useWorkLocations(params: WorkLocationQueryParams = {}) {
   })
 }
 
-/**
- * Hook to fetch all active work locations (for dropdowns/selects)
- */
 export function useActiveWorkLocations() {
   return useQuery({
     queryKey: workLocationKeys.active(),
     queryFn: () => workLocationService.getAllActiveWorkLocations(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 2, // Retry twice on failure
-    retryDelay: 1000, // Wait 1 second between retries
+    staleTime: 5 * 60 * 1000,
+    retry: 2,
+    retryDelay: 1000,
   })
 }
 
-/**
- * Hook to fetch work location statistics
- */
 export function useWorkLocationStats() {
   return useQuery({
     queryKey: workLocationKeys.stats(),
     queryFn: () => workLocationService.getWorkLocationStats(),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 2 * 60 * 1000,
   })
 }
 
-/**
- * Hook to fetch a single work location
- */
 export function useWorkLocation(id: string | undefined) {
   return useQuery({
     queryKey: workLocationKeys.detail(id!),
@@ -75,13 +51,6 @@ export function useWorkLocation(id: string | undefined) {
   })
 }
 
-// ============================================================================
-// Mutation Hooks
-// ============================================================================
-
-/**
- * Hook to create a new work location
- */
 export function useCreateWorkLocation() {
   const queryClient = useQueryClient()
 
@@ -100,9 +69,6 @@ export function useCreateWorkLocation() {
   })
 }
 
-/**
- * Hook to update a work location
- */
 export function useUpdateWorkLocation() {
   const queryClient = useQueryClient()
 
@@ -128,9 +94,6 @@ export function useUpdateWorkLocation() {
   })
 }
 
-/**
- * Hook to delete a work location
- */
 export function useDeleteWorkLocation() {
   const queryClient = useQueryClient()
 

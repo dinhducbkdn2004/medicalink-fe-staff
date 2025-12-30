@@ -1,7 +1,4 @@
-/**
- * ProfileAvatarCard Component
- * Displays doctor avatar, name, degree, and contact information
- */
+
 import { User, Mail, Phone } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -26,7 +23,7 @@ export function ProfileAvatarCard({ doctor }: ProfileAvatarCardProps) {
     <Card>
       <CardContent>
         <div className='flex flex-col items-center text-center'>
-          {/* Avatar with Image Preview */}
+          {}
           {doctor?.avatarUrl ? (
             <div className='relative'>
               <img
@@ -34,7 +31,7 @@ export function ProfileAvatarCard({ doctor }: ProfileAvatarCardProps) {
                 alt={doctor?.fullName}
                 className='ring-border h-32 w-32 rounded-full object-cover ring-4'
                 onError={(e) => {
-                  // Fallback to Avatar if image fails
+                  
                   e.currentTarget.style.display = 'none'
                   const fallback = e.currentTarget.nextElementSibling
                   if (fallback) fallback.classList.remove('hidden')
@@ -67,14 +64,14 @@ export function ProfileAvatarCard({ doctor }: ProfileAvatarCardProps) {
             <EmptyField text='No degree specified' />
           )}
 
-          {/* Active Status */}
+          {}
           <div className='mt-4'>
             <Badge variant={doctor?.isActive ? 'default' : 'secondary'}>
               {doctor?.isActive ? 'Active' : 'Inactive'}
             </Badge>
           </div>
 
-          {/* Contact Info */}
+          {}
           <div className='mt-6 w-full space-y-2 text-left'>
             <div className='bg-muted/50 rounded-md p-3'>
               <div className='text-muted-foreground mb-1 text-xs font-medium'>
