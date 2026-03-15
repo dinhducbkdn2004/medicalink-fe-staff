@@ -126,3 +126,4 @@ firestore-debug.log
 #Documentation
 docs/
 .agent/
+.agents/

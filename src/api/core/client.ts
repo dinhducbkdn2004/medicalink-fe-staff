@@ -7,17 +7,31 @@ import axios, {
 import { toast } from 'sonner'
 
 const API_BASE_URL =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (import.meta.env as any).VITE_APP_ENVIRONMENT === 'production'
-    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (import.meta.env as any).VITE_API_BASE_URL_PRO ||
-      'https://api.medicalink.click'
-    : ''
+  import.meta.env.VITE_APP_ENVIRONMENT === 'production'
+    ? import.meta.env.VITE_API_BASE_URL_PRO || 'https://api.medicalink.click'
+    : 'http://localhost:3000'
+
+const refreshClient = axios.create({
+  baseURL: `${API_BASE_URL}/api`,
+  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+export const apiClient: AxiosInstance = axios.create({
+  baseURL: `${API_BASE_URL}/api`,
+  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  // withCredentials: true,
+})
 
 let isRefreshing = false
 let failedQueue: Array<{
-  resolve: (value: unknown) => void
-  reject: (reason?: unknown) => void
+  resolve: (token: string) => void
+  reject: (error: unknown) => void
 }> = []
 
 const processQueue = (error: unknown, token: string | null = null) => {
@@ -25,21 +39,11 @@ const processQueue = (error: unknown, token: string | null = null) => {
     if (error) {
       prom.reject(error)
     } else {
-      prom.resolve(token)
+      prom.resolve(token as string)
     }
   })
-
   failedQueue = []
 }
-
-export const apiClient: AxiosInstance = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
-  timeout: 30000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: false,
-})
 
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
@@ -49,165 +53,142 @@ apiClient.interceptors.request.use(
     }
     return config
   },
-  (error: unknown) => {
-    return Promise.reject(error)
-  }
+  (error: unknown) => Promise.reject(error)
 )
+
+interface ErrorResponse {
+  message?: string
+  details?: Array<{ property: string; constraints: Record<string, string> }>
+}
 
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    if (
-      response.data &&
-      typeof response.data === 'object' &&
-      'data' in response.data
-    ) {
-      if ('meta' in response.data) {
-        return {
-          ...response,
-          data: {
-            data: response.data.data,
-            meta: response.data.meta,
-          },
-        }
-      }
+    const data = response.data
+    if (data && typeof data === 'object' && 'data' in data) {
       return {
         ...response,
-        data: response.data.data,
+        data: 'meta' in data ? { data: data.data, meta: data.meta } : data.data,
       }
     }
     return response
   },
-  async (
-    error: AxiosError<{
-      message?: string
-      details?: Array<{ property: string; constraints: Record<string, string> }>
-    }>
-  ) => {
+  async (error: AxiosError<ErrorResponse>) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean
     }
 
     if (
-      error.response?.status === 401 &&
-      !originalRequest._retry &&
-      !originalRequest.url?.includes('/auth/login') &&
-      !originalRequest.url?.includes('/auth/refresh')
+      error.response?.status !== 401 ||
+      originalRequest._retry ||
+      originalRequest.url?.includes('/auth/login') ||
+      originalRequest.url?.includes('/auth/refresh')
     ) {
-      const refreshToken = localStorage.getItem('refresh_token')
-
-      if (!refreshToken) {
-        handleLogout('Session expired. Please sign in again.')
-        return Promise.reject(error)
-      }
-
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject })
-        })
-          .then((token) => {
-            if (originalRequest.headers && token) {
-              originalRequest.headers.Authorization = `Bearer ${token}`
-            }
-            return apiClient(originalRequest)
-          })
-          .catch((err) => {
-            return Promise.reject(err)
-          })
-      }
-
-      originalRequest._retry = true
-      isRefreshing = true
-
-      try {
-        const response = await axios.post(`${API_BASE_URL}/api/auth/refresh`, {
-          refresh_token: refreshToken,
-        })
-        const responseData = response.data.data || response.data
-        const newAccessToken = responseData.access_token
-        const newRefreshToken = responseData.refresh_token
-
-        if (!newAccessToken || !newRefreshToken) {
-          throw new Error('Invalid refresh token response')
-        }
-
-        localStorage.setItem('access_token', newAccessToken)
-        localStorage.setItem('refresh_token', newRefreshToken)
-
-        if (originalRequest.headers) {
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
-        }
-
-        try {
-          const { useAuthStore } = await import('@/stores/auth-store')
-          const store = useAuthStore.getState()
-          store.setTokens(newAccessToken, newRefreshToken)
-        } catch {
-          void 0
-        }
-
-        processQueue(null, newAccessToken)
-        isRefreshing = false
-
-        return apiClient(originalRequest)
-      } catch (refreshError) {
-        processQueue(refreshError, null)
-        isRefreshing = false
-
-        handleLogout('Session expired. Please sign in again.')
-        return Promise.reject(refreshError)
-      }
+      return handleApiError(error)
     }
 
-    if (error.response?.status === 400) {
-      const data = error.response.data
+    const refreshToken = localStorage.getItem('refresh_token')
+    if (!refreshToken) {
+      handleLogout('Session expired. Please sign in again.')
+      return Promise.reject(error)
+    }
 
-      if (data?.details && Array.isArray(data.details)) {
-        const firstError = data.details[0]
-        const constraintMessages = Object.values(firstError?.constraints || {})
-        const errorMessage =
-          constraintMessages[0] || data.message || 'Validation failed'
-        toast.error(errorMessage)
+    if (isRefreshing) {
+      return new Promise<string>((resolve, reject) => {
+        failedQueue.push({ resolve, reject })
+      })
+        .then((token) => {
+          if (originalRequest.headers) {
+            originalRequest.headers.Authorization = `Bearer ${token}`
+          }
+          return apiClient(originalRequest)
+        })
+        .catch((err) => Promise.reject(err))
+    }
+
+    originalRequest._retry = true
+    isRefreshing = true
+
+    try {
+      const { data } = await refreshClient.post('/auth/refresh', {
+        refresh_token: refreshToken,
+      })
+
+      const responseData = data.data || data
+      const newAccessToken = responseData.access_token
+      const newRefreshToken = responseData.refresh_token
+
+      if (!newAccessToken || !newRefreshToken) {
+        throw new Error('Invalid refresh token response')
+      }
+
+      localStorage.setItem('access_token', newAccessToken)
+      localStorage.setItem('refresh_token', newRefreshToken)
+
+      apiClient.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`
+
+      try {
+        const { useAuthStore } = await import('@/stores/auth-store')
+        useAuthStore.getState().setTokens(newAccessToken, newRefreshToken)
+      } catch {
+        // ignore
+      }
+
+      if (originalRequest.headers) {
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+      }
+
+      processQueue(null, newAccessToken)
+      return apiClient(originalRequest)
+    } catch (refreshError) {
+      processQueue(refreshError, null)
+      handleLogout('Session expired. Please sign in again.')
+      return Promise.reject(refreshError)
+    } finally {
+      isRefreshing = false
+    }
+  }
+)
+function handleApiError(error: AxiosError<ErrorResponse>) {
+  const { response, request } = error
+
+  if (response) {
+    const { status, data } = response
+    if (status === 400) {
+      if (
+        data?.details &&
+        Array.isArray(data.details) &&
+        data.details.length > 0
+      ) {
+        const constraintMessages = Object.values(
+          data.details[0]?.constraints || {}
+        )
+        toast.error(
+          (constraintMessages[0] as string) ||
+            data.message ||
+            'Validation failed'
+        )
       } else {
         toast.error(data?.message || 'Invalid request data')
       }
-    } else if (error.response) {
-      const { status, data } = error.response
-
-      switch (status) {
-        case 403:
-          toast.error(
-            data?.message ||
-              'You do not have permission to access this resource'
-          )
-          break
-        case 404:
-          toast.error(data?.message || 'Resource not found')
-          break
-        case 500:
-          toast.error(
-            data?.message || 'Internal server error. Please try again later'
-          )
-          break
-        case 503:
-          toast.error(
-            data?.message ||
-              'Service temporarily unavailable. Please try again later'
-          )
-          break
-        default:
-          toast.error(data?.message || 'An error occurred')
-      }
-    } else if (error.request) {
-      toast.error(
-        'Unable to connect to server. Please check your network connection'
-      )
     } else {
-      toast.error('An error occurred. Please try again')
+      const messages: Record<number, string> = {
+        403: 'You do not have permission to access this resource',
+        404: 'Resource not found',
+        500: 'Internal server error. Please try again later',
+        503: 'Service temporarily unavailable. Please try again later',
+      }
+      toast.error(data?.message || messages[status] || 'An error occurred')
     }
-
-    return Promise.reject(error)
+  } else if (request) {
+    toast.error(
+      'Unable to connect to server. Please check your network connection'
+    )
+  } else {
+    toast.error('An error occurred. Please try again')
   }
-)
+
+  return Promise.reject(error)
+}
 
 function handleLogout(message?: string) {
   localStorage.removeItem('access_token')

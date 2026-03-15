@@ -26,7 +26,7 @@ export function AuthLayout({ children }: Readonly<AuthLayoutProps>) {
         <img
           src={logoImage}
           alt='MedicaLink Logo'
-          className='absolute top-6 left-6 h-12 w-auto md:top-8 md:left-11'
+          className='absolute top-6 left-6 cursor-pointer h-12 w-auto md:top-8 md:left-11'
         />
         <div className='flex min-h-svh w-full items-center justify-center p-6 md:p-10'>
           <div className='w-full max-w-sm'>{children}</div>
