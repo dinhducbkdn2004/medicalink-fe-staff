@@ -6,6 +6,7 @@ import { SearchProvider } from '@/context/search-provider'
 import { PermissionProvider } from '@/context/permission-provider'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { ProtectedRoute } from '@/components/auth/protected-route'
+import { RbacGuard } from '@/components/auth/rbac-guard'
 import { AppSidebar } from '@/components/layout/app-sidebar'
 import { SkipToMain } from '@/components/skip-to-main'
 
@@ -21,28 +22,30 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
     <ProtectedRoute>
       <PermissionProvider>
         <SearchProvider>
-          <LayoutProvider>
-            <SidebarProvider defaultOpen={defaultOpen}>
-              <SkipToMain />
-              <AppSidebar />
-              <SidebarInset
-                className={cn(
-                  
-                  '@container/content',
+          <RbacGuard>
+            <LayoutProvider>
+              <SidebarProvider defaultOpen={defaultOpen}>
+                <SkipToMain />
+                <AppSidebar />
+                <SidebarInset
+                  className={cn(
+                    
+                    '@container/content',
 
-                  
-                  
-                  'has-[[data-layout=fixed]]:h-svh',
+                    
+                    
+                    'has-[[data-layout=fixed]]:h-svh',
 
-                  
-                  
-                  'peer-data-[variant=inset]:has-[[data-layout=fixed]]:h-[calc(100svh-(var(--spacing)*4))]'
-                )}
-              >
-                {children ?? <Outlet />}
-              </SidebarInset>
-            </SidebarProvider>
-          </LayoutProvider>
+                    
+                    
+                    'peer-data-[variant=inset]:has-[[data-layout=fixed]]:h-[calc(100svh-(var(--spacing)*4))]'
+                  )}
+                >
+                  {children ?? <Outlet />}
+                </SidebarInset>
+              </SidebarProvider>
+            </LayoutProvider>
+          </RbacGuard>
         </SearchProvider>
       </PermissionProvider>
     </ProtectedRoute>
