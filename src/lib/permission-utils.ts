@@ -41,8 +41,8 @@ export function getRoutePermission(path: string): RoutePermission | null {
   const segments = path.replace(/^\//, '').split('/')
   const baseSegment = segments[0]
 
-  const routePermissionMap: Record<string, RoutePermission> = {
-    '': { resource: 'dashboard', action: 'read' },
+  const routePermissionMap: Record<string, RoutePermission | null> = {
+    '': null, // Dashboard is accessible to all authenticated users
 
     staffs: { resource: 'staff', action: 'read' },
     doctors: { resource: 'doctors', action: 'read' },
@@ -74,6 +74,10 @@ export function getRoutePermission(path: string): RoutePermission | null {
 }
 
 export function canAccessRoute(path: string): boolean {
+  if (isSystemAdmin()) {
+    return true
+  }
+
   const permission = getRoutePermission(path)
 
   if (permission === null) {

@@ -67,15 +67,15 @@ export function SignIn() {
                     <div className='grid grid-cols-3 items-center gap-4'>
                       <span className='text-sm font-medium'>Admin</span>
                       <div className='col-span-2 text-xs'>
-                        <p className='select-all'>hanhnt@medicalink.com</p>
+                        <p className='select-all'>dinhducbkdn2004@medicalink.com</p>
                         <p className='select-all'>Admin123!</p>
                       </div>
                     </div>
                     <div className='grid grid-cols-3 items-center gap-4'>
                       <span className='text-sm font-medium'>Doctor</span>
                       <div className='col-span-2 text-xs'>
-                        <p className='select-all'>dinhducbkdn2004@gmail.com</p>
-                        <p className='select-all'>Duc2004@</p>
+                        <p className='select-all'>john@gmail.com</p>
+                        <p className='select-all'>Doctor123!</p>
                       </div>
                     </div>
                   </div>
