@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -28,10 +27,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { type Specialty } from '../data/schema'
 import { useCreateSpecialty, useUpdateSpecialty } from '../data/use-specialties'
 
-
-
-
-
 const formSchema = z.object({
   name: z
     .string()
@@ -49,10 +44,6 @@ interface SpecialtiesActionDialogProps {
   currentRow?: Specialty
 }
 
-
-
-
-
 export function SpecialtiesActionDialog({
   open,
   onOpenChange,
@@ -62,7 +53,6 @@ export function SpecialtiesActionDialog({
   const createMutation = useCreateSpecialty()
   const updateMutation = useUpdateSpecialty()
 
-  
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -72,7 +62,6 @@ export function SpecialtiesActionDialog({
     },
   })
 
-  
   useEffect(() => {
     if (open && isEditMode && currentRow) {
       form.reset({
@@ -89,7 +78,6 @@ export function SpecialtiesActionDialog({
     }
   }, [open, isEditMode, currentRow, form])
 
-  
   const onSubmit = async (values: FormValues) => {
     try {
       const data = {
@@ -107,7 +95,6 @@ export function SpecialtiesActionDialog({
       onOpenChange()
       form.reset()
     } catch (error) {
-      
       console.error('Form submission error:', error)
     }
   }
@@ -116,7 +103,7 @@ export function SpecialtiesActionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[525px]'>
+      <DialogContent className='max-h-[90vh] overflow-y-auto sm:max-w-[525px]'>
         <DialogHeader>
           <DialogTitle>
             {isEditMode ? 'Edit Specialty' : 'Create New Specialty'}
@@ -164,7 +151,7 @@ export function SpecialtiesActionDialog({
                   <FormControl>
                     <Textarea
                       placeholder='Brief description of the specialty...'
-                      className='min-h-[100px] resize-none'
+                      className='min-h-[100px] max-h-[200px] overflow-y-auto resize-none'
                       {...field}
                       disabled={isLoading}
                     />

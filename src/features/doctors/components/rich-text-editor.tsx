@@ -539,7 +539,7 @@ export function RichTextDisplay({
   return (
     <div
       className={cn(
-        'prose prose-sm dark:prose-invert max-w-none',
+        'prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap text-justify',
 
         'prose-video:aspect-video prose-video:w-full prose-video:max-w-2xl',
         'prose-video:rounded-lg prose-video:border prose-video:border-border',

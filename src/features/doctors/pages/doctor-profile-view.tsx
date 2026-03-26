@@ -359,7 +359,44 @@ export function DoctorProfileView() {
               defaultOpen={false}
             >
               {doctor?.research ? (
-                <RichTextDisplay content={doctor.research} />
+                (() => {
+                  try {
+                    const parsed = JSON.parse(doctor.research)
+                    const hasInternational = parsed.international && parsed.international.length > 0;
+                    const hasDomestic = parsed.domestic && parsed.domestic.length > 0;
+                    
+                    if (!hasInternational && !hasDomestic) {
+                      return <EmptyField text='No research information provided' />
+                    }
+                    
+                    return (
+                      <div className="space-y-4">
+                        {hasInternational && (
+                          <div>
+                            <h4 className="font-semibold text-sm mb-2">International Publications</h4>
+                            <ul className="list-disc pl-5 space-y-1">
+                              {parsed.international.map((item: string, idx: number) => (
+                                <li key={idx} className="text-sm">{item}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {hasDomestic && (
+                          <div>
+                            <h4 className="font-semibold text-sm mb-2">Domestic Publications</h4>
+                            <ul className="list-disc pl-5 space-y-1">
+                              {parsed.domestic.map((item: string, idx: number) => (
+                                <li key={idx} className="text-sm">{item}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  } catch (_e) {
+                    return <RichTextDisplay content={doctor.research} />
+                  }
+                })()
               ) : (
                 <EmptyField text='No research information provided' />
               )}
