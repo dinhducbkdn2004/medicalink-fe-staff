@@ -1,7 +1,6 @@
 
 import { GroupDeleteDialog } from './group-delete-dialog'
 import { GroupFormDialog } from './group-form-dialog'
-import { GroupPermissionsDialog } from './group-permissions-dialog'
 import { useGroupManager } from './use-group-manager'
 
 export function GroupDialogs() {
@@ -16,10 +15,6 @@ export function GroupDialogs() {
       <GroupDeleteDialog
         open={open === 'delete'}
         onOpenChange={(isOpen) => setOpen(isOpen ? 'delete' : null)}
-      />
-      <GroupPermissionsDialog
-        open={open === 'permissions'}
-        onOpenChange={(isOpen) => setOpen(isOpen ? 'permissions' : null)}
       />
     </>
   )

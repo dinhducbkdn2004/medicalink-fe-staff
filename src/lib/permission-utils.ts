@@ -62,6 +62,9 @@ export function getRoutePermission(path: string): RoutePermission | null {
 
     blogs: { resource: 'blogs', action: 'read' },
 
+    faqs: { resource: 'faqs', action: 'read' },
+    testimonials: { resource: 'testimonials', action: 'read' },
+
     notifications: { resource: 'notifications', action: 'read' },
 
     schedules: { resource: 'schedules', action: 'read' },

@@ -1,10 +1,5 @@
-
-import {
-  RESOURCES,
-  ACTIONS,
-  type Resource,
-  type Action,
-} from '@/api/types/permission.types'
+import { useMemo } from 'react'
+import type { Permission } from '@/api/types/permission.types'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import {
@@ -14,23 +9,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  groupCatalogByModule,
+  formatResourceLabel,
+} from '../utils/permission-catalog'
 
 type ResourceActionSelectorProps = {
-  selectedResource?: Resource
-  selectedActions: Action[]
-  onResourceChange: (resource: Resource) => void
-  onActionsChange: (actions: Action[]) => void
+  catalog: Permission[]
+  selectedResource?: string
+  selectedActions: string[]
+  onResourceChange: (resource: string) => void
+  onActionsChange: (actions: string[]) => void
   disabled?: boolean
 }
 
 export function ResourceActionSelector({
+  catalog,
   selectedResource,
   selectedActions,
   onResourceChange,
   onActionsChange,
   disabled = false,
 }: ResourceActionSelectorProps) {
-  const handleActionToggle = (action: Action) => {
+  const actionsForResource = useMemo(() => {
+    if (!selectedResource) return []
+    return catalog
+      .filter((p) => p.resource === selectedResource)
+      .map((p) => p.action)
+      .sort((a, b) => a.localeCompare(b))
+  }, [catalog, selectedResource])
+
+  const modules = useMemo(() => groupCatalogByModule(catalog), [catalog])
+
+  const handleActionToggle = (action: string) => {
     if (selectedActions.includes(action)) {
       onActionsChange(selectedActions.filter((a) => a !== action))
     } else {
@@ -40,33 +51,38 @@ export function ResourceActionSelector({
 
   return (
     <div className='space-y-4'>
-      {}
       <div className='space-y-2'>
         <Label>Resource</Label>
         <Select
           value={selectedResource}
-          onValueChange={(value) => onResourceChange(value as Resource)}
+          onValueChange={onResourceChange}
           disabled={disabled}
         >
           <SelectTrigger>
-            <SelectValue placeholder='Select a resource' />
+            <SelectValue placeholder='Select resource' />
           </SelectTrigger>
-          <SelectContent>
-            {RESOURCES.map((resource) => (
-              <SelectItem key={resource} value={resource}>
-                <span className='capitalize'>{resource}</span>
-              </SelectItem>
+          <SelectContent className='max-h-72'>
+            {modules.map((mod) => (
+              <div key={mod.moduleId}>
+                <div className='text-muted-foreground px-2 py-1.5 text-[11px] font-semibold tracking-wide uppercase'>
+                  {mod.meta.title}
+                </div>
+                {mod.resources.map(({ resource }) => (
+                  <SelectItem key={resource} value={resource}>
+                    <span className='capitalize'>{formatResourceLabel(resource)}</span>
+                  </SelectItem>
+                ))}
+              </div>
             ))}
           </SelectContent>
         </Select>
       </div>
 
-      {}
       {selectedResource && (
         <div className='space-y-2'>
-          <Label>Actions</Label>
+          <Label>Action</Label>
           <div className='space-y-2 rounded-md border p-4'>
-            {ACTIONS.map((action) => (
+            {actionsForResource.map((action) => (
               <div key={action} className='flex items-center space-x-2'>
                 <Checkbox
                   id={`action-${action}`}
@@ -82,6 +98,11 @@ export function ResourceActionSelector({
                 </label>
               </div>
             ))}
+            {actionsForResource.length === 0 && (
+              <p className='text-muted-foreground text-xs'>
+                No actions in the catalog for this resource.
+              </p>
+            )}
           </div>
         </div>
       )}

@@ -19,6 +19,7 @@ import {
   UserRound,
   BookOpen,
   FileText,
+  Quote,
 } from 'lucide-react'
 import type { NavGroupWithPermission } from '@/lib/sidebar-utils'
 
@@ -152,6 +153,18 @@ export const navGroups: NavGroupWithPermission[] = [
         url: '/blogs/list',
         icon: FileText,
         permission: { resource: 'blogs', action: 'read' },
+      },
+      {
+        title: 'FAQs',
+        url: '/faqs',
+        icon: HelpCircle,
+        permission: { resource: 'faqs', action: 'read' },
+      },
+      {
+        title: 'Testimonials',
+        url: '/testimonials',
+        icon: Quote,
+        permission: { resource: 'testimonials', action: 'read' },
       },
     ],
   },

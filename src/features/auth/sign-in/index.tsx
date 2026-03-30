@@ -32,7 +32,7 @@ export function SignIn() {
           <div className='absolute top-4 right-4 flex items-center gap-2'>
             <Button asChild variant='outline' size='sm'>
               <a
-                href='https://client.medicalink.click/'
+                href='https://medicalink-fe-client-seven.vercel.app'
                 target='_blank'
                 rel='noreferrer'
               >
@@ -67,14 +67,14 @@ export function SignIn() {
                     <div className='grid grid-cols-3 items-center gap-4'>
                       <span className='text-sm font-medium'>Admin</span>
                       <div className='col-span-2 text-xs'>
-                        <p className='select-all'>dinhducbkdn2004@medicalink.com</p>
+                        <p className='select-all'>dinhducbkdn2004@gmail.com</p>
                         <p className='select-all'>Admin123!</p>
                       </div>
                     </div>
                     <div className='grid grid-cols-3 items-center gap-4'>
                       <span className='text-sm font-medium'>Doctor</span>
                       <div className='col-span-2 text-xs'>
-                        <p className='select-all'>john@gmail.com</p>
+                        <p className='select-all'>phan-huynh-tien-at@gmail.com</p>
                         <p className='select-all'>Doctor123!</p>
                       </div>
                     </div>

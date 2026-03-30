@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import type { Resource, Action } from '@/api/types/permission.types'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -41,8 +40,8 @@ export function AssignUserPermissionDialog({
   onOpenChange,
   userId,
 }: AssignUserPermissionDialogProps) {
-  const [selectedResource, setSelectedResource] = useState<Resource>()
-  const [selectedActions, setSelectedActions] = useState<Action[]>([])
+  const [selectedResource, setSelectedResource] = useState<string>()
+  const [selectedActions, setSelectedActions] = useState<string[]>([])
 
   const { data: allPermissions } = usePermissions()
   const assignMutation = useAssignUserPermission()
@@ -116,6 +115,7 @@ export function AssignUserPermissionDialog({
             <div className='overflow-y-auto pr-2'>
               <div className='space-y-6'>
                 <ResourceActionSelector
+                  catalog={allPermissions ?? []}
                   selectedResource={selectedResource}
                   selectedActions={selectedActions}
                   onResourceChange={setSelectedResource}

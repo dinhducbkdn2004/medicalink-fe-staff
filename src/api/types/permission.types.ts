@@ -156,20 +156,7 @@ export type UserPermissionQueryParams = {
   tenantId?: string
 }
 
-export const RESOURCES = [
-  'doctors',
-  'patients',
-  'staff',
-  'specialties',
-  'work-locations',
-  'blogs',
-  'questions',
-  'reviews',
-  'permissions',
-] as const
+/** Resource / action keys động — lấy từ API `/permissions`, không hardcode. */
+export type PermissionResourceKey = string
 
-export type Resource = (typeof RESOURCES)[number]
-
-export const ACTIONS = ['read', 'create', 'update', 'delete', 'manage'] as const
-
-export type Action = (typeof ACTIONS)[number]
+export type PermissionActionKey = string

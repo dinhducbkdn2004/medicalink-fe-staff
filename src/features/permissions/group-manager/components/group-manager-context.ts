@@ -1,7 +1,7 @@
 import { createContext } from 'react'
 import type { PermissionGroup } from '@/api/types/permission.types'
 
-type DialogType = 'create' | 'edit' | 'delete' | 'permissions' | null
+type DialogType = 'create' | 'edit' | 'delete' | null
 
 export type GroupManagerContextType = {
   open: DialogType

@@ -28,6 +28,7 @@ import { Route as AuthenticatedWorkLocationsIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedUserPermissionIndexRouteImport } from './routes/_authenticated/user-permission/index'
 import { Route as AuthenticatedUserGroupIndexRouteImport } from './routes/_authenticated/user-group/index'
+import { Route as AuthenticatedTestimonialsIndexRouteImport } from './routes/_authenticated/testimonials/index'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedStaffsIndexRouteImport } from './routes/_authenticated/staffs/index'
 import { Route as AuthenticatedSpecialtiesIndexRouteImport } from './routes/_authenticated/specialties/index'
@@ -37,10 +38,13 @@ import { Route as AuthenticatedPatientsIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedOfficeHoursIndexRouteImport } from './routes/_authenticated/office-hours/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedGroupManagerIndexRouteImport } from './routes/_authenticated/group-manager/index'
+import { Route as AuthenticatedFaqsIndexRouteImport } from './routes/_authenticated/faqs/index'
 import { Route as AuthenticatedDoctorsIndexRouteImport } from './routes/_authenticated/doctors.index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
 import { Route as AuthenticatedAppointmentsIndexRouteImport } from './routes/_authenticated/appointments/index'
+import { Route as AuthenticatedUserPermissionUserIdRouteImport } from './routes/_authenticated/user-permission/$userId'
+import { Route as AuthenticatedUserGroupUserIdRouteImport } from './routes/_authenticated/user-group/$userId'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
@@ -57,6 +61,7 @@ import { Route as AuthenticatedBlogsCategoriesRouteRouteImport } from './routes/
 import { Route as AuthenticatedBlogsBlogIdRouteRouteImport } from './routes/_authenticated/blogs/$blogId/route'
 import { Route as AuthenticatedBlogsBlogIdIndexRouteImport } from './routes/_authenticated/blogs/$blogId/index'
 import { Route as AuthenticatedReviewsDoctorIdAnalysesRouteImport } from './routes/_authenticated/reviews/$doctorId.analyses'
+import { Route as AuthenticatedGroupManagerPermissionsGroupIdRouteImport } from './routes/_authenticated/group-manager/permissions.$groupId'
 import { Route as AuthenticatedDoctorsDoctorIdStatsRouteImport } from './routes/_authenticated/doctors/$doctorId.stats'
 import { Route as AuthenticatedDoctorsDoctorIdReviewsRouteImport } from './routes/_authenticated/doctors/$doctorId.reviews'
 import { Route as AuthenticatedDoctorsDoctorIdProfileRouteImport } from './routes/_authenticated/doctors/$doctorId.profile'
@@ -161,6 +166,12 @@ const AuthenticatedUserGroupIndexRoute =
     path: '/user-group/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedTestimonialsIndexRoute =
+  AuthenticatedTestimonialsIndexRouteImport.update({
+    id: '/testimonials/',
+    path: '/testimonials/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
   id: '/tasks/',
   path: '/tasks/',
@@ -214,6 +225,11 @@ const AuthenticatedGroupManagerIndexRoute =
     path: '/group-manager/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedFaqsIndexRoute = AuthenticatedFaqsIndexRouteImport.update({
+  id: '/faqs/',
+  path: '/faqs/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDoctorsIndexRoute =
   AuthenticatedDoctorsIndexRouteImport.update({
     id: '/doctors/',
@@ -235,6 +251,18 @@ const AuthenticatedAppointmentsIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedAppointmentsRouteRoute,
+  } as any)
+const AuthenticatedUserPermissionUserIdRoute =
+  AuthenticatedUserPermissionUserIdRouteImport.update({
+    id: '/user-permission/$userId',
+    path: '/user-permission/$userId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedUserGroupUserIdRoute =
+  AuthenticatedUserGroupUserIdRouteImport.update({
+    id: '/user-group/$userId',
+    path: '/user-group/$userId',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSettingsNotificationsRoute =
   AuthenticatedSettingsNotificationsRouteImport.update({
@@ -332,6 +360,12 @@ const AuthenticatedReviewsDoctorIdAnalysesRoute =
     path: '/$doctorId/analyses',
     getParentRoute: () => AuthenticatedReviewsRoute,
   } as any)
+const AuthenticatedGroupManagerPermissionsGroupIdRoute =
+  AuthenticatedGroupManagerPermissionsGroupIdRouteImport.update({
+    id: '/group-manager/permissions/$groupId',
+    path: '/group-manager/permissions/$groupId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDoctorsDoctorIdStatsRoute =
   AuthenticatedDoctorsDoctorIdStatsRouteImport.update({
     id: '/doctors/$doctorId/stats',
@@ -386,10 +420,13 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/user-group/$userId': typeof AuthenticatedUserGroupUserIdRoute
+  '/user-permission/$userId': typeof AuthenticatedUserPermissionUserIdRoute
   '/appointments/': typeof AuthenticatedAppointmentsIndexRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/doctors': typeof AuthenticatedDoctorsIndexRoute
+  '/faqs': typeof AuthenticatedFaqsIndexRoute
   '/group-manager': typeof AuthenticatedGroupManagerIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/office-hours': typeof AuthenticatedOfficeHoursIndexRoute
@@ -399,6 +436,7 @@ export interface FileRoutesByFullPath {
   '/specialties': typeof AuthenticatedSpecialtiesIndexRoute
   '/staffs': typeof AuthenticatedStaffsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
+  '/testimonials': typeof AuthenticatedTestimonialsIndexRoute
   '/user-group': typeof AuthenticatedUserGroupIndexRoute
   '/user-permission': typeof AuthenticatedUserPermissionIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
@@ -407,6 +445,7 @@ export interface FileRoutesByFullPath {
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
   '/doctors/$doctorId/reviews': typeof AuthenticatedDoctorsDoctorIdReviewsRoute
   '/doctors/$doctorId/stats': typeof AuthenticatedDoctorsDoctorIdStatsRoute
+  '/group-manager/permissions/$groupId': typeof AuthenticatedGroupManagerPermissionsGroupIdRoute
   '/reviews/$doctorId/analyses': typeof AuthenticatedReviewsDoctorIdAnalysesRoute
   '/blogs/$blogId/': typeof AuthenticatedBlogsBlogIdIndexRoute
 }
@@ -436,10 +475,13 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/user-group/$userId': typeof AuthenticatedUserGroupUserIdRoute
+  '/user-permission/$userId': typeof AuthenticatedUserPermissionUserIdRoute
   '/appointments': typeof AuthenticatedAppointmentsIndexRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/doctors': typeof AuthenticatedDoctorsIndexRoute
+  '/faqs': typeof AuthenticatedFaqsIndexRoute
   '/group-manager': typeof AuthenticatedGroupManagerIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/office-hours': typeof AuthenticatedOfficeHoursIndexRoute
@@ -449,6 +491,7 @@ export interface FileRoutesByTo {
   '/specialties': typeof AuthenticatedSpecialtiesIndexRoute
   '/staffs': typeof AuthenticatedStaffsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
+  '/testimonials': typeof AuthenticatedTestimonialsIndexRoute
   '/user-group': typeof AuthenticatedUserGroupIndexRoute
   '/user-permission': typeof AuthenticatedUserPermissionIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
@@ -457,6 +500,7 @@ export interface FileRoutesByTo {
   '/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
   '/doctors/$doctorId/reviews': typeof AuthenticatedDoctorsDoctorIdReviewsRoute
   '/doctors/$doctorId/stats': typeof AuthenticatedDoctorsDoctorIdStatsRoute
+  '/group-manager/permissions/$groupId': typeof AuthenticatedGroupManagerPermissionsGroupIdRoute
   '/reviews/$doctorId/analyses': typeof AuthenticatedReviewsDoctorIdAnalysesRoute
   '/blogs/$blogId': typeof AuthenticatedBlogsBlogIdIndexRoute
 }
@@ -491,10 +535,13 @@ export interface FileRoutesById {
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/_authenticated/user-group/$userId': typeof AuthenticatedUserGroupUserIdRoute
+  '/_authenticated/user-permission/$userId': typeof AuthenticatedUserPermissionUserIdRoute
   '/_authenticated/appointments/': typeof AuthenticatedAppointmentsIndexRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/doctors/': typeof AuthenticatedDoctorsIndexRoute
+  '/_authenticated/faqs/': typeof AuthenticatedFaqsIndexRoute
   '/_authenticated/group-manager/': typeof AuthenticatedGroupManagerIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/office-hours/': typeof AuthenticatedOfficeHoursIndexRoute
@@ -504,6 +551,7 @@ export interface FileRoutesById {
   '/_authenticated/specialties/': typeof AuthenticatedSpecialtiesIndexRoute
   '/_authenticated/staffs/': typeof AuthenticatedStaffsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
+  '/_authenticated/testimonials/': typeof AuthenticatedTestimonialsIndexRoute
   '/_authenticated/user-group/': typeof AuthenticatedUserGroupIndexRoute
   '/_authenticated/user-permission/': typeof AuthenticatedUserPermissionIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
@@ -512,6 +560,7 @@ export interface FileRoutesById {
   '/_authenticated/doctors/$doctorId/profile': typeof AuthenticatedDoctorsDoctorIdProfileRoute
   '/_authenticated/doctors/$doctorId/reviews': typeof AuthenticatedDoctorsDoctorIdReviewsRoute
   '/_authenticated/doctors/$doctorId/stats': typeof AuthenticatedDoctorsDoctorIdStatsRoute
+  '/_authenticated/group-manager/permissions/$groupId': typeof AuthenticatedGroupManagerPermissionsGroupIdRoute
   '/_authenticated/reviews/$doctorId/analyses': typeof AuthenticatedReviewsDoctorIdAnalysesRoute
   '/_authenticated/blogs/$blogId/': typeof AuthenticatedBlogsBlogIdIndexRoute
 }
@@ -546,10 +595,13 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/user-group/$userId'
+    | '/user-permission/$userId'
     | '/appointments/'
     | '/apps'
     | '/chats'
     | '/doctors'
+    | '/faqs'
     | '/group-manager'
     | '/help-center'
     | '/office-hours'
@@ -559,6 +611,7 @@ export interface FileRouteTypes {
     | '/specialties'
     | '/staffs'
     | '/tasks'
+    | '/testimonials'
     | '/user-group'
     | '/user-permission'
     | '/users'
@@ -567,6 +620,7 @@ export interface FileRouteTypes {
     | '/doctors/$doctorId/profile'
     | '/doctors/$doctorId/reviews'
     | '/doctors/$doctorId/stats'
+    | '/group-manager/permissions/$groupId'
     | '/reviews/$doctorId/analyses'
     | '/blogs/$blogId/'
   fileRoutesByTo: FileRoutesByTo
@@ -596,10 +650,13 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/user-group/$userId'
+    | '/user-permission/$userId'
     | '/appointments'
     | '/apps'
     | '/chats'
     | '/doctors'
+    | '/faqs'
     | '/group-manager'
     | '/help-center'
     | '/office-hours'
@@ -609,6 +666,7 @@ export interface FileRouteTypes {
     | '/specialties'
     | '/staffs'
     | '/tasks'
+    | '/testimonials'
     | '/user-group'
     | '/user-permission'
     | '/users'
@@ -617,6 +675,7 @@ export interface FileRouteTypes {
     | '/doctors/$doctorId/profile'
     | '/doctors/$doctorId/reviews'
     | '/doctors/$doctorId/stats'
+    | '/group-manager/permissions/$groupId'
     | '/reviews/$doctorId/analyses'
     | '/blogs/$blogId'
   id:
@@ -650,10 +709,13 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
+    | '/_authenticated/user-group/$userId'
+    | '/_authenticated/user-permission/$userId'
     | '/_authenticated/appointments/'
     | '/_authenticated/apps/'
     | '/_authenticated/chats/'
     | '/_authenticated/doctors/'
+    | '/_authenticated/faqs/'
     | '/_authenticated/group-manager/'
     | '/_authenticated/help-center/'
     | '/_authenticated/office-hours/'
@@ -663,6 +725,7 @@ export interface FileRouteTypes {
     | '/_authenticated/specialties/'
     | '/_authenticated/staffs/'
     | '/_authenticated/tasks/'
+    | '/_authenticated/testimonials/'
     | '/_authenticated/user-group/'
     | '/_authenticated/user-permission/'
     | '/_authenticated/users/'
@@ -671,6 +734,7 @@ export interface FileRouteTypes {
     | '/_authenticated/doctors/$doctorId/profile'
     | '/_authenticated/doctors/$doctorId/reviews'
     | '/_authenticated/doctors/$doctorId/stats'
+    | '/_authenticated/group-manager/permissions/$groupId'
     | '/_authenticated/reviews/$doctorId/analyses'
     | '/_authenticated/blogs/$blogId/'
   fileRoutesById: FileRoutesById
@@ -824,6 +888,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUserGroupIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/testimonials/': {
+      id: '/_authenticated/testimonials/'
+      path: '/testimonials'
+      fullPath: '/testimonials'
+      preLoaderRoute: typeof AuthenticatedTestimonialsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/tasks/': {
       id: '/_authenticated/tasks/'
       path: '/tasks'
@@ -887,6 +958,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedGroupManagerIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/faqs/': {
+      id: '/_authenticated/faqs/'
+      path: '/faqs'
+      fullPath: '/faqs'
+      preLoaderRoute: typeof AuthenticatedFaqsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/doctors/': {
       id: '/_authenticated/doctors/'
       path: '/doctors'
@@ -914,6 +992,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/appointments/'
       preLoaderRoute: typeof AuthenticatedAppointmentsIndexRouteImport
       parentRoute: typeof AuthenticatedAppointmentsRouteRoute
+    }
+    '/_authenticated/user-permission/$userId': {
+      id: '/_authenticated/user-permission/$userId'
+      path: '/user-permission/$userId'
+      fullPath: '/user-permission/$userId'
+      preLoaderRoute: typeof AuthenticatedUserPermissionUserIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/user-group/$userId': {
+      id: '/_authenticated/user-group/$userId'
+      path: '/user-group/$userId'
+      fullPath: '/user-group/$userId'
+      preLoaderRoute: typeof AuthenticatedUserGroupUserIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings/notifications': {
       id: '/_authenticated/settings/notifications'
@@ -1026,6 +1118,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/reviews/$doctorId/analyses'
       preLoaderRoute: typeof AuthenticatedReviewsDoctorIdAnalysesRouteImport
       parentRoute: typeof AuthenticatedReviewsRoute
+    }
+    '/_authenticated/group-manager/permissions/$groupId': {
+      id: '/_authenticated/group-manager/permissions/$groupId'
+      path: '/group-manager/permissions/$groupId'
+      fullPath: '/group-manager/permissions/$groupId'
+      preLoaderRoute: typeof AuthenticatedGroupManagerPermissionsGroupIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/doctors/$doctorId/stats': {
       id: '/_authenticated/doctors/$doctorId/stats'
@@ -1149,9 +1248,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBlogsListRouteRoute: typeof AuthenticatedBlogsListRouteRoute
   AuthenticatedBlogsNewRouteRoute: typeof AuthenticatedBlogsNewRouteRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedUserGroupUserIdRoute: typeof AuthenticatedUserGroupUserIdRoute
+  AuthenticatedUserPermissionUserIdRoute: typeof AuthenticatedUserPermissionUserIdRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedDoctorsIndexRoute: typeof AuthenticatedDoctorsIndexRoute
+  AuthenticatedFaqsIndexRoute: typeof AuthenticatedFaqsIndexRoute
   AuthenticatedGroupManagerIndexRoute: typeof AuthenticatedGroupManagerIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedOfficeHoursIndexRoute: typeof AuthenticatedOfficeHoursIndexRoute
@@ -1160,6 +1262,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSpecialtiesIndexRoute: typeof AuthenticatedSpecialtiesIndexRoute
   AuthenticatedStaffsIndexRoute: typeof AuthenticatedStaffsIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
+  AuthenticatedTestimonialsIndexRoute: typeof AuthenticatedTestimonialsIndexRoute
   AuthenticatedUserGroupIndexRoute: typeof AuthenticatedUserGroupIndexRoute
   AuthenticatedUserPermissionIndexRoute: typeof AuthenticatedUserPermissionIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
@@ -1167,6 +1270,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDoctorsDoctorIdProfileRoute: typeof AuthenticatedDoctorsDoctorIdProfileRoute
   AuthenticatedDoctorsDoctorIdReviewsRoute: typeof AuthenticatedDoctorsDoctorIdReviewsRoute
   AuthenticatedDoctorsDoctorIdStatsRoute: typeof AuthenticatedDoctorsDoctorIdStatsRoute
+  AuthenticatedGroupManagerPermissionsGroupIdRoute: typeof AuthenticatedGroupManagerPermissionsGroupIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -1182,9 +1286,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBlogsListRouteRoute: AuthenticatedBlogsListRouteRoute,
   AuthenticatedBlogsNewRouteRoute: AuthenticatedBlogsNewRouteRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedUserGroupUserIdRoute: AuthenticatedUserGroupUserIdRoute,
+  AuthenticatedUserPermissionUserIdRoute:
+    AuthenticatedUserPermissionUserIdRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedDoctorsIndexRoute: AuthenticatedDoctorsIndexRoute,
+  AuthenticatedFaqsIndexRoute: AuthenticatedFaqsIndexRoute,
   AuthenticatedGroupManagerIndexRoute: AuthenticatedGroupManagerIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedOfficeHoursIndexRoute: AuthenticatedOfficeHoursIndexRoute,
@@ -1193,6 +1301,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSpecialtiesIndexRoute: AuthenticatedSpecialtiesIndexRoute,
   AuthenticatedStaffsIndexRoute: AuthenticatedStaffsIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
+  AuthenticatedTestimonialsIndexRoute: AuthenticatedTestimonialsIndexRoute,
   AuthenticatedUserGroupIndexRoute: AuthenticatedUserGroupIndexRoute,
   AuthenticatedUserPermissionIndexRoute: AuthenticatedUserPermissionIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
@@ -1203,6 +1312,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDoctorsDoctorIdReviewsRoute,
   AuthenticatedDoctorsDoctorIdStatsRoute:
     AuthenticatedDoctorsDoctorIdStatsRoute,
+  AuthenticatedGroupManagerPermissionsGroupIdRoute:
+    AuthenticatedGroupManagerPermissionsGroupIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

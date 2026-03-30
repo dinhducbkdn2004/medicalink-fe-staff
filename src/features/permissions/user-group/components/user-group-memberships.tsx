@@ -36,8 +36,9 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { RoleGate } from '@/components/auth/role-gate'
-import { useUserGroups, useRemoveUserFromGroup } from '../../hooks'
+import { useUserGroups, useRemoveUserFromGroup, usePermissions } from '../../hooks'
 import { AddToGroupDialog } from './add-to-group-dialog'
+import { GroupInheritedPermissions } from './group-inherited-permissions'
 
 type UserGroupMembershipsProps = {
   userId?: string
@@ -48,6 +49,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
   const [removeGroupId, setRemoveGroupId] = useState<string>()
 
   const { data: memberships, isLoading } = useUserGroups(userId || '')
+  const { data: permissionCatalog } = usePermissions()
   const removeMutation = useRemoveUserFromGroup()
 
   const handleRemove = async () => {
@@ -74,7 +76,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
           <div className='text-center'>
             <h3 className='font-semibold'>No User Selected</h3>
             <p className='text-muted-foreground mt-1 text-sm'>
-              Select a user from the list to view their group memberships
+              Select a user from the list above to view their group memberships
             </p>
           </div>
         </CardContent>
@@ -113,7 +115,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                 <div className='bg-primary/10 rounded-lg p-2'>
                   <UsersRound className='text-primary h-4 w-4' />
                 </div>
-                Group Memberships
+                Group memberships
               </CardTitle>
               <Badge
                 variant='secondary'
@@ -157,65 +159,72 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
               </RoleGate>
             </div>
           ) : (
-            <ScrollArea className='h-[600px]'>
+            <ScrollArea className='max-h-[70vh] min-h-[200px]'>
               <div className='space-y-2 p-4'>
                 {memberships.map((membership) => (
                   <HoverCard key={membership.id} openDelay={300}>
                     <HoverCardTrigger asChild>
                       <Card className='border-muted/40 transition-all hover:shadow-md'>
-                        <CardContent className='flex items-center justify-between p-4'>
-                          <div className='flex-1 space-y-2'>
-                            <div className='flex items-center gap-2'>
-                              <div className='bg-primary/10 rounded-md p-1.5'>
-                                <Shield className='text-primary h-3.5 w-3.5' />
+                        <CardContent className='flex flex-col gap-2 p-4'>
+                          <div className='flex items-start justify-between gap-2'>
+                            <div className='flex-1 space-y-2'>
+                              <div className='flex flex-wrap items-center gap-2'>
+                                <div className='bg-primary/10 rounded-md p-1.5'>
+                                  <Shield className='text-primary h-3.5 w-3.5' />
+                                </div>
+                                <h4 className='font-semibold'>
+                                  {membership.groupName}
+                                </h4>
+                                <Badge variant='secondary' className='text-xs'>
+                                  Member
+                                </Badge>
+                                <Badge variant='outline' className='text-xs'>
+                                  {membership.tenantId}
+                                </Badge>
                               </div>
-                              <h4 className='font-semibold'>
-                                {membership.groupName}
-                              </h4>
-                              <Badge variant='secondary' className='text-xs'>
-                                Member
-                              </Badge>
-                              <Badge variant='outline' className='text-xs'>
-                                {membership.tenantId}
-                              </Badge>
+                              {membership.groupDescription && (
+                                <p className='text-muted-foreground line-clamp-1 text-sm'>
+                                  {membership.groupDescription}
+                                </p>
+                              )}
+                              <div className='text-muted-foreground flex items-center gap-1.5 text-xs'>
+                                <Calendar className='h-3 w-3' />
+                                Joined{' '}
+                                {new Date(
+                                  membership.createdAt
+                                ).toLocaleDateString('en-US', {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric',
+                                })}
+                              </div>
                             </div>
-                            {membership.groupDescription && (
-                              <p className='text-muted-foreground line-clamp-1 text-sm'>
-                                {membership.groupDescription}
-                              </p>
-                            )}
-                            <div className='text-muted-foreground flex items-center gap-1.5 text-xs'>
-                              <Calendar className='h-3 w-3' />
-                              Joined{' '}
-                              {new Date(
-                                membership.createdAt
-                              ).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                              })}
-                            </div>
+                            <RoleGate roles={['SUPER_ADMIN']}>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant='ghost'
+                                    size='sm'
+                                    className='h-8 w-8 shrink-0 p-0'
+                                    onClick={() =>
+                                      setRemoveGroupId(membership.groupId)
+                                    }
+                                    disabled={removeMutation.isPending}
+                                  >
+                                    <X className='text-destructive h-4 w-4' />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Remove from group</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </RoleGate>
                           </div>
-                          <RoleGate roles={['SUPER_ADMIN']}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant='ghost'
-                                  size='sm'
-                                  className='h-8 w-8 p-0'
-                                  onClick={() =>
-                                    setRemoveGroupId(membership.groupId)
-                                  }
-                                  disabled={removeMutation.isPending}
-                                >
-                                  <X className='text-destructive h-4 w-4' />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Remove from group</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </RoleGate>
+                          <GroupInheritedPermissions
+                            groupId={membership.groupId}
+                            tenantId={membership.tenantId}
+                            catalog={permissionCatalog ?? []}
+                          />
                         </CardContent>
                       </Card>
                     </HoverCardTrigger>

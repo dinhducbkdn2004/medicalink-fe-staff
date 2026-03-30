@@ -132,7 +132,7 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
             </div>
           </div>
         ) : (
-          <ScrollArea className='h-[600px]'>
+          <ScrollArea className='h-[min(420px,40vh)]'>
             <div className='space-y-1 p-2'>
               {users.map((user: Staff) => (
                 <HoverCard key={user.id} openDelay={300}>

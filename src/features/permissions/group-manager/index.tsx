@@ -6,6 +6,7 @@ import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { usePermissionGroups, usePermissionStats } from '../hooks'
 import { GroupDialogs } from './components/group-dialogs'
@@ -27,6 +28,7 @@ export function GroupManager() {
     <RequirePermission resource='permissions' action='manage'>
       <GroupManagerProvider>
         <Header fixed>
+          <Search />
           <div className='ms-auto flex items-center space-x-4'>
             <ThemeSwitch />
             <ConfigDrawer />
@@ -40,12 +42,12 @@ export function GroupManager() {
             <div className='space-y-1'>
               <div className='flex items-center gap-3'>
                 <h2 className='text-2xl font-bold tracking-tight'>
-                  Permission Groups
+                  Group manager
                 </h2>
               </div>
               <p className='text-muted-foreground'>
-                Create and manage permission groups. Assign permissions to
-                groups, then add users to groups.
+                Manage RBAC groups: assign permissions by module tree (aligned
+                with the API catalog), then add users to groups for inheritance.
               </p>
             </div>
             <Can I='groups:create'>

@@ -1,4 +1,5 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { Link } from '@tanstack/react-router'
 import { type Row } from '@tanstack/react-table'
 import { Edit, Trash2, Shield } from 'lucide-react'
 import { type PermissionGroup } from '@/api/types/permission.types'
@@ -33,16 +34,17 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-[180px]'>
-        <DropdownMenuItem
-          onClick={() => {
-            setCurrentGroup(group)
-            setOpen('permissions')
-          }}
-        >
-          View Permissions
-          <DropdownMenuShortcut>
-            <Shield size={16} />
-          </DropdownMenuShortcut>
+        <DropdownMenuItem asChild>
+          <Link
+            to='/group-manager/permissions/$groupId'
+            params={{ groupId: group.id }}
+            className='cursor-pointer'
+          >
+            View permissions
+            <DropdownMenuShortcut>
+              <Shield size={16} />
+            </DropdownMenuShortcut>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {

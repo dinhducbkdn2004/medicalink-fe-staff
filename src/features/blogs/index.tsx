@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
+import { getRouteApi } from '@tanstack/react-router'
 import { type BlogCategory } from '@/api/services/blog.service'
 import { Button } from '@/components/ui/button'
 import { ConfigDrawer } from '@/components/config-drawer'
@@ -13,8 +14,19 @@ import { CategoryFormDialog } from './components/category-form-dialog'
 import { CategoryList } from './components/category-list'
 import { useBlogCategories } from './data/use-blog-categories'
 
+const blogCategoriesRoute = getRouteApi('/_authenticated/blogs/categories')
+
 export function BlogCategories() {
-  const { data, isLoading } = useBlogCategories()
+  const search = blogCategoriesRoute.useSearch()
+  const navigate = blogCategoriesRoute.useNavigate()
+
+  const { data, isLoading } = useBlogCategories({
+    page: (search.page as number) || 1,
+    limit: (search.pageSize as number) || 10,
+    search: (search.search as string)?.trim() || undefined,
+    sortBy: (search.sortBy as string) || undefined,
+    sortOrder: (search.sortOrder as 'asc' | 'desc') || undefined,
+  })
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<BlogCategory | null>(
     null
@@ -50,8 +62,18 @@ export function BlogCategories() {
         </div>
 
         <CategoryList
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          data={(Array.isArray(data) ? data : data?.data || []) as any}
+          data={
+            Array.isArray(data)
+              ? data
+              : ((data as { data?: BlogCategory[] })?.data ?? [])
+          }
+          pageCount={Math.max(
+            1,
+            (data as { meta?: { totalPages?: number } } | undefined)?.meta
+              ?.totalPages ?? 1
+          )}
+          search={search}
+          navigate={navigate}
           isLoading={isLoading}
           onEdit={(category) => setEditingCategory(category)}
           onDelete={(category) => setDeletingCategory(category)}

@@ -5,7 +5,7 @@ import { GroupManagerContext } from './group-manager-context'
 
 export type { GroupManagerContextType } from './group-manager-context'
 
-type DialogType = 'create' | 'edit' | 'delete' | 'permissions' | null
+type DialogType = 'create' | 'edit' | 'delete' | null
 
 export function GroupManagerProvider({
   children,

@@ -34,3 +34,5 @@ export type {
 export { answerService } from './answer.service'
 
 export * from './review.service'
+export * from './faq.service'
+export * from './testimonial.service'

@@ -1,4 +1,5 @@
 
+import { useNavigate } from '@tanstack/react-router'
 import { Edit, Trash2, Shield } from 'lucide-react'
 import type { PermissionGroup } from '@/api/types/permission.types'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
@@ -21,8 +22,8 @@ export function GroupsTable({
   isLoading = false,
 }: Readonly<GroupsTableProps>) {
   const { setOpen, setCurrentGroup } = useGroupManager()
+  const routerNavigate = useNavigate()
 
-  
   const getRowActions = (row: {
     original: PermissionGroup
   }): DataTableAction[] => {
@@ -30,11 +31,13 @@ export function GroupsTable({
 
     return [
       {
-        label: 'View Permissions',
+        label: 'View permissions',
         icon: Shield,
         onClick: () => {
-          setCurrentGroup(group)
-          setOpen('permissions')
+          routerNavigate({
+            to: '/group-manager/permissions/$groupId',
+            params: { groupId: group.id },
+          })
         },
       },
       {

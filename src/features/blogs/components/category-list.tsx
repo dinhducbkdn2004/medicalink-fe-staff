@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import { useNavigate } from '@tanstack/react-router'
+import { type NavigateFn } from '@/hooks/use-table-url-state'
 import { type ColumnDef } from '@tanstack/react-table'
 import { Edit, FileText, MoreHorizontal, Trash } from 'lucide-react'
 import { type BlogCategory } from '@/api/services/blog.service'
@@ -13,22 +13,38 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { DataTable } from '@/components/data-table/data-table'
+import {
+  DataTable,
+  type ColumnFilterConfig,
+} from '@/components/data-table'
 
 interface CategoryListProps {
   data: BlogCategory[]
+  pageCount: number
+  search: Record<string, unknown>
+  navigate: NavigateFn
   isLoading: boolean
   onEdit: (category: BlogCategory) => void
   onDelete: (category: BlogCategory) => void
 }
 
+const columnFilterConfigs: ColumnFilterConfig[] = [
+  {
+    columnId: 'name',
+    searchKey: 'search',
+    type: 'string',
+  },
+]
+
 export function CategoryList({
   data,
+  pageCount,
+  search,
+  navigate,
   isLoading,
   onEdit,
   onDelete,
 }: CategoryListProps) {
-  const navigate = useNavigate()
 
   const columns: ColumnDef<BlogCategory>[] = [
     {
@@ -158,12 +174,13 @@ export function CategoryList({
       data={data}
       columns={columns}
       isLoading={isLoading}
-      search={{}}
+      search={search}
       navigate={navigate}
+      pageCount={pageCount}
       entityName='category'
-      searchPlaceholder='Search categories...'
-      hideToolbar={true}
-      
+      searchPlaceholder='Search category...'
+      searchKey='name'
+      columnFilterConfigs={columnFilterConfigs}
       getRowActions={getRowActions}
     />
   )
