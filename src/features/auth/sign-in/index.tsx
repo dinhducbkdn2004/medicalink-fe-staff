@@ -32,7 +32,7 @@ export function SignIn() {
           <div className='absolute top-4 right-4 flex items-center gap-2'>
             <Button asChild variant='outline' size='sm'>
               <a
-                href='https://medicalink-fe-client-seven.vercel.app'
+                href='https://medicalink.online'
                 target='_blank'
                 rel='noreferrer'
               >
