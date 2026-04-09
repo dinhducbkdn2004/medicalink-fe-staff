@@ -83,14 +83,14 @@ export function OfficeHoursActionDialog() {
     if (isOpen) {
       form.reset({
         doctorId: null,
-        workLocationId: null,
+        workLocationId: workLocations?.length === 1 ? workLocations[0].id : null,
         dayOfWeek: 1,
         startTime: '08:00',
         endTime: '17:00',
         isGlobal: false,
       })
     }
-  }, [isOpen, form])
+  }, [isOpen, form, workLocations])
 
   const handleClose = () => {
     setOpen(null)
@@ -219,6 +219,8 @@ export function OfficeHoursActionDialog() {
                         if (checked) {
                           form.setValue('doctorId', null)
                           form.setValue('workLocationId', null)
+                        } else if (workLocations?.length === 1) {
+                          form.setValue('workLocationId', workLocations[0].id)
                         }
                       }}
                       disabled={isLoading}
@@ -252,6 +254,9 @@ export function OfficeHoursActionDialog() {
 
                       if (value !== 'none') {
                         form.setValue('isGlobal', false)
+                        if (!form.getValues('workLocationId') && workLocations?.length === 1) {
+                          form.setValue('workLocationId', workLocations[0].id)
+                        }
                       }
                     }}
                     value={field.value || 'none'}
@@ -310,7 +315,7 @@ export function OfficeHoursActionDialog() {
                       }
                     }}
                     value={field.value || 'none'}
-                    disabled={isLoading || form.watch('isGlobal')}
+                    disabled={isLoading || form.watch('isGlobal') || workLocations?.length === 1}
                   >
                     <FormControl>
                       <SelectTrigger>
