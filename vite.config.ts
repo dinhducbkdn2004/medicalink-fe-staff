@@ -22,7 +22,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://api.medicalink.click',
+        target: 'https://api.medicalink.online',
         changeOrigin: true,
         secure: false,
       },

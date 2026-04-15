@@ -173,7 +173,7 @@ export function OtpForm({
               <div className='text-muted-foreground mt-2 text-center text-sm'>
                 Having trouble signing in?{' '}
                 <a
-                  href='mailto:support@medicalink.click'
+                  href='mailto:support@medicalink.online'
                   className='hover:text-primary underline underline-offset-4 transition-colors'
                 >
                   Contact support
