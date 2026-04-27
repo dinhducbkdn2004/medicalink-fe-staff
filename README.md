@@ -306,7 +306,6 @@ A simplified list can be found in the [Overview](#overview) section.
 - [TanStack Query Devtools](https://tanstack.com/query/latest/docs/react/devtools?from=reactQueryV3&original=https%3A%2F%2Ftanstack.com%2Fquery%2Fv3%2Fdocs%2Fdevtools)
 - [TanStack Router Devtools](https://tanstack.com/router/v1/docs/devtools)
 - [TanStack Table Devtools](https://www.npmjs.com/package/@tanstack/react-table-devtools)
-- [React Hook Form Devtools](https://react-hook-form.com/dev-tools)
 
 ### Git
 
