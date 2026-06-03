@@ -14,6 +14,8 @@ import {
   DollarSign,
   FileText,
   ArrowLeft,
+  Brain,
+  AlertTriangle,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -250,6 +252,76 @@ export function EventDetailsDialog({
                         className='prose prose-sm max-w-none text-sm'
                         dangerouslySetInnerHTML={{ __html: appointment.notes }}
                       />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {appointment.aiTriageData && (
+                <div className='border-t pt-6'>
+                  <div className='flex items-start gap-3'>
+                    <Brain className='text-muted-foreground mt-1 size-5 shrink-0' />
+                    <div className='flex-1 space-y-2'>
+                      <div className='flex items-center gap-2'>
+                        <p className='text-sm font-medium'>AI Clinical Summary</p>
+                        {appointment.aiTriageData.is_emergency && (
+                          <Badge variant='destructive' className='h-5 px-1.5 text-[10px]'>
+                            <AlertTriangle className='mr-1 h-3 w-3' />
+                            Emergency Flag
+                          </Badge>
+                        )}
+                        {appointment.aiTriageData.triage_level && !appointment.aiTriageData.is_emergency && (
+                          <Badge variant='outline' className='h-5 px-1.5 text-[10px] uppercase'>
+                            {appointment.aiTriageData.triage_level}
+                          </Badge>
+                        )}
+                      </div>
+                      
+                      <div className='rounded-lg border bg-muted/50 p-3 text-sm'>
+                        {appointment.aiTriageData.emergency_reason && (
+                          <div className='mb-2 text-destructive font-medium text-xs'>
+                            Emergency Reason: {appointment.aiTriageData.emergency_reason}
+                          </div>
+                        )}
+                        
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                          {appointment.aiTriageData.extracted_symptoms?.length > 0 && (
+                            <div>
+                              <p className='font-medium text-xs text-muted-foreground mb-1'>Extracted Symptoms</p>
+                              <ul className='list-disc list-inside text-xs space-y-0.5'>
+                                {appointment.aiTriageData.extracted_symptoms.map((s: string, i: number) => (
+                                  <li key={i}>{s}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          
+                          {appointment.aiTriageData.negated_symptoms?.length > 0 && (
+                            <div>
+                              <p className='font-medium text-xs text-muted-foreground mb-1'>Negated Symptoms</p>
+                              <ul className='list-disc list-inside text-xs space-y-0.5'>
+                                {appointment.aiTriageData.negated_symptoms.map((s: string, i: number) => (
+                                  <li key={i} className='text-muted-foreground'>{s}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {appointment.aiTriageData.note && (
+                          <div className='mt-3 border-t pt-2'>
+                            <p className='font-medium text-xs text-muted-foreground mb-1'>AI Note</p>
+                            <p className='text-xs'>{appointment.aiTriageData.note}</p>
+                          </div>
+                        )}
+                        
+                        {(appointment.aiTriageData.severity || appointment.aiTriageData.duration) && (
+                          <div className='mt-2 flex gap-4 text-xs text-muted-foreground'>
+                            {appointment.aiTriageData.severity && <span>Severity: {appointment.aiTriageData.severity}</span>}
+                            {appointment.aiTriageData.duration && <span>Duration: {appointment.aiTriageData.duration}</span>}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

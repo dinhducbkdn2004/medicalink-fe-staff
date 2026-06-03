@@ -41,6 +41,7 @@ export interface IAppointment {
   status: AppointmentStatus
   reason: string
   notes: string | null
+  aiTriageData?: Record<string, unknown>
   priceAmount: number | null
   currency: string
   createdAt: string
