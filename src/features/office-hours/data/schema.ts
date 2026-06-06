@@ -63,7 +63,7 @@ const timeValidator = z.string().regex(timeRegex, {
 
 export const officeHourFormSchema = z
   .object({
-    doctorId: z.string().nullable().optional(),
+    doctorIds: z.array(z.string()).default([]),
     workLocationId: z.string().nullable().optional(),
     dayOfWeek: z
       .number()
@@ -80,22 +80,22 @@ export const officeHourFormSchema = z
         return true
       }
 
-      return data.doctorId || data.workLocationId
+      return data.doctorIds.length > 0
     },
     {
-      message: 'Either Doctor, Work Location, or Global must be selected',
-      path: ['doctorId'],
+      message: 'Please select at least one doctor for Doctor Hours',
+      path: ['doctorIds'],
     }
   )
   .refine(
     (data) => {
-      if (data.isGlobal && data.doctorId) {
+      if (data.isGlobal && data.doctorIds.length > 0) {
         return false
       }
       return true
     },
     {
-      message: 'Global hours cannot be assigned to a specific doctor',
+      message: 'Clinic hours (Global) cannot be assigned to specific doctors',
       path: ['isGlobal'],
     }
   )

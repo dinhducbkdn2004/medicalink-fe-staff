@@ -29,6 +29,7 @@ import { RichTextDisplay } from '../components/rich-text-editor'
 import { useCompleteDoctor } from '../data/use-doctors'
 import { canEditOwnProfile } from '../utils/permissions'
 import { DoctorProfileForm } from './doctor-profile-form'
+import { SpecialShiftsWidget } from '@/features/special-shifts'
 
 function EmptyField({ text = 'No information provided' }: { text?: string }) {
   return (
@@ -336,6 +337,9 @@ export function DoctorProfileView() {
                 </CollapsibleContent>
               </Card>
             </Collapsible>
+
+            {/* Special Shifts Widget */}
+            <SpecialShiftsWidget doctorId={doctorId} />
           </div>
 
           {/* Right Column - Detailed Information */}

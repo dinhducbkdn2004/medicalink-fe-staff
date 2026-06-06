@@ -24,7 +24,7 @@ export interface OfficeHour {
 }
 
 export interface OfficeHourQueryParams extends PaginationParams {
-  doctorId?: string
+  doctorId?: string | string[]
   workLocationId?: string
 }
 

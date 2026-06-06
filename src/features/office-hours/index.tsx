@@ -1,13 +1,9 @@
 
+import { useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Can } from '@/components/auth/permission-gate'
 import { RequirePermission } from '@/components/auth/require-permission'
@@ -18,62 +14,61 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { useDoctors } from '@/features/doctors/data/use-doctors'
-import { useWorkLocations } from '@/features/work-locations/data/use-work-locations'
 import { OfficeHoursDialogs } from './components/office-hours-dialogs'
 import { OfficeHoursPrimaryButtons } from './components/office-hours-primary-buttons'
 import { OfficeHoursProvider } from './components/office-hours-provider'
 import { OfficeHoursTable } from './components/office-hours-table'
 import { useOfficeHours } from './data/use-office-hours'
+import { SearchableSelect } from '@/components/ui/searchable-select'
+
+import {
+  SpecialShiftsProvider,
+  SpecialShiftsTable,
+  SpecialShiftsDialogs,
+  useSpecialShifts,
+  useSpecialShiftsContext,
+} from '@/features/special-shifts'
+
+function SpecialShiftsPrimaryButtons() {
+  const { setOpen } = useSpecialShiftsContext()
+  return (
+    <div className='flex gap-2'>
+      <Button onClick={() => setOpen('create')}>
+        <Plus className='mr-2 size-4' />
+        Add Special Shift
+      </Button>
+    </div>
+  )
+}
 
 const route = getRouteApi('/_authenticated/office-hours/')
 
 function OfficeHoursContent() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
+  const [activeTab, setActiveTab] = useState('office-hours')
 
   
   const { data: doctorsData } = useDoctors({ limit: 100 })
-  const { data: locationsData } = useWorkLocations({ limit: 100 })
 
   const doctors = doctorsData?.data || []
-  const locations = locationsData?.data || []
-
-  
-  const handleDoctorChange = (doctorId: string) => {
-    navigate({
-      search: {
-        ...search,
-        doctorId: doctorId === 'all' ? undefined : doctorId,
-      },
-    })
-  }
-
-  const handleLocationChange = (workLocationId: string) => {
-    navigate({
-      search: {
-        ...search,
-        workLocationId: workLocationId === 'all' ? undefined : workLocationId,
-      },
-    })
-  }
 
   
   const queryParams = {
-    doctorId: (search.doctorId as string) || undefined,
-    workLocationId: (search.workLocationId as string) || undefined,
+    doctorId: search.doctorId,
+    workLocationId: 'cm0hq6rxg000008mf3x0c6w4b', // Default for single-location
   }
 
   const { data, isLoading, error } = useOfficeHours(queryParams)
+  const { data: specialShiftsData, isLoading: isLoadingSpecialShifts } = useSpecialShifts(queryParams)
 
   
   
   const categorizeOfficeHours = (apiData: typeof data) => {
     if (!apiData) {
       return {
-        global: [],
-        workLocation: [],
+        clinic: [],
         doctor: [],
-        doctorInLocation: [],
       }
     }
 
@@ -87,17 +82,8 @@ function OfficeHoursContent() {
 
     
     return {
-      global: allOfficeHours.filter(
-        (oh) =>
-          (oh.isGlobal && !oh.doctorId) || (!oh.doctorId && !oh.workLocationId)
-      ),
-      workLocation: allOfficeHours.filter(
-        (oh) => oh.workLocationId && !oh.doctorId && !oh.isGlobal
-      ),
-      doctor: allOfficeHours.filter((oh) => oh.doctorId && !oh.workLocationId),
-      doctorInLocation: allOfficeHours.filter(
-        (oh) => oh.doctorId && oh.workLocationId
-      ),
+      clinic: allOfficeHours.filter((oh) => oh.isGlobal),
+      doctor: allOfficeHours.filter((oh) => !oh.isGlobal && oh.doctorId),
     }
   }
 
@@ -105,10 +91,8 @@ function OfficeHoursContent() {
 
   
   const totalAll =
-    groupedData.global.length +
-    groupedData.workLocation.length +
-    groupedData.doctor.length +
-    groupedData.doctorInLocation.length
+    groupedData.clinic.length +
+    groupedData.doctor.length
 
   
   const isPermissionError =
@@ -122,6 +106,7 @@ function OfficeHoursContent() {
 
   return (
     <OfficeHoursProvider>
+    <SpecialShiftsProvider>
       <Header fixed>
         <Search />
         <div className='ms-auto flex items-center space-x-4'>
@@ -143,46 +128,31 @@ function OfficeHoursContent() {
           </div>
           {!isPermissionError && (
             <Can I='office-hours:create'>
-              <OfficeHoursPrimaryButtons />
+              {activeTab === 'office-hours' ? (
+                <OfficeHoursPrimaryButtons />
+              ) : (
+                <SpecialShiftsPrimaryButtons />
+              )}
             </Can>
           )}
         </div>
 
-        {}
         <div className='flex flex-wrap gap-4'>
-          <Select
-            value={(search.doctorId as string) || 'all'}
-            onValueChange={handleDoctorChange}
-          >
-            <SelectTrigger className='w-[200px]'>
-              <SelectValue placeholder='All Doctors' />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='all'>All Doctors</SelectItem>
-              {doctors.map((doctor) => (
-                <SelectItem key={doctor.id} value={doctor.id}>
-                  {doctor.fullName}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={(search.workLocationId as string) || 'all'}
-            onValueChange={handleLocationChange}
-          >
-            <SelectTrigger className='w-[200px]'>
-              <SelectValue placeholder='All Locations' />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='all'>All Locations</SelectItem>
-              {locations.map((location) => (
-                <SelectItem key={location.id} value={location.id}>
-                  {location.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className='w-[300px]'>
+            <SearchableSelect
+              options={doctors.map((d) => ({ label: d.fullName, value: d.id }))}
+              onValueChange={(value) => {
+                navigate({
+                  search: {
+                    ...search,
+                    doctorId: value || undefined,
+                  },
+                })
+              }}
+              value={search.doctorId as string}
+              placeholder='Select Doctor...'
+            />
+          </div>
         </div>
 
         {isPermissionError ? (
@@ -200,36 +170,31 @@ function OfficeHoursContent() {
             </p>
           </div>
         ) : (
-          <Tabs defaultValue='all' className='w-full'>
-            <TabsList>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
+            <TabsList className='mb-4'>
+              <TabsTrigger value='office-hours'>Regular Office Hours</TabsTrigger>
+              <TabsTrigger value='special-shifts'>Special Shifts (Overrides)</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value='office-hours' className='mt-0'>
+              <Tabs defaultValue='all' className='w-full'>
+                <TabsList>
               <TabsTrigger value='all'>
                 All Hours
                 <Badge variant='secondary' className='ml-2'>
                   {totalAll}
                 </Badge>
               </TabsTrigger>
-              <TabsTrigger value='doctorInLocation'>
-                Doctor + Location
+              <TabsTrigger value='clinic'>
+                Clinic Hours
                 <Badge variant='secondary' className='ml-2'>
-                  {groupedData.doctorInLocation.length}
+                  {groupedData.clinic.length}
                 </Badge>
               </TabsTrigger>
               <TabsTrigger value='doctor'>
-                Doctor Only
+                Doctor Hours
                 <Badge variant='secondary' className='ml-2'>
                   {groupedData.doctor.length}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger value='location'>
-                Location Only
-                <Badge variant='secondary' className='ml-2'>
-                  {groupedData.workLocation.length}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger value='global'>
-                Global Hours
-                <Badge variant='secondary' className='ml-2'>
-                  {groupedData.global.length}
                 </Badge>
               </TabsTrigger>
             </TabsList>
@@ -238,10 +203,8 @@ function OfficeHoursContent() {
             <TabsContent value='all' className='mt-4'>
               <OfficeHoursTable
                 data={[
-                  ...groupedData.doctorInLocation,
+                  ...groupedData.clinic,
                   ...groupedData.doctor,
-                  ...groupedData.workLocation,
-                  ...groupedData.global,
                 ]}
                 search={search}
                 navigate={navigate}
@@ -249,17 +212,17 @@ function OfficeHoursContent() {
               />
             </TabsContent>
 
-            {/* Doctor In Location - Highest Priority */}
-            <TabsContent value='doctorInLocation' className='mt-4'>
+            {/* Clinic Hours */}
+            <TabsContent value='clinic' className='mt-4'>
               <OfficeHoursTable
-                data={groupedData.doctorInLocation}
+                data={groupedData.clinic}
                 search={search}
                 navigate={navigate}
                 isLoading={isLoading}
               />
             </TabsContent>
 
-            {/* Doctor Only - High Priority */}
+            {/* Doctor Hours */}
             <TabsContent value='doctor' className='mt-4'>
               <OfficeHoursTable
                 data={groupedData.doctor}
@@ -268,24 +231,15 @@ function OfficeHoursContent() {
                 isLoading={isLoading}
               />
             </TabsContent>
-
-            {/* Location Only - Medium Priority */}
-            <TabsContent value='location' className='mt-4'>
-              <OfficeHoursTable
-                data={groupedData.workLocation}
-                search={search}
-                navigate={navigate}
-                isLoading={isLoading}
-              />
+              </Tabs>
             </TabsContent>
 
-            {/* Global Hours - Apply to all locations as fallback */}
-            <TabsContent value='global' className='mt-4'>
-              <OfficeHoursTable
-                data={groupedData.global}
+            <TabsContent value='special-shifts' className='mt-0'>
+              <SpecialShiftsTable
+                data={specialShiftsData || []}
                 search={search}
                 navigate={navigate}
-                isLoading={isLoading}
+                isLoading={isLoadingSpecialShifts}
               />
             </TabsContent>
           </Tabs>
@@ -293,6 +247,8 @@ function OfficeHoursContent() {
       </Main>
 
       <OfficeHoursDialogs />
+      <SpecialShiftsDialogs />
+    </SpecialShiftsProvider>
     </OfficeHoursProvider>
   )
 }

@@ -31,7 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useActiveWorkLocations } from '@/features/work-locations/data/use-work-locations'
+import { MultiSelect } from '@/components/ui/multi-select'
 import {
   officeHourFormSchema,
   type OfficeHourFormValues,
@@ -45,9 +45,6 @@ export function OfficeHoursActionDialog() {
   const createMutation = useCreateOfficeHour()
 
   const isOpen = open === 'add'
-
-  const { data: workLocations, isLoading: isLoadingLocations } =
-    useActiveWorkLocations()
   const {
     data: doctorsData,
     isLoading: isLoadingDoctors,
@@ -64,13 +61,13 @@ export function OfficeHoursActionDialog() {
   })
 
   const doctors = doctorsData?.data || []
-  const isLoadingData = isLoadingDoctors || isLoadingLocations
+  const isLoadingData = isLoadingDoctors
 
   const form = useForm<OfficeHourFormValues>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(officeHourFormSchema as any) as any,
     defaultValues: {
-      doctorId: null,
+      doctorIds: [],
       workLocationId: null,
       dayOfWeek: 1,
       startTime: '08:00',
@@ -82,15 +79,15 @@ export function OfficeHoursActionDialog() {
   useEffect(() => {
     if (isOpen) {
       form.reset({
-        doctorId: null,
-        workLocationId: workLocations?.length === 1 ? workLocations[0].id : null,
+        doctorIds: [],
+        workLocationId: null,
         dayOfWeek: 1,
         startTime: '08:00',
         endTime: '17:00',
         isGlobal: false,
       })
     }
-  }, [isOpen, form, workLocations])
+  }, [isOpen, form])
 
   const handleClose = () => {
     setOpen(null)
@@ -100,36 +97,39 @@ export function OfficeHoursActionDialog() {
 
   const onSubmit = async (values: OfficeHourFormValues) => {
     try {
-      if (values.doctorId && !doctors.find((d) => d.id === values.doctorId)) {
-        form.setError('doctorId', {
+      if (!values.isGlobal && values.doctorIds.length === 0) {
+        form.setError('doctorIds', {
           type: 'manual',
-          message: 'Selected doctor not found. Please select a valid doctor.',
+          message: 'Please select at least one doctor.',
         })
         return
       }
 
-      if (
-        values.workLocationId &&
-        !workLocations?.find((l) => l.id === values.workLocationId)
-      ) {
-        form.setError('workLocationId', {
-          type: 'manual',
-          message:
-            'Selected location not found. Please select a valid location.',
-        })
-        return
+      if (values.isGlobal) {
+        const requestData = {
+          doctorId: null,
+          workLocationId: null,
+          dayOfWeek: values.dayOfWeek,
+          startTime: values.startTime,
+          endTime: values.endTime,
+          isGlobal: true,
+        }
+        await createMutation.mutateAsync(requestData)
+      } else {
+        await Promise.allSettled(
+          values.doctorIds.map(async (doctorId) => {
+            const requestData = {
+              doctorId,
+              workLocationId: null,
+              dayOfWeek: values.dayOfWeek,
+              startTime: values.startTime,
+              endTime: values.endTime,
+              isGlobal: false,
+            }
+            return createMutation.mutateAsync(requestData)
+          })
+        )
       }
-
-      const requestData = {
-        doctorId: values.isGlobal ? null : values.doctorId || null,
-        workLocationId: values.isGlobal ? null : values.workLocationId || null,
-        dayOfWeek: values.dayOfWeek,
-        startTime: values.startTime,
-        endTime: values.endTime,
-        isGlobal: values.isGlobal || false,
-      }
-
-      await createMutation.mutateAsync(requestData)
 
       handleClose()
     } catch (error) {
@@ -139,30 +139,7 @@ export function OfficeHoursActionDialog() {
 
   const isLoading = createMutation.isPending
 
-  const watchedDoctorId = form.watch('doctorId')
-  const watchedWorkLocationId = form.watch('workLocationId')
   const watchedIsGlobal = form.watch('isGlobal')
-
-  let officeHoursType = ''
-  let officeHoursTypeDescription = ''
-
-  if (watchedIsGlobal) {
-    officeHoursType = 'Global Hours'
-    officeHoursTypeDescription =
-      'These hours apply to all locations as fallback when no specific hours are defined. Lowest priority.'
-  } else if (watchedDoctorId && watchedWorkLocationId) {
-    officeHoursType = 'Doctor at Specific Location'
-    officeHoursTypeDescription =
-      'These hours apply to a specific doctor at a specific location. Highest priority.'
-  } else if (watchedDoctorId && !watchedWorkLocationId) {
-    officeHoursType = 'Doctor (All Locations)'
-    officeHoursTypeDescription =
-      'These hours apply to a specific doctor across all locations.'
-  } else if (!watchedDoctorId && watchedWorkLocationId) {
-    officeHoursType = 'Work Location Hours'
-    officeHoursTypeDescription =
-      'These hours apply to a specific location for all doctors working there.'
-  }
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -178,31 +155,7 @@ export function OfficeHoursActionDialog() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
             {}
-            {officeHoursType && (
-              <div className='bg-muted rounded-lg border p-3'>
-                <div className='flex items-center justify-between'>
-                  <span className='text-sm font-medium'>{officeHoursType}</span>
-                  <span className='text-muted-foreground text-xs'>
-                    {watchedIsGlobal && 'Priority: Lowest'}
-                    {!watchedIsGlobal &&
-                      !watchedDoctorId &&
-                      watchedWorkLocationId &&
-                      'Priority: Low'}
-                    {!watchedIsGlobal &&
-                      watchedDoctorId &&
-                      !watchedWorkLocationId &&
-                      'Priority: Medium'}
-                    {!watchedIsGlobal &&
-                      watchedDoctorId &&
-                      watchedWorkLocationId &&
-                      'Priority: Highest'}
-                  </span>
-                </div>
-                <p className='text-muted-foreground mt-1 text-xs'>
-                  {officeHoursTypeDescription}
-                </p>
-              </div>
-            )}
+            {}
 
             {}
             <FormField
@@ -217,20 +170,17 @@ export function OfficeHoursActionDialog() {
                         field.onChange(checked)
 
                         if (checked) {
-                          form.setValue('doctorId', null)
-                          form.setValue('workLocationId', null)
-                        } else if (workLocations?.length === 1) {
-                          form.setValue('workLocationId', workLocations[0].id)
+                          form.setValue('doctorIds', [])
                         }
                       }}
                       disabled={isLoading}
                     />
                   </FormControl>
                   <div className='space-y-1 leading-none'>
-                    <FormLabel>Global Hours</FormLabel>
+                    <FormLabel>Clinic Hours (Applies to all doctors)</FormLabel>
                     <FormDescription>
-                      Apply to all locations as fallback hours. When checked,
-                      doctor and location fields will be disabled and cleared.
+                      Apply to the entire clinic as global fallback hours. When checked,
+                      doctor selection will be disabled and cleared.
                     </FormDescription>
                   </div>
                 </FormItem>
@@ -239,7 +189,7 @@ export function OfficeHoursActionDialog() {
             {}
             <FormField
               control={form.control}
-              name='doctorId'
+              name='doctorIds'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
@@ -248,46 +198,20 @@ export function OfficeHoursActionDialog() {
                       (Optional)
                     </span>
                   </FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value === 'none' ? null : value)
-
-                      if (value !== 'none') {
-                        form.setValue('isGlobal', false)
-                        if (!form.getValues('workLocationId') && workLocations?.length === 1) {
-                          form.setValue('workLocationId', workLocations[0].id)
-                        }
-                      }
-                    }}
-                    value={field.value || 'none'}
-                    disabled={isLoading || form.watch('isGlobal')}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select a doctor or leave empty' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value='none'>
-                        <span className='text-muted-foreground'>
-                          No specific doctor (for location-wide hours)
-                        </span>
-                      </SelectItem>
-                      {doctors.map((doctor) => (
-                        <SelectItem key={doctor.id} value={doctor.id}>
-                          Dr. {doctor.fullName}
-                          {doctor.specialties &&
-                            doctor.specialties.length > 0 && (
-                              <span className='text-muted-foreground ml-2 text-xs'>
-                                ({doctor.specialties[0].name})
-                              </span>
-                            )}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <MultiSelect
+                    options={doctors.map((d) => ({
+                      value: d.id,
+                      label: `Dr. ${d.fullName}`,
+                      subtitle: d.specialties?.[0]?.name,
+                    }))}
+                    selected={field.value}
+                    onChange={field.onChange}
+                    disabled={isLoading || watchedIsGlobal}
+                    placeholder='Select one or more doctors...'
+                    searchPlaceholder='Search doctor...'
+                  />
                   <FormDescription>
-                    Leave empty to create location-wide hours for all doctors
+                    Select one or multiple doctors to create shifts in batch.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -295,53 +219,7 @@ export function OfficeHoursActionDialog() {
             />
 
             {}
-            <FormField
-              control={form.control}
-              name='workLocationId'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Work Location{' '}
-                    <span className='text-muted-foreground text-xs font-normal'>
-                      (Optional)
-                    </span>
-                  </FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value === 'none' ? null : value)
-
-                      if (value !== 'none') {
-                        form.setValue('isGlobal', false)
-                      }
-                    }}
-                    value={field.value || 'none'}
-                    disabled={isLoading || form.watch('isGlobal') || workLocations?.length === 1}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select a location or leave empty' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value='none'>
-                        <span className='text-muted-foreground'>
-                          All locations (doctor's default hours)
-                        </span>
-                      </SelectItem>
-                      {workLocations?.map((location) => (
-                        <SelectItem key={location.id} value={location.id}>
-                          {location.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>
-                    Leave empty for doctor's hours across all locations
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Work Location field removed for Single-Location */}
 
             {}
             <FormField

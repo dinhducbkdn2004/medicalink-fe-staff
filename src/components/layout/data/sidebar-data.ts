@@ -20,6 +20,7 @@ import {
   BookOpen,
   FileText,
   Quote,
+  CalendarOff,
 } from 'lucide-react'
 import type { NavGroupWithPermission } from '@/lib/sidebar-utils'
 
@@ -102,6 +103,12 @@ export const navGroups: NavGroupWithPermission[] = [
         url: '/office-hours',
         icon: Clock,
 
+        permission: { resource: 'office-hours', action: 'manage' },
+      },
+      {
+        title: 'Holidays',
+        url: '/holidays',
+        icon: CalendarOff,
         permission: { resource: 'office-hours', action: 'manage' },
       },
     ],
