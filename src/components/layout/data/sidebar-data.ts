@@ -103,13 +103,13 @@ export const navGroups: NavGroupWithPermission[] = [
         url: '/office-hours',
         icon: Clock,
 
-        permission: { resource: 'office-hours', action: 'manage' },
+        permission: { resource: 'office-hours', action: 'read' },
       },
       {
         title: 'Holidays',
         url: '/holidays',
         icon: CalendarOff,
-        permission: { resource: 'office-hours', action: 'manage' },
+        permission: { resource: 'office-hours', action: 'read' },
       },
     ],
   },

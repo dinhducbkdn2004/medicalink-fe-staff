@@ -19,6 +19,7 @@ import { OfficeHoursPrimaryButtons } from './components/office-hours-primary-but
 import { OfficeHoursProvider } from './components/office-hours-provider'
 import { OfficeHoursTable } from './components/office-hours-table'
 import { useOfficeHours } from './data/use-office-hours'
+import { useAuth } from '@/hooks/use-auth'
 import { SearchableSelect } from '@/components/ui/searchable-select'
 
 import {
@@ -48,22 +49,24 @@ function OfficeHoursContent() {
   const navigate = route.useNavigate()
   const [activeTab, setActiveTab] = useState('office-hours')
 
-  
+
   const { data: doctorsData } = useDoctors({ limit: 100 })
 
   const doctors = doctorsData?.data || []
 
-  
+  const { user } = useAuth()
+  const isDoctor = user?.role === 'DOCTOR'
+
   const queryParams = {
-    doctorId: search.doctorId,
+    doctorId: isDoctor ? user?.id : search.doctorId,
     workLocationId: 'cm0hq6rxg000008mf3x0c6w4b', // Default for single-location
   }
 
   const { data, isLoading, error } = useOfficeHours(queryParams)
   const { data: specialShiftsData, isLoading: isLoadingSpecialShifts } = useSpecialShifts(queryParams)
 
-  
-  
+
+
   const categorizeOfficeHours = (apiData: typeof data) => {
     if (!apiData) {
       return {
@@ -80,12 +83,12 @@ function OfficeHoursContent() {
 
   const groupedData = categorizeOfficeHours(data)
 
-  
+
   const totalAll =
     groupedData.clinic.length +
     groupedData.doctor.length
 
-  
+
   const isPermissionError =
     error &&
     typeof error === 'object' &&
@@ -228,7 +231,6 @@ function OfficeHoursContent() {
             <TabsContent value='special-shifts' className='mt-0'>
               <SpecialShiftsTable
                 data={specialShiftsData || []}
-                search={search}
                 navigate={navigate}
                 isLoading={isLoadingSpecialShifts}
               />
@@ -249,7 +251,7 @@ function OfficeHoursContent() {
  */
 export function OfficeHours() {
   return (
-    <RequirePermission resource='office-hours' action='manage'>
+    <RequirePermission resource='office-hours' action='read'>
       <OfficeHoursContent />
     </RequirePermission>
   )
