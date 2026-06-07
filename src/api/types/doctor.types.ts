@@ -36,7 +36,6 @@ export interface DoctorProfile {
   id: string
   staffAccountId: string
   isActive: boolean
-  degree?: string
   position?: string[]
   introduction?: string
   memberships?: string[]
@@ -63,7 +62,6 @@ export interface DoctorWithProfile {
 
   profileId?: string
   isActive?: boolean
-  degree?: string
   position?: string[]
   introduction?: string
   memberships?: string[]
@@ -97,7 +95,6 @@ export interface CompleteDoctorData {
   profileId: string
   isActive: boolean
 
-  degree?: string
   position?: string[]
   introduction?: string
   memberships?: string[]
@@ -118,7 +115,6 @@ export interface PublicDoctorProfile {
   staffAccountId: string
   fullName: string
   isActive: boolean
-  degree?: string
   position?: string[]
   avatarUrl?: string
   specialties: Pick<Specialty, 'id' | 'name' | 'slug'>[]
@@ -176,7 +172,6 @@ export interface UpdateDoctorAccountRequest {
 export interface CreateDoctorProfileRequest {
   staffAccountId: string
   isActive?: boolean
-  degree?: string
   position?: string[]
   introduction?: string
   memberships?: string[]
@@ -191,7 +186,6 @@ export interface CreateDoctorProfileRequest {
 }
 
 export interface UpdateDoctorProfileRequest {
-  degree?: string
   position?: string[]
   introduction?: string
   memberships?: string[]

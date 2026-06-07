@@ -17,10 +17,10 @@ export const specialShiftsColumns: ColumnDef<SpecialShift>[] = [
     },
   },
   {
-    accessorKey: 'date',
+    accessorKey: 'effectiveDate',
     header: 'Date',
     cell: ({ row }) => {
-      const date = new Date(row.original.date)
+      const date = new Date(row.original.effectiveDate)
       return <div>{format(date, 'MMM dd, yyyy')}</div>
     },
   },

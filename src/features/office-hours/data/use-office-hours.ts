@@ -86,8 +86,26 @@ export function useDeleteOfficeHour() {
       queryClient.invalidateQueries({ queryKey: officeHourKeys.lists() })
       toast.success('Office hours deleted successfully')
     },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to delete office hours')
+    onError: (error: unknown) => {
+      const axiosError = error as {
+        response?: {
+          data?: {
+            message?: string
+            details?: { code?: string }
+          }
+        }
+        message?: string
+      }
+      const code = axiosError?.response?.data?.details?.code
+      if (code === 'SHRINKING_WINDOW') {
+        // We handle this in the component via a custom modal
+        return
+      }
+      toast.error(
+        axiosError?.response?.data?.message ||
+          axiosError?.message ||
+          'Failed to delete office hours'
+      )
     },
   })
 }

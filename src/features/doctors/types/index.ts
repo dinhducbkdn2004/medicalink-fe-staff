@@ -19,7 +19,6 @@ export interface DoctorProfile {
   id: string
   staffAccountId: string
   isActive: boolean
-  degree?: string
   position?: string[]
   introduction?: string
   memberships?: string[]
@@ -49,7 +48,6 @@ export interface DoctorWithProfile {
 
   profileId?: string
   isActive?: boolean
-  degree?: string
   position?: string[]
   introduction?: string
   memberships?: string[]
@@ -81,7 +79,6 @@ export interface CompleteDoctorData {
   profileId: string
   isActive: boolean
 
-  degree?: string
   position?: string[]
   introduction?: string
   memberships?: string[]
@@ -172,7 +169,6 @@ export interface PublicDoctorProfileParams {
 export interface CreateDoctorProfileRequest {
   staffAccountId: string
   isActive?: boolean
-  degree?: string
   position?: string[]
   introduction?: string
   memberships?: string[]
@@ -187,7 +183,6 @@ export interface CreateDoctorProfileRequest {
 }
 
 export interface UpdateDoctorProfileRequest {
-  degree?: string
   position?: string[]
   introduction?: string
   memberships?: string[]
@@ -265,7 +260,6 @@ export const updateDoctorAccountSchema = z
   )
 
 export const updateDoctorProfileSchema = z.object({
-  degree: z.string().max(100).optional(),
   position: z.array(z.string()).optional(),
   introduction: z.string().optional(),
   memberships: z.array(z.string()).optional(),

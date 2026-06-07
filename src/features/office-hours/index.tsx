@@ -72,18 +72,9 @@ function OfficeHoursContent() {
       }
     }
 
-    
-    const allOfficeHours = [
-      ...(apiData.global || []),
-      ...(apiData.workLocation || []),
-      ...(apiData.doctor || []),
-      ...(apiData.doctorInLocation || []),
-    ]
-
-    
     return {
-      clinic: allOfficeHours.filter((oh) => oh.isGlobal),
-      doctor: allOfficeHours.filter((oh) => !oh.isGlobal && oh.doctorId),
+      clinic: apiData.global || [],
+      doctor: apiData.doctorSpecific || [],
     }
   }
 

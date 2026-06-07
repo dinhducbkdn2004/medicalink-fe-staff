@@ -16,7 +16,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -64,7 +63,7 @@ export function SpecialShiftsActionDialog({
     defaultValues: {
       doctorIds: defaultDoctorId ? [defaultDoctorId] : [],
       workLocationId: null,
-      date: new Date().toISOString().split('T')[0],
+      effectiveDate: new Date().toISOString().split('T')[0],
       startTime: '',
       endTime: '',
       reason: '',
@@ -76,7 +75,7 @@ export function SpecialShiftsActionDialog({
       form.reset({
         doctorIds: defaultDoctorId ? [defaultDoctorId] : [],
         workLocationId: null,
-        date: new Date().toISOString().split('T')[0],
+        effectiveDate: new Date().toISOString().split('T')[0],
         startTime: '',
         endTime: '',
         reason: '',
@@ -97,17 +96,17 @@ export function SpecialShiftsActionDialog({
           const requestData = {
             doctorId,
             workLocationId: null,
-            date: values.date,
+            effectiveDate: values.effectiveDate,
             startTime: values.startTime,
             endTime: values.endTime,
-            reason: values.reason || null,
+            reason: values.reason,
           }
           return createMutation.mutateAsync(requestData)
         })
       )
       handleClose()
     } catch (error) {
-      console.error('Form submission error:', error)
+      console.error('Failed to create special shift:', error)
     }
   }
 
@@ -115,55 +114,49 @@ export function SpecialShiftsActionDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className='sm:max-w-[500px]'>
+      <DialogContent className='sm:max-w-[600px]'>
         <DialogHeader>
-          <DialogTitle>Add Special Shift</DialogTitle>
+          <DialogTitle>Create Special Shift</DialogTitle>
           <DialogDescription>
-            Override regular schedules for a doctor on a specific date.
+            Add an override or special shift for one or more doctors. This will
+            override their regular office hours for the specified date.
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-            {!defaultDoctorId && (
-              <FormField
-                control={form.control}
-                name='doctorIds'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Doctor <span className='text-destructive'>*</span>
-                    </FormLabel>
-                    <MultiSelect
-                      options={doctors.map((d) => ({
-                        value: d.id,
-                        label: `Dr. ${d.fullName}`,
-                        subtitle: d.specialties?.[0]?.name,
-                      }))}
-                      selected={field.value}
-                      onChange={field.onChange}
-                      disabled={isLoading || isLoadingData}
-                      placeholder='Select one or more doctors...'
-                      searchPlaceholder='Search doctor...'
-                    />
-                    <FormDescription>
-                      Select one or multiple doctors to create shifts in batch.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-
-            {/* Location field removed for single-location */}
-
             <FormField
               control={form.control}
-              name='date'
+              name='doctorIds'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Date <span className='text-destructive'>*</span>
+                    Doctor <span className='text-destructive'>*</span>
+                  </FormLabel>
+                  <MultiSelect
+                    options={doctors.map((d) => ({
+                      value: d.id,
+                      label: `Dr. ${d.fullName}`,
+                      subtitle: d.specialties?.[0]?.name,
+                    }))}
+                    selected={field.value}
+                    onChange={field.onChange}
+                    disabled={isLoading || !!defaultDoctorId}
+                    placeholder='Select one or more doctors...'
+                    searchPlaceholder='Search doctor...'
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='effectiveDate'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Effective Date <span className='text-destructive'>*</span>
                   </FormLabel>
                   <FormControl>
                     <Input type='date' {...field} disabled={isLoading} />

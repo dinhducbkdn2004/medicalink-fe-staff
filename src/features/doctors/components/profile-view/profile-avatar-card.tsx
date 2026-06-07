@@ -58,10 +58,10 @@ export function ProfileAvatarCard({ doctor }: ProfileAvatarCardProps) {
             {doctor?.fullName || 'Unknown Doctor'}
           </h2>
 
-          {doctor?.degree ? (
-            <p className='text-muted-foreground text-sm'>{doctor.degree}</p>
+          {doctor?.position?.[0] ? (
+            <p className='text-muted-foreground text-sm'>{doctor.position[0]}</p>
           ) : (
-            <EmptyField text='No degree specified' />
+            <EmptyField text='No position specified' />
           )}
 
           {}

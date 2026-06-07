@@ -89,12 +89,19 @@ export function useDeleteSpecialShift() {
     onError: (error: unknown) => {
       const axiosError = error as {
         response?: {
-          status?: number
-          data?: { message?: string | string[] }
+          data?: {
+            message?: string | string[]
+            details?: { code?: string }
+          }
         }
         message?: string
       }
-      const errData = axiosError.response?.data?.message
+      const code = axiosError?.response?.data?.details?.code
+      if (code === 'SHRINKING_WINDOW') {
+        // Handled in component
+        return
+      }
+      const errData = axiosError?.response?.data?.message
       const errString = Array.isArray(errData) ? errData[0] : errData
       toast.error(errString || 'Failed to delete special shift')
     },

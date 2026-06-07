@@ -28,32 +28,6 @@ export function AcademicTab({ form }: Readonly<AcademicTabProps>) {
         </h3>
         <div className='space-y-4'>
         {}
-        <FormField
-          control={form.control}
-          name='degree'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='flex items-center gap-2 text-sm'>
-                Academic Degree
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder='e.g., MD, PhD, FACC'
-                  {...field}
-                  value={field.value || ''}
-                  className='h-9'
-                />
-              </FormControl>
-              <FormDescription className='text-xs'>
-                Academic degrees and professional certifications
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Separator />
-
         {}
         <FormField
           control={form.control}

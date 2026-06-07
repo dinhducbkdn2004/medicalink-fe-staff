@@ -11,8 +11,8 @@ function SpecialShiftsWidgetContent({ doctorId }: { doctorId: string }) {
   const { data: shifts, isLoading } = useSpecialShifts({ doctorId })
 
   const upcomingShifts = shifts
-    ?.filter((shift) => new Date(shift.date) >= new Date(new Date().setHours(0, 0, 0, 0)))
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    ?.filter((shift) => new Date(shift.effectiveDate) >= new Date(new Date().setHours(0, 0, 0, 0)))
+    .sort((a, b) => new Date(a.effectiveDate).getTime() - new Date(b.effectiveDate).getTime())
     .slice(0, 5)
 
   return (
@@ -44,7 +44,7 @@ function SpecialShiftsWidgetContent({ doctorId }: { doctorId: string }) {
                 <div className='flex items-center justify-between font-medium'>
                   <div className='flex items-center gap-2'>
                     <Calendar className='size-4 text-primary' />
-                    {format(new Date(shift.date), 'MMM dd, yyyy')}
+                    {format(new Date(shift.effectiveDate), 'MMM dd, yyyy')}
                   </div>
                   <div className='flex items-center gap-1 text-muted-foreground text-xs'>
                     <Clock className='size-3' />

@@ -63,16 +63,20 @@ const timeValidator = z.string().regex(timeRegex, {
 
 export const officeHourFormSchema = z
   .object({
+    shiftType: z.enum(['REGULAR', 'OVERRIDE']).default('REGULAR'),
     doctorIds: z.array(z.string()).default([]),
     workLocationId: z.string().nullable().optional(),
     dayOfWeek: z
       .number()
       .int()
       .min(0)
-      .max(6, 'Day of week must be between 0 (Sunday) and 6 (Saturday)'),
+      .max(6, 'Day of week must be between 0 (Sunday) and 6 (Saturday)')
+      .optional(),
+    effectiveDate: z.string().optional(),
     startTime: timeValidator,
     endTime: timeValidator,
     isGlobal: z.boolean().default(false),
+    reason: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -97,6 +101,30 @@ export const officeHourFormSchema = z
     {
       message: 'Clinic hours (Global) cannot be assigned to specific doctors',
       path: ['isGlobal'],
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.shiftType === 'REGULAR' && data.dayOfWeek === undefined) {
+        return false
+      }
+      return true
+    },
+    {
+      message: 'Day of week is required for regular shifts',
+      path: ['dayOfWeek'],
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.shiftType === 'OVERRIDE' && !data.effectiveDate) {
+        return false
+      }
+      return true
+    },
+    {
+      message: 'Specific date is required for special shifts',
+      path: ['effectiveDate'],
     }
   )
   .refine(

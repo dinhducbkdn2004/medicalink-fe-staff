@@ -4,7 +4,7 @@ export const specialShiftSchema = z.object({
   id: z.string().uuid(),
   doctorId: z.string().uuid(),
   workLocationId: z.string().uuid().nullable().optional(),
-  date: z.string(),
+  effectiveDate: z.string(),
   startTime: z.string(),
   endTime: z.string(),
   reason: z.string().nullable().optional(),
@@ -32,7 +32,7 @@ export const specialShiftFormSchema = z
   .object({
     doctorIds: z.array(z.string()).min(1, 'Please select at least one doctor'),
     workLocationId: z.string().nullable().optional(),
-    date: z.string().min(1, 'Date is required'),
+    effectiveDate: z.string().min(1, 'Date is required'),
     startTime: z.string().min(1, 'Start time is required'),
     endTime: z.string().min(1, 'End time is required'),
     reason: z.string().nullable().optional(),

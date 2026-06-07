@@ -99,7 +99,7 @@ export function DoctorProfileView() {
   }
 
   const canEdit = canEditOwnProfile(user, doctorId)
-  const hasProfile = Boolean(doctor.degree || doctor.introduction)
+  const hasProfile = Boolean(doctor.position?.length || doctor.introduction)
 
   if (isEditMode) {
     return <DoctorProfileForm onCancel={handleCancelEdit} />
@@ -197,12 +197,12 @@ export function DoctorProfileView() {
                     {doctor?.fullName || 'Unknown Doctor'}
                   </h2>
 
-                  {doctor?.degree ? (
+                  {doctor?.position?.[0] ? (
                     <p className='text-muted-foreground text-sm'>
-                      {doctor.degree}
+                      {doctor.position[0]}
                     </p>
                   ) : (
-                    <EmptyField text='No degree specified' />
+                    <EmptyField text='No position specified' />
                   )}
 
                   {/* Active Status */}

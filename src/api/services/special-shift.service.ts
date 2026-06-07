@@ -5,7 +5,7 @@ export interface SpecialShift {
   id: string
   doctorId: string
   workLocationId?: string | null
-  date: string
+  effectiveDate: string
   startTime: string
   endTime: string
   reason?: string | null
@@ -26,13 +26,13 @@ export interface SpecialShift {
 export interface SpecialShiftQueryParams extends PaginationParams {
   doctorId?: string
   workLocationId?: string
-  date?: string
+  effectiveDate?: string
 }
 
 export interface CreateSpecialShiftRequest {
   doctorId: string
   workLocationId?: string | null
-  date: string
+  effectiveDate: string
   startTime: string
   endTime: string
   reason?: string | null

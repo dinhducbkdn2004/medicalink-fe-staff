@@ -39,9 +39,7 @@ export interface CreateOfficeHourRequest {
 
 export interface OfficeHoursGroupedResponse {
   global: OfficeHour[]
-  workLocation: OfficeHour[]
-  doctor: OfficeHour[]
-  doctorInLocation: OfficeHour[]
+  doctorSpecific: OfficeHour[]
 }
 
 class OfficeHourService {

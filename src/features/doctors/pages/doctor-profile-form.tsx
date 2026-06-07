@@ -72,7 +72,6 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
     
     resolver: zodResolver(updateDoctorProfileSchema),
     defaultValues: {
-      degree: '',
       position: [],
       introduction: '',
       memberships: [],
@@ -91,7 +90,6 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
   useEffect(() => {
     if (doctor) {
       form.reset({
-        degree: doctor.degree || '',
         position: doctor.position || [],
         introduction: doctor.introduction || '',
         memberships: doctor.memberships || [],
