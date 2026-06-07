@@ -1,5 +1,5 @@
 import { useSearch } from '@tanstack/react-router'
-import { Info } from 'lucide-react'
+// import { Info } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -9,11 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from '@/components/ui/popover'
 import { AuthLayout } from '../auth-layout'
 import { UserAuthForm } from './components/user-auth-form'
 
@@ -39,7 +39,7 @@ export function SignIn() {
                 Client Portal
               </a>
             </Button>
-            <Popover>
+            {/* <Popover>
               <PopoverTrigger asChild>
                 <Button variant='outline' size='sm'>
                   <Info className='mr-2 h-4 w-4' />
@@ -81,7 +81,7 @@ export function SignIn() {
                   </div>
                 </div>
               </PopoverContent>
-            </Popover>
+            </Popover> */}
           </div>
         </CardHeader>
         <CardContent>
