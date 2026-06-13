@@ -231,8 +231,10 @@ function OfficeHoursContent() {
             <TabsContent value='special-shifts' className='mt-0'>
               <SpecialShiftsTable
                 data={specialShiftsData || []}
+                search={search}
                 navigate={navigate}
                 isLoading={isLoadingSpecialShifts}
+                hideToolbar={true}
               />
             </TabsContent>
           </Tabs>

@@ -13,6 +13,7 @@ export const DAYS_OF_WEEK = [
   { value: 4, label: 'Thursday', short: 'Thu' },
   { value: 5, label: 'Friday', short: 'Fri' },
   { value: 6, label: 'Saturday', short: 'Sat' },
+  { value: 7, label: 'Sunday', short: 'Sun' },
 ] as const
 
 export function getDayLabel(dayOfWeek: number): string {

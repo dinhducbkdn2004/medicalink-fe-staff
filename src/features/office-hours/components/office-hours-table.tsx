@@ -53,15 +53,19 @@ export function OfficeHoursTable({
     return actions
   }
 
+  const pageIndex = Number(search.page) || 1
+  const pageSize = Number(search.limit) || 10
+  const paginatedData = data.slice((pageIndex - 1) * pageSize, pageIndex * pageSize)
+  const pageCount = Math.ceil(data.length / pageSize)
+
   return (
     <DataTable
-      
-      data={data}
+      data={paginatedData}
       columns={columns}
       search={search}
       navigate={navigate}
       
-      pageCount={1} 
+      pageCount={pageCount} 
       isLoading={isLoading}
       entityName='office hour'
       
