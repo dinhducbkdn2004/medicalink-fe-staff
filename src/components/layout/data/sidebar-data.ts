@@ -103,7 +103,7 @@ export const navGroups: NavGroupWithPermission[] = [
         url: '/office-hours',
         icon: Clock,
 
-        permission: { resource: 'office-hours', action: 'read' },
+        permission: { resource: 'office-hours', action: 'manage' },
       },
       {
         title: 'Holidays',
@@ -116,6 +116,16 @@ export const navGroups: NavGroupWithPermission[] = [
   {
     title: 'Operations',
     items: [
+      {
+        title: 'My Schedule',
+        url: '/my-schedule',
+        icon: Clock,
+        permission: {
+          resource: 'schedules',
+          action: 'read',
+          roleRequired: ['DOCTOR'],
+        },
+      },
       {
         title: 'Appointments',
         url: '/appointments',

@@ -54,11 +54,8 @@ function OfficeHoursContent() {
 
   const doctors = doctorsData?.data || []
 
-  const { user } = useAuth()
-  const isDoctor = user?.role === 'DOCTOR'
-
   const queryParams = {
-    doctorId: isDoctor ? user?.id : search.doctorId,
+    doctorId: search.doctorId,
     workLocationId: 'cm0hq6rxg000008mf3x0c6w4b', // Default for single-location
   }
 

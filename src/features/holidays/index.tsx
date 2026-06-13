@@ -104,7 +104,7 @@ function HolidaysContent() {
 
 export function Holidays() {
   return (
-    <RequirePermission resource='office-hours' action='manage'>
+    <RequirePermission resource='office-hours' action='read'>
       <HolidaysContent />
     </RequirePermission>
   )

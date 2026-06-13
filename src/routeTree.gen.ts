@@ -36,6 +36,7 @@ import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedQuestionsIndexRouteImport } from './routes/_authenticated/questions/index'
 import { Route as AuthenticatedPatientsIndexRouteImport } from './routes/_authenticated/patients.index'
 import { Route as AuthenticatedOfficeHoursIndexRouteImport } from './routes/_authenticated/office-hours/index'
+import { Route as AuthenticatedMyScheduleIndexRouteImport } from './routes/_authenticated/my-schedule/index'
 import { Route as AuthenticatedHolidaysIndexRouteImport } from './routes/_authenticated/holidays/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedGroupManagerIndexRouteImport } from './routes/_authenticated/group-manager/index'
@@ -212,6 +213,12 @@ const AuthenticatedOfficeHoursIndexRoute =
   AuthenticatedOfficeHoursIndexRouteImport.update({
     id: '/office-hours/',
     path: '/office-hours/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMyScheduleIndexRoute =
+  AuthenticatedMyScheduleIndexRouteImport.update({
+    id: '/my-schedule/',
+    path: '/my-schedule/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedHolidaysIndexRoute =
@@ -437,6 +444,7 @@ export interface FileRoutesByFullPath {
   '/group-manager': typeof AuthenticatedGroupManagerIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/holidays': typeof AuthenticatedHolidaysIndexRoute
+  '/my-schedule': typeof AuthenticatedMyScheduleIndexRoute
   '/office-hours': typeof AuthenticatedOfficeHoursIndexRoute
   '/patients': typeof AuthenticatedPatientsIndexRoute
   '/questions': typeof AuthenticatedQuestionsIndexRoute
@@ -493,6 +501,7 @@ export interface FileRoutesByTo {
   '/group-manager': typeof AuthenticatedGroupManagerIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/holidays': typeof AuthenticatedHolidaysIndexRoute
+  '/my-schedule': typeof AuthenticatedMyScheduleIndexRoute
   '/office-hours': typeof AuthenticatedOfficeHoursIndexRoute
   '/patients': typeof AuthenticatedPatientsIndexRoute
   '/questions': typeof AuthenticatedQuestionsIndexRoute
@@ -554,6 +563,7 @@ export interface FileRoutesById {
   '/_authenticated/group-manager/': typeof AuthenticatedGroupManagerIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/holidays/': typeof AuthenticatedHolidaysIndexRoute
+  '/_authenticated/my-schedule/': typeof AuthenticatedMyScheduleIndexRoute
   '/_authenticated/office-hours/': typeof AuthenticatedOfficeHoursIndexRoute
   '/_authenticated/patients/': typeof AuthenticatedPatientsIndexRoute
   '/_authenticated/questions/': typeof AuthenticatedQuestionsIndexRoute
@@ -615,6 +625,7 @@ export interface FileRouteTypes {
     | '/group-manager'
     | '/help-center'
     | '/holidays'
+    | '/my-schedule'
     | '/office-hours'
     | '/patients'
     | '/questions'
@@ -671,6 +682,7 @@ export interface FileRouteTypes {
     | '/group-manager'
     | '/help-center'
     | '/holidays'
+    | '/my-schedule'
     | '/office-hours'
     | '/patients'
     | '/questions'
@@ -731,6 +743,7 @@ export interface FileRouteTypes {
     | '/_authenticated/group-manager/'
     | '/_authenticated/help-center/'
     | '/_authenticated/holidays/'
+    | '/_authenticated/my-schedule/'
     | '/_authenticated/office-hours/'
     | '/_authenticated/patients/'
     | '/_authenticated/questions/'
@@ -955,6 +968,13 @@ declare module '@tanstack/react-router' {
       path: '/office-hours'
       fullPath: '/office-hours'
       preLoaderRoute: typeof AuthenticatedOfficeHoursIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/my-schedule/': {
+      id: '/_authenticated/my-schedule/'
+      path: '/my-schedule'
+      fullPath: '/my-schedule'
+      preLoaderRoute: typeof AuthenticatedMyScheduleIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/holidays/': {
@@ -1277,6 +1297,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedGroupManagerIndexRoute: typeof AuthenticatedGroupManagerIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedHolidaysIndexRoute: typeof AuthenticatedHolidaysIndexRoute
+  AuthenticatedMyScheduleIndexRoute: typeof AuthenticatedMyScheduleIndexRoute
   AuthenticatedOfficeHoursIndexRoute: typeof AuthenticatedOfficeHoursIndexRoute
   AuthenticatedPatientsIndexRoute: typeof AuthenticatedPatientsIndexRoute
   AuthenticatedQuestionsIndexRoute: typeof AuthenticatedQuestionsIndexRoute
@@ -1317,6 +1338,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedGroupManagerIndexRoute: AuthenticatedGroupManagerIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedHolidaysIndexRoute: AuthenticatedHolidaysIndexRoute,
+  AuthenticatedMyScheduleIndexRoute: AuthenticatedMyScheduleIndexRoute,
   AuthenticatedOfficeHoursIndexRoute: AuthenticatedOfficeHoursIndexRoute,
   AuthenticatedPatientsIndexRoute: AuthenticatedPatientsIndexRoute,
   AuthenticatedQuestionsIndexRoute: AuthenticatedQuestionsIndexRoute,
