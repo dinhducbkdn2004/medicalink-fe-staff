@@ -4,22 +4,17 @@ import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { getDayLabel } from '@/features/office-hours/data/schema'
-import type { OfficeHour } from '@/features/office-hours/data/schema'
-import type { SpecialShift } from '@/features/special-shifts/data/schema'
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
+import { format } from 'date-fns'
 
-dayjs.extend(utc)
-
-export type ScheduleItem = {
+export type ComputedScheduleItem = {
   id: string
-  dayOfWeek?: number
-  date?: string
+  date: Date
+  dayOfWeek: number
   startTime: string
   endTime: string
-  type: 'regular-global' | 'regular-doctor' | 'override'
+  type: 'global' | 'regular-doctor' | 'override' | 'none'
+  status: string
   reason?: string
-  status?: string
 }
 
 function formatTime(timeString: string): string {
@@ -36,23 +31,20 @@ function formatTime(timeString: string): string {
   }
 }
 
-export const myScheduleColumns: ColumnDef<ScheduleItem>[] = [
+export const myScheduleColumns: ColumnDef<ComputedScheduleItem>[] = [
   {
-    id: 'dateOrDay',
+    id: 'date',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Day / Date' />
+      <DataTableColumnHeader column={column} title='Date' />
     ),
     cell: ({ row }) => {
       const item = row.original
-      const isOverride = item.type === 'override'
       
       return (
         <div className='flex items-center gap-2'>
           <Calendar className='text-muted-foreground size-4' />
           <span className='font-medium'>
-            {isOverride && item.date 
-              ? dayjs(item.date).format('MMM DD, YYYY') 
-              : getDayLabel(item.dayOfWeek ?? -1)}
+            {format(item.date, 'EEEE, MMM dd')}
           </span>
         </div>
       )
@@ -65,8 +57,18 @@ export const myScheduleColumns: ColumnDef<ScheduleItem>[] = [
     id: 'timeRange',
     header: 'Time Range',
     cell: ({ row }) => {
-      const startTime = formatTime(row.original.startTime)
-      const endTime = formatTime(row.original.endTime)
+      const item = row.original
+      
+      if (item.status === 'OFF') {
+        return (
+          <Badge variant='outline' className='text-red-500 border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/30'>
+            Off
+          </Badge>
+        )
+      }
+
+      const startTime = formatTime(item.startTime)
+      const endTime = formatTime(item.endTime)
       return (
         <div className='flex items-center gap-2'>
           <Clock className='text-muted-foreground size-4' />
@@ -88,11 +90,15 @@ export const myScheduleColumns: ColumnDef<ScheduleItem>[] = [
       let typeLabel: string
       let badgeClass: string
 
+      if (item.type === 'none') {
+        return <span className="text-muted-foreground text-sm">-</span>
+      }
+
       if (item.type === 'override') {
         typeLabel = 'Special Shift'
         badgeClass = 'border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-800 dark:bg-purple-950 dark:text-purple-300'
       } else if (item.type === 'regular-doctor') {
-        typeLabel = 'My Regular Hours'
+        typeLabel = 'Doctor Specific Hours'
         badgeClass = 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300'
       } else {
         typeLabel = 'Clinic Global Hours'

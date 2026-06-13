@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
-import { Clock, Calendar as CalendarIcon, Info } from 'lucide-react'
+import { Info, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react'
+import { startOfWeek, endOfWeek, addWeeks, subWeeks, format } from 'date-fns'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
@@ -9,9 +10,7 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { useAuth } from '@/hooks/use-auth'
 import { RequirePermission } from '@/components/auth/require-permission'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Button } from '@/components/ui/button'
 
 import { useOfficeHours } from '@/features/office-hours/data/use-office-hours'
 import { useSpecialShifts } from '@/features/special-shifts/data/use-special-shifts'
@@ -24,17 +23,51 @@ function MyScheduleContent() {
   const navigate = route.useNavigate()
   const { user } = useAuth()
   
-  const [activeTab, setActiveTab] = useState('all')
+  // Use search params for date range, fallback to current week
+  const startDateStr = search.startDate as string | undefined
+  
+  const currentWeekStart = useMemo(() => {
+    if (startDateStr) {
+      return new Date(startDateStr)
+    }
+    return startOfWeek(new Date(), { weekStartsOn: 1 }) // Monday as first day
+  }, [startDateStr])
+
+  const currentWeekEnd = useMemo(() => endOfWeek(currentWeekStart, { weekStartsOn: 1 }), [currentWeekStart])
+
+  const handlePrevWeek = () => {
+    const newStart = subWeeks(currentWeekStart, 1)
+    navigate({
+      search: {
+        ...search,
+        startDate: format(newStart, 'yyyy-MM-dd'),
+        endDate: format(endOfWeek(newStart, { weekStartsOn: 1 }), 'yyyy-MM-dd')
+      }
+    })
+  }
+
+  const handleNextWeek = () => {
+    const newStart = addWeeks(currentWeekStart, 1)
+    navigate({
+      search: {
+        ...search,
+        startDate: format(newStart, 'yyyy-MM-dd'),
+        endDate: format(endOfWeek(newStart, { weekStartsOn: 1 }), 'yyyy-MM-dd')
+      }
+    })
+  }
 
   const queryParams = {
     doctorId: user?.id,
     workLocationId: 'cm0hq6rxg000008mf3x0c6w4b', // Default location
   }
 
-  const { data: officeHoursData, isLoading: isLoadingOH } = useOfficeHours(queryParams)
+  const { data: officeHoursData, isLoading: isLoadingOH } = useOfficeHours({
+    doctorId: user?.id,
+    workLocationId: 'cm0hq6rxg000008mf3x0c6w4b',
+  })
   const { data: specialShiftsData, isLoading: isLoadingSS } = useSpecialShifts(queryParams)
 
-  // Process data to merge and calculate final schedule
   const globalHours = officeHoursData?.global || []
   const doctorHours = officeHoursData?.doctorSpecific || []
   const specialShifts = specialShiftsData || []
@@ -68,52 +101,35 @@ function MyScheduleContent() {
           </AlertDescription>
         </Alert>
 
-        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className='space-y-4'>
-            <div className='flex items-center justify-between'>
-              <TabsList>
-                <TabsTrigger value='all'>All Shifts</TabsTrigger>
-                <TabsTrigger value='regular'>Regular Hours</TabsTrigger>
-                <TabsTrigger value='special'>Special Shifts</TabsTrigger>
-              </TabsList>
+        <div className='flex items-center justify-between mb-4'>
+          <div className='flex items-center space-x-4'>
+            <Button variant='outline' size='icon' onClick={handlePrevWeek}>
+              <ChevronLeft className='h-4 w-4' />
+            </Button>
+            <div className='flex items-center font-medium'>
+              <CalendarIcon className='mr-2 h-4 w-4 text-muted-foreground' />
+              {format(currentWeekStart, 'MMM dd, yyyy')} - {format(currentWeekEnd, 'MMM dd, yyyy')}
             </div>
+            <Button variant='outline' size='icon' onClick={handleNextWeek}>
+              <ChevronRight className='h-4 w-4' />
+            </Button>
+          </div>
+          <Button variant='outline' onClick={() => navigate({ search: { ...search, startDate: undefined, endDate: undefined } })}>
+            Today
+          </Button>
+        </div>
 
-            <TabsContent value='all' className='mt-0'>
-              <MyScheduleTable 
-                type="all"
-                globalHours={globalHours} 
-                doctorHours={doctorHours} 
-                specialShifts={specialShifts}
-                search={search}
-                navigate={navigate}
-                isLoading={isLoading}
-              />
-            </TabsContent>
-
-            <TabsContent value='regular' className='mt-0'>
-              <MyScheduleTable 
-                type="regular"
-                globalHours={globalHours} 
-                doctorHours={doctorHours} 
-                specialShifts={specialShifts}
-                search={search}
-                navigate={navigate}
-                isLoading={isLoading}
-              />
-            </TabsContent>
-
-            <TabsContent value='special' className='mt-0'>
-              <MyScheduleTable 
-                type="special"
-                globalHours={globalHours} 
-                doctorHours={doctorHours} 
-                specialShifts={specialShifts}
-                search={search}
-                navigate={navigate}
-                isLoading={isLoading}
-              />
-            </TabsContent>
-          </Tabs>
+        <div className='-mx-4 flex-1 overflow-auto px-4 py-1'>
+          <MyScheduleTable 
+            startDate={currentWeekStart}
+            endDate={currentWeekEnd}
+            globalHours={globalHours} 
+            doctorHours={doctorHours} 
+            specialShifts={specialShifts}
+            search={search}
+            navigate={navigate}
+            isLoading={isLoading}
+          />
         </div>
       </Main>
     </>
