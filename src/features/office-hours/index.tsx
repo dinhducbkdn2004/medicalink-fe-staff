@@ -19,7 +19,6 @@ import { OfficeHoursPrimaryButtons } from './components/office-hours-primary-but
 import { OfficeHoursProvider } from './components/office-hours-provider'
 import { OfficeHoursTable } from './components/office-hours-table'
 import { useOfficeHours } from './data/use-office-hours'
-import { useAuth } from '@/hooks/use-auth'
 import { SearchableSelect } from '@/components/ui/searchable-select'
 
 import {
@@ -50,7 +49,7 @@ function OfficeHoursContent() {
   const [activeTab, setActiveTab] = useState('office-hours')
 
 
-  const { data: doctorsData } = useDoctors({ limit: 1000 })
+  const { data: doctorsData } = useDoctors({ limit: 200 })
 
   const doctors = doctorsData?.data || []
 

@@ -1,4 +1,4 @@
-import { ColumnDef } from '@tanstack/react-table'
+import { type ColumnDef } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
 import { type SpecialShift } from '../data/schema'
 import { format } from 'date-fns'

@@ -56,7 +56,7 @@ export function OfficeHoursActionDialog() {
     queryKey: ['doctors', 'active'],
     queryFn: () =>
       doctorService.getDoctors({
-        limit: 1000,
+        limit: 200,
         sortBy: 'createdAt',
         sortOrder: 'asc',
       }),
