@@ -47,7 +47,7 @@ export function SpecialShiftsActionDialog({
     queryKey: ['doctors', 'active'],
     queryFn: () =>
       doctorService.getDoctors({
-        limit: 1000,
+        limit: 200,
         sortBy: 'createdAt',
         sortOrder: 'asc',
       }),
@@ -95,7 +95,7 @@ export function SpecialShiftsActionDialog({
         values.doctorIds.map(async (doctorId) => {
           const requestData = {
             doctorId,
-            workLocationId: null,
+            workLocationId: 'cm0hq6rxg000008mf3x0c6w4b',
             effectiveDate: values.effectiveDate,
             startTime: values.startTime,
             endTime: values.endTime,

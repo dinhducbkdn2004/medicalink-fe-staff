@@ -116,7 +116,7 @@ export function OfficeHoursActionDialog() {
         if (values.isGlobal) {
           const requestData = {
             doctorId: null,
-            workLocationId: null,
+            workLocationId: 'cm0hq6rxg000008mf3x0c6w4b',
             dayOfWeek: values.dayOfWeek!,
             startTime: values.startTime,
             endTime: values.endTime,
@@ -128,7 +128,7 @@ export function OfficeHoursActionDialog() {
             values.doctorIds.map(async (doctorId) => {
               const requestData = {
                 doctorId,
-                workLocationId: null,
+                workLocationId: 'cm0hq6rxg000008mf3x0c6w4b',
                 dayOfWeek: values.dayOfWeek!,
                 startTime: values.startTime,
                 endTime: values.endTime,
@@ -161,7 +161,7 @@ export function OfficeHoursActionDialog() {
           values.doctorIds.map(async (doctorId) => {
             const requestData = {
               doctorId,
-              workLocationId: null,
+              workLocationId: 'cm0hq6rxg000008mf3x0c6w4b',
               effectiveDate: values.effectiveDate!,
               startTime: values.startTime,
               endTime: values.endTime,
