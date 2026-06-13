@@ -111,7 +111,7 @@ function OfficeHoursContent() {
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Schedule Management (Resolution Engine)
+              Schedule Management
             </h2>
             <p className='text-muted-foreground'>
               Manage Layer 1 (Regular Hours) and Layer 4 (Special Shifts) overrides for doctors and locations.

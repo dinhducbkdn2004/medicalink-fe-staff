@@ -121,6 +121,7 @@ export function MultiSelect({
                 return (
                   <CommandItem
                     key={option.value}
+                    value={`${option.label} ${option.subtitle || ''} ${option.value}`}
                     onSelect={() => {
                       onChange(
                         isSelected

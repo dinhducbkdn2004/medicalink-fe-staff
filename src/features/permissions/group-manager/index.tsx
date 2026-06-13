@@ -46,8 +46,7 @@ export function GroupManager() {
                 </h2>
               </div>
               <p className='text-muted-foreground'>
-                Manage RBAC groups: assign permissions by module tree (aligned
-                with the API catalog), then add users to groups for inheritance.
+                Manage groups: assign permissions by module tree.
               </p>
             </div>
             <Can I='groups:create'>

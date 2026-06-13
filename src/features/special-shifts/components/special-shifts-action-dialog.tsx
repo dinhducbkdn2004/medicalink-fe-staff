@@ -47,7 +47,7 @@ export function SpecialShiftsActionDialog({
     queryKey: ['doctors', 'active'],
     queryFn: () =>
       doctorService.getDoctors({
-        limit: 100,
+        limit: 1000,
         sortBy: 'createdAt',
         sortOrder: 'asc',
       }),
