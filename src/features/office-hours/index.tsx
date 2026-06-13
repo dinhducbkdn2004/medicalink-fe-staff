@@ -50,7 +50,7 @@ function OfficeHoursContent() {
   const [activeTab, setActiveTab] = useState('office-hours')
 
 
-  const { data: doctorsData } = useDoctors({ limit: 100 })
+  const { data: doctorsData } = useDoctors({ limit: 1000 })
 
   const doctors = doctorsData?.data || []
 

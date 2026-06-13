@@ -3,6 +3,20 @@ import { Badge } from '@/components/ui/badge'
 import { type SpecialShift } from '../data/schema'
 import { format } from 'date-fns'
 
+function formatTime(timeString: string): string {
+  try {
+    if (timeString.includes('T')) {
+      const date = new Date(timeString)
+      const hours = date.getUTCHours().toString().padStart(2, '0')
+      const minutes = date.getUTCMinutes().toString().padStart(2, '0')
+      return `${hours}:${minutes}`
+    }
+    return timeString
+  } catch {
+    return timeString
+  }
+}
+
 export const specialShiftsColumns: ColumnDef<SpecialShift>[] = [
   {
     accessorKey: 'doctor',
@@ -28,10 +42,11 @@ export const specialShiftsColumns: ColumnDef<SpecialShift>[] = [
     accessorKey: 'time',
     header: 'Time',
     cell: ({ row }) => {
-      const { startTime, endTime } = row.original
+      const startTime = formatTime(row.original.startTime)
+      const endTime = formatTime(row.original.endTime)
       return (
-        <span className="text-muted-foreground text-sm">
-          {startTime.slice(0, 5)} - {endTime.slice(0, 5)}
+        <span className="text-muted-foreground text-sm font-mono">
+          {startTime} - {endTime}
         </span>
       )
     },
