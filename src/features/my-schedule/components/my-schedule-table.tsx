@@ -34,8 +34,9 @@ export function MyScheduleTable({
 
     while (isBefore(currentDate, endDate) || isSameDay(currentDate, endDate)) {
       const dateStr = format(currentDate, 'yyyy-MM-dd')
-      // date-fns getDay: 0=Sunday, 1=Monday. In our DB: 0=Sunday, 1=Monday... 6=Saturday
-      const dayOfWeek = getDay(currentDate) 
+      // date-fns getDay: 0=Sunday, 1=Monday. In our DB: 1=Monday... 7=Sunday
+      let dayOfWeek = getDay(currentDate)
+      if (dayOfWeek === 0) dayOfWeek = 7
 
       // 1. Check Special Shifts for this exact date
       const dateSpecialShifts = specialShifts.filter((ss) => {
