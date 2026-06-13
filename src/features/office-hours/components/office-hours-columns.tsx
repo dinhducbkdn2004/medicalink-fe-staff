@@ -74,27 +74,16 @@ export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
       let typeLabel: string
       let badgeClass: string
 
-      
-      if (officeHour.doctorId && officeHour.workLocationId) {
-        _type = 'doctorInLocation'
-        typeLabel = 'Doctor + Location'
-        badgeClass =
-          'border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950 dark:text-green-300'
-      } else if (officeHour.doctorId && !officeHour.workLocationId) {
-        _type = 'doctor'
-        typeLabel = 'Doctor Specific Hours'
-        badgeClass =
-          'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300'
-      } else if (!officeHour.doctorId && officeHour.workLocationId) {
-        _type = 'workLocation'
-        typeLabel = 'Location Specific Hours'
-        badgeClass =
-          'border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-300'
-      } else {
+      if (officeHour.isGlobal) {
         _type = 'global'
         typeLabel = 'Clinic Global Hours'
         badgeClass =
           'border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300'
+      } else {
+        _type = 'doctor'
+        typeLabel = 'Doctor Specific Hours'
+        badgeClass =
+          'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300'
       }
 
       return (

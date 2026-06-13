@@ -111,10 +111,10 @@ function OfficeHoursContent() {
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Office Hours Management
+              Schedule Management (Resolution Engine)
             </h2>
             <p className='text-muted-foreground'>
-              Manage working hours and schedules for doctors and locations.
+              Manage Layer 1 (Regular Hours) and Layer 4 (Special Shifts) overrides for doctors and locations.
             </p>
           </div>
           {!isPermissionError && (
@@ -163,8 +163,8 @@ function OfficeHoursContent() {
         ) : (
           <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
             <TabsList className='mb-4'>
-              <TabsTrigger value='office-hours'>Regular Office Hours</TabsTrigger>
-              <TabsTrigger value='special-shifts'>Special Shifts (Overrides)</TabsTrigger>
+              <TabsTrigger value='office-hours'>Layer 1: Regular Hours</TabsTrigger>
+              <TabsTrigger value='special-shifts'>Layer 4: Special Shifts (Overrides)</TabsTrigger>
             </TabsList>
 
             <TabsContent value='office-hours' className='mt-0'>
@@ -177,13 +177,13 @@ function OfficeHoursContent() {
                 </Badge>
               </TabsTrigger>
               <TabsTrigger value='clinic'>
-                Clinic Hours
+                Clinic Global Hours
                 <Badge variant='secondary' className='ml-2'>
                   {groupedData.clinic.length}
                 </Badge>
               </TabsTrigger>
               <TabsTrigger value='doctor'>
-                Doctor Hours
+                Doctor Specific Hours
                 <Badge variant='secondary' className='ml-2'>
                   {groupedData.doctor.length}
                 </Badge>
