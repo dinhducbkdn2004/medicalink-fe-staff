@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { format, parseISO } from 'date-fns'
+import { formatShiftTime } from '@/lib/utils'
 import { CancelAppointmentDialog } from '@/calendar/components/dialogs/cancel-appointment-dialog'
 import { CompleteAppointmentDialog } from '@/calendar/components/dialogs/complete-appointment-dialog'
 import { ConfirmAppointmentDialog } from '@/calendar/components/dialogs/confirm-appointment-dialog'
@@ -203,15 +204,9 @@ export function EventDetailsDialog({
                     <div className='space-y-1'>
                       <p className='text-sm font-medium'>Date & Time</p>
                       <p className='text-sm'>
-                        {format(serviceDate, 'EEEE, MMMM d, yyyy')}
-                      </p>
-                      <p className='text-sm'>
-                        {format(
-                          parseISO(appointment.event.timeStart),
-                          'h:mm a'
-                        )}{' '}
+                        {formatShiftTime(appointment.event.timeStart)}{' '}
                         -{' '}
-                        {format(parseISO(appointment.event.timeEnd), 'h:mm a')}
+                        {formatShiftTime(appointment.event.timeEnd)}
                       </p>
                     </div>
                   </div>
@@ -333,7 +328,7 @@ export function EventDetailsDialog({
                   <p>
                     {format(
                       parseISO(appointment.createdAt),
-                      'MMM d, yyyy h:mm a'
+                      'MMM d, yyyy HH:mm'
                     )}
                   </p>
                 </div>
@@ -342,7 +337,7 @@ export function EventDetailsDialog({
                   <p>
                     {format(
                       parseISO(appointment.updatedAt),
-                      'MMM d, yyyy h:mm a'
+                      'MMM d, yyyy HH:mm'
                     )}
                   </p>
                 </div>
@@ -352,7 +347,7 @@ export function EventDetailsDialog({
                     <p>
                       {format(
                         parseISO(appointment.completedAt),
-                        'MMM d, yyyy h:mm a'
+                        'MMM d, yyyy HH:mm'
                       )}
                     </p>
                   </div>
@@ -363,7 +358,7 @@ export function EventDetailsDialog({
                     <p>
                       {format(
                         parseISO(appointment.cancelledAt),
-                        'MMM d, yyyy h:mm a'
+                        'MMM d, yyyy HH:mm'
                       )}
                     </p>
                   </div>
@@ -441,3 +436,4 @@ export function EventDetailsDialog({
     </Sheet>
   )
 }
+

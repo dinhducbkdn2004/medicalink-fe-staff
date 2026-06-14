@@ -1,4 +1,5 @@
 import { format, addDays, subMonths, addMonths } from 'date-fns'
+import { formatShiftTime } from '@/lib/utils'
 import { ConfirmAppointmentDialog } from '@/calendar/components/dialogs/confirm-appointment-dialog'
 import { EventDetailsDialog } from '@/calendar/components/dialogs/event-details-dialog'
 import { Calendar, Clock, User, FileText } from 'lucide-react'
@@ -134,9 +135,9 @@ function PendingAppointmentsCard() {
                             <div className='flex items-center gap-1.5'>
                               <Clock className='h-3.5 w-3.5' />
                               <span>
-                                {format(new Date(apt.event.timeStart), 'HH:mm')}
+                                {formatShiftTime(apt.event.timeStart)}
                                 {apt.event.timeEnd &&
-                                  ` - ${format(new Date(apt.event.timeEnd), 'HH:mm')}`}
+                                  ` - ${formatShiftTime(apt.event.timeEnd)}`}
                               </span>
                             </div>
                           )}
@@ -331,9 +332,9 @@ function UpcomingAppointmentsCard() {
                             <div className='flex items-center gap-1.5'>
                               <Clock className='h-3.5 w-3.5' />
                               <span>
-                                {format(new Date(apt.event.timeStart), 'HH:mm')}
+                                {formatShiftTime(apt.event.timeStart)}
                                 {apt.event.timeEnd &&
-                                  ` - ${format(new Date(apt.event.timeEnd), 'HH:mm')}`}
+                                  ` - ${formatShiftTime(apt.event.timeEnd)}`}
                               </span>
                             </div>
                           )}

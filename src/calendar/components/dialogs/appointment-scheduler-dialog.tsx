@@ -159,7 +159,7 @@ export function AppointmentSchedulerDialog({
               const isSelected = selectedDate && isSameDay(date, selectedDate)
               const isPast = isBefore(date, startOfDay(new Date()))
               
-              const isDisabled = !isAvailable || (isPast && !allowPast)
+              const isDisabled = !isAvailable || isPast
 
               return (
                 <button
@@ -216,6 +216,14 @@ export function AppointmentSchedulerDialog({
                   <>
                     <div className='grid max-h-[160px] grid-cols-3 gap-2 overflow-y-auto rounded-md border p-3'>
                       {slots.map((slot, index) => {
+                        const isToday = selectedDate && isSameDay(selectedDate, new Date())
+                        const currentTime = new Date()
+                        const [startHour, startMinute] = slot.timeStart.split(':').map(Number)
+                        const isPastSlot = isToday && (startHour < currentTime.getHours() || (startHour === currentTime.getHours() && startMinute < currentTime.getMinutes()))
+                        const isDisabledSlot = isPastSlot
+                        
+                         // Or render as disabled
+
                         const isSelected =
                           selectedSlot?.timeStart === slot.timeStart &&
                           selectedSlot?.timeEnd === slot.timeEnd
@@ -225,7 +233,9 @@ export function AppointmentSchedulerDialog({
                             key={`${slot.timeStart}-${slot.timeEnd}-${index}`}
                             type='button'
                             onClick={() => handleSlotClick(slot)}
+                            disabled={isDisabledSlot}
                             className={cn(
+                              isDisabledSlot && 'opacity-50 cursor-not-allowed',
                               'rounded-md border p-2 text-xs transition-all',
                               isSelected &&
                                 'border-primary bg-primary text-primary-foreground',
@@ -270,3 +280,4 @@ export function AppointmentSchedulerDialog({
     </Dialog>
   )
 }
+

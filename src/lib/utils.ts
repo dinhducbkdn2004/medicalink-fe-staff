@@ -41,3 +41,9 @@ export function getPageNumbers(currentPage: number, totalPages: number) {
 
   return rangeWithDots
 }
+
+export function formatShiftTime(isoString: string): string {
+  if (!isoString) return ''
+  if (isoString.includes('T')) return isoString.substring(11, 16)
+  return isoString
+}

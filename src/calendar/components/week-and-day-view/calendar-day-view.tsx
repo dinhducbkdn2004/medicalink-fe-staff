@@ -277,8 +277,8 @@ export function CalendarDayView({
                       <div className='text-muted-foreground flex items-center gap-1.5'>
                         <Clock className='size-3.5 shrink-0' />
                         <span className='text-xs'>
-                          {format(parseISO(event.startDate), 'h:mm a')} -{' '}
-                          {format(parseISO(event.endDate), 'h:mm a')}
+                          {format(parseISO(event.startDate), 'HH:mm')} -{' '}
+                          {format(parseISO(event.endDate), 'HH:mm')}
                         </span>
                       </div>
                     </div>
