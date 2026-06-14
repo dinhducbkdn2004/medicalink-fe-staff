@@ -30,6 +30,17 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet'
 
+interface IAITriageData {
+  is_emergency?: boolean;
+  triage_level?: string;
+  emergency_reason?: string;
+  extracted_symptoms?: string[];
+  negated_symptoms?: string[];
+  note?: string;
+  severity?: string;
+  duration?: string;
+}
+
 interface IProps {
   appointment: IAppointment
   children: React.ReactNode
@@ -65,6 +76,8 @@ export function EventDetailsDialog({
   if (!appointment?.event) {
     return null
   }
+
+  const aiData = aiData as unknown as IAITriageData | undefined
 
   const hasDoctorAssigned = appointment.doctor !== null
   const canConfirm =
@@ -254,7 +267,7 @@ export function EventDetailsDialog({
                 </div>
               )}
 
-              {appointment.aiTriageData && (
+              {aiData && (
                 <div className='border-t pt-6'>
                   <div className='flex items-start gap-3'>
                     <Brain className='text-muted-foreground mt-1 size-5 shrink-0' />
@@ -263,7 +276,7 @@ export function EventDetailsDialog({
                         <p className='text-sm font-medium'>
                           AI Clinical Summary
                         </p>
-                        {appointment.aiTriageData.is_emergency && (
+                        {aiData.is_emergency && (
                           <Badge
                             variant='destructive'
                             className='h-5 px-1.5 text-[10px]'
@@ -272,34 +285,34 @@ export function EventDetailsDialog({
                             Emergency Flag
                           </Badge>
                         )}
-                        {appointment.aiTriageData.triage_level &&
-                          !appointment.aiTriageData.is_emergency && (
+                        {aiData.triage_level &&
+                          !aiData.is_emergency && (
                             <Badge
                               variant='outline'
                               className='h-5 px-1.5 text-[10px] uppercase'
                             >
-                              {appointment.aiTriageData.triage_level}
+                              {aiData.triage_level}
                             </Badge>
                           )}
                       </div>
 
                       <div className='bg-muted/50 rounded-lg border p-3 text-sm'>
-                        {appointment.aiTriageData.emergency_reason && (
+                        {aiData.emergency_reason && (
                           <div className='text-destructive mb-2 text-xs font-medium'>
                             Emergency Reason:{' '}
-                            {appointment.aiTriageData.emergency_reason}
+                            {aiData.emergency_reason}
                           </div>
                         )}
 
                         <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-                          {appointment.aiTriageData.extracted_symptoms?.length >
+                          {aiData.extracted_symptoms?.length >
                             0 && (
                             <div>
                               <p className='text-muted-foreground mb-1 text-xs font-medium'>
                                 Extracted Symptoms
                               </p>
                               <ul className='list-inside list-disc space-y-0.5 text-xs'>
-                                {appointment.aiTriageData.extracted_symptoms.map(
+                                {aiData.extracted_symptoms.map(
                                   (s: string, i: number) => (
                                     <li key={i}>{s}</li>
                                   )
@@ -308,14 +321,14 @@ export function EventDetailsDialog({
                             </div>
                           )}
 
-                          {appointment.aiTriageData.negated_symptoms?.length >
+                          {aiData.negated_symptoms?.length >
                             0 && (
                             <div>
                               <p className='text-muted-foreground mb-1 text-xs font-medium'>
                                 Negated Symptoms
                               </p>
                               <ul className='list-inside list-disc space-y-0.5 text-xs'>
-                                {appointment.aiTriageData.negated_symptoms.map(
+                                {aiData.negated_symptoms.map(
                                   (s: string, i: number) => (
                                     <li
                                       key={i}
@@ -330,28 +343,28 @@ export function EventDetailsDialog({
                           )}
                         </div>
 
-                        {appointment.aiTriageData.note && (
+                        {aiData.note && (
                           <div className='mt-3 border-t pt-2'>
                             <p className='text-muted-foreground mb-1 text-xs font-medium'>
                               AI Note
                             </p>
                             <p className='text-xs'>
-                              {appointment.aiTriageData.note}
+                              {aiData.note}
                             </p>
                           </div>
                         )}
 
-                        {(appointment.aiTriageData.severity ||
-                          appointment.aiTriageData.duration) && (
+                        {(aiData.severity ||
+                          aiData.duration) && (
                           <div className='text-muted-foreground mt-2 flex gap-4 text-xs'>
-                            {appointment.aiTriageData.severity && (
+                            {aiData.severity && (
                               <span>
-                                Severity: {appointment.aiTriageData.severity}
+                                Severity: {aiData.severity}
                               </span>
                             )}
-                            {appointment.aiTriageData.duration && (
+                            {aiData.duration && (
                               <span>
-                                Duration: {appointment.aiTriageData.duration}
+                                Duration: {aiData.duration}
                               </span>
                             )}
                           </div>
