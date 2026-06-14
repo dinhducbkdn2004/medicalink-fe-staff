@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useMemo, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import { Info, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react'

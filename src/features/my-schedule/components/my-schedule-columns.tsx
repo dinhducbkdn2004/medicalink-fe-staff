@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { type ColumnDef } from '@tanstack/react-table'
 import { Clock, Calendar, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'

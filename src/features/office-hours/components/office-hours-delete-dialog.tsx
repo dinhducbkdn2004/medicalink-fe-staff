@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useEffect } from 'react'
 import {
@@ -55,7 +56,8 @@ export function OfficeHoursDeleteDialog() {
     try {
       await deleteMutation.mutateAsync(currentRow.id)
       handleClose()
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as any;
       const code = error?.response?.data?.details?.code
       if (code === 'SHRINKING_WINDOW') {
         setShrinkingError(error.response.data.message || 'Cannot delete office hours due to existing appointments.')

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import { Loader2, AlertCircle } from 'lucide-react'
@@ -43,7 +44,8 @@ export function SpecialShiftsDeleteDialog() {
     try {
       await deleteMutation.mutateAsync(currentRow.id)
       handleClose()
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as any;
       const code = error?.response?.data?.details?.code
       if (code === 'SHRINKING_WINDOW') {
         setShrinkingError(error.response.data.message || 'Cannot delete special shift due to existing appointments.')

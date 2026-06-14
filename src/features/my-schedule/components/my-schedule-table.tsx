@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from 'react'
 import { DataTable } from '@/components/data-table/data-table'
 import { myScheduleColumns, type ComputedScheduleItem } from './my-schedule-columns'

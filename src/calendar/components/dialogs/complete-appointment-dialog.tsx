@@ -1,3 +1,5 @@
+import { format, parseISO } from 'date-fns'
+import { formatShiftTime } from '@/lib/utils'
 import type { IAppointment } from '@/calendar/interfaces'
 import { CheckCircle2 } from 'lucide-react'
 import { useDisclosure } from '@/hooks/use-disclosure'
@@ -73,13 +75,16 @@ export function CompleteAppointmentDialog({
             <div className='flex justify-between text-sm'>
               <span className='text-muted-foreground'>Date:</span>
               <span className='font-medium'>
-                {appointment.event.serviceDate}
+                {format(
+                  parseISO(appointment.event.serviceDate),
+                  'MMMM dd, yyyy'
+                )}
               </span>
             </div>
             <div className='flex justify-between text-sm'>
               <span className='text-muted-foreground'>Time:</span>
               <span className='font-medium'>
-                {appointment.event.timeStart} - {appointment.event.timeEnd}
+                {formatShiftTime(appointment.event.timeStart)} - {formatShiftTime(appointment.event.timeEnd)}
               </span>
             </div>
             {appointment.reason && (

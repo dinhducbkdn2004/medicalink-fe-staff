@@ -36,7 +36,7 @@ interface AppointmentSchedulerDialogProps {
   readonly selectedDate?: Date
   readonly selectedSlot?: TimeSlot
   readonly disabled?: boolean
-  readonly allowPast?: boolean
+  
 }
 
 export function AppointmentSchedulerDialog({
@@ -49,7 +49,6 @@ export function AppointmentSchedulerDialog({
   selectedDate,
   selectedSlot,
   disabled,
-  allowPast = false,
 }: AppointmentSchedulerDialogProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [currentMonth, setCurrentMonth] = useState(new Date())

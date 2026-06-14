@@ -3,14 +3,10 @@ import type { UseFormReturn } from 'react-hook-form'
 import { Briefcase } from 'lucide-react'
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Separator } from '@/components/ui/separator'
 import { ArrayInputField } from '../array-input-field'
 import type { UpdateDoctorProfileFormData } from '../../types'
 
