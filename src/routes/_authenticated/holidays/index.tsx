@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Holidays } from '@/features/holidays'
-import { SearchParams } from '@/types/common.types'
+import type { SearchParams } from '@/types/common.types'
 
 export const Route = createFileRoute('/_authenticated/holidays/')({
   component: Holidays,

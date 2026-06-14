@@ -3,6 +3,7 @@ import { DataTable } from '@/components/data-table/data-table'
 import { myScheduleColumns, type ComputedScheduleItem } from './my-schedule-columns'
 import type { OfficeHour } from '@/features/office-hours/data/schema'
 import type { SpecialShift } from '@/features/special-shifts/data/schema'
+import type { ClinicException } from '@/features/holidays/data/schema'
 import type { SearchParams } from '@/types/common.types'
 import { addDays, format, getDay, isBefore, isSameDay, parseISO } from 'date-fns'
 
@@ -12,6 +13,7 @@ interface MyScheduleTableProps {
   globalHours: OfficeHour[]
   doctorHours: OfficeHour[]
   specialShifts: SpecialShift[]
+  clinicExceptions: ClinicException[]
   search: SearchParams
   navigate: (opts: any) => void
   isLoading?: boolean
@@ -23,6 +25,7 @@ export function MyScheduleTable({
   globalHours,
   doctorHours,
   specialShifts,
+  clinicExceptions,
   search,
   navigate,
   isLoading,
@@ -53,54 +56,76 @@ export function MyScheduleTable({
             dayOfWeek,
             startTime: ss.startTime,
             endTime: ss.endTime,
-            status: ss.status,
+            status: ss.status || 'WORKING',
             type: 'override',
             reason: ss.reason,
           })
         })
       } else {
-        // 2. Check Doctor Specific Hours
-        const dateDoctorHours = doctorHours.filter((oh) => oh.dayOfWeek === dayOfWeek)
-        
-        if (dateDoctorHours.length > 0) {
-          dateDoctorHours.forEach((oh) => {
+        // Check Clinic Exceptions (Holidays)
+        const dateClinicExceptions = clinicExceptions.filter((ce) => {
+          const ceDate = ce.date ? format(parseISO(ce.date), 'yyyy-MM-dd') : null
+          return ceDate === dateStr
+        })
+
+        if (dateClinicExceptions.length > 0) {
+          // It's a holiday! Overrides normal hours
+          dateClinicExceptions.forEach((ce) => {
             computedData.push({
-              id: `doctor-${oh.id}`,
+              id: `holiday-${ce.id}`,
               date: currentDate,
               dayOfWeek,
-              startTime: oh.startTime,
-              endTime: oh.endTime,
-              status: 'WORKING',
-              type: 'regular-doctor',
+              startTime: ce.startTime || '',
+              endTime: ce.endTime || '',
+              status: 'OFF',
+              type: 'holiday',
+              reason: ce.reason || 'Clinic Holiday',
             })
           })
         } else {
-          // 3. Check Global Hours
-          const dateGlobalHours = globalHours.filter((oh) => oh.dayOfWeek === dayOfWeek)
+          // 2. Check Doctor Specific Hours
+          const dateDoctorHours = doctorHours.filter((oh) => oh.dayOfWeek === dayOfWeek)
           
-          if (dateGlobalHours.length > 0) {
-            dateGlobalHours.forEach((oh) => {
+          if (dateDoctorHours.length > 0) {
+            dateDoctorHours.forEach((oh) => {
               computedData.push({
-                id: `global-${oh.id}`,
+                id: `doctor-${oh.id}`,
                 date: currentDate,
                 dayOfWeek,
                 startTime: oh.startTime,
                 endTime: oh.endTime,
                 status: 'WORKING',
-                type: 'global',
+                type: 'regular-doctor',
               })
             })
           } else {
-            // 4. Off
-            computedData.push({
-              id: `off-${dateStr}`,
-              date: currentDate,
-              dayOfWeek,
-              startTime: '',
-              endTime: '',
-              status: 'OFF',
-              type: 'none',
-            })
+            // 3. Check Global Hours
+            const dateGlobalHours = globalHours.filter((oh) => oh.dayOfWeek === dayOfWeek)
+            
+            if (dateGlobalHours.length > 0) {
+              dateGlobalHours.forEach((oh) => {
+                computedData.push({
+                  id: `global-${oh.id}`,
+                  date: currentDate,
+                  dayOfWeek,
+                  startTime: oh.startTime,
+                  endTime: oh.endTime,
+                  status: 'WORKING',
+                  type: 'global',
+                })
+              })
+            } else {
+              // 4. Off
+              computedData.push({
+                id: `off-${dateStr}`,
+                date: currentDate,
+                dayOfWeek,
+                startTime: '',
+                endTime: '',
+                status: 'OFF',
+                type: 'none',
+              })
+            }
           }
         }
       }
@@ -109,7 +134,7 @@ export function MyScheduleTable({
     }
 
     return computedData
-  }, [startDate, endDate, globalHours, doctorHours, specialShifts])
+  }, [startDate, endDate, globalHours, doctorHours, specialShifts, clinicExceptions])
 
   // Sorting
   const sortedData = useMemo(() => {

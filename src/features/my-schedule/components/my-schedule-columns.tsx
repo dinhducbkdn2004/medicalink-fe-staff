@@ -12,7 +12,7 @@ export type ComputedScheduleItem = {
   dayOfWeek: number
   startTime: string
   endTime: string
-  type: 'global' | 'regular-doctor' | 'override' | 'none'
+  type: 'global' | 'regular-doctor' | 'override' | 'none' | 'holiday'
   status: string
   reason?: string
 }
@@ -97,6 +97,9 @@ export const myScheduleColumns: ColumnDef<ComputedScheduleItem>[] = [
       if (item.type === 'override') {
         typeLabel = 'Special Shift'
         badgeClass = 'border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-800 dark:bg-purple-950 dark:text-purple-300'
+      } else if (item.type === 'holiday') {
+        typeLabel = 'Clinic Holiday'
+        badgeClass = 'border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-300'
       } else if (item.type === 'regular-doctor') {
         typeLabel = 'Doctor Specific Hours'
         badgeClass = 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300'

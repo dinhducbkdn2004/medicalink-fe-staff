@@ -25,7 +25,7 @@ export const specialShiftsColumns: ColumnDef<SpecialShift>[] = [
       const doctor = row.original.doctor
       return (
         <div className="font-medium">
-          Dr. {doctor?.firstName} {doctor?.lastName}
+          Dr. {doctor?.fullName}
         </div>
       )
     },

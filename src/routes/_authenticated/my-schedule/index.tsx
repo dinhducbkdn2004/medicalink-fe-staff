@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { MySchedule } from '@/features/my-schedule'
 import type { SearchParams } from '@/types/common.types'
-import { startOfWeek, endOfWeek, format } from 'date-fns'
+
 
 export const Route = createFileRoute('/_authenticated/my-schedule/')({
   component: MySchedule,

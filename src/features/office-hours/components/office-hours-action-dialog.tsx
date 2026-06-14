@@ -25,6 +25,10 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { MultiSelect } from '@/components/ui/multi-select'
+import { SingleDayPicker } from '@/components/ui/single-day-picker'
+import { TimeInput } from '@/components/ui/time-input'
+import { Time } from '@internationalized/date'
+import { format, parse } from 'date-fns'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Select,
@@ -56,7 +60,7 @@ export function OfficeHoursActionDialog() {
     queryKey: ['doctors', 'active'],
     queryFn: () =>
       doctorService.getDoctors({
-        limit: 200,
+        limit: 1000,
         sortBy: 'createdAt',
         sortOrder: 'asc',
       }),
@@ -351,10 +355,11 @@ export function OfficeHoursActionDialog() {
                       Effective Date <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type='date'
-                        {...field}
-                        value={field.value || ''}
+                      <SingleDayPicker
+                        id='effective-date-picker'
+                        value={field.value ? parse(field.value, 'yyyy-MM-dd', new Date()) : undefined}
+                        onSelect={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
+                        placeholder='Select a date'
                         disabled={isLoading}
                       />
                     </FormControl>
@@ -375,11 +380,10 @@ export function OfficeHoursActionDialog() {
                       Start Time <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type='time'
-                        {...field}
+                      <TimeInput
+                        value={field.value ? new Time(...field.value.split(':').map(Number)) : undefined}
+                        onChange={(time) => field.onChange(time ? `${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}` : '')}
                         disabled={isLoading}
-                        className='font-mono'
                       />
                     </FormControl>
                     <FormMessage />
@@ -396,11 +400,10 @@ export function OfficeHoursActionDialog() {
                       End Time <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type='time'
-                        {...field}
+                      <TimeInput
+                        value={field.value ? new Time(...field.value.split(':').map(Number)) : undefined}
+                        onChange={(time) => field.onChange(time ? `${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}` : '')}
                         disabled={isLoading}
-                        className='font-mono'
                       />
                     </FormControl>
                     <FormMessage />

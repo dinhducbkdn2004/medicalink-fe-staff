@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
+import { format, parse } from 'date-fns'
 import { Loader2 } from 'lucide-react'
 import { doctorService } from '@/api/services'
 import { Button } from '@/components/ui/button'
@@ -22,7 +23,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Time } from '@internationalized/date'
 import { MultiSelect } from '@/components/ui/multi-select'
+import { SingleDayPicker } from '@/components/ui/single-day-picker'
+import { TimeInput } from '@/components/ui/time-input'
 import {
   specialShiftFormSchema,
   type SpecialShiftFormValues,
@@ -47,7 +51,7 @@ export function SpecialShiftsActionDialog({
     queryKey: ['doctors', 'active'],
     queryFn: () =>
       doctorService.getDoctors({
-        limit: 200,
+        limit: 1000,
         sortBy: 'createdAt',
         sortOrder: 'asc',
       }),
@@ -63,7 +67,7 @@ export function SpecialShiftsActionDialog({
     defaultValues: {
       doctorIds: defaultDoctorId ? [defaultDoctorId] : [],
       workLocationId: null,
-      effectiveDate: new Date().toISOString().split('T')[0],
+      effectiveDate: format(new Date(), 'yyyy-MM-dd'),
       startTime: '',
       endTime: '',
       reason: '',
@@ -75,7 +79,7 @@ export function SpecialShiftsActionDialog({
       form.reset({
         doctorIds: defaultDoctorId ? [defaultDoctorId] : [],
         workLocationId: null,
-        effectiveDate: new Date().toISOString().split('T')[0],
+        effectiveDate: format(new Date(), 'yyyy-MM-dd'),
         startTime: '',
         endTime: '',
         reason: '',
@@ -150,21 +154,27 @@ export function SpecialShiftsActionDialog({
               )}
             />
 
-            <FormField
-              control={form.control}
-              name='effectiveDate'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Effective Date <span className='text-destructive'>*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input type='date' {...field} disabled={isLoading} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name='effectiveDate'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Effective Date <span className='text-destructive'>*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <SingleDayPicker
+                        id='effective-date-picker'
+                        value={field.value ? parse(field.value, 'yyyy-MM-dd', new Date()) : undefined}
+                        onSelect={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
+                        placeholder='Select a date'
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
             <div className='grid grid-cols-2 gap-4'>
               <FormField
@@ -176,11 +186,10 @@ export function SpecialShiftsActionDialog({
                       Start Time <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type='time'
-                        {...field}
+                      <TimeInput
+                        value={field.value ? new Time(...field.value.split(':').map(Number)) : undefined}
+                        onChange={(time) => field.onChange(time ? `${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}` : '')}
                         disabled={isLoading}
-                        className='font-mono'
                       />
                     </FormControl>
                     <FormMessage />
@@ -197,11 +206,10 @@ export function SpecialShiftsActionDialog({
                       End Time <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type='time'
-                        {...field}
+                      <TimeInput
+                        value={field.value ? new Time(...field.value.split(':').map(Number)) : undefined}
+                        onChange={(time) => field.onChange(time ? `${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}` : '')}
                         disabled={isLoading}
-                        className='font-mono'
                       />
                     </FormControl>
                     <FormMessage />

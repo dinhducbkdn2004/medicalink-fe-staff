@@ -113,7 +113,7 @@ function OfficeHoursContent() {
               Schedule Management
             </h2>
             <p className='text-muted-foreground'>
-              Manage Layer 1 (Regular Hours) and Layer 4 (Special Shifts) overrides for doctors and locations.
+              Manage Regular Hours and Special Shifts overrides for doctors and locations.
             </p>
           </div>
           {!isPermissionError && (
@@ -162,8 +162,8 @@ function OfficeHoursContent() {
         ) : (
           <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
             <TabsList className='mb-4'>
-              <TabsTrigger value='office-hours'>Layer 1: Regular Hours</TabsTrigger>
-              <TabsTrigger value='special-shifts'>Layer 4: Special Shifts (Overrides)</TabsTrigger>
+              <TabsTrigger value='office-hours'>Regular Hours</TabsTrigger>
+              <TabsTrigger value='special-shifts'>Special Shifts</TabsTrigger>
             </TabsList>
 
             <TabsContent value='office-hours' className='mt-0'>

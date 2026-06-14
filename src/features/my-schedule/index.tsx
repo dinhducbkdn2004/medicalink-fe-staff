@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 
 import { useOfficeHours } from '@/features/office-hours/data/use-office-hours'
 import { useSpecialShifts } from '@/features/special-shifts/data/use-special-shifts'
+import { useClinicExceptions } from '@/features/holidays/data/use-clinic-exceptions'
 import { MyScheduleTable } from './components/my-schedule-table'
 
 const route = getRouteApi('/_authenticated/my-schedule/')
@@ -67,12 +68,16 @@ function MyScheduleContent() {
     workLocationId: 'cm0hq6rxg000008mf3x0c6w4b',
   })
   const { data: specialShiftsData, isLoading: isLoadingSS } = useSpecialShifts(queryParams)
+  const { data: clinicExceptionsData, isLoading: isLoadingCE } = useClinicExceptions({
+    workLocationId: 'cm0hq6rxg000008mf3x0c6w4b',
+  })
 
   const globalHours = officeHoursData?.global || []
   const doctorHours = officeHoursData?.doctorSpecific || []
   const specialShifts = specialShiftsData || []
+  const clinicExceptions = clinicExceptionsData || []
 
-  const isLoading = isLoadingOH || isLoadingSS
+  const isLoading = isLoadingOH || isLoadingSS || isLoadingCE
 
   return (
     <>
@@ -126,6 +131,7 @@ function MyScheduleContent() {
             globalHours={globalHours} 
             doctorHours={doctorHours} 
             specialShifts={specialShifts}
+            clinicExceptions={clinicExceptions}
             search={search}
             navigate={navigate}
             isLoading={isLoading}

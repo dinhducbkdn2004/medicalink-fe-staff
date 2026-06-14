@@ -1,9 +1,13 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { format, parse } from 'date-fns'
 import { Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { SingleDayPicker } from '@/components/ui/single-day-picker'
+import { TimeInput } from '@/components/ui/time-input'
+import { Time } from '@internationalized/date'
 import {
   Dialog,
   DialogContent,
@@ -39,7 +43,7 @@ export function ClinicExceptionsActionDialog() {
     resolver: zodResolver(clinicExceptionFormSchema),
     defaultValues: {
       workLocationId: null,
-      date: new Date().toISOString().split('T')[0],
+      date: format(new Date(), 'yyyy-MM-dd'),
       isFullDay: true,
       startTime: '',
       endTime: '',
@@ -51,7 +55,7 @@ export function ClinicExceptionsActionDialog() {
     if (isOpen) {
       form.reset({
         workLocationId: null,
-        date: new Date().toISOString().split('T')[0],
+        date: format(new Date(), 'yyyy-MM-dd'),
         isFullDay: true,
         startTime: '',
         endTime: '',
@@ -101,21 +105,27 @@ export function ClinicExceptionsActionDialog() {
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
             {/* Scope (Location) removed for Single Location App */}
 
-            <FormField
-              control={form.control}
-              name='date'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Date <span className='text-destructive'>*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input type='date' {...field} disabled={isLoading} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name='date'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Date <span className='text-destructive'>*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <SingleDayPicker
+                        id='date-picker'
+                        value={field.value ? parse(field.value, 'yyyy-MM-dd', new Date()) : undefined}
+                        onSelect={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
+                        placeholder='Select a date'
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
             <FormField
               control={form.control}
@@ -150,12 +160,10 @@ export function ClinicExceptionsActionDialog() {
                         Start Time <span className='text-destructive'>*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          type='time'
-                          {...field}
-                          value={field.value || ''}
+                        <TimeInput
+                          value={field.value ? new Time(...field.value.split(':').map(Number)) : undefined}
+                          onChange={(time) => field.onChange(time ? `${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}` : '')}
                           disabled={isLoading}
-                          className='font-mono'
                         />
                       </FormControl>
                       <FormMessage />
@@ -172,12 +180,10 @@ export function ClinicExceptionsActionDialog() {
                         End Time <span className='text-destructive'>*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          type='time'
-                          {...field}
-                          value={field.value || ''}
+                        <TimeInput
+                          value={field.value ? new Time(...field.value.split(':').map(Number)) : undefined}
+                          onChange={(time) => field.onChange(time ? `${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}` : '')}
                           disabled={isLoading}
-                          className='font-mono'
                         />
                       </FormControl>
                       <FormMessage />
