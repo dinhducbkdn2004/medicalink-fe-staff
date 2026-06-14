@@ -77,7 +77,7 @@ export function EventDetailsDialog({
     return null
   }
 
-  const aiData = aiData as unknown as IAITriageData | undefined
+  const aiData = appointment.aiTriageData as unknown as IAITriageData | undefined
 
   const hasDoctorAssigned = appointment.doctor !== null
   const canConfirm =
@@ -305,14 +305,14 @@ export function EventDetailsDialog({
                         )}
 
                         <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-                          {aiData.extracted_symptoms?.length >
+                          {(aiData.extracted_symptoms?.length ?? 0) >
                             0 && (
                             <div>
                               <p className='text-muted-foreground mb-1 text-xs font-medium'>
                                 Extracted Symptoms
                               </p>
                               <ul className='list-inside list-disc space-y-0.5 text-xs'>
-                                {aiData.extracted_symptoms.map(
+                                {aiData.extracted_symptoms?.map(
                                   (s: string, i: number) => (
                                     <li key={i}>{s}</li>
                                   )
@@ -321,14 +321,14 @@ export function EventDetailsDialog({
                             </div>
                           )}
 
-                          {aiData.negated_symptoms?.length >
+                          {(aiData.negated_symptoms?.length ?? 0) >
                             0 && (
                             <div>
                               <p className='text-muted-foreground mb-1 text-xs font-medium'>
                                 Negated Symptoms
                               </p>
                               <ul className='list-inside list-disc space-y-0.5 text-xs'>
-                                {aiData.negated_symptoms.map(
+                                {aiData.negated_symptoms?.map(
                                   (s: string, i: number) => (
                                     <li
                                       key={i}
