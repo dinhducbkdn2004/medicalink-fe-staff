@@ -38,13 +38,18 @@ export interface DoctorProfile {
   isActive: boolean
   position?: string[]
   introduction?: string
-  memberships?: string[]
-  awards?: string[]
-  research?: string
-  trainingProcess?: string[]
+  education?: string[]
   experience?: string[]
   avatarUrl?: string
   portrait?: string
+  ratings?: number
+  serviceCost?: number
+  experienceYears?: number
+  conditions?: string[]
+  symptoms?: string[]
+  expertise?: string[]
+  procedures?: string[]
+  patientGroups?: string[]
   specialties: Specialty[]
   workLocations: WorkLocation[]
   createdAt: string
@@ -64,13 +69,18 @@ export interface DoctorWithProfile {
   isActive?: boolean
   position?: string[]
   introduction?: string
-  memberships?: string[]
-  awards?: string[]
-  research?: string
-  trainingProcess?: string[]
+  education?: string[]
   experience?: string[]
   avatarUrl?: string
   portrait?: string
+  ratings?: number
+  serviceCost?: number
+  experienceYears?: number
+  conditions?: string[]
+  symptoms?: string[]
+  expertise?: string[]
+  procedures?: string[]
+  patientGroups?: string[]
   specialties?: Specialty[]
   workLocations?: WorkLocation[]
 
@@ -97,13 +107,18 @@ export interface CompleteDoctorData {
 
   position?: string[]
   introduction?: string
-  memberships?: string[]
-  awards?: string[]
-  research?: string
-  trainingProcess?: string[]
+  education?: string[]
   experience?: string[]
   avatarUrl?: string
   portrait?: string
+  ratings?: number
+  serviceCost?: number
+  experienceYears?: number
+  conditions?: string[]
+  symptoms?: string[]
+  expertise?: string[]
+  procedures?: string[]
+  patientGroups?: string[]
   specialties?: Specialty[]
   workLocations?: WorkLocation[]
   profileCreatedAt?: string
@@ -174,13 +189,17 @@ export interface CreateDoctorProfileRequest {
   isActive?: boolean
   position?: string[]
   introduction?: string
-  memberships?: string[]
-  awards?: string[]
-  research?: string
-  trainingProcess?: string[]
+  education?: string[]
   experience?: string[]
   avatarUrl?: string
   portrait?: string
+  serviceCost?: number
+  experienceYears?: number
+  conditions?: string[]
+  symptoms?: string[]
+  expertise?: string[]
+  procedures?: string[]
+  patientGroups?: string[]
   specialtyIds?: string[]
   locationIds?: string[]
 }
@@ -188,13 +207,17 @@ export interface CreateDoctorProfileRequest {
 export interface UpdateDoctorProfileRequest {
   position?: string[]
   introduction?: string
-  memberships?: string[]
-  awards?: string[]
-  research?: string
-  trainingProcess?: string[]
+  education?: string[]
   experience?: string[]
   avatarUrl?: string
   portrait?: string
+  serviceCost?: number
+  experienceYears?: number
+  conditions?: string[]
+  symptoms?: string[]
+  expertise?: string[]
+  procedures?: string[]
+  patientGroups?: string[]
   specialtyIds?: string[]
   locationIds?: string[]
 }

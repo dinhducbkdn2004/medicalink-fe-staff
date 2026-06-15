@@ -19,16 +19,15 @@ export function EducationTab({ form }: Readonly<EducationTabProps>) {
           Training & Experience
         </h3>
         <div className='space-y-4'>
-        {}
         <FormField
           control={form.control}
-          name='trainingProcess'
+          name='education'
           render={({ field }) => (
             <FormItem>
               <FormControl>
                 <ArrayInputField
-                  label='Training Process'
-                  description='Educational background and formal training'
+                  label='Education & Training'
+                  description='Educational background, degrees, and formal training'
                   value={field.value || []}
                   onChange={field.onChange}
                   placeholder='e.g., 2005-2009: Medical School - Harvard'
@@ -61,49 +60,6 @@ export function EducationTab({ form }: Readonly<EducationTabProps>) {
           )}
         />
 
-        <Separator />
-
-        {}
-        <FormField
-          control={form.control}
-          name='memberships'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <ArrayInputField
-                  label='Professional Memberships'
-                  description='Organizations and professional associations'
-                  value={field.value || []}
-                  onChange={field.onChange}
-                  placeholder='e.g., American Heart Association'
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Separator />
-
-        {}
-        <FormField
-          control={form.control}
-          name='awards'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <ArrayInputField
-                  label='Awards & Recognition'
-                  description='Honors and achievements'
-                  value={field.value || []}
-                  onChange={field.onChange}
-                  placeholder='e.g., Best Doctor Award 2023'
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         </div>
       </div>
     </div>

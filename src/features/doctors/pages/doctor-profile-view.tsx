@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams } from '@tanstack/react-router'
-import { Edit, Mail, Phone, User, ChevronDown, Loader2 } from 'lucide-react'
+import { Edit, Mail, Phone, User, ChevronDown, Loader2, Star, BadgeDollarSign, Clock, Calendar } from 'lucide-react'
+import { format } from 'date-fns'
 import type { CompleteDoctorData } from '@/api/types/doctor.types'
 import { useAuth } from '@/hooks/use-auth'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -212,6 +213,31 @@ export function DoctorProfileView() {
                     </Badge>
                   </div>
 
+                  {/* Stats */}
+                  <div className='mt-4 grid w-full grid-cols-3 divide-x rounded-lg border bg-card py-3 text-center'>
+                    <div className='flex flex-col items-center justify-center gap-1'>
+                      <div className='flex items-center text-sm font-medium'>
+                        <Star className='mr-1 h-3.5 w-3.5 fill-yellow-400 text-yellow-400' />
+                        {doctor?.ratings || 'N/A'}
+                      </div>
+                      <span className='text-[10px] text-muted-foreground uppercase tracking-wider'>Rating</span>
+                    </div>
+                    <div className='flex flex-col items-center justify-center gap-1'>
+                      <div className='flex items-center text-sm font-medium'>
+                        <BadgeDollarSign className='mr-1 h-3.5 w-3.5 text-green-500' />
+                        {doctor?.serviceCost ? `$${doctor.serviceCost}` : 'N/A'}
+                      </div>
+                      <span className='text-[10px] text-muted-foreground uppercase tracking-wider'>Cost</span>
+                    </div>
+                    <div className='flex flex-col items-center justify-center gap-1'>
+                      <div className='flex items-center text-sm font-medium'>
+                        <Clock className='mr-1 h-3.5 w-3.5 text-blue-500' />
+                        {doctor?.experienceYears ? `${doctor.experienceYears}y` : 'N/A'}
+                      </div>
+                      <span className='text-[10px] text-muted-foreground uppercase tracking-wider'>Exp</span>
+                    </div>
+                  </div>
+
                   {/* Contact Info */}
                   <div className='mt-6 w-full space-y-2 text-left'>
                     <div className='bg-muted/50 rounded-md p-3'>
@@ -239,6 +265,21 @@ export function DoctorProfileView() {
                       ) : (
                         <EmptyField text='No phone number' />
                       )}
+                    </div>
+                    <div className='bg-muted/50 rounded-md p-3'>
+                      <div className='text-muted-foreground mb-1 text-xs font-medium'>
+                        Personal Info
+                      </div>
+                      <div className='flex flex-col gap-2 text-sm'>
+                        <div className='flex items-center gap-2'>
+                          <User className='text-muted-foreground h-4 w-4' />
+                          <span>{doctor?.isMale === undefined ? 'Not specified' : doctor.isMale ? 'Male' : 'Female'}</span>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                          <Calendar className='text-muted-foreground h-4 w-4' />
+                          <span>{doctor?.dateOfBirth ? format(new Date(doctor.dateOfBirth), 'PPP') : 'No DOB provided'}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -288,6 +329,40 @@ export function DoctorProfileView() {
                       </div>
                     ) : (
                       <EmptyField text='No specialties assigned' />
+                    )}
+                  </CardContent>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
+
+            {/* Patient Groups Card */}
+            <Collapsible defaultOpen={true}>
+              <Card>
+                <CardHeader>
+                  <div className='flex items-center justify-between'>
+                    <CardTitle className='text-sm'>Patient Groups</CardTitle>
+                    <CollapsibleTrigger asChild>
+                      <Button variant='ghost' size='sm' className='h-6 w-6 p-0'>
+                        <ChevronDown className='h-3 w-3 transition-transform duration-200 data-[state=open]:rotate-180' />
+                        <span className='sr-only'>Toggle patient groups</span>
+                      </Button>
+                    </CollapsibleTrigger>
+                  </div>
+                </CardHeader>
+                <CollapsibleContent>
+                  <CardContent className='pt-0'>
+                    {doctor?.patientGroups && doctor.patientGroups.length > 0 ? (
+                      <div className='flex flex-wrap gap-2'>
+                        {doctor.patientGroups.map(
+                          (group: string, idx: number) => (
+                            <Badge key={idx} variant='secondary'>
+                              {group}
+                            </Badge>
+                          )
+                        )}
+                      </div>
+                    ) : (
+                      <EmptyField text='No patient groups specified' />
                     )}
                   </CardContent>
                 </CollapsibleContent>
@@ -356,64 +431,14 @@ export function DoctorProfileView() {
               )}
             </CollapsibleSection>
 
-            {/* Research & Publications */}
-            <CollapsibleSection
-              title='Research & Publications'
-              description='Scientific work and contributions'
-              defaultOpen={false}
-            >
-              {doctor?.research ? (
-                (() => {
-                  try {
-                    const parsed = JSON.parse(doctor.research)
-                    const hasInternational = parsed.international && parsed.international.length > 0;
-                    const hasDomestic = parsed.domestic && parsed.domestic.length > 0;
-                    
-                    if (!hasInternational && !hasDomestic) {
-                      return <EmptyField text='No research information provided' />
-                    }
-                    
-                    return (
-                      <div className="space-y-4">
-                        {hasInternational && (
-                          <div>
-                            <h4 className="font-semibold text-sm mb-2">International Publications</h4>
-                            <ul className="list-disc pl-5 space-y-1">
-                              {parsed.international.map((item: string, idx: number) => (
-                                <li key={idx} className="text-sm">{item}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                        {hasDomestic && (
-                          <div>
-                            <h4 className="font-semibold text-sm mb-2">Domestic Publications</h4>
-                            <ul className="list-disc pl-5 space-y-1">
-                              {parsed.domestic.map((item: string, idx: number) => (
-                                <li key={idx} className="text-sm">{item}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    )
-                  } catch (_e) {
-                    return <RichTextDisplay content={doctor.research} />
-                  }
-                })()
-              ) : (
-                <EmptyField text='No research information provided' />
-              )}
-            </CollapsibleSection>
-
-            {/* Training Process */}
-            <Collapsible defaultOpen={false}>
+            {/* Education */}
+            <Collapsible defaultOpen={true}>
               <Card>
                 <CardHeader>
                   <div className='flex items-center justify-between'>
                     <div className='flex-1'>
                       <CardTitle className='text-base'>
-                        Training Process
+                        Education
                       </CardTitle>
                       <CardDescription className='text-xs'>
                         Educational background and training
@@ -422,29 +447,26 @@ export function DoctorProfileView() {
                     <CollapsibleTrigger asChild>
                       <Button variant='ghost' size='sm' className='h-8 w-8 p-0'>
                         <ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
-                        <span className='sr-only'>Toggle training</span>
+                        <span className='sr-only'>Toggle education</span>
                       </Button>
                     </CollapsibleTrigger>
                   </div>
                 </CardHeader>
                 <CollapsibleContent>
                   <CardContent className='pt-0'>
-                    {doctor?.trainingProcess &&
-                    doctor.trainingProcess.length > 0 ? (
+                    {doctor?.education && doctor.education.length > 0 ? (
                       <ul className='space-y-3'>
-                        {doctor.trainingProcess.map(
-                          (training: string, idx: number) => (
-                            <li key={idx} className='flex gap-3'>
-                              <div className='bg-primary/10 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full'>
-                                <div className='bg-primary h-2 w-2 rounded-full' />
-                              </div>
-                              <p className='text-sm'>{training}</p>
-                            </li>
-                          )
-                        )}
+                        {doctor.education.map((edu: string, idx: number) => (
+                          <li key={idx} className='flex gap-3'>
+                            <div className='bg-primary/10 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full'>
+                              <div className='bg-primary h-2 w-2 rounded-full' />
+                            </div>
+                            <p className='text-sm'>{edu}</p>
+                          </li>
+                        ))}
                       </ul>
                     ) : (
-                      <EmptyField text='No training process documented' />
+                      <EmptyField text='No education documented' />
                     )}
                   </CardContent>
                 </CollapsibleContent>
@@ -455,7 +477,7 @@ export function DoctorProfileView() {
             <CollapsibleSection
               title='Professional Experience'
               description='Work history and career timeline'
-              defaultOpen={false}
+              defaultOpen={true}
             >
               {doctor?.experience && doctor.experience.length > 0 ? (
                 <ul className='space-y-3'>
@@ -473,65 +495,83 @@ export function DoctorProfileView() {
               )}
             </CollapsibleSection>
 
-            {/* Memberships */}
-            <Collapsible defaultOpen={false}>
-              <Card>
-                <CardHeader>
-                  <div className='flex items-center justify-between'>
-                    <div className='flex-1'>
-                      <CardTitle className='text-base'>
-                        Professional Memberships
-                      </CardTitle>
-                      <CardDescription className='text-xs'>
-                        Organizations and professional associations
-                      </CardDescription>
-                    </div>
-                    <CollapsibleTrigger asChild>
-                      <Button variant='ghost' size='sm' className='h-8 w-8 p-0'>
-                        <ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
-                        <span className='sr-only'>Toggle memberships</span>
-                      </Button>
-                    </CollapsibleTrigger>
-                  </div>
-                </CardHeader>
-                <CollapsibleContent>
-                  <CardContent className='pt-0'>
-                    {doctor?.memberships && doctor.memberships.length > 0 ? (
-                      <ul className='space-y-2'>
-                        {doctor.memberships.map(
-                          (membership: string, idx: number) => (
-                            <li key={idx} className='text-sm'>
-                              • {membership}
-                            </li>
-                          )
-                        )}
-                      </ul>
-                    ) : (
-                      <EmptyField text='No memberships listed' />
-                    )}
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
+            {/* Expertise & Procedures */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <CollapsibleSection
+                title='Expertise'
+                description='Specialized medical skills'
+                defaultOpen={true}
+              >
+                {doctor?.expertise && doctor.expertise.length > 0 ? (
+                  <ul className='space-y-2'>
+                    {doctor.expertise.map((item: string, idx: number) => (
+                      <li key={idx} className='text-sm'>
+                        • {item}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <EmptyField text='No expertise listed' />
+                )}
+              </CollapsibleSection>
 
-            {/* Awards */}
-            <CollapsibleSection
-              title='Awards & Recognition'
-              description='Honors and achievements'
-              defaultOpen={false}
-            >
-              {doctor?.awards && doctor.awards.length > 0 ? (
-                <ul className='space-y-2'>
-                  {doctor.awards.map((award: string, idx: number) => (
-                    <li key={idx} className='text-sm'>
-                      🏆 {award}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <EmptyField text='No awards listed' />
-              )}
-            </CollapsibleSection>
+              <CollapsibleSection
+                title='Procedures'
+                description='Medical procedures performed'
+                defaultOpen={true}
+              >
+                {doctor?.procedures && doctor.procedures.length > 0 ? (
+                  <ul className='space-y-2'>
+                    {doctor.procedures.map((item: string, idx: number) => (
+                      <li key={idx} className='text-sm'>
+                        • {item}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <EmptyField text='No procedures listed' />
+                )}
+              </CollapsibleSection>
+            </div>
+
+            {/* Conditions & Symptoms */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <CollapsibleSection
+                title='Conditions Treated'
+                description='Medical conditions managed'
+                defaultOpen={true}
+              >
+                {doctor?.conditions && doctor.conditions.length > 0 ? (
+                  <div className='flex flex-wrap gap-2'>
+                    {doctor.conditions.map((item: string, idx: number) => (
+                      <Badge key={idx} variant='outline' className='font-normal'>
+                        {item}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyField text='No conditions listed' />
+                )}
+              </CollapsibleSection>
+
+              <CollapsibleSection
+                title='Symptoms Evaluated'
+                description='Common symptoms investigated'
+                defaultOpen={true}
+              >
+                {doctor?.symptoms && doctor.symptoms.length > 0 ? (
+                  <div className='flex flex-wrap gap-2'>
+                    {doctor.symptoms.map((item: string, idx: number) => (
+                      <Badge key={idx} variant='outline' className='font-normal'>
+                        {item}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyField text='No symptoms listed' />
+                )}
+              </CollapsibleSection>
+            </div>
           </div>
         </div>
       </Main>

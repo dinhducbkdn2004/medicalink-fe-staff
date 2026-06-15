@@ -12,6 +12,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import type { UpdateDoctorProfileFormData } from '../../types'
 import { RichTextEditor } from '../rich-text-editor'
+import { ArrayInputField } from '../array-input-field'
 
 interface ProfessionalTabProps {
   form: UseFormReturn<UpdateDoctorProfileFormData>
@@ -63,30 +64,102 @@ export function ProfessionalTab({
 
           <Separator />
 
-          {}
           <FormField
             control={form.control}
-            name='research'
+            name='expertise'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='flex items-center gap-2'>
-                  Research & Publications
-                </FormLabel>
-                <FormDescription className='mb-2 text-xs'>
-                  Research interests and published works
-                </FormDescription>
                 <FormControl>
-                  <RichTextEditor
-                    value={field.value || ''}
+                  <ArrayInputField
+                    label='Medical Expertise'
+                    description='Specialized areas of medical knowledge'
+                    value={field.value || []}
                     onChange={field.onChange}
-                    accessToken={accessToken}
-                    placeholder='Describe research work and publications...'
-                    toolbarOptions='basic'
-                    enableSyntax={true}
-                    enableFormula={true}
-                    enableImageUpload={true}
-                    enableVideoUpload={true}
-                    size='compact'
+                    placeholder='e.g., General Cardiology'
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Separator />
+
+          <FormField
+            control={form.control}
+            name='procedures'
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <ArrayInputField
+                    label='Procedures'
+                    description='Medical procedures performed'
+                    value={field.value || []}
+                    onChange={field.onChange}
+                    placeholder='e.g., Echocardiogram'
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Separator />
+
+          <FormField
+            control={form.control}
+            name='conditions'
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <ArrayInputField
+                    label='Conditions Treated'
+                    description='Medical conditions and diseases treated'
+                    value={field.value || []}
+                    onChange={field.onChange}
+                    placeholder='e.g., Hypertension'
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Separator />
+
+          <FormField
+            control={form.control}
+            name='symptoms'
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <ArrayInputField
+                    label='Symptoms Evaluated'
+                    description='Common symptoms evaluated and diagnosed'
+                    value={field.value || []}
+                    onChange={field.onChange}
+                    placeholder='e.g., Chest Pain'
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Separator />
+
+          <FormField
+            control={form.control}
+            name='patientGroups'
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <ArrayInputField
+                    label='Patient Groups'
+                    description='Specific patient demographics treated'
+                    value={field.value || []}
+                    onChange={field.onChange}
+                    placeholder='e.g., Adults, Seniors'
                   />
                 </FormControl>
                 <FormMessage />
