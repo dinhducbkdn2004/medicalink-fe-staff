@@ -40,12 +40,32 @@ export interface CreateReviewRequest {
 }
 
 class ReviewService {
+  async getReviews(
+    params: ReviewQueryParams = {}
+  ): Promise<PaginatedResponse<Review>> {
+    const response = await apiClient.get<PaginatedResponse<Review>>(
+      '/reviews',
+      { params }
+    )
+    return response.data
+  }
+
   async getDoctorReviews(
     doctorId: string,
     params: ReviewQueryParams = {}
   ): Promise<PaginatedResponse<Review>> {
     const response = await apiClient.get<PaginatedResponse<Review>>(
       `/reviews/doctor/${doctorId}`,
+      { params }
+    )
+    return response.data
+  }
+
+  async getMyReviews(
+    params: ReviewQueryParams = {}
+  ): Promise<PaginatedResponse<Review>> {
+    const response = await apiClient.get<PaginatedResponse<Review>>(
+      '/reviews/staff/me',
       { params }
     )
     return response.data
@@ -90,6 +110,15 @@ class ReviewService {
     const response = await apiClient.get<
       PaginatedResponse<ReviewAnalysisListItem>
     >(`/reviews/${doctorId}/analyses`, { params })
+    return response.data
+  }
+
+  async listMyAnalyses(
+    params: ListReviewAnalysesParams = {}
+  ): Promise<PaginatedResponse<ReviewAnalysisListItem>> {
+    const response = await apiClient.get<
+      PaginatedResponse<ReviewAnalysisListItem>
+    >('/reviews/staff/me/analyses', { params })
     return response.data
   }
 

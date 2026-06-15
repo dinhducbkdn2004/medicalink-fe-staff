@@ -35,12 +35,17 @@ export function AnalysisList({ className }: AnalysisListProps) {
 
   const { data, isLoading } = useQuery({
     queryKey: ['review-analyses', doctorId, filter],
-    queryFn: () =>
-      reviewService.listAnalyses(doctorId, {
+    queryFn: () => {
+      const queryParams = {
         page: 1,
         limit: 50,
         dateRange: filter === 'all' ? undefined : filter,
-      }),
+      }
+      if (doctorId === 'me') {
+        return reviewService.listMyAnalyses(queryParams)
+      }
+      return reviewService.listAnalyses(doctorId, queryParams)
+    },
   })
 
   const handleCreateClick = () => {

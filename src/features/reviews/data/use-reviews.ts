@@ -57,7 +57,12 @@ export function useDoctorReviews(
 ) {
   return useQuery({
     queryKey: reviewKeys.doctorReviews(doctorId, params),
-    queryFn: () => reviewService.getDoctorReviews(doctorId, params),
+    queryFn: () => {
+      if (doctorId === 'me') {
+        return reviewService.getMyReviews(params)
+      }
+      return reviewService.getDoctorReviews(doctorId, params)
+    },
     enabled: !!doctorId,
     staleTime: 30000,
   })

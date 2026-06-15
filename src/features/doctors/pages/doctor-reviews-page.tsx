@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useNavigate, useSearch } from '@tanstack/react-router'
-import { doctorProfileService } from '@/api/services/doctor-profile.service'
 import { reviewService, type Review } from '@/api/services/review.service'
 import type { PaginationParams } from '@/api/types/common.types'
 import { useAuthStore } from '@/stores/auth-store'
@@ -27,37 +26,21 @@ export function DoctorReviewsPage({
   const search: any = useSearch({ strict: false })
   const { user } = useAuthStore()
 
-  const [resolvedStaffAccountId, setResolvedStaffAccountId] = useState<
-    string | undefined
-  >(undefined)
+  const [resolvedDoctorId, setResolvedDoctorId] = useState<string | undefined>(
+    undefined
+  )
 
   useEffect(() => {
-    const resolveStaffAccountId = async () => {
-      if (
-        !initialDoctorId &&
-        !params.doctorId &&
-        user?.role === 'DOCTOR' &&
-        user.id
-      ) {
-        setResolvedStaffAccountId(user.id)
-        return
-      }
-
-      const profileId = initialDoctorId || params.doctorId
-      if (profileId) {
-        try {
-          const profile =
-            await doctorProfileService.getDoctorProfileById(profileId)
-          if (profile.staffAccountId) {
-            setResolvedStaffAccountId(profile.staffAccountId)
-          }
-        } catch (error) {
-          console.error('Failed to resolve staff account ID:', error)
-        }
-      }
+    if (!initialDoctorId && !params.doctorId && user?.role === 'DOCTOR') {
+      // Current logged-in doctor
+      setResolvedDoctorId('me')
+      return
     }
 
-    resolveStaffAccountId()
+    const profileId = initialDoctorId || params.doctorId
+    if (profileId) {
+      setResolvedDoctorId(profileId)
+    }
   }, [initialDoctorId, params.doctorId, user])
 
   const [data, setData] = useState<Review[]>([])
@@ -69,7 +52,7 @@ export function DoctorReviewsPage({
   const isPublic = search?.isPublic ? search.isPublic === 'true' : undefined
 
   const fetchReviews = useCallback(async () => {
-    if (!resolvedStaffAccountId) return
+    if (!resolvedDoctorId) return
 
     setIsLoading(true)
     try {
@@ -82,10 +65,9 @@ export function DoctorReviewsPage({
         queryParams.isPublic = isPublic
       }
 
-      const response = await reviewService.getDoctorReviews(
-        resolvedStaffAccountId,
-        queryParams
-      )
+      const response = await (resolvedDoctorId === 'me'
+        ? reviewService.getMyReviews(queryParams)
+        : reviewService.getDoctorReviews(resolvedDoctorId, queryParams))
       setData(response.data)
       setPageCount(response.meta.totalPages)
     } catch (error) {
@@ -93,13 +75,13 @@ export function DoctorReviewsPage({
     } finally {
       setIsLoading(false)
     }
-  }, [resolvedStaffAccountId, page, limit, isPublic])
+  }, [resolvedDoctorId, page, limit, isPublic])
 
   useEffect(() => {
-    if (resolvedStaffAccountId) {
+    if (resolvedDoctorId) {
       fetchReviews()
     }
-  }, [fetchReviews, resolvedStaffAccountId])
+  }, [fetchReviews, resolvedDoctorId])
 
   return (
     <ReviewsProvider onReviewDeleted={fetchReviews}>
