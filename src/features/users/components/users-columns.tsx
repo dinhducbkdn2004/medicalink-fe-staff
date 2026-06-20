@@ -39,7 +39,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: 'username',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Username' />
+      <DataTableColumnHeader column={column} title='Tên người dùng' />
     ),
     cell: ({ row }) => (
       <LongText className='max-w-36 ps-3'>{row.getValue('username')}</LongText>
@@ -55,7 +55,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     id: 'fullName',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Name' />
+      <DataTableColumnHeader column={column} title='Họ và tên' />
     ),
     cell: ({ row }) => {
       const { firstName, lastName } = row.original
@@ -76,7 +76,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: 'phoneNumber',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Phone Number' />
+      <DataTableColumnHeader column={column} title='Số điện thoại' />
     ),
     cell: ({ row }) => <div>{row.getValue('phoneNumber')}</div>,
     enableSorting: false,
@@ -84,7 +84,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: 'status',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Status' />
+      <DataTableColumnHeader column={column} title='Trạng thái' />
     ),
     cell: ({ row }) => {
       const { status } = row.original
@@ -106,7 +106,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: 'role',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Role' />
+      <DataTableColumnHeader column={column} title='Vai trò' />
     ),
     cell: ({ row }) => {
       const { role } = row.original

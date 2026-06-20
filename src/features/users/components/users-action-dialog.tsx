@@ -27,15 +27,15 @@ import { type User } from '../data/schema'
 
 const formSchema = z
   .object({
-    firstName: z.string().min(1, 'First Name is required.'),
-    lastName: z.string().min(1, 'Last Name is required.'),
-    username: z.string().min(1, 'Username is required.'),
-    phoneNumber: z.string().min(1, 'Phone number is required.'),
+    firstName: z.string().min(1, 'Vui lòng nhập tên.'),
+    lastName: z.string().min(1, 'Vui lòng nhập họ.'),
+    username: z.string().min(1, 'Vui lòng nhập tên người dùng.'),
+    phoneNumber: z.string().min(1, 'Vui lòng nhập số điện thoại.'),
     email: z.email({
-      error: (iss) => (iss.input === '' ? 'Email is required.' : undefined),
+      error: (iss) => (iss.input === '' ? 'Vui lòng nhập email.' : undefined),
     }),
     password: z.string().transform((pwd) => pwd.trim()),
-    role: z.string().min(1, 'Role is required.'),
+    role: z.string().min(1, 'Vui lòng chọn vai trò.'),
     confirmPassword: z.string().transform((pwd) => pwd.trim()),
     isEdit: z.boolean(),
   })
@@ -45,7 +45,7 @@ const formSchema = z
       return data.password.length > 0
     },
     {
-      message: 'Password is required.',
+      message: 'Vui lòng nhập mật khẩu.',
       path: ['password'],
     }
   )
@@ -55,7 +55,7 @@ const formSchema = z
       return password.length >= 8
     },
     {
-      message: 'Password must be at least 8 characters long.',
+      message: 'Mật khẩu phải có ít nhất 8 ký tự.',
       path: ['password'],
     }
   )
@@ -65,7 +65,7 @@ const formSchema = z
       return /[a-z]/.test(password)
     },
     {
-      message: 'Password must contain at least one lowercase letter.',
+      message: 'Mật khẩu phải chứa ít nhất một chữ thường.',
       path: ['password'],
     }
   )
@@ -75,7 +75,7 @@ const formSchema = z
       return /\d/.test(password)
     },
     {
-      message: 'Password must contain at least one number.',
+      message: 'Mật khẩu phải chứa ít nhất một chữ số.',
       path: ['password'],
     }
   )
@@ -85,7 +85,7 @@ const formSchema = z
       return password === confirmPassword
     },
     {
-      message: "Passwords don't match.",
+      message: "Mật khẩu không khớp.",
       path: ['confirmPassword'],
     }
   )
@@ -143,10 +143,10 @@ export function UsersActionDialog({
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
-          <DialogTitle>{isEdit ? 'Edit User' : 'Add New User'}</DialogTitle>
+          <DialogTitle>{isEdit ? 'Chỉnh sửa người dùng' : 'Thêm người dùng mới'}</DialogTitle>
           <DialogDescription>
-            {isEdit ? 'Update the user here. ' : 'Create new user here. '}
-            Click save when you&apos;re done.
+            {isEdit ? 'Cập nhật người dùng tại đây. ' : 'Tạo người dùng mới tại đây. '}
+            Nhấp vào lưu khi bạn hoàn tất.
           </DialogDescription>
         </DialogHeader>
         <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
@@ -162,7 +162,7 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      First Name
+                      Tên
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -182,7 +182,7 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Last Name
+                      Họ
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -202,8 +202,7 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Username
-                    </FormLabel>
+                      Tên người dùng
                     <FormControl>
                       <Input
                         placeholder='john_doe'
@@ -238,7 +237,7 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Phone Number
+                      Số điện thoại
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -256,11 +255,11 @@ export function UsersActionDialog({
                 name='role'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Role</FormLabel>
+                    <FormLabel className='col-span-2 text-end'>Vai trò</FormLabel>
                     <SelectDropdown
                       defaultValue={field.value}
                       onValueChange={field.onChange}
-                      placeholder='Select a role'
+                      placeholder='Chọn vai trò'
                       className='col-span-4'
                       items={roles.map(({ label, value }) => ({
                         label,
@@ -277,7 +276,7 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Password
+                      Mật khẩu
                     </FormLabel>
                     <FormControl>
                       <PasswordInput
@@ -296,7 +295,7 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Confirm Password
+                      Xác nhận mật khẩu
                     </FormLabel>
                     <FormControl>
                       <PasswordInput
@@ -315,7 +314,7 @@ export function UsersActionDialog({
         </div>
         <DialogFooter>
           <Button type='submit' form='user-form'>
-            Save changes
+            Lưu thay đổi
           </Button>
         </DialogFooter>
       </DialogContent>

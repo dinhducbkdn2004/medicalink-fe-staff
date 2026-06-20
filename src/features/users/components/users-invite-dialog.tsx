@@ -29,9 +29,9 @@ import { roles } from '../data/data'
 const formSchema = z.object({
   email: z.email({
     error: (iss) =>
-      iss.input === '' ? 'Please enter an email to invite.' : undefined,
+      iss.input === '' ? 'Vui lòng nhập email để mời.' : undefined,
   }),
-  role: z.string().min(1, 'Role is required.'),
+  role: z.string().min(1, 'Vui lòng chọn vai trò.'),
   desc: z.string().optional(),
 })
 
@@ -68,11 +68,11 @@ export function UsersInviteDialog({
       <DialogContent className='sm:max-w-md'>
         <DialogHeader className='text-start'>
           <DialogTitle className='flex items-center gap-2'>
-            <MailPlus /> Invite User
+            <MailPlus /> Mời người dùng
           </DialogTitle>
           <DialogDescription>
-            Invite new user to join your team by sending them an email
-            invitation. Assign a role to define their access level.
+            Mời người dùng mới tham gia nhóm của bạn bằng cách gửi cho họ một email
+            mời. Gán một vai trò để xác định quyền truy cập của họ.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -90,7 +90,7 @@ export function UsersInviteDialog({
                   <FormControl>
                     <Input
                       type='email'
-                      placeholder='eg: john.doe@gmail.com'
+                      placeholder='ví dụ: john.doe@gmail.com'
                       {...field}
                     />
                   </FormControl>
@@ -103,11 +103,11 @@ export function UsersInviteDialog({
               name='role'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel>Vai trò</FormLabel>
                   <SelectDropdown
                     defaultValue={field.value}
                     onValueChange={field.onChange}
-                    placeholder='Select a role'
+                    placeholder='Chọn một vai trò'
                     items={roles.map(({ label, value }) => ({
                       label,
                       value,
@@ -122,11 +122,11 @@ export function UsersInviteDialog({
               name='desc'
               render={({ field }) => (
                 <FormItem className=''>
-                  <FormLabel>Description (optional)</FormLabel>
+                  <FormLabel>Mô tả (tùy chọn)</FormLabel>
                   <FormControl>
                     <Textarea
                       className='resize-none'
-                      placeholder='Add a personal note to your invitation (optional)'
+                      placeholder='Thêm ghi chú cá nhân vào lời mời của bạn (tùy chọn)'
                       {...field}
                     />
                   </FormControl>
@@ -138,10 +138,10 @@ export function UsersInviteDialog({
         </Form>
         <DialogFooter className='gap-y-2'>
           <DialogClose asChild>
-            <Button variant='outline'>Cancel</Button>
+            <Button variant='outline'>Hủy</Button>
           </DialogClose>
           <Button type='submit' form='user-invite-form'>
-            Invite <Send />
+            Mời <Send />
           </Button>
         </DialogFooter>
       </DialogContent>
