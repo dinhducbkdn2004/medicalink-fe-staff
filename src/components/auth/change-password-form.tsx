@@ -77,10 +77,10 @@ export function ChangePasswordForm({
           name='currentPassword'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Current password</FormLabel>
+              <FormLabel>Mật khẩu hiện tại</FormLabel>
               <FormControl>
                 <PasswordInput
-                  placeholder='Enter your current password'
+                  placeholder='Nhập mật khẩu hiện tại'
                   autoComplete='current-password'
                   disabled={isLoading}
                   {...field}
@@ -96,18 +96,17 @@ export function ChangePasswordForm({
           name='newPassword'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>New password</FormLabel>
+              <FormLabel>Mật khẩu mới</FormLabel>
               <FormControl>
                 <PasswordInput
-                  placeholder='Enter your new password'
+                  placeholder='Nhập mật khẩu mới'
                   autoComplete='new-password'
                   disabled={isLoading}
                   {...field}
                 />
               </FormControl>
               <FormDescription>
-                Must be at least 8 characters and contain uppercase, lowercase,
-                and a number
+                Phải dài ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -119,10 +118,10 @@ export function ChangePasswordForm({
           name='confirmPassword'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm new password</FormLabel>
+              <FormLabel>Xác nhận mật khẩu mới</FormLabel>
               <FormControl>
                 <PasswordInput
-                  placeholder='Confirm your new password'
+                  placeholder='Xác nhận mật khẩu mới của bạn'
                   autoComplete='new-password'
                   disabled={isLoading}
                   {...field}
@@ -139,7 +138,7 @@ export function ChangePasswordForm({
           ) : (
             <Lock className='h-4 w-4' />
           )}
-          Change password
+          Đổi mật khẩu
         </Button>
       </form>
     </Form>
@@ -152,9 +151,9 @@ export function ChangePasswordForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Change password</CardTitle>
+        <CardTitle>Đổi mật khẩu</CardTitle>
         <CardDescription>
-          Update your password to keep your account secure
+          Cập nhật mật khẩu để bảo mật tài khoản
         </CardDescription>
       </CardHeader>
       <CardContent>{formContent}</CardContent>

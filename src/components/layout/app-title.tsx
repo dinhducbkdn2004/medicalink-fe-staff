@@ -60,7 +60,7 @@ function ToggleSidebar({
     >
       <X className='md:hidden' />
       <Menu className='max-md:hidden' />
-      <span className='sr-only'>Toggle Sidebar</span>
+      <span className='sr-only'>Đóng/mở thanh bên</span>
     </Button>
   )
 }

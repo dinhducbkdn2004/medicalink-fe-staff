@@ -55,9 +55,9 @@ export function ConfigDrawer() {
       </SheetTrigger>
       <SheetContent className='flex flex-col'>
         <SheetHeader className='pb-0 text-start'>
-          <SheetTitle>Theme Settings</SheetTitle>
+          <SheetTitle>Cài đặt giao diện</SheetTitle>
           <SheetDescription id='config-drawer-description'>
-            Adjust the appearance and layout to suit your preferences.
+            Điều chỉnh giao diện và bố cục phù hợp với sở thích của bạn.
           </SheetDescription>
         </SheetHeader>
         <div className='space-y-6 overflow-y-auto px-4'>
@@ -70,9 +70,9 @@ export function ConfigDrawer() {
           <Button
             variant='destructive'
             onClick={handleReset}
-            aria-label='Reset all settings to default values'
+            aria-label='Đặt lại tất cả cài đặt về mặc định'
           >
-            Reset
+            Đặt lại
           </Button>
         </SheetFooter>
       </SheetContent>
@@ -173,7 +173,7 @@ function ThemeConfig() {
   return (
     <div>
       <SectionTitle
-        title='Theme'
+        title='Giao diện'
         showReset={theme !== defaultTheme}
         onReset={() => setTheme(defaultTheme)}
       />
@@ -187,17 +187,17 @@ function ThemeConfig() {
         {[
           {
             value: 'system',
-            label: 'System',
+            label: 'Hệ thống',
             icon: IconThemeSystem,
           },
           {
             value: 'light',
-            label: 'Light',
+            label: 'Sáng',
             icon: IconThemeLight,
           },
           {
             value: 'dark',
-            label: 'Dark',
+            label: 'Tối',
             icon: IconThemeDark,
           },
         ].map((item) => (
@@ -216,7 +216,7 @@ function SidebarConfig() {
   return (
     <div className='max-md:hidden'>
       <SectionTitle
-        title='Sidebar'
+        title='Thanh bên'
         showReset={defaultVariant !== variant}
         onReset={() => setVariant(defaultVariant)}
       />
@@ -230,17 +230,17 @@ function SidebarConfig() {
         {[
           {
             value: 'inset',
-            label: 'Inset',
+            label: 'Bên trong',
             icon: IconSidebarInset,
           },
           {
             value: 'floating',
-            label: 'Floating',
+            label: 'Nổi',
             icon: IconSidebarFloating,
           },
           {
             value: 'sidebar',
-            label: 'Sidebar',
+            label: 'Cố định',
             icon: IconSidebarSidebar,
           },
         ].map((item) => (
@@ -263,7 +263,7 @@ function LayoutConfig() {
   return (
     <div className='max-md:hidden'>
       <SectionTitle
-        title='Layout'
+        title='Bố cục'
         showReset={radioState !== 'default'}
         onReset={() => {
           setOpen(true)
@@ -287,17 +287,17 @@ function LayoutConfig() {
         {[
           {
             value: 'default',
-            label: 'Default',
+            label: 'Mặc định',
             icon: IconLayoutDefault,
           },
           {
             value: 'icon',
-            label: 'Compact',
+            label: 'Thu gọn',
             icon: IconLayoutCompact,
           },
           {
             value: 'offcanvas',
-            label: 'Full layout',
+            label: 'Đầy đủ',
             icon: IconLayoutFull,
           },
         ].map((item) => (
@@ -316,7 +316,7 @@ function DirConfig() {
   return (
     <div>
       <SectionTitle
-        title='Direction'
+        title='Hướng văn bản'
         showReset={defaultDir !== dir}
         onReset={() => setDir(defaultDir)}
       />
@@ -330,14 +330,14 @@ function DirConfig() {
         {[
           {
             value: 'ltr',
-            label: 'Left to Right',
+            label: 'Trái sang phải',
             icon: (props: SVGProps<SVGSVGElement>) => (
               <IconDir dir='ltr' {...props} />
             ),
           },
           {
             value: 'rtl',
-            label: 'Right to Left',
+            label: 'Phải sang trái',
             icon: (props: SVGProps<SVGSVGElement>) => (
               <IconDir dir='rtl' {...props} />
             ),

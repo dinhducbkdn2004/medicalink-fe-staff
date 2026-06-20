@@ -26,30 +26,30 @@ import type { NavGroupWithPermission } from '@/lib/sidebar-utils'
 
 export const navGroups: NavGroupWithPermission[] = [
   {
-    title: 'Dashboard',
+    title: 'Bảng điều khiển',
     items: [
       {
-        title: 'Dashboard',
+        title: 'Bảng điều khiển',
         url: '/',
         icon: LayoutDashboard,
       },
     ],
   },
   {
-    title: 'User & Access Control',
+    title: 'Quản lý người dùng & Phân quyền',
     items: [
       {
-        title: 'User Management',
+        title: 'Quản lý người dùng',
         icon: Users,
         items: [
           {
-            title: 'Staff Accounts',
+            title: 'Tài khoản nhân viên',
             url: '/staffs',
             icon: UserRoundCog,
             permission: { resource: 'staff', action: 'read' },
           },
           {
-            title: 'Doctor Accounts',
+            title: 'Tài khoản bác sĩ',
             url: '/doctors',
             icon: Stethoscope,
 
@@ -58,23 +58,23 @@ export const navGroups: NavGroupWithPermission[] = [
         ],
       },
       {
-        title: 'Permission',
+        title: 'Phân quyền',
         icon: Shield,
         items: [
           {
-            title: 'Group Manager',
+            title: 'Quản lý nhóm',
             url: '/group-manager',
             icon: UsersRound,
             permission: { resource: 'permissions', action: 'manage' },
           },
           {
-            title: 'User Permission',
+            title: 'Quyền người dùng',
             url: '/user-permission',
             icon: ShieldCheck,
             permission: { resource: 'permissions', action: 'manage' },
           },
           {
-            title: 'User Group',
+            title: 'Nhóm người dùng',
             url: '/user-group',
             icon: UsersRound,
             permission: { resource: 'groups', action: 'manage' },
@@ -84,29 +84,29 @@ export const navGroups: NavGroupWithPermission[] = [
     ],
   },
   {
-    title: 'Hospital Configuration',
+    title: 'Cấu hình phòng khám',
     items: [
       {
-        title: 'Specialties',
+        title: 'Chuyên khoa',
         url: '/specialties',
         icon: Stethoscope,
         permission: { resource: 'specialties', action: 'read' },
       },
       {
-        title: 'Work Locations',
+        title: 'Cơ sở làm việc',
         url: '/work-locations',
         icon: MapPin,
         permission: { resource: 'work-locations', action: 'manage' },
       },
       {
-        title: 'Office Hours',
+        title: 'Giờ làm việc',
         url: '/office-hours',
         icon: Clock,
 
         permission: { resource: 'office-hours', action: 'manage' },
       },
       {
-        title: 'Holidays',
+        title: 'Ngày nghỉ lễ',
         url: '/holidays',
         icon: CalendarOff,
         permission: { resource: 'office-hours', action: 'read' },
@@ -114,10 +114,10 @@ export const navGroups: NavGroupWithPermission[] = [
     ],
   },
   {
-    title: 'Operations',
+    title: 'Vận hành',
     items: [
       {
-        title: 'My Schedule',
+        title: 'Lịch của tôi',
         url: '/my-schedule',
         icon: Clock,
         permission: {
@@ -127,25 +127,25 @@ export const navGroups: NavGroupWithPermission[] = [
         },
       },
       {
-        title: 'Appointments',
+        title: 'Lịch hẹn',
         url: '/appointments',
         icon: CalendarDays,
         permission: { resource: 'appointments', action: 'read' },
       },
       {
-        title: 'Patients',
+        title: 'Bệnh nhân',
         url: '/patients',
         icon: UserRound,
         permission: { resource: 'patients', action: 'read' },
       },
       {
-        title: 'Q&A',
+        title: 'Hỏi đáp',
         url: '/questions',
         icon: MessageCircleQuestion,
         permission: { resource: 'questions', action: 'read' },
       },
       {
-        title: 'Reviews',
+        title: 'Đánh giá',
         url: '/reviews',
         icon: Star,
         permission: {
@@ -157,28 +157,28 @@ export const navGroups: NavGroupWithPermission[] = [
     ],
   },
   {
-    title: 'Content Management',
+    title: 'Quản lý nội dung',
     items: [
       {
-        title: 'Blog Categories',
+        title: 'Danh mục bài viết',
         url: '/blogs/categories',
         icon: BookOpen,
         permission: { resource: 'blogs', action: 'manage' },
       },
       {
-        title: 'All Blogs',
+        title: 'Tất cả bài viết',
         url: '/blogs/list',
         icon: FileText,
         permission: { resource: 'blogs', action: 'read' },
       },
       {
-        title: 'FAQs',
+        title: 'Câu hỏi thường gặp',
         url: '/faqs',
         icon: HelpCircle,
         permission: { resource: 'faqs', action: 'read' },
       },
       {
-        title: 'Testimonials',
+        title: 'Phản hồi khách hàng',
         url: '/testimonials',
         icon: Quote,
         permission: { resource: 'testimonials', action: 'read' },
@@ -186,31 +186,31 @@ export const navGroups: NavGroupWithPermission[] = [
     ],
   },
   {
-    title: 'Other',
+    title: 'Khác',
     items: [
       {
-        title: 'Settings',
+        title: 'Cài đặt',
         icon: Settings,
         items: [
           {
-            title: 'General',
+            title: 'Cài đặt chung',
             url: '/settings',
             icon: Wrench,
           },
           {
-            title: 'Appearance',
+            title: 'Giao diện',
             url: '/settings/appearance',
             icon: Palette,
           },
           {
-            title: 'Notifications',
+            title: 'Thông báo',
             url: '/settings/notifications',
             icon: Bell,
           },
         ],
       },
       {
-        title: 'Help Center',
+        title: 'Trung tâm trợ giúp',
         url: '/help-center',
         icon: HelpCircle,
       },

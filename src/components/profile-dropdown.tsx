@@ -50,21 +50,21 @@ export function ProfileDropdown() {
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
               <Link to='/settings'>
-                Profile
+                Hồ sơ
                 <DropdownMenuShortcut>⇧P</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
 
             <DropdownMenuItem asChild>
               <Link to='/settings'>
-                Settings
+                Cài đặt
                 <DropdownMenuShortcut>S</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant='destructive' onClick={() => setOpen(true)}>
-            Sign out
+            Đăng xuất
             <DropdownMenuShortcut className='text-current'>
               ⇧Q
             </DropdownMenuShortcut>

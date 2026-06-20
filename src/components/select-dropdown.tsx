@@ -37,7 +37,7 @@ export function SelectDropdown({
     <Select {...defaultState}>
       <FormControl>
         <SelectTrigger disabled={disabled} className={cn(className)}>
-          <SelectValue placeholder={placeholder ?? 'Select'} />
+          <SelectValue placeholder={placeholder ?? 'Chọn'} />
         </SelectTrigger>
       </FormControl>
       <SelectContent>
@@ -45,8 +45,7 @@ export function SelectDropdown({
           <SelectItem disabled value='loading' className='h-14'>
             <div className='flex items-center justify-center gap-2'>
               <Loader className='h-5 w-5 animate-spin' />
-              {'  '}
-              Loading...
+              Đang tải...
             </div>
           </SelectItem>
         ) : (

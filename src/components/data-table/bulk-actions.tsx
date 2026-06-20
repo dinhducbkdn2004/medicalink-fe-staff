@@ -31,7 +31,7 @@ export function DataTableBulkActions<TData>({
   
   useEffect(() => {
     if (selectedCount > 0) {
-      const message = `${selectedCount} ${entityName}${selectedCount > 1 ? 's' : ''} selected. Bulk actions toolbar is available.`
+      const message = `Đã chọn ${selectedCount} ${entityName}. Thanh công cụ hành động hàng loạt khả dụng.`
 
       
       queueMicrotask(() => {
@@ -129,7 +129,7 @@ export function DataTableBulkActions<TData>({
       <div
         ref={toolbarRef}
         role='toolbar'
-        aria-label={`Bulk actions for ${selectedCount} selected ${entityName}${selectedCount > 1 ? 's' : ''}`}
+        aria-label={`Hành động hàng loạt cho ${selectedCount} ${entityName} đã chọn`}
         aria-describedby='bulk-actions-description'
         tabIndex={-1}
         onKeyDown={handleKeyDown}
@@ -154,15 +154,15 @@ export function DataTableBulkActions<TData>({
                 size='icon'
                 onClick={handleClearSelection}
                 className='size-6 rounded-full'
-                aria-label='Clear selection'
-                title='Clear selection (Escape)'
+                aria-label='Xóa lựa chọn'
+                title='Xóa lựa chọn (Escape)'
               >
                 <X />
-                <span className='sr-only'>Clear selection</span>
+                <span className='sr-only'>Xóa lựa chọn</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Clear selection (Escape)</p>
+              <p>Xóa lựa chọn (Escape)</p>
             </TooltipContent>
           </Tooltip>
 
@@ -179,15 +179,14 @@ export function DataTableBulkActions<TData>({
             <Badge
               variant='default'
               className='min-w-8 rounded-lg'
-              aria-label={`${selectedCount} selected`}
+              aria-label={`Đã chọn ${selectedCount}`}
             >
               {selectedCount}
             </Badge>{' '}
             <span className='hidden sm:inline'>
               {entityName}
-              {selectedCount > 1 ? 's' : ''}
             </span>{' '}
-            selected
+            đã chọn
           </div>
 
           <Separator

@@ -38,8 +38,8 @@ export function VerifyPasswordDialog({
   open,
   onOpenChange,
   onVerified,
-  title = 'Verify your password',
-  description = 'Please enter your password to confirm this action.',
+  title = 'Xác minh mật khẩu',
+  description = 'Vui lòng nhập mật khẩu để xác nhận.',
 }: Readonly<VerifyPasswordDialogProps>) {
   const verifyPasswordMutation = useVerifyPassword()
 
@@ -94,10 +94,10 @@ export function VerifyPasswordDialog({
               name='password'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Mật khẩu</FormLabel>
                   <FormControl>
                     <PasswordInput
-                      placeholder='Enter your password'
+                      placeholder='Nhập mật khẩu'
                       autoComplete='current-password'
                       autoFocus
                       disabled={isLoading}
@@ -116,11 +116,11 @@ export function VerifyPasswordDialog({
                 onClick={() => handleOpenChange(false)}
                 disabled={isLoading}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type='submit' disabled={isLoading}>
                 {isLoading && <Loader2 className='h-4 w-4 animate-spin' />}
-                Verify
+                Xác minh
               </Button>
             </DialogFooter>
           </form>

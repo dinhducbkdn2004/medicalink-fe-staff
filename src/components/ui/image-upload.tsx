@@ -38,9 +38,9 @@ export function ImageUpload({
       onChange(url)
     } catch (error) {
       console.error('Failed to upload image', error)
-      
+
     } finally {
-      
+
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }
@@ -91,11 +91,10 @@ export function ImageUpload({
               <Upload className='text-muted-foreground size-8' />
             )}
             <div className='text-sm'>
-              <span className='font-semibold'>Click to upload</span> or drag and
-              drop
+              <span className='font-semibold'>Tải lên</span> hoặc kéo và thả
             </div>
             <p className='text-muted-foreground text-xs'>
-              SVG, PNG, JPG or GIF (max. 10MB)
+              SVG, PNG, JPG hoặc GIF (tối đa 10MB)
             </p>
           </div>
         </div>

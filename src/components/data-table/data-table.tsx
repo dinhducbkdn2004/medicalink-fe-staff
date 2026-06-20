@@ -95,8 +95,8 @@ export function DataTable<TData>({
   search,
   navigate,
   isLoading = false,
-  entityName = 'item',
-  searchPlaceholder = 'Search...',
+  entityName = 'mục',
+  searchPlaceholder = 'Tìm kiếm...',
   searchKey,
   filters = [],
   getRowActions,
@@ -212,7 +212,7 @@ export function DataTable<TData>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sorting])
 
-  const defaultEmptyMessage = `No ${entityName}s found.`
+  const defaultEmptyMessage = `Không tìm thấy ${entityName} nào.`
 
   return (
     <div
