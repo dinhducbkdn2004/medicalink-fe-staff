@@ -66,7 +66,7 @@ function DashboardContent() {
       {}
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
-          <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
+          <h1 className='text-2xl font-bold tracking-tight'>Bảng điều khiển</h1>
         </div>
         <Tabs
           orientation='vertical'
@@ -75,12 +75,12 @@ function DashboardContent() {
         >
           <div className='w-full overflow-x-auto'>
             <TabsList>
-              <TabsTrigger value='overview'>Overview</TabsTrigger>
+              <TabsTrigger value='overview'>Tổng quan</TabsTrigger>
               <TabsTrigger value='booking-stats'>
-                Doctor Booking Stats
+                Thống kê đặt lịch
               </TabsTrigger>
               <TabsTrigger value='content-stats'>
-                Doctor Content Stats
+                Thống kê nội dung
               </TabsTrigger>
             </TabsList>
           </div>
@@ -89,7 +89,7 @@ function DashboardContent() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Total Staffs
+                    Tổng số nhân viên
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -115,7 +115,7 @@ function DashboardContent() {
                         {staffStats?.total || 0}
                       </div>
                       <p className='text-muted-foreground text-xs'>
-                        {staffStats?.recentlyCreated || 0} recently created
+                        {staffStats?.recentlyCreated || 0} mới tạo gần đây
                       </p>
                     </>
                   )}
@@ -125,7 +125,7 @@ function DashboardContent() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Total Patients
+                    Tổng số bệnh nhân
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -151,7 +151,7 @@ function DashboardContent() {
                         {patientStats?.totalPatients || 0}
                       </div>
                       <p className='text-muted-foreground text-xs'>
-                        {patientStats?.currentMonthPatients || 0} new this month
+                        {patientStats?.currentMonthPatients || 0} mới trong tháng này
                       </p>
                     </>
                   )}
@@ -161,7 +161,7 @@ function DashboardContent() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Appointments
+                    Cuộc hẹn
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -191,7 +191,7 @@ function DashboardContent() {
                         {appointmentStats?.growthPercent != null && (
                           <>
                             {appointmentStats.growthPercent > 0 ? '+' : ''}
-                            {appointmentStats.growthPercent}% from last month
+                            {appointmentStats.growthPercent}% so với tháng trước
                           </>
                         )}
                       </p>
@@ -203,7 +203,7 @@ function DashboardContent() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Total Revenue
+                    Tổng doanh thu
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -230,7 +230,7 @@ function DashboardContent() {
                         }).format(totalRevenue || 0)}
                       </div>
                       <p className='text-muted-foreground text-xs'>
-                        Year to date
+                        Từ đầu năm đến nay
                       </p>
                     </>
                   )}
@@ -240,7 +240,7 @@ function DashboardContent() {
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
               <Card className='col-span-1 lg:col-span-4'>
                 <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+                  <CardTitle>Tổng quan</CardTitle>
                 </CardHeader>
                 <CardContent className='ps-2'>
                   <Overview />
@@ -248,9 +248,9 @@ function DashboardContent() {
               </Card>
               <Card className='col-span-1 lg:col-span-3'>
                 <CardHeader>
-                  <CardTitle>Top Doctors by Revenue</CardTitle>
+                  <CardTitle>Bác sĩ có doanh thu cao nhất</CardTitle>
                   <CardDescription>
-                    Highest earning doctors this month.
+                    Những bác sĩ có thu nhập cao nhất tháng này.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -275,13 +275,13 @@ function DashboardContent() {
 
 const topNav = [
   {
-    title: 'Overview',
+    title: 'Tổng quan',
     href: '/',
     isActive: true,
     disabled: false,
   },
   {
-    title: 'Settings',
+    title: 'Cài đặt',
     href: 'settings',
     isActive: true,
     disabled: false,

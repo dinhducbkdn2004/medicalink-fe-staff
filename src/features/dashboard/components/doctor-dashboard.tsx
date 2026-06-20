@@ -79,10 +79,10 @@ export function DoctorDashboard() {
         <div className='mb-2 flex items-center justify-between space-y-2'>
           <div>
             <h1 className='text-2xl font-bold tracking-tight'>
-              Doctor Dashboard
+              Bảng điều khiển Bác sĩ
             </h1>
             <p className='text-muted-foreground'>
-              Overview of your activities and statistics
+              Tổng quan về các hoạt động và thống kê của bạn
             </p>
           </div>
         </div>
@@ -94,8 +94,8 @@ export function DoctorDashboard() {
         >
           <div className='w-full overflow-x-auto'>
             <TabsList>
-              <TabsTrigger value='overview'>Overview</TabsTrigger>
-              <TabsTrigger value='appointments'>Appointments</TabsTrigger>
+              <TabsTrigger value='overview'>Tổng quan</TabsTrigger>
+              <TabsTrigger value='appointments'>Cuộc hẹn</TabsTrigger>
             </TabsList>
           </div>
 
@@ -104,37 +104,37 @@ export function DoctorDashboard() {
             <div className='space-y-4'>
               {}
               <div>
-                <h2 className='mb-3 text-lg font-semibold'>Booking Stats</h2>
+                <h2 className='mb-3 text-lg font-semibold'>Thống kê đặt lịch</h2>
                 <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
                   <StatsCard
-                    title='Total Appointments'
+                    title='Tổng số cuộc hẹn'
                     value={stats?.booking.total || 0}
-                    description='Total appointments'
+                    description='Tổng số cuộc hẹn'
                     icon={Calendar}
                     isLoading={isLoading}
                   />
                   <StatsCard
-                    title='Pending Confirmation'
+                    title='Chờ xác nhận'
                     value={stats?.booking.bookedCount || 0}
-                    description='Needs confirmation'
+                    description='Cần xác nhận'
                     icon={Clock}
                     isLoading={isLoading}
                   />
                   <StatsCard
-                    title='Confirmed'
+                    title='Đã xác nhận'
                     value={stats?.booking.confirmedCount || 0}
-                    description='Confirmed appointments'
+                    description='Các cuộc hẹn đã xác nhận'
                     icon={CheckCircle}
                     isLoading={isLoading}
                   />
                   <StatsCard
-                    title='Completed Rate'
+                    title='Tỷ lệ hoàn thành'
                     value={
                       stats?.booking.completedRate
                         ? `${stats.booking.completedRate.toFixed(1)}%`
                         : '0%'
                     }
-                    description={`${stats?.booking.completedCount || 0} completed`}
+                    description={`${stats?.booking.completedCount || 0} đã hoàn thành`}
                     icon={CheckCircle}
                     isLoading={isLoading}
                   />
@@ -143,37 +143,37 @@ export function DoctorDashboard() {
 
               {}
               <div>
-                <h2 className='mb-3 text-lg font-semibold'>Content Stats</h2>
+                <h2 className='mb-3 text-lg font-semibold'>Thống kê nội dung</h2>
                 <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
                   <StatsCard
-                    title='Total Reviews'
+                    title='Tổng số đánh giá'
                     value={stats?.content.totalReviews || 0}
-                    description='Reviews from patients'
+                    description='Đánh giá từ bệnh nhân'
                     icon={Star}
                     isLoading={isLoading}
                   />
                   <StatsCard
-                    title='Average Rating'
+                    title='Đánh giá trung bình'
                     value={
                       stats?.content.averageRating
                         ? stats.content.averageRating.toFixed(1)
                         : '0.0'
                     }
-                    description='Average score'
+                    description='Điểm trung bình'
                     icon={Star}
                     isLoading={isLoading}
                   />
                   <StatsCard
-                    title='Q&A Answers'
+                    title='Trả lời Q&A'
                     value={stats?.content.totalAnswers || 0}
-                    description={`${stats?.content.answerAcceptedRate.toFixed(0) || 0}% accepted`}
+                    description={`${stats?.content.answerAcceptedRate.toFixed(0) || 0}% được chấp nhận`}
                     icon={MessageSquare}
                     isLoading={isLoading}
                   />
                   <StatsCard
-                    title='Published Blogs'
+                    title='Bài viết đã xuất bản'
                     value={stats?.content.totalBlogs || 0}
-                    description='Published articles'
+                    description='Các bài viết đã đăng'
                     icon={FileText}
                     isLoading={isLoading}
                   />
@@ -184,9 +184,9 @@ export function DoctorDashboard() {
               <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
                 <Card>
                   <CardHeader>
-                    <CardTitle>Booking Performance</CardTitle>
+                    <CardTitle>Hiệu suất đặt lịch</CardTitle>
                     <CardDescription>
-                      Details about appointment status
+                      Chi tiết về trạng thái cuộc hẹn
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -201,7 +201,7 @@ export function DoctorDashboard() {
                         <div className='flex items-center justify-between'>
                           <div className='flex items-center gap-2'>
                             <CheckCircle className='h-4 w-4 text-green-600' />
-                            <span className='text-sm'>Completed</span>
+                            <span className='text-sm'>Đã hoàn thành</span>
                           </div>
                           <span className='font-semibold'>
                             {stats?.booking.completedCount || 0}
@@ -210,7 +210,7 @@ export function DoctorDashboard() {
                         <div className='flex items-center justify-between'>
                           <div className='flex items-center gap-2'>
                             <Clock className='h-4 w-4 text-yellow-600' />
-                            <span className='text-sm'>Confirmed</span>
+                            <span className='text-sm'>Đã xác nhận</span>
                           </div>
                           <span className='font-semibold'>
                             {stats?.booking.confirmedCount || 0}
@@ -219,7 +219,7 @@ export function DoctorDashboard() {
                         <div className='flex items-center justify-between'>
                           <div className='flex items-center gap-2'>
                             <XCircle className='h-4 w-4 text-red-600' />
-                            <span className='text-sm'>Cancelled</span>
+                            <span className='text-sm'>Đã hủy</span>
                           </div>
                           <span className='font-semibold'>
                             {stats?.booking.cancelledCount || 0}
@@ -232,9 +232,9 @@ export function DoctorDashboard() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Content Engagement</CardTitle>
+                    <CardTitle>Tương tác nội dung</CardTitle>
                     <CardDescription>
-                      Engagement with posts and answers
+                      Tương tác với bài viết và câu trả lời
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -249,7 +249,7 @@ export function DoctorDashboard() {
                         <div className='flex items-center justify-between'>
                           <div className='flex items-center gap-2'>
                             <Star className='h-4 w-4 text-yellow-500' />
-                            <span className='text-sm'>Avg Rating</span>
+                            <span className='text-sm'>Đánh giá TB</span>
                           </div>
                           <span className='font-semibold'>
                             {stats?.content.averageRating.toFixed(1) || '0.0'} /
@@ -259,7 +259,7 @@ export function DoctorDashboard() {
                         <div className='flex items-center justify-between'>
                           <div className='flex items-center gap-2'>
                             <MessageSquare className='h-4 w-4 text-blue-600' />
-                            <span className='text-sm'>Accepted Answers</span>
+                            <span className='text-sm'>Câu trả lời được chấp nhận</span>
                           </div>
                           <span className='font-semibold'>
                             {stats?.content.totalAcceptedAnswers || 0} /{' '}
@@ -269,7 +269,7 @@ export function DoctorDashboard() {
                         <div className='flex items-center justify-between'>
                           <div className='flex items-center gap-2'>
                             <FileText className='h-4 w-4 text-purple-600' />
-                            <span className='text-sm'>Published Blogs</span>
+                            <span className='text-sm'>Bài viết đã xuất bản</span>
                           </div>
                           <span className='font-semibold'>
                             {stats?.content.totalBlogs || 0}
@@ -292,12 +292,12 @@ export function DoctorDashboard() {
           <TabsContent value='content' className='space-y-4'>
             <Card>
               <CardHeader>
-                <CardTitle>Content Overview</CardTitle>
-                <CardDescription>Your reviews, Q&A, and blogs</CardDescription>
+                <CardTitle>Tổng quan Nội dung</CardTitle>
+                <CardDescription>Đánh giá, Hỏi đáp và bài viết của bạn</CardDescription>
               </CardHeader>
               <CardContent>
                 <p className='text-muted-foreground text-sm'>
-                  Content details will be implemented here.
+                  Chi tiết nội dung sẽ được triển khai tại đây.
                 </p>
               </CardContent>
             </Card>

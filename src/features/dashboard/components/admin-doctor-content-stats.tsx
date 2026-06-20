@@ -38,11 +38,11 @@ import {
 } from '@/components/ui/table'
 
 const sortOptions: { value: DoctorContentSortBy; label: string }[] = [
-  { value: 'totalReviews', label: 'Total Reviews' },
-  { value: 'averageRating', label: 'Average Rating' },
-  { value: 'totalAnswers', label: 'Total Answers' },
-  { value: 'totalAcceptedAnswers', label: 'Accepted Answers' },
-  { value: 'totalBlogs', label: 'Published Blogs' },
+  { value: 'totalReviews', label: 'Tổng đánh giá' },
+  { value: 'averageRating', label: 'Đánh giá trung bình' },
+  { value: 'totalAnswers', label: 'Tổng số câu trả lời' },
+  { value: 'totalAcceptedAnswers', label: 'Câu trả lời được chấp nhận' },
+  { value: 'totalBlogs', label: 'Bài viết đã xuất bản' },
 ]
 
 export function AdminDoctorContentStats() {
@@ -101,16 +101,16 @@ export function AdminDoctorContentStats() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Doctor Content Statistics</CardTitle>
+        <CardTitle>Thống kê nội dung của Bác sĩ</CardTitle>
         <CardDescription>
-          Content statistics (reviews, Q&A, blogs) for all doctors
+          Thống kê nội dung (đánh giá, Q&A, bài viết) cho tất cả bác sĩ
         </CardDescription>
       </CardHeader>
       <CardContent>
         {}
         <div className='mb-4 flex flex-wrap items-center gap-4'>
           <div className='flex items-center gap-2'>
-            <label className='text-sm font-medium'>Sort by:</label>
+            <label className='text-sm font-medium'>Sắp xếp theo:</label>
             <Select value={params.sortBy} onValueChange={handleSortChange}>
               <SelectTrigger className='w-[180px]'>
                 <SelectValue />
@@ -126,11 +126,11 @@ export function AdminDoctorContentStats() {
           </div>
 
           <Button variant='outline' size='sm' onClick={handleSortOrderToggle}>
-            {params.sortOrder === 'ASC' ? '↑ Ascending' : '↓ Descending'}
+            {params.sortOrder === 'ASC' ? '↑ Tăng dần' : '↓ Giảm dần'}
           </Button>
 
           <div className='flex items-center gap-2'>
-            <label className='text-sm font-medium'>Per page:</label>
+            <label className='text-sm font-medium'>Số dòng/trang:</label>
             <Select
               value={params.limit?.toString()}
               onValueChange={handleLimitChange}
@@ -151,7 +151,7 @@ export function AdminDoctorContentStats() {
         {}
         {error && (
           <div className='bg-destructive/10 text-destructive rounded-md p-4'>
-            Error loading stats: {error.message}
+            Lỗi tải thống kê: {error.message}
           </div>
         )}
 
@@ -160,13 +160,13 @@ export function AdminDoctorContentStats() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Doctor</TableHead>
-                <TableHead className='text-right'>Reviews</TableHead>
-                <TableHead className='text-right'>Rating</TableHead>
-                <TableHead className='text-right'>Answers</TableHead>
-                <TableHead className='text-right'>Accepted</TableHead>
-                <TableHead className='text-right'>Accept Rate</TableHead>
-                <TableHead className='text-right'>Blogs</TableHead>
+                <TableHead>Bác sĩ</TableHead>
+                <TableHead className='text-right'>Đánh giá</TableHead>
+                <TableHead className='text-right'>Điểm đánh giá</TableHead>
+                <TableHead className='text-right'>Trả lời</TableHead>
+                <TableHead className='text-right'>Được chấp nhận</TableHead>
+                <TableHead className='text-right'>Tỷ lệ chấp nhận</TableHead>
+                <TableHead className='text-right'>Bài viết</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -203,7 +203,7 @@ export function AdminDoctorContentStats() {
                     colSpan={7}
                     className='text-muted-foreground text-center'
                   >
-                    No data available
+                    Không có dữ liệu
                   </TableCell>
                 </TableRow>
               ) : (
@@ -213,7 +213,7 @@ export function AdminDoctorContentStats() {
                       {item.doctor.fullName}
                       {item.doctor.id === 'invalid-id' && (
                         <span className='text-muted-foreground ml-2 text-xs'>
-                          (Deleted)
+                          (Đã xóa)
                         </span>
                       )}
                     </TableCell>
@@ -248,9 +248,9 @@ export function AdminDoctorContentStats() {
         {data && (
           <div className='mt-4 flex items-center justify-between'>
             <div className='text-muted-foreground text-sm'>
-              Showing {(data.meta.page - 1) * data.meta.limit + 1} to{' '}
-              {Math.min(data.meta.page * data.meta.limit, data.meta.total)} of{' '}
-              {data.meta.total} results
+              Hiển thị {(data.meta.page - 1) * data.meta.limit + 1} đến{' '}
+              {Math.min(data.meta.page * data.meta.limit, data.meta.total)} của{' '}
+              {data.meta.total} kết quả
             </div>
             <div className='flex items-center gap-2'>
               <Button
@@ -270,7 +270,7 @@ export function AdminDoctorContentStats() {
                 <ChevronLeft className='h-4 w-4' />
               </Button>
               <span className='text-sm'>
-                Page {data.meta.page} of {data.meta.totalPages}
+                Trang {data.meta.page} trên {data.meta.totalPages}
               </span>
               <Button
                 variant='outline'

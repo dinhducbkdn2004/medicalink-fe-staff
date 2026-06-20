@@ -24,7 +24,7 @@ export function Overview() {
   if (chartData.length === 0) {
     return (
       <div className='text-muted-foreground flex h-[350px] items-center justify-center'>
-        No revenue data available
+        Không có dữ liệu doanh thu
       </div>
     )
   }

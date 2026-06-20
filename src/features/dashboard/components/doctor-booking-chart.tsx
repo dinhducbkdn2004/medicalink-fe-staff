@@ -46,7 +46,7 @@ export function DoctorBookingChart() {
     return data.data
       .slice(0, 10)
       .map((item) => {
-        const fullName = item.doctor?.fullName || 'Unknown Doctor'
+        const fullName = item.doctor?.fullName || 'Bác sĩ chưa xác định'
         const nameParts = fullName.split(' ')
         const shortName =
           nameParts.length >= 2 ? nameParts.slice(-2).join(' ') : fullName
@@ -76,19 +76,19 @@ export function DoctorBookingChart() {
     )
 
     return [
-      { name: 'Pending', value: totals.pending, color: STATUS_COLORS.pending },
+      { name: 'Chờ xác nhận', value: totals.pending, color: STATUS_COLORS.pending },
       {
-        name: 'Confirmed',
+        name: 'Đã xác nhận',
         value: totals.confirmed,
         color: STATUS_COLORS.confirmed,
       },
       {
-        name: 'Completed',
+        name: 'Đã hoàn thành',
         value: totals.completed,
         color: STATUS_COLORS.completed,
       },
       {
-        name: 'Cancelled',
+        name: 'Đã hủy',
         value: totals.cancelled,
         color: STATUS_COLORS.cancelled,
       },
@@ -124,7 +124,7 @@ export function DoctorBookingChart() {
     return (
       <Card>
         <CardContent className='flex h-[350px] items-center justify-center'>
-          <p className='text-muted-foreground'>No booking data available</p>
+          <p className='text-muted-foreground'>Không có dữ liệu đặt lịch</p>
         </CardContent>
       </Card>
     )
@@ -141,9 +141,9 @@ export function DoctorBookingChart() {
       {completionRateData.length > 0 ? (
         <Card>
           <CardHeader>
-            <CardTitle>Top Doctors by Completion Rate</CardTitle>
+            <CardTitle>Top Bác sĩ theo Tỷ lệ hoàn thành</CardTitle>
             <CardDescription>
-              Doctors with highest appointment completion rates
+              Các bác sĩ có tỷ lệ hoàn thành cuộc hẹn cao nhất
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -180,10 +180,10 @@ export function DoctorBookingChart() {
                           <p className='mb-2 font-semibold'>{data.name}</p>
                           <div className='space-y-1 text-xs'>
                             <p className='font-medium text-green-600'>
-                              ✓ Completion Rate: {data.rate}%
+                              ✓ Tỷ lệ hoàn thành: {data.rate}%
                             </p>
                             <p className='text-muted-foreground'>
-                              Completed: {data.completed} / {data.total}
+                              Đã hoàn thành: {data.completed} / {data.total}
                             </p>
                           </div>
                         </div>
@@ -217,7 +217,7 @@ export function DoctorBookingChart() {
       ) : (
         <Card>
           <CardContent className='flex h-[350px] items-center justify-center'>
-            <p className='text-muted-foreground'>No completion rate data</p>
+            <p className='text-muted-foreground'>Không có dữ liệu tỷ lệ hoàn thành</p>
           </CardContent>
         </Card>
       )}
@@ -226,10 +226,10 @@ export function DoctorBookingChart() {
       {statusDistribution.length > 0 ? (
         <Card>
           <CardHeader>
-            <CardTitle>Overall Appointment Status</CardTitle>
+            <CardTitle>Trạng thái Cuộc hẹn Tổng quát</CardTitle>
             <CardDescription>
-              Distribution of {totalAppointments.toLocaleString()} total
-              appointments
+              Phân bổ của tổng số {totalAppointments.toLocaleString()}{' '}
+              cuộc hẹn
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -259,13 +259,13 @@ export function DoctorBookingChart() {
                         <div className='bg-background rounded-lg border p-3 shadow-lg'>
                           <p className='mb-1 font-semibold'>{data.name}</p>
                           <p className='text-sm'>
-                            {data.value.toLocaleString()} appointments
+                            {data.value.toLocaleString()} cuộc hẹn
                           </p>
                           <p className='text-muted-foreground text-xs'>
                             {((data.value / totalAppointments) * 100).toFixed(
                               1
                             )}
-                            % of total
+                            % tổng số
                           </p>
                         </div>
                       )
@@ -289,7 +289,7 @@ export function DoctorBookingChart() {
       ) : (
         <Card>
           <CardContent className='flex h-[350px] items-center justify-center'>
-            <p className='text-muted-foreground'>No status distribution data</p>
+            <p className='text-muted-foreground'>Không có dữ liệu phân bổ trạng thái</p>
           </CardContent>
         </Card>
       )}

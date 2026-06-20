@@ -51,7 +51,7 @@ export function DoctorContentChart() {
     return data.data
       .slice(0, 10)
       .map((item) => {
-        const fullName = item.doctor?.fullName || 'Unknown Doctor'
+        const fullName = item.doctor?.fullName || 'Bác sĩ chưa xác định'
         const nameParts = fullName.split(' ')
         const shortName =
           nameParts.length >= 2 ? nameParts.slice(-2).join(' ') : fullName
@@ -70,15 +70,15 @@ export function DoctorContentChart() {
     if (!data?.data || data.data.length === 0) return []
 
     return data.data.slice(0, 5).map((item) => {
-      const fullName = item.doctor?.fullName || 'Unknown'
+      const fullName = item.doctor?.fullName || 'Chưa xác định'
       const lastName = fullName.split(' ').slice(-1)[0]
 
       return {
         doctor: lastName,
-        Reviews: item.totalReviews || 0,
-        Answers: item.totalAnswers || 0,
-        Accepted: item.totalAcceptedAnswers || 0,
-        Blogs: item.totalBlogs || 0,
+        Đánh_giá: item.totalReviews || 0,
+        Trả_lời: item.totalAnswers || 0,
+        Được_chấp_nhận: item.totalAcceptedAnswers || 0,
+        Bài_viết: item.totalBlogs || 0,
       }
     })
   }, [data])
@@ -112,7 +112,7 @@ export function DoctorContentChart() {
     return (
       <Card>
         <CardContent className='flex h-[350px] items-center justify-center'>
-          <p className='text-muted-foreground'>No content data available</p>
+          <p className='text-muted-foreground'>Không có dữ liệu nội dung</p>
         </CardContent>
       </Card>
     )
@@ -124,9 +124,9 @@ export function DoctorContentChart() {
       {ratingChartData.length > 0 ? (
         <Card>
           <CardHeader>
-            <CardTitle>Top Doctors by Average Rating</CardTitle>
+            <CardTitle>Top Bác sĩ theo Điểm đánh giá trung bình</CardTitle>
             <CardDescription>
-              Doctors with highest patient satisfaction ratings
+              Các bác sĩ có mức độ hài lòng của bệnh nhân cao nhất
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -172,8 +172,7 @@ export function DoctorContentChart() {
                             </span>
                           </div>
                           <p className='text-muted-foreground text-xs'>
-                            Based on {data.reviews} review
-                            {data.reviews !== 1 ? 's' : ''}
+                            Dựa trên {data.reviews} đánh giá
                           </p>
                         </div>
                       )
@@ -198,7 +197,7 @@ export function DoctorContentChart() {
       ) : (
         <Card>
           <CardContent className='flex h-[350px] items-center justify-center'>
-            <p className='text-muted-foreground'>No rating data available</p>
+            <p className='text-muted-foreground'>Không có dữ liệu đánh giá</p>
           </CardContent>
         </Card>
       )}
@@ -207,9 +206,9 @@ export function DoctorContentChart() {
       {radarChartData.length > 0 ? (
         <Card>
           <CardHeader>
-            <CardTitle>Top 5 Content Contributors</CardTitle>
+            <CardTitle>Top 5 Bác sĩ Đóng góp Nội dung</CardTitle>
             <CardDescription>
-              Multi-dimensional content engagement analysis
+              Phân tích mức độ tương tác nội dung đa chiều
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -225,32 +224,32 @@ export function DoctorContentChart() {
                   angle={90}
                 />
                 <Radar
-                  name='Reviews'
-                  dataKey='Reviews'
+                  name='Đánh giá'
+                  dataKey='Đánh_giá'
                   stroke='#fbbf24'
                   fill='#fef3c7'
                   fillOpacity={0.6}
                   strokeWidth={2.5}
                 />
                 <Radar
-                  name='Answers'
-                  dataKey='Answers'
+                  name='Trả lời'
+                  dataKey='Trả_lời'
                   stroke='#60a5fa'
                   fill='#dbeafe'
                   fillOpacity={0.6}
                   strokeWidth={2.5}
                 />
                 <Radar
-                  name='Accepted'
-                  dataKey='Accepted'
+                  name='Được chấp nhận'
+                  dataKey='Được_chấp_nhận'
                   stroke='#34d399'
                   fill='#d1fae5'
                   fillOpacity={0.6}
                   strokeWidth={2.5}
                 />
                 <Radar
-                  name='Blogs'
-                  dataKey='Blogs'
+                  name='Bài viết'
+                  dataKey='Bài_viết'
                   stroke='#c084fc'
                   fill='#f3e8ff'
                   fillOpacity={0.6}
@@ -270,27 +269,27 @@ export function DoctorContentChart() {
                           </p>
                           <div className='space-y-1 text-xs'>
                             <div className='flex items-center justify-between gap-4'>
-                              <span className='text-yellow-600'>Reviews:</span>
+                              <span className='text-yellow-600'>Đánh giá:</span>
                               <span className='font-medium'>
-                                {payload[0].payload.Reviews}
+                                {payload[0].payload.Đánh_giá}
                               </span>
                             </div>
                             <div className='flex items-center justify-between gap-4'>
-                              <span className='text-blue-600'>Answers:</span>
+                              <span className='text-blue-600'>Trả lời:</span>
                               <span className='font-medium'>
-                                {payload[0].payload.Answers}
+                                {payload[0].payload.Trả_lời}
                               </span>
                             </div>
                             <div className='flex items-center justify-between gap-4'>
-                              <span className='text-green-600'>Accepted:</span>
+                              <span className='text-green-600'>Được chấp nhận:</span>
                               <span className='font-medium'>
-                                {payload[0].payload.Accepted}
+                                {payload[0].payload.Được_chấp_nhận}
                               </span>
                             </div>
                             <div className='flex items-center justify-between gap-4'>
-                              <span className='text-purple-600'>Blogs:</span>
+                              <span className='text-purple-600'>Bài viết:</span>
                               <span className='font-medium'>
-                                {payload[0].payload.Blogs}
+                                {payload[0].payload.Bài_viết}
                               </span>
                             </div>
                           </div>
@@ -308,7 +307,7 @@ export function DoctorContentChart() {
         <Card>
           <CardContent className='flex h-[350px] items-center justify-center'>
             <p className='text-muted-foreground'>
-              No content metrics available
+              Không có số liệu nội dung
             </p>
           </CardContent>
         </Card>

@@ -37,11 +37,11 @@ import {
 } from '@/components/ui/table'
 
 const sortOptions: { value: DoctorBookingSortBy; label: string }[] = [
-  { value: 'booked', label: 'Pending (Booked)' },
-  { value: 'confirmed', label: 'Confirmed' },
-  { value: 'cancelled', label: 'Cancelled' },
-  { value: 'completed', label: 'Completed' },
-  { value: 'completedRate', label: 'Completion Rate' },
+  { value: 'booked', label: 'Chờ xác nhận (Đã đặt)' },
+  { value: 'confirmed', label: 'Đã xác nhận' },
+  { value: 'cancelled', label: 'Đã hủy' },
+  { value: 'completed', label: 'Đã hoàn thành' },
+  { value: 'completedRate', label: 'Tỷ lệ hoàn thành' },
 ]
 
 export function AdminDoctorBookingStats() {
@@ -81,16 +81,16 @@ export function AdminDoctorBookingStats() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Doctor Booking Statistics</CardTitle>
+        <CardTitle>Thống kê đặt lịch của Bác sĩ</CardTitle>
         <CardDescription>
-          Booking statistics for all doctors with pagination & sorting
+          Thống kê đặt lịch cho tất cả bác sĩ với phân trang và sắp xếp
         </CardDescription>
       </CardHeader>
       <CardContent>
         {}
         <div className='mb-4 flex flex-wrap items-center gap-4'>
           <div className='flex items-center gap-2'>
-            <label className='text-sm font-medium'>Sort by:</label>
+            <label className='text-sm font-medium'>Sắp xếp theo:</label>
             <Select value={params.sortBy} onValueChange={handleSortChange}>
               <SelectTrigger className='w-[180px]'>
                 <SelectValue />
@@ -106,11 +106,11 @@ export function AdminDoctorBookingStats() {
           </div>
 
           <Button variant='outline' size='sm' onClick={handleSortOrderToggle}>
-            {params.sortOrder === 'ASC' ? '↑ Ascending' : '↓ Descending'}
+            {params.sortOrder === 'ASC' ? '↑ Tăng dần' : '↓ Giảm dần'}
           </Button>
 
           <div className='flex items-center gap-2'>
-            <label className='text-sm font-medium'>Per page:</label>
+            <label className='text-sm font-medium'>Số dòng/trang:</label>
             <Select
               value={params.limit?.toString()}
               onValueChange={handleLimitChange}
@@ -131,7 +131,7 @@ export function AdminDoctorBookingStats() {
         {}
         {error && (
           <div className='bg-destructive/10 text-destructive rounded-md p-4'>
-            Error loading stats: {error.message}
+            Lỗi tải thống kê: {error.message}
           </div>
         )}
 
@@ -140,13 +140,13 @@ export function AdminDoctorBookingStats() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Doctor</TableHead>
-                <TableHead className='text-right'>Total</TableHead>
-                <TableHead className='text-right'>Pending</TableHead>
-                <TableHead className='text-right'>Confirmed</TableHead>
-                <TableHead className='text-right'>Cancelled</TableHead>
-                <TableHead className='text-right'>Completed</TableHead>
-                <TableHead className='text-right'>Rate</TableHead>
+                <TableHead>Bác sĩ</TableHead>
+                <TableHead className='text-right'>Tổng cộng</TableHead>
+                <TableHead className='text-right'>Chờ xác nhận</TableHead>
+                <TableHead className='text-right'>Đã xác nhận</TableHead>
+                <TableHead className='text-right'>Đã hủy</TableHead>
+                <TableHead className='text-right'>Đã hoàn thành</TableHead>
+                <TableHead className='text-right'>Tỷ lệ</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -183,7 +183,7 @@ export function AdminDoctorBookingStats() {
                     colSpan={7}
                     className='text-muted-foreground text-center'
                   >
-                    No data available
+                    Không có dữ liệu
                   </TableCell>
                 </TableRow>
               ) : (
@@ -193,7 +193,7 @@ export function AdminDoctorBookingStats() {
                       {item.doctor.fullName}
                       {item.doctor.id === 'invalid-id' && (
                         <span className='text-muted-foreground ml-2 text-xs'>
-                          (Deleted)
+                          (Đã xóa)
                         </span>
                       )}
                     </TableCell>
@@ -224,9 +224,9 @@ export function AdminDoctorBookingStats() {
         {data && (
           <div className='mt-4 flex items-center justify-between'>
             <div className='text-muted-foreground text-sm'>
-              Showing {(data.meta.page - 1) * data.meta.limit + 1} to{' '}
-              {Math.min(data.meta.page * data.meta.limit, data.meta.total)} of{' '}
-              {data.meta.total} results
+              Hiển thị {(data.meta.page - 1) * data.meta.limit + 1} đến{' '}
+              {Math.min(data.meta.page * data.meta.limit, data.meta.total)} của{' '}
+              {data.meta.total} kết quả
             </div>
             <div className='flex items-center gap-2'>
               <Button
@@ -246,7 +246,7 @@ export function AdminDoctorBookingStats() {
                 <ChevronLeft className='h-4 w-4' />
               </Button>
               <span className='text-sm'>
-                Page {data.meta.page} of {data.meta.totalPages}
+                Trang {data.meta.page} trên {data.meta.totalPages}
               </span>
               <Button
                 variant='outline'

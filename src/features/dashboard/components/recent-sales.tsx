@@ -20,10 +20,10 @@ export function RecentSales() {
           <div className='flex flex-1 flex-wrap items-center justify-between'>
             <div className='space-y-1'>
               <p className='text-sm leading-none font-medium'>
-                {item.doctor?.fullName || 'Deleted Doctor'}
+                {item.doctor?.fullName || 'Bác sĩ đã xóa'}
               </p>
               <p className='text-muted-foreground text-sm'>
-                {item.doctor?.isActive ? 'Active' : 'Inactive'}
+                {item.doctor?.isActive ? 'Hoạt động' : 'Ngừng hoạt động'}
               </p>
             </div>
             <div className='font-medium'>
@@ -45,7 +45,7 @@ export function RecentSales() {
       {(!topDoctors || topDoctors.length === 0) && (
         <div className='flex h-full min-h-[100px] flex-col items-center justify-center text-center'>
           <p className='text-muted-foreground text-sm'>
-            No doctor revenue data available for this month.
+            Không có dữ liệu doanh thu của bác sĩ trong tháng này.
           </p>
         </div>
       )}
