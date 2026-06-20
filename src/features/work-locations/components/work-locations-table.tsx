@@ -61,7 +61,7 @@ export function WorkLocationsTable({
 }: WorkLocationsTableProps) {
   const { setOpen, setCurrentRow } = useWorkLocations()
 
-  
+
   const getRowActions = (row: {
     original: WorkLocation
   }): DataTableAction[] => {
@@ -69,7 +69,7 @@ export function WorkLocationsTable({
 
     const actions: DataTableAction[] = []
 
-    
+
     if (canUpdateWorkLocations()) {
       actions.push({
         label: 'Edit',
@@ -81,7 +81,7 @@ export function WorkLocationsTable({
       })
     }
 
-    
+
     if (canDeleteWorkLocation({ workLocationId: workLocation.id })) {
       actions.push({
         label: 'Delete',
@@ -99,22 +99,22 @@ export function WorkLocationsTable({
 
   return (
     <DataTable
-      
+
       data={data}
       columns={columns}
       search={search}
       navigate={navigate}
-      
+
       pageCount={pageCount}
       isLoading={isLoading}
       entityName='work location'
-      
-      searchPlaceholder='Search locations by name or address...'
+
+      searchPlaceholder='Tìm kiếm phòng khám...'
       searchKey='name'
       filters={[
         {
           columnId: 'isActive',
-          title: 'Status',
+          title: 'Trạng thái',
           options: statusOptions.map((status) => ({
             label: status.label,
             value: status.value,
@@ -122,10 +122,10 @@ export function WorkLocationsTable({
           })),
         },
       ]}
-      
+
       getRowActions={getRowActions}
       renderBulkActions={(table) => <DataTableBulkActions table={table} />}
-      
+
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
       emptyMessage='No work locations found. Create your first location to get started.'

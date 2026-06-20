@@ -47,7 +47,7 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Location Name' />
+      <DataTableColumnHeader column={column} title='Tên địa điểm' />
     ),
     cell: ({ row }) => {
       return (
@@ -73,7 +73,7 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
   },
   {
     accessorKey: 'address',
-    header: 'Address',
+    header: 'Địa chỉ',
     cell: ({ row }) => {
       const address = row.original.address
       return (
@@ -93,7 +93,7 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
   },
   {
     accessorKey: 'phone',
-    header: 'Contact',
+    header: 'Liên hệ',
     cell: ({ row }) => {
       const phone = row.original.phone
       return (
@@ -109,7 +109,7 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
   },
   {
     accessorKey: 'timezone',
-    header: 'Timezone',
+    header: 'Múi giờ',
     cell: ({ row }) => {
       const timezone = row.original.timezone
       return (
@@ -128,7 +128,7 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
   {
     accessorKey: 'isActive',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Status' />
+      <DataTableColumnHeader column={column} title='Trạng thái' />
     ),
     cell: ({ row }) => {
       const isActive = row.original.isActive
@@ -142,7 +142,7 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
                 : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400'
             )}
           >
-            {isActive ? 'Active' : 'Inactive'}
+            {isActive ? 'Hoạt động' : 'Ngừng hoạt động'}
           </Badge>
         </div>
       )
@@ -159,13 +159,13 @@ export const workLocationsColumns: ColumnDef<WorkLocation>[] = [
   {
     accessorKey: 'createdAt',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Created Date' />
+      <DataTableColumnHeader column={column} title='Ngày tạo' />
     ),
     cell: ({ row }) => {
       const date = new Date(row.original.createdAt)
       return (
         <div className='text-muted-foreground text-sm'>
-          {date.toLocaleDateString('en-US', {
+          {date.toLocaleDateString('vi-VN', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',

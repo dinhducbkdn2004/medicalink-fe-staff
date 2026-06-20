@@ -20,7 +20,7 @@ export function WorkLocations() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
-  
+
   const queryParams = {
     page: (search.page as number) || 1,
     limit: (search.pageSize as number) || 10,
@@ -54,10 +54,10 @@ export function WorkLocations() {
           <div className='flex flex-wrap items-end justify-between gap-2'>
             <div>
               <h2 className='text-2xl font-bold tracking-tight'>
-                Work Location Management
+                Quản lý địa điểm làm việc
               </h2>
               <p className='text-muted-foreground'>
-                Manage hospital and clinic locations where doctors practice.
+                Quản lý các địa điểm làm việc
               </p>
             </div>
             <Can I='work-locations:create'>

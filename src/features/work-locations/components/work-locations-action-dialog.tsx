@@ -40,26 +40,26 @@ import { TimezoneCombobox } from './timezone-combobox'
 const formSchema = z.object({
   name: z
     .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(160, 'Name must be at most 160 characters'),
+    .min(2, 'Tên phải có ít nhất 2 ký tự')
+    .max(160, 'Tên không được vượt quá 160 ký tự'),
   address: z
     .string()
-    .max(255, 'Address must be at most 255 characters')
+    .max(255, 'Địa chỉ không được vượt quá 255 ký tự')
     .optional()
     .or(z.literal('')),
   phone: z
     .string()
-    .max(32, 'Phone must be at most 32 characters')
+    .max(32, 'Số điện thoại không được vượt quá 32 ký tự')
     .optional()
     .or(z.literal('')),
   timezone: z
     .string()
-    .max(64, 'Timezone must be at most 64 characters')
+    .max(64, 'Múi giờ không được vượt quá 64 ký tự')
     .optional()
     .or(z.literal('')),
   googleMapUrl: z
     .string()
-    .url('Must be a valid URL')
+    .url('Phải là một URL hợp lệ')
     .optional()
     .or(z.literal('')),
 })
@@ -156,12 +156,12 @@ export function WorkLocationsActionDialog({
       <DialogContent className='sm:max-w-[600px]'>
         <DialogHeader>
           <DialogTitle>
-            {isEditMode ? 'Edit Work Location' : 'Create New Work Location'}
+            {isEditMode ? 'Chỉnh sửa địa điểm làm việc' : 'Tạo địa điểm làm việc mới'}
           </DialogTitle>
           <DialogDescription>
             {isEditMode
-              ? 'Update the work location information below.'
-              : 'Fill in the information to create a new work location.'}
+              ? 'Cập nhật thông tin địa điểm làm việc dưới đây.'
+              : 'Điền thông tin để tạo địa điểm làm việc mới.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -174,11 +174,11 @@ export function WorkLocationsActionDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Location Name <span className='text-destructive'>*</span>
+                    Tên địa điểm <span className='text-destructive'>*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder='e.g., Main Hospital'
+                      placeholder='ví dụ: Bệnh viện trung tâm'
                       {...field}
                       disabled={isLoading}
                     />
@@ -194,10 +194,10 @@ export function WorkLocationsActionDialog({
               name='address'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>Địa chỉ</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='123 Medical Center Dr, City, State ZIP'
+                      placeholder='123 Đường Trung tâm Y tế, Thành phố, Tỉnh/Thành phố ZIP'
                       className='min-h-[80px] resize-none'
                       {...field}
                       disabled={isLoading}
@@ -214,7 +214,7 @@ export function WorkLocationsActionDialog({
               name='phone'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel>Số điện thoại</FormLabel>
                   <FormControl>
                     <Input
                       type='tel'
@@ -234,7 +234,7 @@ export function WorkLocationsActionDialog({
               name='timezone'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Timezone</FormLabel>
+                  <FormLabel>Múi giờ</FormLabel>
                   <FormControl>
                     <TimezoneCombobox
                       value={field.value || ''}
@@ -263,8 +263,7 @@ export function WorkLocationsActionDialog({
                     />
                   </FormControl>
                   <FormDescription>
-                    Optional link to Google Maps location (can auto-generate
-                    from address)
+                    Đường dẫn tùy chọn đến vị trí trên Google Maps (có thể tự động tạo từ địa chỉ)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -278,11 +277,11 @@ export function WorkLocationsActionDialog({
                 onClick={onOpenChange}
                 disabled={isLoading}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type='submit' disabled={isLoading}>
                 {isLoading && <Loader2 className='mr-2 size-4 animate-spin' />}
-                {isEditMode ? 'Update' : 'Create'}
+                {isEditMode ? 'Cập nhật' : 'Tạo mới'}
               </Button>
             </DialogFooter>
           </form>

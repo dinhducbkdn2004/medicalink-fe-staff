@@ -40,10 +40,10 @@ export function WorkLocationsDeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>Bạn có chắc chắn không?</AlertDialogTitle>
           <AlertDialogDescription className='space-y-2'>
             <p>
-              This will permanently delete the work location{' '}
+              Thao tác này sẽ xóa vĩnh viễn địa điểm làm việc{' '}
               <span className='font-semibold text-foreground'>
                 "{currentRow.name}"
               </span>
@@ -51,16 +51,16 @@ export function WorkLocationsDeleteDialog({
             </p>
             {currentRow.doctorsCount && currentRow.doctorsCount > 0 && (
               <p className='text-warning font-medium'>
-                ⚠️ Warning: This location is assigned to {currentRow.doctorsCount}{' '}
-                doctor(s). Deletion may fail if there are active associations.
+                ⚠️ Cảnh báo: Địa điểm này đã được gán cho {currentRow.doctorsCount}{' '}
+                bác sĩ. Việc xóa có thể thất bại nếu có các liên kết đang hoạt động.
               </p>
             )}
-            <p>This action cannot be undone.</p>
+            <p>Hành động này không thể hoàn tác.</p>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleteMutation.isPending}>
-            Cancel
+            Hủy
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
@@ -70,7 +70,7 @@ export function WorkLocationsDeleteDialog({
             {deleteMutation.isPending && (
               <Loader2 className='mr-2 size-4 animate-spin' />
             )}
-            Delete
+            Xóa
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
