@@ -30,7 +30,7 @@ export function useCreateSpecialShift() {
       specialShiftService.createSpecialShift(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: specialShiftKeys.lists() })
-      toast.success('Special shift created successfully')
+      toast.success('Đã tạo ca làm đặc biệt thành công')
     },
     onError: (error: unknown) => {
       const axiosError = error as {
@@ -42,7 +42,7 @@ export function useCreateSpecialShift() {
       }
       const errData = axiosError.response?.data?.message
       const errString = Array.isArray(errData) ? errData[0] : errData
-      toast.error(errString || 'Failed to create special shift')
+      toast.error(errString || 'Không thể tạo ca làm đặc biệt')
     },
   })
 }
@@ -60,7 +60,7 @@ export function useUpdateSpecialShift() {
     }) => specialShiftService.updateSpecialShift(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: specialShiftKeys.lists() })
-      toast.success('Special shift updated successfully')
+      toast.success('Đã cập nhật ca làm đặc biệt thành công')
     },
     onError: (error: unknown) => {
       const axiosError = error as {
@@ -72,7 +72,7 @@ export function useUpdateSpecialShift() {
       }
       const errData = axiosError.response?.data?.message
       const errString = Array.isArray(errData) ? errData[0] : errData
-      toast.error(errString || 'Failed to update special shift')
+      toast.error(errString || 'Không thể cập nhật ca làm đặc biệt')
     },
   })
 }
@@ -84,7 +84,7 @@ export function useDeleteSpecialShift() {
     mutationFn: (id: string) => specialShiftService.deleteSpecialShift(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: specialShiftKeys.lists() })
-      toast.success('Special shift deleted successfully')
+      toast.success('Đã xóa ca làm đặc biệt thành công')
     },
     onError: (error: unknown) => {
       const axiosError = error as {
@@ -103,7 +103,7 @@ export function useDeleteSpecialShift() {
       }
       const errData = axiosError?.response?.data?.message
       const errString = Array.isArray(errData) ? errData[0] : errData
-      toast.error(errString || 'Failed to delete special shift')
+      toast.error(errString || 'Không thể xóa ca làm đặc biệt')
     },
   })
 }

@@ -19,20 +19,20 @@ function SpecialShiftsWidgetContent({ doctorId }: { doctorId: string }) {
     <Card>
       <CardHeader className='pb-3 flex flex-row items-center justify-between'>
         <div>
-          <CardTitle className='text-base'>Upcoming Special Shifts</CardTitle>
+          <CardTitle className='text-base'>Ca làm việc đặc biệt sắp tới</CardTitle>
           <CardDescription className='text-xs'>
-            Overrides and extra shifts for this doctor
+            Các ca ngoại lệ và làm thêm của bác sĩ này
           </CardDescription>
         </div>
         <Button variant='outline' size='sm' onClick={() => setOpen('create')}>
           <Plus className='mr-2 size-4' />
-          Add Shift
+          Thêm ca làm việc
         </Button>
       </CardHeader>
       <CardContent>
         {isLoading ? (
           <div className='flex items-center justify-center p-4'>
-            <span className='text-muted-foreground text-sm'>Loading...</span>
+            <span className='text-muted-foreground text-sm'>Đang tải...</span>
           </div>
         ) : upcomingShifts && upcomingShifts.length > 0 ? (
           <div className='space-y-3'>
@@ -54,12 +54,12 @@ function SpecialShiftsWidgetContent({ doctorId }: { doctorId: string }) {
                 <div className='flex items-center gap-2 mt-1'>
                   <MapPin className='size-3 text-muted-foreground' />
                   <span className='text-xs text-muted-foreground'>
-                    {shift.workLocation?.name || 'All Locations'}
+                    {shift.workLocation?.name || 'Tất cả cơ sở'}
                   </span>
                 </div>
                 {shift.reason && (
                   <p className='mt-1 text-xs text-muted-foreground italic'>
-                    Note: {shift.reason}
+                    Ghi chú: {shift.reason}
                   </p>
                 )}
               </div>
@@ -67,7 +67,7 @@ function SpecialShiftsWidgetContent({ doctorId }: { doctorId: string }) {
           </div>
         ) : (
           <div className='text-muted-foreground flex items-center justify-center gap-2 p-4 text-xs italic'>
-            No upcoming special shifts scheduled
+            Không có ca làm việc đặc biệt nào sắp tới
           </div>
         )}
       </CardContent>

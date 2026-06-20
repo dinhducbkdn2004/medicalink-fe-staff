@@ -120,10 +120,10 @@ export function SpecialShiftsActionDialog({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className='sm:max-w-[600px]'>
         <DialogHeader>
-          <DialogTitle>Create Special Shift</DialogTitle>
+          <DialogTitle>Thêm ca làm việc</DialogTitle>
           <DialogDescription>
-            Add an override or special shift for one or more doctors. This will
-            override their regular office hours for the specified date.
+            Thêm một ca làm việc hoặc ghi đè cho một hoặc nhiều bác sĩ. Thao tác này sẽ ghi đè
+            giờ làm việc thông thường của họ cho ngày được chỉ định.
           </DialogDescription>
         </DialogHeader>
 
@@ -135,7 +135,7 @@ export function SpecialShiftsActionDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Doctor <span className='text-destructive'>*</span>
+                    Bác sĩ <span className='text-destructive'>*</span>
                   </FormLabel>
                   <MultiSelect
                     options={doctors.map((d) => ({
@@ -146,8 +146,8 @@ export function SpecialShiftsActionDialog({
                     selected={field.value}
                     onChange={field.onChange}
                     disabled={isLoading || !!defaultDoctorId}
-                    placeholder='Select one or more doctors...'
-                    searchPlaceholder='Search doctor...'
+                    placeholder='Chọn một hoặc nhiều bác sĩ...'
+                    searchPlaceholder='Tìm kiếm bác sĩ...'
                   />
                   <FormMessage />
                 </FormItem>
@@ -160,7 +160,7 @@ export function SpecialShiftsActionDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Effective Date <span className='text-destructive'>*</span>
+                      Ngày làm việc <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
                       <SingleDayPicker
@@ -183,7 +183,7 @@ export function SpecialShiftsActionDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Start Time <span className='text-destructive'>*</span>
+                      Giờ bắt đầu <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
                       <TimeInput
@@ -203,7 +203,7 @@ export function SpecialShiftsActionDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      End Time <span className='text-destructive'>*</span>
+                      Giờ kết thúc <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
                       <TimeInput
@@ -223,10 +223,10 @@ export function SpecialShiftsActionDialog({
               name='reason'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Reason / Note</FormLabel>
+                  <FormLabel>Lý do / Ghi chú</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder='e.g. On-call Emergency, Extra Shift...'
+                      placeholder='Ví dụ: Đi học, Nghỉ ốm...'
                       {...field}
                       value={field.value || ''}
                       disabled={isLoading}
@@ -244,7 +244,7 @@ export function SpecialShiftsActionDialog({
                 onClick={handleClose}
                 disabled={isLoading}
               >
-                Cancel
+                Huỷ
               </Button>
               <Button
                 type='submit'
@@ -257,7 +257,7 @@ export function SpecialShiftsActionDialog({
                 {(isLoading || isLoadingData) && (
                   <Loader2 className='mr-2 size-4 animate-spin' />
                 )}
-                {isLoadingData ? 'Loading...' : 'Add Special Shift'}
+                {isLoadingData ? 'Đang tải...' : 'Thêm ca làm việc'}
               </Button>
             </DialogFooter>
           </form>

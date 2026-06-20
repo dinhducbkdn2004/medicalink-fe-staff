@@ -48,7 +48,7 @@ export function SpecialShiftsDeleteDialog() {
       const error = err as any;
       const code = error?.response?.data?.details?.code
       if (code === 'SHRINKING_WINDOW') {
-        setShrinkingError(error.response.data.message || 'Cannot delete special shift due to existing appointments.')
+        setShrinkingError(error.response.data.message || 'Không thể xóa ca làm việc do có cuộc hẹn hiện tại.')
       } else {
         console.error('Failed to delete special shift:', error)
       }
@@ -63,30 +63,30 @@ export function SpecialShiftsDeleteDialog() {
             <AlertDialogHeader>
               <AlertDialogTitle className='flex items-center text-destructive'>
                 <AlertCircle className='mr-2 h-5 w-5' />
-                Action Prevented
+                Không thể thực hiện hành động
               </AlertDialogTitle>
               <AlertDialogDescription className='space-y-4 pt-2'>
                 <Alert variant='destructive'>
                   <AlertCircle className='h-4 w-4' />
-                  <AlertTitle>Conflict Detected</AlertTitle>
+                  <AlertTitle>Phát hiện xung đột</AlertTitle>
                   <AlertDescription>{shrinkingError}</AlertDescription>
                 </Alert>
                 <p className='text-sm text-muted-foreground'>
-                  You must cancel or reschedule the conflicting appointments before you can delete this shift.
+                  Bạn phải hủy hoặc sắp xếp lại các cuộc hẹn xung đột trước khi có thể xóa ca làm việc này.
                 </p>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogAction onClick={handleClose}>Acknowledge</AlertDialogAction>
+              <AlertDialogAction onClick={handleClose}>Đã hiểu</AlertDialogAction>
             </AlertDialogFooter>
           </>
         ) : (
           <>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogTitle>Bạn có chắc chắn muốn xóa?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the special shift
-                for <span className='text-foreground font-medium'>Dr. {currentRow?.doctor?.firstName} {currentRow?.doctor?.lastName}</span> on{' '}
+                Hành động này không thể hoàn tác. Thao tác này sẽ xóa vĩnh viễn ca làm việc đặc biệt
+                cho <span className='text-foreground font-medium'>Dr. {currentRow?.doctor?.firstName} {currentRow?.doctor?.lastName}</span> vào{' '}
                 <span className='text-foreground font-medium'>
                   {currentRow?.effectiveDate ? format(new Date(currentRow.effectiveDate), 'MMM dd, yyyy') : ''}
                 </span>
@@ -95,7 +95,7 @@ export function SpecialShiftsDeleteDialog() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel disabled={deleteMutation.isPending}>
-                Cancel
+                Hủy
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDelete}
@@ -105,7 +105,7 @@ export function SpecialShiftsDeleteDialog() {
                 {deleteMutation.isPending && (
                   <Loader2 className='mr-2 size-4 animate-spin' />
                 )}
-                Delete
+                Xóa
               </AlertDialogAction>
             </AlertDialogFooter>
           </>
