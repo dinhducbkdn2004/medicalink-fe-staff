@@ -55,21 +55,21 @@ export function FaqsTable({
     const actions: DataTableAction[] = []
     if (canUpdateFaq()) {
       actions.push({
-        label: 'Edit',
+        label: 'Chỉnh sửa',
         icon: Edit,
         onClick: () => onEdit(faq),
       })
     }
     if (canToggleFaq()) {
       actions.push({
-        label: faq.isActive ? 'Turn off display' : 'Turn on display',
+        label: faq.isActive ? 'Tắt hiển thị' : 'Bật hiển thị',
         icon: Power,
         onClick: () => onToggleActive(faq),
       })
     }
     if (canDeleteFaq()) {
       actions.push({
-        label: 'Delete',
+        label: 'Xóa',
         icon: Trash2,
         onClick: () => onDelete(faq),
         variant: 'destructive',
@@ -86,13 +86,13 @@ export function FaqsTable({
       navigate={navigate}
       pageCount={pageCount}
       isLoading={isLoading}
-      entityName='FAQ'
-      searchPlaceholder='Search by question or content...'
+      entityName='Câu hỏi thường gặp'
+      searchPlaceholder='Tìm kiếm theo câu hỏi hoặc nội dung...'
       searchKey='question'
       filters={[
         {
           columnId: 'isActive',
-          title: 'Status',
+          title: 'Trạng thái',
           options: faqActiveFilterOptions.map((o) => ({
             label: o.label,
             value: o.value,
@@ -103,7 +103,7 @@ export function FaqsTable({
       getRowActions={getRowActions}
       enableRowSelection
       columnFilterConfigs={columnFilterConfigs}
-      emptyMessage='No FAQ yet.'
+      emptyMessage='Chưa có câu hỏi thường gặp nào.'
     />
   )
 }

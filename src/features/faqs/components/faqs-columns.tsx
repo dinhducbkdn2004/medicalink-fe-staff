@@ -31,7 +31,7 @@ export const faqsColumns: ColumnDef<Faq>[] = [
   },
   {
     accessorKey: 'question',
-    header: 'Question',
+    header: 'Câu hỏi',
     cell: ({ row }) => (
       <span className='font-medium line-clamp-2 max-w-[320px]'>
         {row.original.question}
@@ -40,22 +40,22 @@ export const faqsColumns: ColumnDef<Faq>[] = [
   },
   {
     accessorKey: 'order',
-    header: 'Order',
+    header: 'Thứ tự',
     cell: ({ row }) => row.original.order,
   },
   {
     accessorKey: 'isActive',
-    header: 'Display',
+    header: 'Hiển thị',
     cell: ({ row }) =>
       row.original.isActive ? (
-        <Badge variant='default'>On</Badge>
+        <Badge variant='default'>Bật</Badge>
       ) : (
-        <Badge variant='secondary'>Off</Badge>
+        <Badge variant='secondary'>Tắt</Badge>
       ),
   },
   {
     accessorKey: 'updatedAt',
-    header: 'Updated',
+    header: 'Cập nhật',
     cell: ({ row }) =>
       format(new Date(row.original.updatedAt), 'dd/MM/yyyy HH:mm'),
   },

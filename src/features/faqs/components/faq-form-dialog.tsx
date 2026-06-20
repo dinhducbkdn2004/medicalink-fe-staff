@@ -95,9 +95,9 @@ export function FaqFormDialog({ open, onOpenChange, faq }: FaqFormDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='max-w-lg max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle>{faq ? 'Edit FAQ' : 'Add FAQ'}</DialogTitle>
+          <DialogTitle>{faq ? 'Chỉnh sửa Câu hỏi' : 'Thêm Câu hỏi'}</DialogTitle>
           <DialogDescription>
-            Content displayed on the public (landing) page when the status is on.
+            Nội dung hiển thị trên trang chủ (landing) khi trạng thái được bật.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -107,9 +107,9 @@ export function FaqFormDialog({ open, onOpenChange, faq }: FaqFormDialogProps) {
               name='question'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Question</FormLabel>
+                  <FormLabel>Câu hỏi</FormLabel>
                   <FormControl>
-                    <Input placeholder='Maximum 255 characters' {...field} />
+                    <Input placeholder='Tối đa 255 ký tự' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -120,9 +120,9 @@ export function FaqFormDialog({ open, onOpenChange, faq }: FaqFormDialogProps) {
               name='answer'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Answer</FormLabel>
+                  <FormLabel>Câu trả lời</FormLabel>
                   <FormControl>
-                    <Textarea rows={6} placeholder='Answer content' {...field} />
+                    <Textarea rows={6} placeholder='Nội dung câu trả lời' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -133,7 +133,7 @@ export function FaqFormDialog({ open, onOpenChange, faq }: FaqFormDialogProps) {
               name='order'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Order</FormLabel>
+                  <FormLabel>Thứ tự</FormLabel>
                   <FormControl>
                     <Input type='number' min={0} {...field} />
                   </FormControl>
@@ -152,7 +152,7 @@ export function FaqFormDialog({ open, onOpenChange, faq }: FaqFormDialogProps) {
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel className='!mt-0'>Display on website</FormLabel>
+                  <FormLabel className='!mt-0'>Hiển thị trên trang web</FormLabel>
                 </FormItem>
               )}
             />
@@ -162,10 +162,10 @@ export function FaqFormDialog({ open, onOpenChange, faq }: FaqFormDialogProps) {
                 variant='outline'
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type='submit' disabled={isPending}>
-                {isPending ? 'Saving...' : 'Save'}
+                {isPending ? 'Đang lưu...' : 'Lưu'}
               </Button>
             </DialogFooter>
           </form>

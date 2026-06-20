@@ -27,10 +27,11 @@ export function useCreateFaq() {
   return useMutation({
     mutationFn: (data: CreateFaqRequest) => faqService.create(data),
     onSuccess: () => {
-      toast.success('FAQ created successfully')
+      toast.success('Đã tạo câu hỏi thường gặp thành công')
       void qc.invalidateQueries({ queryKey: faqKeys.lists() })
     },
-    onError: (e: Error) => toast.error(e.message || 'Failed to create FAQ'),
+    onError: (e: Error) =>
+      toast.error(e.message || 'Không thể tạo câu hỏi thường gặp'),
   })
 }
 
@@ -45,10 +46,11 @@ export function useUpdateFaq() {
       data: Omit<UpdateFaqRequest, 'id'>
     }) => faqService.update(id, data),
     onSuccess: () => {
-      toast.success('FAQ updated successfully')
+      toast.success('Đã cập nhật câu hỏi thường gặp thành công')
       void qc.invalidateQueries({ queryKey: faqKeys.lists() })
     },
-    onError: (e: Error) => toast.error(e.message || 'Failed to update FAQ'),
+    onError: (e: Error) =>
+      toast.error(e.message || 'Không thể cập nhật câu hỏi thường gặp'),
   })
 }
 
@@ -57,11 +59,11 @@ export function useToggleFaqActive() {
   return useMutation({
     mutationFn: (id: string) => faqService.toggleActive(id),
     onSuccess: () => {
-      toast.success('Display status changed successfully')
+      toast.success('Đã thay đổi trạng thái hiển thị thành công')
       void qc.invalidateQueries({ queryKey: faqKeys.lists() })
     },
     onError: (e: Error) =>
-      toast.error(e.message || 'Failed to change display status'),
+      toast.error(e.message || 'Không thể thay đổi trạng thái hiển thị'),
   })
 }
 
@@ -70,9 +72,10 @@ export function useDeleteFaq() {
   return useMutation({
     mutationFn: (id: string) => faqService.delete(id),
     onSuccess: () => {
-      toast.success('FAQ deleted successfully')
+      toast.success('Đã xóa câu hỏi thường gặp thành công')
       void qc.invalidateQueries({ queryKey: faqKeys.lists() })
     },
-    onError: (e: Error) => toast.error(e.message || 'Failed to delete FAQ'),
+    onError: (e: Error) =>
+      toast.error(e.message || 'Không thể xóa câu hỏi thường gặp'),
   })
 }

@@ -69,10 +69,10 @@ export function FaqsManagement() {
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              FAQs Management
+              Quản lý Câu hỏi thường gặp
             </h2>
             <p className='text-muted-foreground'>
-              Frequently asked questions displayed on the landing page (when displaying).
+              Các câu hỏi thường gặp hiển thị trên trang chủ (khi trạng thái được bật).
             </p>
           </div>
           <Can I='faqs:create'>
@@ -83,7 +83,7 @@ export function FaqsManagement() {
               }}
             >
               <Plus className='mr-2 h-4 w-4' />
-              Add FAQ
+              Thêm Câu hỏi
             </Button>
           </Can>
         </div>

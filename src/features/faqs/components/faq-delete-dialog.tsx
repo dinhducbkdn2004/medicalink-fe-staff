@@ -28,15 +28,15 @@ export function FaqDeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete FAQ?</AlertDialogTitle>
+          <AlertDialogTitle>Xóa Câu hỏi thường gặp?</AlertDialogTitle>
           <AlertDialogDescription>
             {faq
-              ? `This action cannot be undone. FAQ: «${faq.question.slice(0, 80)}${faq.question.length > 80 ? '…' : ''}»`
+              ? `Thao tác này không thể hoàn tác. Câu hỏi: «${faq.question.slice(0, 80)}${faq.question.length > 80 ? '…' : ''}»`
               : ''}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>Hủy</AlertDialogCancel>
           <AlertDialogAction
             disabled={isPending || !faq}
             className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
@@ -46,7 +46,7 @@ export function FaqDeleteDialog({
               }
             }}
           >
-            Delete
+            Xóa
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
