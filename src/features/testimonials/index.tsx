@@ -72,10 +72,10 @@ export function TestimonialsManagement() {
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Testimonials Management
+              Quản lý đánh giá
             </h2>
             <p className='text-muted-foreground'>
-              Featured testimonials displayed on the public landing page.
+              Các đánh giá nổi bật được hiển thị trên trang chủ công khai.
             </p>
           </div>
           <Can I='testimonials:create'>
@@ -86,7 +86,7 @@ export function TestimonialsManagement() {
               }}
             >
               <Plus className='mr-2 h-4 w-4' />
-                Add testimonial
+                Thêm đánh giá
             </Button>
           </Can>
         </div>

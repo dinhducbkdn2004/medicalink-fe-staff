@@ -28,15 +28,15 @@ export function TestimonialDeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete testimonial?</AlertDialogTitle>
+          <AlertDialogTitle>Xóa đánh giá?</AlertDialogTitle>
           <AlertDialogDescription>
             {testimonial
-              ? `This action cannot be undone. Testimonial from «${testimonial.authorName}».`
+              ? `Thao tác này không thể hoàn tác. Đánh giá từ «${testimonial.authorName}».`
               : ''}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>Hủy</AlertDialogCancel>
           <AlertDialogAction
             disabled={isPending || !testimonial}
             className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
@@ -46,7 +46,7 @@ export function TestimonialDeleteDialog({
               }
             }}
           >
-            Delete
+            Xóa
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

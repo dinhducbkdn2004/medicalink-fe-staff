@@ -31,7 +31,7 @@ export const testimonialsColumns: ColumnDef<Testimonial>[] = [
   },
   {
     accessorKey: 'authorName',
-    header: 'Sender',
+    header: 'Người gửi',
     cell: ({ row }) => {
       const t = row.original
       return (
@@ -57,7 +57,7 @@ export const testimonialsColumns: ColumnDef<Testimonial>[] = [
   },
   {
     accessorKey: 'content',
-    header: 'Content',
+    header: 'Nội dung',
     cell: ({ row }) => (
       <span className='line-clamp-2 max-w-[360px] text-muted-foreground'>
         {row.original.content}
@@ -66,22 +66,22 @@ export const testimonialsColumns: ColumnDef<Testimonial>[] = [
   },
   {
     accessorKey: 'rating',
-    header: 'Rating',
+    header: 'Đánh giá',
     cell: ({ row }) => row.original.rating ?? '—',
   },
   {
     accessorKey: 'isFeatured',
-    header: 'Featured',
+    header: 'Nổi bật',
     cell: ({ row }) =>
       row.original.isFeatured ? (
-        <Badge>Yes</Badge>
+        <Badge>Có</Badge>
       ) : (
-        <Badge variant='outline'>No</Badge>
+        <Badge variant='outline'>Không</Badge>
       ),
   },
   {
     accessorKey: 'updatedAt',
-    header: 'Updated',
+    header: 'Cập nhật',
     cell: ({ row }) =>
       format(new Date(row.original.updatedAt), 'dd/MM/yyyy HH:mm'),
   },

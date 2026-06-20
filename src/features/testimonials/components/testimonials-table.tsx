@@ -55,21 +55,21 @@ export function TestimonialsTable({
     const actions: DataTableAction[] = []
     if (canUpdateTestimonial()) {
       actions.push({
-        label: 'Edit',
+        label: 'Chỉnh sửa',
         icon: Edit,
         onClick: () => onEdit(t),
       })
     }
     if (canToggleFeatured()) {
       actions.push({
-        label: t.isFeatured ? 'Remove featured' : 'Mark as featured',
+        label: t.isFeatured ? 'Gỡ nổi bật' : 'Đánh dấu nổi bật',
         icon: Star,
         onClick: () => onToggleFeatured(t),
       })
     }
     if (canDeleteTestimonial()) {
       actions.push({
-        label: 'Delete',
+        label: 'Xóa',
         icon: Trash2,
         onClick: () => onDelete(t),
         variant: 'destructive',
@@ -86,13 +86,13 @@ export function TestimonialsTable({
       navigate={navigate}
       pageCount={pageCount}
       isLoading={isLoading}
-      entityName='testimonial'
-      searchPlaceholder='Search by name or content...'
+      entityName='đánh giá'
+      searchPlaceholder='Tìm kiếm theo tên hoặc nội dung...'
       searchKey='content'
       filters={[
         {
           columnId: 'isFeatured',
-          title: 'Featured',
+          title: 'Nổi bật',
           options: testimonialFeaturedFilterOptions.map((o) => ({
             label: o.label,
             value: o.value,
@@ -103,7 +103,7 @@ export function TestimonialsTable({
       getRowActions={getRowActions}
       enableRowSelection
       columnFilterConfigs={columnFilterConfigs}
-      emptyMessage='No testimonial yet.'
+      emptyMessage='Chưa có đánh giá nào.'
     />
   )
 }

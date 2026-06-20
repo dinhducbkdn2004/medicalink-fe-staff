@@ -104,10 +104,10 @@ export function TestimonialFormDialog({
       <DialogContent className='max-w-lg max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>
-            {testimonial ? 'Edit testimonial' : 'Add testimonial'}
+            {testimonial ? 'Chỉnh sửa đánh giá' : 'Thêm đánh giá'}
           </DialogTitle>
           <DialogDescription>
-            Featured testimonial displayed on the public landing page.
+            Đánh giá nổi bật được hiển thị trên trang chủ công khai.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -117,9 +117,9 @@ export function TestimonialFormDialog({
               name='authorName'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Display name</FormLabel>
+                  <FormLabel>Tên hiển thị</FormLabel>
                   <FormControl>
-                    <Input placeholder='Full name' {...field} />
+                    <Input placeholder='Họ và tên' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -130,9 +130,9 @@ export function TestimonialFormDialog({
               name='authorTitle'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Designation / short description</FormLabel>
+                  <FormLabel>Chức danh / mô tả ngắn</FormLabel>
                   <FormControl>
-                    <Input placeholder='Example: Patient' {...field} />
+                    <Input placeholder='Ví dụ: Bệnh nhân' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -143,7 +143,7 @@ export function TestimonialFormDialog({
               name='authorAvatar'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Avatar URL (optional)</FormLabel>
+                  <FormLabel>URL Ảnh đại diện (tùy chọn)</FormLabel>
                   <FormControl>
                     <Input placeholder='https://...' {...field} />
                   </FormControl>
@@ -156,7 +156,7 @@ export function TestimonialFormDialog({
               name='content'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Content</FormLabel>
+                  <FormLabel>Nội dung</FormLabel>
                   <FormControl>
                     <Textarea rows={5} {...field} />
                   </FormControl>
@@ -169,7 +169,7 @@ export function TestimonialFormDialog({
               name='rating'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Rating (1–5)</FormLabel>
+                  <FormLabel>Đánh giá (1–5 sao)</FormLabel>
                   <FormControl>
                     <Input type='number' min={1} max={5} {...field} />
                   </FormControl>
@@ -188,7 +188,7 @@ export function TestimonialFormDialog({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel className='!mt-0'>Display featured (landing)</FormLabel>
+                  <FormLabel className='!mt-0'>Hiển thị nổi bật (trang chủ)</FormLabel>
                 </FormItem>
               )}
             />
@@ -198,10 +198,10 @@ export function TestimonialFormDialog({
                 variant='outline'
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type='submit' disabled={isPending}>
-                {isPending ? 'Saving...' : 'Save'}
+                {isPending ? 'Đang lưu...' : 'Lưu'}
               </Button>
             </DialogFooter>
           </form>

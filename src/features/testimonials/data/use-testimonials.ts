@@ -29,11 +29,10 @@ export function useCreateTestimonial() {
     mutationFn: (data: CreateTestimonialRequest) =>
       testimonialService.create(data),
     onSuccess: () => {
-      toast.success('Testimonial created successfully')
+      toast.success('Đã tạo nhận xét thành công')
       void qc.invalidateQueries({ queryKey: testimonialKeys.lists() })
     },
-    onError: (e: Error) =>
-      toast.error(e.message || 'Failed to create testimonial'),
+    onError: (e: Error) => toast.error(e.message || 'Không thể tạo nhận xét'),
   })
 }
 
@@ -48,11 +47,11 @@ export function useUpdateTestimonial() {
       data: Omit<UpdateTestimonialRequest, 'id'>
     }) => testimonialService.update(id, data),
     onSuccess: () => {
-      toast.success('Testimonial updated successfully')
+      toast.success('Đã cập nhật nhận xét thành công')
       void qc.invalidateQueries({ queryKey: testimonialKeys.lists() })
     },
     onError: (e: Error) =>
-      toast.error(e.message || 'Failed to update testimonial'),
+      toast.error(e.message || 'Không thể cập nhật nhận xét'),
   })
 }
 
@@ -61,11 +60,11 @@ export function useToggleTestimonialFeatured() {
   return useMutation({
     mutationFn: (id: string) => testimonialService.toggleFeatured(id),
     onSuccess: () => {
-      toast.success('Featured status changed successfully')
+      toast.success('Đã thay đổi trạng thái nổi bật thành công')
       void qc.invalidateQueries({ queryKey: testimonialKeys.lists() })
     },
     onError: (e: Error) =>
-      toast.error(e.message || 'Failed to change featured status'),
+      toast.error(e.message || 'Không thể thay đổi trạng thái nổi bật'),
   })
 }
 
@@ -74,10 +73,9 @@ export function useDeleteTestimonial() {
   return useMutation({
     mutationFn: (id: string) => testimonialService.delete(id),
     onSuccess: () => {
-      toast.success('Testimonial deleted successfully')
+      toast.success('Đã xóa nhận xét thành công')
       void qc.invalidateQueries({ queryKey: testimonialKeys.lists() })
     },
-    onError: (e: Error) =>
-      toast.error(e.message || 'Failed to delete testimonial'),
+    onError: (e: Error) => toast.error(e.message || 'Không thể xóa nhận xét'),
   })
 }
