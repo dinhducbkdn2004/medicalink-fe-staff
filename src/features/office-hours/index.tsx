@@ -35,7 +35,7 @@ function SpecialShiftsPrimaryButtons() {
     <div className='flex gap-2'>
       <Button onClick={() => setOpen('create')}>
         <Plus className='mr-2 size-4' />
-        Add Special Shift
+        Thêm Ca đặc biệt
       </Button>
     </div>
   )
@@ -109,10 +109,10 @@ function OfficeHoursContent() {
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Schedule Management
+              Quản lý Lịch làm việc
             </h2>
             <p className='text-muted-foreground'>
-              Manage Regular Hours and Special Shifts overrides for doctors and locations.
+              Quản lý Giờ làm việc và Ca đặc biệt cho bác sĩ và địa điểm.
             </p>
           </div>
           {!isPermissionError && (
@@ -139,7 +139,7 @@ function OfficeHoursContent() {
                 })
               }}
               value={search.doctorId as string}
-              placeholder='Select Doctor...'
+              placeholder='Chọn Bác sĩ...'
             />
           </div>
         </div>
@@ -147,41 +147,40 @@ function OfficeHoursContent() {
         {isPermissionError ? (
           <div className='border-destructive/50 bg-destructive/10 rounded-lg border p-8 text-center'>
             <h3 className='text-destructive text-lg font-semibold'>
-              Access Denied
+              Từ chối truy cập
             </h3>
             <p className='text-muted-foreground mt-2'>
-              You don't have permission to view office hours. Please contact
-              your administrator to request access.
+              Bạn không có quyền xem lịch làm việc. Vui lòng liên hệ với quản trị viên của bạn để yêu cầu quyền truy cập.
             </p>
             <p className='text-muted-foreground mt-1 text-sm'>
-              Required permission:{' '}
+              Quyền yêu cầu:{' '}
               <code className='font-mono'>office-hours:read</code>
             </p>
           </div>
         ) : (
           <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
             <TabsList className='mb-4'>
-              <TabsTrigger value='office-hours'>Regular Hours</TabsTrigger>
-              <TabsTrigger value='special-shifts'>Special Shifts</TabsTrigger>
+              <TabsTrigger value='office-hours'>Giờ làm việc</TabsTrigger>
+              <TabsTrigger value='special-shifts'>Ca đặc biệt</TabsTrigger>
             </TabsList>
 
             <TabsContent value='office-hours' className='mt-0'>
               <Tabs defaultValue='all' className='w-full'>
                 <TabsList>
               <TabsTrigger value='all'>
-                All Hours
+                Tất cả Giờ làm việc
                 <Badge variant='secondary' className='ml-2'>
                   {totalAll}
                 </Badge>
               </TabsTrigger>
               <TabsTrigger value='clinic'>
-                Clinic Global Hours
+                Giờ làm việc chung của Phòng khám
                 <Badge variant='secondary' className='ml-2'>
                   {groupedData.clinic.length}
                 </Badge>
               </TabsTrigger>
               <TabsTrigger value='doctor'>
-                Doctor Specific Hours
+                Giờ làm việc cụ thể của Bác sĩ
                 <Badge variant='secondary' className='ml-2'>
                   {groupedData.doctor.length}
                 </Badge>

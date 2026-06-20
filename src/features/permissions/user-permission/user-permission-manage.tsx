@@ -38,7 +38,7 @@ export function UserPermissionManage({ userId }: UserPermissionManageProps) {
           <Button variant='ghost' size='sm' asChild>
             <Link to='/user-permission'>
               <ArrowLeft className='mr-2 h-4 w-4' />
-              Back to directory
+              Quay lại danh mục
             </Link>
           </Button>
         </div>
@@ -46,7 +46,7 @@ export function UserPermissionManage({ userId }: UserPermissionManageProps) {
         <div className='flex flex-wrap items-end justify-between gap-4'>
           <div className='space-y-1'>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Direct permissions
+              Quyền trực tiếp
               {staff?.fullName ? (
                 <span className='text-muted-foreground font-normal'>
                   {' '}
@@ -57,20 +57,20 @@ export function UserPermissionManage({ userId }: UserPermissionManageProps) {
               ) : null}
             </h2>
             <p className='text-muted-foreground'>
-              Grant or revoke individual permission overrides for this user.
+              Cấp hoặc thu hồi quyền cụ thể cho người dùng này.
             </p>
           </div>
           <Can I='permissions:manage'>
             <Button onClick={() => setShowAssignDialog(true)}>
               <UserPlus className='mr-2 h-4 w-4' />
-              Assign permission
+              Gán quyền
             </Button>
           </Can>
         </div>
 
         {!isLoading && !staff ? (
           <div className='text-muted-foreground rounded-md border p-6 text-sm'>
-            User not found. Return to the directory and pick another account.
+            Không tìm thấy người dùng. Quay lại danh mục và chọn tài khoản khác.
           </div>
         ) : (
           <UserPermissionDetails userId={userId} />

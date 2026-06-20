@@ -60,7 +60,7 @@ export function OfficeHoursDeleteDialog() {
       const error = err as any;
       const code = error?.response?.data?.details?.code
       if (code === 'SHRINKING_WINDOW') {
-        setShrinkingError(error.response.data.message || 'Cannot delete office hours due to existing appointments.')
+        setShrinkingError(error.response.data.message || 'Không thể xóa giờ làm việc do đã có lịch hẹn.')
       }
     }
   }
@@ -79,63 +79,63 @@ export function OfficeHoursDeleteDialog() {
             <AlertDialogHeader>
               <AlertDialogTitle className='flex items-center text-destructive'>
                 <AlertCircle className='mr-2 h-5 w-5' />
-                Action Prevented
+                Hành động bị chặn
               </AlertDialogTitle>
               <AlertDialogDescription className='space-y-4 pt-2'>
                 <Alert variant='destructive'>
                   <AlertCircle className='h-4 w-4' />
-                  <AlertTitle>Conflict Detected</AlertTitle>
+                  <AlertTitle>Phát hiện xung đột</AlertTitle>
                   <AlertDescription>{shrinkingError}</AlertDescription>
                 </Alert>
                 <p className='text-sm text-muted-foreground'>
-                  You must cancel or reschedule the conflicting appointments before you can delete these office hours.
+                  Bạn phải hủy hoặc dời lại các lịch hẹn bị xung đột trước khi có thể xóa giờ làm việc này.
                 </p>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogAction onClick={handleClose}>Acknowledge</AlertDialogAction>
+              <AlertDialogAction onClick={handleClose}>Đã hiểu</AlertDialogAction>
             </AlertDialogFooter>
           </>
         ) : (
           <>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete Office Hours</AlertDialogTitle>
+              <AlertDialogTitle>Xóa Giờ làm việc</AlertDialogTitle>
               <AlertDialogDescription className='space-y-2'>
-                <p>Are you sure you want to delete this office hour entry?</p>
+                <p>Bạn có chắc chắn muốn xóa ca làm việc này không?</p>
                 <div className='rounded-md border p-3 text-sm'>
                   <p>
-                    <strong>Day:</strong> {dayLabel}
+                    <strong>Ngày:</strong> {dayLabel}
                   </p>
                   <p>
-                    <strong>Time:</strong> {startTime} - {endTime}
+                    <strong>Thời gian:</strong> {startTime} - {endTime}
                   </p>
                   {currentRow.doctor && (
                     <p>
-                      <strong>Doctor:</strong> {currentRow.doctor.firstName}{' '}
+                      <strong>Bác sĩ:</strong> {currentRow.doctor.firstName}{' '}
                       {currentRow.doctor.lastName}
                     </p>
                   )}
                   {currentRow.workLocation && (
                     <p>
-                      <strong>Location:</strong> {currentRow.workLocation.name}
+                      <strong>Địa điểm:</strong> {currentRow.workLocation.name}
                     </p>
                   )}
                 </div>
                 <p className='text-destructive font-medium'>
-                  This action cannot be undone.
+                  Hành động này không thể hoàn tác.
                 </p>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel disabled={deleteMutation.isPending}>
-                Cancel
+                Hủy
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDelete}
                 disabled={deleteMutation.isPending}
                 className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
               >
-                {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+                {deleteMutation.isPending ? 'Đang xóa...' : 'Xóa'}
               </AlertDialogAction>
             </AlertDialogFooter>
           </>

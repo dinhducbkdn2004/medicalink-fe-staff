@@ -136,9 +136,9 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
             <Shield className='text-primary h-10 w-10' />
           </div>
           <div className='text-center'>
-            <h3 className='font-semibold'>No user selected</h3>
+            <h3 className='font-semibold'>Chưa chọn người dùng</h3>
             <p className='text-muted-foreground mt-1 text-sm'>
-              Select a user from the list above to view their direct permissions
+              Chọn một người dùng từ danh sách bên trên để xem các quyền trực tiếp của họ
             </p>
           </div>
         </CardContent>
@@ -153,7 +153,7 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
           <div className='flex items-center gap-2'>
             <RefreshCw className='text-primary h-4 w-4 animate-spin' />
             <p className='text-muted-foreground text-sm'>
-              Loading permissions…
+              Đang tải các quyền...
             </p>
           </div>
         </CardContent>
@@ -170,7 +170,7 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
               <div className='bg-primary/10 rounded-lg p-2'>
                 <Shield className='text-primary h-4 w-4' />
               </div>
-              Direct permissions (user)
+              Quyền trực tiếp (người dùng)
             </CardTitle>
             <div className='flex flex-wrap items-center gap-2'>
               <Badge
@@ -178,11 +178,11 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
                 className='flex items-center gap-1 text-xs'
               >
                 <CheckCircle2 className='h-3 w-3' />
-                {permissions?.length || 0} permissions
+                {permissions?.length || 0} quyền
               </Badge>
               {filteredPermissions.length !== permissions?.length && (
                 <Badge variant='outline' className='text-xs'>
-                  Showing {filteredPermissions.length} / {permissions?.length}
+                  Đang hiển thị {filteredPermissions.length} / {permissions?.length}
                 </Badge>
               )}
             </div>
@@ -191,7 +191,7 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
             <Tooltip>
               <TooltipTrigger asChild></TooltipTrigger>
               <TooltipContent>
-                <p>Refresh permission cache</p>
+                <p>Làm mới bộ nhớ đệm quyền</p>
               </TooltipContent>
             </Tooltip>
           </RoleGate>
@@ -204,7 +204,7 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
               <div className='relative'>
                 <Search className='text-muted-foreground absolute top-2.5 left-2 h-4 w-4' />
                 <Input
-                  placeholder='Search by resource or action…'
+                  placeholder='Tìm kiếm theo tài nguyên hoặc hành động...'
                   className='h-9 pl-8'
                   value={searchQ}
                   onChange={(e) => setSearchQ(e.target.value)}
@@ -213,14 +213,14 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
               <div className='flex flex-wrap items-center gap-2'>
                 <div className='flex items-center gap-2 text-sm'>
                   <Filter className='text-muted-foreground h-4 w-4' />
-                  <span className='text-muted-foreground'>Filter:</span>
+                  <span className='text-muted-foreground'>Bộ lọc:</span>
                 </div>
                 <Select value={filterResource} onValueChange={setFilterResource}>
                   <SelectTrigger className='h-8 w-[180px]'>
-                    <SelectValue placeholder='Resource' />
+                    <SelectValue placeholder='Tài nguyên' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='all'>All resources</SelectItem>
+                    <SelectItem value='all'>Tất cả tài nguyên</SelectItem>
                     {resources.map((resource) => (
                       <SelectItem key={resource} value={resource}>
                         {formatResourceLabel(resource)}
@@ -230,10 +230,10 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
                 </Select>
                 <Select value={filterEffect} onValueChange={setFilterEffect}>
                   <SelectTrigger className='h-8 w-[120px]'>
-                    <SelectValue placeholder='Effect' />
+                    <SelectValue placeholder='Hiệu lực' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='all'>All effects</SelectItem>
+                    <SelectItem value='all'>Tất cả hiệu lực</SelectItem>
                     <SelectItem value='ALLOW'>ALLOW</SelectItem>
                     <SelectItem value='DENY'>DENY</SelectItem>
                   </SelectContent>
@@ -251,7 +251,7 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
                       setSearchQ('')
                     }}
                   >
-                    Clear filters
+                    Xóa bộ lọc
                   </Button>
                 )}
               </div>
@@ -267,9 +267,9 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
               <AlertCircle className='text-muted-foreground h-6 w-6' />
             </div>
             <div className='text-center'>
-              <p className='font-medium'>No direct permissions</p>
+              <p className='font-medium'>Không có quyền trực tiếp</p>
               <p className='text-muted-foreground mt-1 text-sm'>
-                This user may still have access via groups only
+                Người dùng này có thể vẫn có quyền truy cập thông qua các nhóm
               </p>
             </div>
           </div>
@@ -279,9 +279,9 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
               <Eye className='text-muted-foreground h-6 w-6' />
             </div>
             <div className='text-center'>
-              <p className='font-medium'>No results</p>
+              <p className='font-medium'>Không có kết quả</p>
               <p className='text-muted-foreground mt-1 text-sm'>
-                Try adjusting filters or search
+                Thử điều chỉnh bộ lọc hoặc tìm kiếm
               </p>
             </div>
           </div>
@@ -302,7 +302,7 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
                           0
                         )
                       }{' '}
-                      permissions
+                      quyền
                     </Badge>
                   </CollapsibleTrigger>
                   <CollapsibleContent className='mt-2 space-y-2 pl-2'>
@@ -357,8 +357,7 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
                                               variant='outline'
                                               className='mt-1 cursor-help text-[10px]'
                                             >
-                                              {snap.conditions.length} condition
-                                              {snap.conditions.length === 1 ? '' : 's'}
+                                              {snap.conditions.length} điều kiện
                                             </Badge>
                                           </TooltipTrigger>
                                           <TooltipContent className='max-w-xs'>
@@ -403,7 +402,7 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
                                           <XCircle className='text-destructive h-4 w-4' />
                                         </Button>
                                       </TooltipTrigger>
-                                      <TooltipContent>Revoke permission</TooltipContent>
+                                        <TooltipContent>Thu hồi quyền</TooltipContent>
                                     </Tooltip>
                                   </RoleGate>
                                 </div>

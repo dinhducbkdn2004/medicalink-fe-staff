@@ -42,11 +42,11 @@ export function GroupManager() {
             <div className='space-y-1'>
               <div className='flex items-center gap-3'>
                 <h2 className='text-2xl font-bold tracking-tight'>
-                  Group manager
+                  Quản lý nhóm
                 </h2>
               </div>
               <p className='text-muted-foreground'>
-                Manage groups: assign permissions by module tree.
+                Quản lý các nhóm: gán quyền theo sơ đồ mô-đun.
               </p>
             </div>
             <Can I='groups:create'>

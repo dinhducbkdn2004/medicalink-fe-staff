@@ -36,10 +36,10 @@ export function useAddUserToGroup() {
       })
       queryClient.invalidateQueries({ queryKey: ['permission-stats'] })
       queryClient.invalidateQueries({ queryKey: ['permission-groups'] })
-      toast.success('User added to group successfully')
+      toast.success('Đã thêm người dùng vào nhóm thành công')
     },
     onError: (error: Error) => {
-      toast.error(`Failed to add user to group: ${error.message}`)
+      toast.error(`Không thể thêm người dùng vào nhóm: ${error.message}`)
     },
   })
 }
@@ -63,10 +63,10 @@ export function useRemoveUserFromGroup() {
       })
       queryClient.invalidateQueries({ queryKey: ['permission-stats'] })
       queryClient.invalidateQueries({ queryKey: ['permission-groups'] })
-      toast.success('User removed from group successfully')
+      toast.success('Đã xóa người dùng khỏi nhóm thành công')
     },
     onError: (error: Error) => {
-      toast.error(`Failed to remove user from group: ${error.message}`)
+      toast.error(`Không thể xóa người dùng khỏi nhóm: ${error.message}`)
     },
   })
 }

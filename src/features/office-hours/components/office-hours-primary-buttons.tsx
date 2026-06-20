@@ -15,7 +15,7 @@ export function OfficeHoursPrimaryButtons() {
     <div className='flex items-center gap-2'>
       <Button onClick={handleAdd} size='sm' className='h-9'>
         <Plus className='mr-2 size-4' />
-        Add Office Hours
+        Thêm Giờ làm việc
       </Button>
     </div>
   )

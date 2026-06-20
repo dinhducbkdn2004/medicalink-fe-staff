@@ -30,7 +30,7 @@ export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
   {
     accessorKey: 'dayOfWeek',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Day of Week' />
+      <DataTableColumnHeader column={column} title='Ngày trong tuần' />
     ),
     cell: ({ row }) => {
       const dayOfWeek = row.original.dayOfWeek
@@ -47,7 +47,7 @@ export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
   },
   {
     id: 'timeRange',
-    header: 'Time Range',
+    header: 'Thời gian',
     cell: ({ row }) => {
       const startTime = formatTime(row.original.startTime)
       const endTime = formatTime(row.original.endTime)
@@ -67,7 +67,7 @@ export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
 
   {
     id: 'type',
-    header: 'Type',
+    header: 'Loại',
     cell: ({ row }) => {
       const officeHour = row.original
       let _type: string
@@ -76,12 +76,12 @@ export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
 
       if (officeHour.isGlobal) {
         _type = 'global'
-        typeLabel = 'Clinic Global Hours'
+        typeLabel = 'Giờ chung phòng khám'
         badgeClass =
           'border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300'
       } else {
         _type = 'doctor'
-        typeLabel = 'Doctor Specific Hours'
+        typeLabel = 'Giờ riêng của Bác sĩ'
         badgeClass =
           'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300'
       }
@@ -99,13 +99,13 @@ export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
   {
     accessorKey: 'createdAt',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Created Date' />
+      <DataTableColumnHeader column={column} title='Ngày tạo' />
     ),
     cell: ({ row }) => {
       const date = new Date(row.original.createdAt)
       return (
         <div className='text-muted-foreground text-sm'>
-          {date.toLocaleDateString('en-US', {
+          {date.toLocaleDateString('vi-VN', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',

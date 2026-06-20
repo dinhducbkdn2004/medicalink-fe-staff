@@ -35,34 +35,34 @@ export function PermissionStatsCards({
 
   const statCards = [
     {
-      title: 'Total Permissions',
+      title: 'Tổng số quyền',
       value: stats.totalPermissions,
       icon: Shield,
-      description: 'Available in system',
+      description: 'Có sẵn trong hệ thống',
     },
     {
-      title: 'Permission Groups',
+      title: 'Nhóm quyền',
       value: stats.totalGroups,
       icon: Users,
-      description: 'Active groups',
+      description: 'Các nhóm đang hoạt động',
     },
     {
-      title: 'User Permissions',
+      title: 'Quyền người dùng',
       value: stats.totalUserPermissions,
       icon: ShieldCheck,
-      description: 'Direct assignments',
+      description: 'Gán trực tiếp',
     },
     {
-      title: 'Group Permissions',
+      title: 'Quyền của nhóm',
       value: stats.totalGroupPermissions,
       icon: UserCog,
-      description: 'Group assignments',
+      description: 'Gán theo nhóm',
     },
     {
-      title: 'Group Memberships',
+      title: 'Thành viên nhóm',
       value: stats.totalUserGroupMemberships,
       icon: TrendingUp,
-      description: 'User-group links',
+      description: 'Liên kết người dùng - nhóm',
     },
   ]
 

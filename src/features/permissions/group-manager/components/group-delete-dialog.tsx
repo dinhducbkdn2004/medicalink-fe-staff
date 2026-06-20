@@ -43,21 +43,19 @@ export function GroupDeleteDialog({
     <AlertDialog open={open} onOpenChange={handleClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Permission Group</AlertDialogTitle>
+          <AlertDialogTitle>Xóa nhóm quyền</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete the group{' '}
+            Bạn có chắc chắn muốn xóa nhóm{' '}
             <span className='font-semibold'>{currentGroup?.name}</span>?
             <br />
             <br />
-            This action cannot be undone. All permissions assigned to this group
-            will be removed, and users in this group will lose inherited
-            permissions.
+            Hành động này không thể hoàn tác. Tất cả các quyền được gán cho nhóm này sẽ bị xóa, và người dùng trong nhóm này sẽ mất các quyền được thừa kế.
             {currentGroup?.memberCount && currentGroup.memberCount > 0 && (
               <>
                 <br />
                 <br />
                 <span className='text-destructive font-semibold'>
-                  Warning: This group has {currentGroup.memberCount} member(s).
+                  Cảnh báo: Nhóm này có {currentGroup.memberCount} thành viên.
                 </span>
               </>
             )}
@@ -65,14 +63,14 @@ export function GroupDeleteDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleteMutation.isPending}>
-            Cancel
+            Hủy
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteMutation.isPending}
             className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
           >
-            {deleteMutation.isPending ? 'Deleting...' : 'Delete Group'}
+            {deleteMutation.isPending ? 'Đang xóa...' : 'Xóa nhóm'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

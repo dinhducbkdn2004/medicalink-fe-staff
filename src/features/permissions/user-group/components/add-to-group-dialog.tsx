@@ -29,7 +29,7 @@ import {
 import { usePermissionGroups, useAddUserToGroup } from '../../hooks'
 
 const addToGroupSchema = z.object({
-  groupId: z.string().min(1, 'Please select a group'),
+  groupId: z.string().min(1, 'Vui lòng chọn một nhóm'),
   tenantId: z.string().optional(),
 })
 
@@ -79,10 +79,9 @@ export function AddToGroupDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add User to Group</DialogTitle>
+          <DialogTitle>Thêm người dùng vào nhóm</DialogTitle>
           <DialogDescription>
-            Add this user to a permission group. They will inherit all
-            permissions from the group.
+            Thêm người dùng này vào một nhóm quyền. Họ sẽ thừa hưởng tất cả các quyền từ nhóm đó.
           </DialogDescription>
         </DialogHeader>
 
@@ -93,7 +92,7 @@ export function AddToGroupDialog({
               name='groupId'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Permission Group</FormLabel>
+                  <FormLabel>Nhóm quyền</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -101,13 +100,13 @@ export function AddToGroupDialog({
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder='Select a group' />
+                        <SelectValue placeholder='Chọn một nhóm' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {availableGroups.length === 0 ? (
                         <div className='text-muted-foreground px-2 py-1.5 text-sm'>
-                          No groups available
+                          Không có nhóm nào khả dụng
                         </div>
                       ) : (
                         availableGroups.map((group) => (
@@ -126,7 +125,7 @@ export function AddToGroupDialog({
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    Select a group to add the user to
+                    Chọn nhóm để thêm người dùng vào
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -138,7 +137,7 @@ export function AddToGroupDialog({
               name='tenantId'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tenant ID</FormLabel>
+                  <FormLabel>Mã Tenant</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -146,15 +145,15 @@ export function AddToGroupDialog({
                       disabled={addMutation.isPending}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder='Select tenant' />
+                        <SelectValue placeholder='Chọn tenant' />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value='global'>Global</SelectItem>
+                        <SelectItem value='global'>Toàn cục (Global)</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
                   <FormDescription>
-                    The tenant scope for this membership
+                    Phạm vi tenant cho thành viên này
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -168,10 +167,10 @@ export function AddToGroupDialog({
                 onClick={() => onOpenChange(false)}
                 disabled={addMutation.isPending}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type='submit' disabled={addMutation.isPending}>
-                {addMutation.isPending ? 'Adding...' : 'Add to Group'}
+                {addMutation.isPending ? 'Đang thêm...' : 'Thêm vào nhóm'}
               </Button>
             </DialogFooter>
           </form>

@@ -62,7 +62,7 @@ export function GroupMembersPanel({ groupId }: GroupMembersPanelProps) {
         <CardContent className='flex items-center justify-center py-16'>
           <div className='text-muted-foreground text-center'>
             <UsersRound className='mx-auto mb-4 h-12 w-12' />
-            <p>Select a group to view its members</p>
+            <p>Chọn một nhóm để xem danh sách thành viên</p>
           </div>
         </CardContent>
       </Card>
@@ -74,39 +74,39 @@ export function GroupMembersPanel({ groupId }: GroupMembersPanelProps) {
       <Card>
         <CardHeader>
           <div className='flex items-center justify-between'>
-            <CardTitle>Group Members</CardTitle>
+            <CardTitle>Thành viên nhóm</CardTitle>
             <Button onClick={() => setShowAddDialog(true)}>
               <UserPlus className='mr-2 h-4 w-4' />
-              Add Members
+              Thêm thành viên
             </Button>
           </div>
         </CardHeader>
         <CardContent>
           {isLoading ? (
             <div className='text-muted-foreground flex items-center justify-center py-8'>
-              Loading members...
+              Đang tải danh sách thành viên...
             </div>
           ) : members.length === 0 ? (
             <div className='text-muted-foreground py-8 text-center'>
-              <p>No members in this group</p>
+              <p>Chưa có thành viên trong nhóm</p>
               <Button
                 variant='outline'
                 className='mt-4'
                 onClick={() => setShowAddDialog(true)}
               >
                 <UserPlus className='mr-2 h-4 w-4' />
-                Add Members
+                Thêm thành viên
               </Button>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
+                  <TableHead>Tên</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Joined Date</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead>Vai trò</TableHead>
+                  <TableHead>Ngày tham gia</TableHead>
+                  <TableHead>Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -159,22 +159,21 @@ export function GroupMembersPanel({ groupId }: GroupMembersPanelProps) {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove Member</AlertDialogTitle>
+            <AlertDialogTitle>Xóa thành viên</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove this user from the group? They
-              will lose all permissions inherited from this group.
+              Bạn có chắc chắn muốn xóa thành viên này khỏi nhóm? Họ sẽ mất tất cả quyền hạn thừa hưởng từ nhóm này.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={removeMutation.isPending}>
-              Cancel
+              Hủy
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleRemove}
               disabled={removeMutation.isPending}
               className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
             >
-              {removeMutation.isPending ? 'Removing...' : 'Remove'}
+              {removeMutation.isPending ? 'Đang xóa...' : 'Xóa'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

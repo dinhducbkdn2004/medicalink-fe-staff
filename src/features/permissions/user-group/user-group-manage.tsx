@@ -33,14 +33,14 @@ export function UserGroupManage({ userId }: UserGroupManageProps) {
           <Button variant='ghost' size='sm' asChild>
             <Link to='/user-group'>
               <ArrowLeft className='mr-2 h-4 w-4' />
-              Back to directory
+              Quay lại danh mục
             </Link>
           </Button>
         </div>
 
         <div className='space-y-1'>
           <h2 className='text-2xl font-bold tracking-tight'>
-            Group memberships
+            Thành viên nhóm
             {staff?.fullName ? (
               <span className='text-muted-foreground font-normal'>
                 {' '}
@@ -51,13 +51,13 @@ export function UserGroupManage({ userId }: UserGroupManageProps) {
             ) : null}
           </h2>
           <p className='text-muted-foreground'>
-            Add or remove RBAC groups and review inherited permissions.
+            Thêm hoặc xóa nhóm RBAC và xem các quyền được thừa kế.
           </p>
         </div>
 
         {!isLoading && !staff ? (
           <div className='text-muted-foreground rounded-md border p-6 text-sm'>
-            User not found. Return to the directory and pick another account.
+            Không tìm thấy người dùng. Quay lại danh mục và chọn tài khoản khác.
           </div>
         ) : (
           <UserGroupMemberships userId={userId} />

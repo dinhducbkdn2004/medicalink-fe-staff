@@ -110,7 +110,7 @@ export function OfficeHoursActionDialog() {
       if (!values.isGlobal && values.doctorIds.length === 0) {
         form.setError('doctorIds', {
           type: 'manual',
-          message: 'Please select at least one doctor.',
+          message: 'Vui lòng chọn ít nhất một bác sĩ.',
         })
         return
       }
@@ -147,7 +147,7 @@ export function OfficeHoursActionDialog() {
           form.setError('isGlobal', {
             type: 'manual',
             message:
-              'Global shifts are not supported for Special Shifts overrides.',
+              'Giờ toàn cục không được hỗ trợ cho Ca đặc biệt (ghi đè).',
           })
           return
         }
@@ -155,7 +155,7 @@ export function OfficeHoursActionDialog() {
         if (values.doctorIds.length === 0) {
           form.setError('doctorIds', {
             type: 'manual',
-            message: 'Please select at least one doctor for Special Shifts.',
+            message: 'Vui lòng chọn ít nhất một bác sĩ cho Ca đặc biệt.',
           })
           return
         }
@@ -190,10 +190,10 @@ export function OfficeHoursActionDialog() {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className='sm:max-w-[600px]'>
         <DialogHeader>
-          <DialogTitle>Create Office Hours</DialogTitle>
+          <DialogTitle>Tạo Giờ làm việc</DialogTitle>
           <DialogDescription>
-            Define working hours for doctors and locations. The system supports
-            4 types of office hours with different priority levels.
+            Định nghĩa giờ làm việc cho bác sĩ và địa điểm. Hệ thống hỗ trợ
+            4 loại giờ làm việc với các mức ưu tiên khác nhau.
           </DialogDescription>
         </DialogHeader>
 
@@ -207,7 +207,7 @@ export function OfficeHoursActionDialog() {
               name='shiftType'
               render={({ field }) => (
                 <FormItem className='space-y-3'>
-                  <FormLabel>Shift Type</FormLabel>
+                  <FormLabel>Loại ca trực</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={(value) => {
@@ -225,7 +225,7 @@ export function OfficeHoursActionDialog() {
                           <RadioGroupItem value='REGULAR' />
                         </FormControl>
                         <FormLabel className='font-normal'>
-                          Regular (Weekly)
+                          Thường xuyên (Hàng tuần)
                         </FormLabel>
                       </FormItem>
                       <FormItem className='flex items-center space-y-0 space-x-2'>
@@ -233,7 +233,7 @@ export function OfficeHoursActionDialog() {
                           <RadioGroupItem value='OVERRIDE' />
                         </FormControl>
                         <FormLabel className='font-normal'>
-                          Special Shift (Override)
+                          Ca đặc biệt (Ghi đè)
                         </FormLabel>
                       </FormItem>
                     </RadioGroup>
@@ -264,12 +264,11 @@ export function OfficeHoursActionDialog() {
                     </FormControl>
                     <div className='space-y-1 leading-none'>
                       <FormLabel>
-                        Clinic Hours (Applies to all doctors)
+                        Giờ phòng khám (Áp dụng cho tất cả bác sĩ)
                       </FormLabel>
                       <FormDescription>
-                        Apply to the entire clinic as global fallback hours.
-                        When checked, doctor selection will be disabled and
-                        cleared.
+                        Áp dụng cho toàn bộ phòng khám làm giờ làm việc mặc định.
+                        Khi được chọn, phần chọn bác sĩ sẽ bị vô hiệu hóa và xóa trống.
                       </FormDescription>
                     </div>
                   </FormItem>
@@ -284,9 +283,9 @@ export function OfficeHoursActionDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Doctor{' '}
+                    Bác sĩ{' '}
                     <span className='text-muted-foreground text-xs font-normal'>
-                      (Optional for Regular, Required for Special)
+                      (Tùy chọn đối với Thường xuyên, Bắt buộc đối với Đặc biệt)
                     </span>
                   </FormLabel>
                   <MultiSelect
@@ -301,11 +300,11 @@ export function OfficeHoursActionDialog() {
                       isLoading ||
                       (watchedShiftType === 'REGULAR' && watchedIsGlobal)
                     }
-                    placeholder='Select one or more doctors...'
-                    searchPlaceholder='Search doctor...'
+                    placeholder='Chọn một hoặc nhiều bác sĩ...'
+                    searchPlaceholder='Tìm kiếm bác sĩ...'
                   />
                   <FormDescription>
-                    Select one or multiple doctors to create shifts in batch.
+                    Chọn một hoặc nhiều bác sĩ để tạo ca trực hàng loạt.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -320,7 +319,7 @@ export function OfficeHoursActionDialog() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Day of Week <span className='text-destructive'>*</span>
+                      Ngày trong tuần <span className='text-destructive'>*</span>
                     </FormLabel>
                     <Select
                       onValueChange={(value) => field.onChange(Number(value))}
@@ -329,7 +328,7 @@ export function OfficeHoursActionDialog() {
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder='Select a day' />
+                          <SelectValue placeholder='Chọn ngày' />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -351,14 +350,14 @@ export function OfficeHoursActionDialog() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Effective Date <span className='text-destructive'>*</span>
+                      Ngày có hiệu lực <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
                       <SingleDayPicker
                         id='effective-date-picker'
                         value={field.value ? parse(field.value, 'yyyy-MM-dd', new Date()) : undefined}
                         onSelect={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
-                        placeholder='Select a date'
+                        placeholder='Chọn ngày'
                         disabled={isLoading}
                       />
                     </FormControl>
@@ -376,7 +375,7 @@ export function OfficeHoursActionDialog() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Start Time <span className='text-destructive'>*</span>
+                      Giờ bắt đầu <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
                       <TimeInput
@@ -396,7 +395,7 @@ export function OfficeHoursActionDialog() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      End Time <span className='text-destructive'>*</span>
+                      Giờ kết thúc <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
                       <TimeInput
@@ -418,7 +417,7 @@ export function OfficeHoursActionDialog() {
                 onClick={handleClose}
                 disabled={isLoading}
               >
-                Cancel
+                Hủy
               </Button>
               <Button
                 type='submit'
@@ -427,7 +426,7 @@ export function OfficeHoursActionDialog() {
                 {(isLoading || isLoadingData) && (
                   <Loader2 className='mr-2 size-4 animate-spin' />
                 )}
-                {isLoadingData ? 'Loading...' : 'Create Office Hours'}
+                {isLoadingData ? 'Đang tải...' : 'Tạo Giờ làm việc'}
               </Button>
             </DialogFooter>
           </form>

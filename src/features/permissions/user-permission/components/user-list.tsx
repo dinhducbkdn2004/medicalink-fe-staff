@@ -76,10 +76,10 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
             <div className='bg-primary/10 rounded-lg p-2'>
               <Users className='text-primary h-4 w-4' />
             </div>
-            Users
+            Người dùng
           </CardTitle>
           <Badge variant='secondary' className='text-xs'>
-            {users.length} total
+            Tổng cộng {users.length}
           </Badge>
         </div>
         <div className='space-y-2 flex  gap-2'>
@@ -87,7 +87,7 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
             <Search className='text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4' />
             <Input
               type='search'
-              placeholder='Search by name or email...'
+              placeholder='Tìm kiếm theo tên hoặc email...'
               className='h-9 pl-8'
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -95,13 +95,13 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
           </div>
           <Select value={roleFilter} onValueChange={setRoleFilter}>
             <SelectTrigger className='h-9'>
-              <SelectValue placeholder='Filter by role' />
+              <SelectValue placeholder='Lọc theo vai trò' />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='all'>All Roles</SelectItem>
-              <SelectItem value='DOCTOR'>Doctor</SelectItem>
-              <SelectItem value='ADMIN'>Admin</SelectItem>
-              <SelectItem value='SUPER_ADMIN'>Super Admin</SelectItem>
+              <SelectItem value='all'>Tất cả vai trò</SelectItem>
+              <SelectItem value='DOCTOR'>Bác sĩ</SelectItem>
+              <SelectItem value='ADMIN'>Quản trị viên</SelectItem>
+              <SelectItem value='SUPER_ADMIN'>Quản trị cấp cao</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -125,9 +125,9 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
               <UserCircle2 className='text-muted-foreground h-6 w-6' />
             </div>
             <div className='text-center'>
-              <p className='text-sm font-medium'>No users found</p>
+              <p className='text-sm font-medium'>Không tìm thấy người dùng</p>
               <p className='text-muted-foreground text-xs'>
-                Try adjusting your search
+                Thử điều chỉnh tìm kiếm của bạn
               </p>
             </div>
           </div>
@@ -201,21 +201,21 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
                         {user.phoneNumber && (
                           <div>
                             <span className='text-muted-foreground text-xs'>
-                              Phone
+                              Điện thoại
                             </span>
                             <p className='font-medium'>{user.phoneNumber}</p>
                           </div>
                         )}
                         <div>
                           <span className='text-muted-foreground text-xs'>
-                            Status
+                            Trạng thái
                           </span>
                           <div className='mt-1'>
                             <Badge
                               variant={user.isActive ? 'default' : 'secondary'}
                               className='text-xs'
                             >
-                              {user.isActive ? 'Active' : 'Inactive'}
+                              {user.isActive ? 'Hoạt động' : 'Ngừng hoạt động'}
                             </Badge>
                           </div>
                         </div>

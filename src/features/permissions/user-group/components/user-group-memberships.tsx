@@ -74,9 +74,9 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
             <UsersRound className='text-primary h-10 w-10' />
           </div>
           <div className='text-center'>
-            <h3 className='font-semibold'>No User Selected</h3>
+            <h3 className='font-semibold'>Chưa chọn người dùng</h3>
             <p className='text-muted-foreground mt-1 text-sm'>
-              Select a user from the list above to view their group memberships
+              Chọn một người dùng từ danh sách bên trên để xem các nhóm mà họ tham gia
             </p>
           </div>
         </CardContent>
@@ -115,21 +115,20 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                 <div className='bg-primary/10 rounded-lg p-2'>
                   <UsersRound className='text-primary h-4 w-4' />
                 </div>
-                Group memberships
+                Các nhóm tham gia
               </CardTitle>
               <Badge
                 variant='secondary'
                 className='flex w-fit items-center gap-1 text-xs'
               >
                 <CheckCircle2 className='h-3 w-3' />
-                {memberships?.length || 0} group
-                {memberships?.length === 1 ? '' : 's'}
+                {memberships?.length || 0} nhóm
               </Badge>
             </div>
             <RoleGate roles={['SUPER_ADMIN']}>
               <Button onClick={() => setShowAddDialog(true)} size='sm'>
                 <UserPlus className='mr-2 h-4 w-4' />
-                Add to Group
+                Thêm vào nhóm
               </Button>
             </RoleGate>
           </div>
@@ -142,9 +141,9 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                 <AlertCircle className='text-muted-foreground h-6 w-6' />
               </div>
               <div className='text-center'>
-                <p className='font-medium'>No group memberships</p>
+                <p className='font-medium'>Không tham gia nhóm nào</p>
                 <p className='text-muted-foreground mt-1 text-sm'>
-                  This user is not a member of any group
+                  Người dùng này không phải là thành viên của bất kỳ nhóm nào
                 </p>
               </div>
               <RoleGate roles={['SUPER_ADMIN']}>
@@ -154,7 +153,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                   onClick={() => setShowAddDialog(true)}
                 >
                   <UserPlus className='mr-2 h-4 w-4' />
-                  Add to Group
+                  Thêm vào nhóm
                 </Button>
               </RoleGate>
             </div>
@@ -176,7 +175,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                                   {membership.groupName}
                                 </h4>
                                 <Badge variant='secondary' className='text-xs'>
-                                  Member
+                                  Thành viên
                                 </Badge>
                                 <Badge variant='outline' className='text-xs'>
                                   {membership.tenantId}
@@ -189,7 +188,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                               )}
                               <div className='text-muted-foreground flex items-center gap-1.5 text-xs'>
                                 <Calendar className='h-3 w-3' />
-                                Joined{' '}
+                                Tham gia từ {' '}
                                 {new Date(
                                   membership.createdAt
                                 ).toLocaleDateString('en-US', {
@@ -215,7 +214,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                                   </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                  <p>Remove from group</p>
+                                  <p>Xóa khỏi nhóm</p>
                                 </TooltipContent>
                               </Tooltip>
                             </RoleGate>
@@ -241,7 +240,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                           </div>
                           <div className='mt-2 flex gap-2'>
                             <Badge variant='secondary' className='text-xs'>
-                              Member
+                              Thành viên
                             </Badge>
                             <Badge variant='outline' className='text-xs'>
                               {membership.tenantId}
@@ -252,16 +251,16 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                         <div className='space-y-2'>
                           <div>
                             <span className='text-muted-foreground text-xs'>
-                              Description
+                              Mô tả
                             </span>
                             <p className='mt-1 text-sm'>
                               {membership.groupDescription ||
-                                'No description available'}
+                                'Không có mô tả'}
                             </p>
                           </div>
                           <div>
                             <span className='text-muted-foreground text-xs'>
-                              Membership Date
+                              Ngày tham gia
                             </span>
                             <p className='mt-1 flex items-center gap-1.5 text-sm'>
                               <Calendar className='h-3.5 w-3.5' />
@@ -306,18 +305,16 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                 <AlertCircle className='text-destructive h-5 w-5' />
               </div>
               <div>
-                <AlertDialogTitle>Remove from Group</AlertDialogTitle>
+                <AlertDialogTitle>Xóa khỏi nhóm</AlertDialogTitle>
               </div>
             </div>
             <AlertDialogDescription className='pt-2'>
-              Are you sure you want to remove this user from this group? They
-              will lose all permissions inherited from this group. This action
-              cannot be undone.
+              Bạn có chắc chắn muốn xóa người dùng này khỏi nhóm? Họ sẽ mất tất cả các quyền được thừa kế từ nhóm này. Hành động này không thể hoàn tác.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={removeMutation.isPending}>
-              Cancel
+              Hủy
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleRemove}
@@ -327,7 +324,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
               {removeMutation.isPending && (
                 <RefreshCw className='mr-2 h-4 w-4 animate-spin' />
               )}
-              {removeMutation.isPending ? 'Removing...' : 'Remove'}
+              {removeMutation.isPending ? 'Đang xóa...' : 'Xóa'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -44,14 +44,12 @@ export function GroupMultiDeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>Bạn có chắc chắn không?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete {selectedCount}{' '}
-            {selectedCount === 1 ? 'group' : 'groups'}. This action cannot be
-            undone.
+            Hành động này sẽ xóa vĩnh viễn {selectedCount} nhóm. Không thể hoàn tác.
             <br />
             <br />
-            <strong>Groups to be deleted:</strong>
+            <strong>Các nhóm sẽ bị xóa:</strong>
             <ul className='mt-2 list-inside list-disc'>
               {selectedRows.slice(0, 5).map((row) => (
                 <li key={row.original.id} className='text-sm'>
@@ -60,7 +58,7 @@ export function GroupMultiDeleteDialog({
               ))}
               {selectedRows.length > 5 && (
                 <li className='text-sm'>
-                  and {selectedRows.length - 5} more...
+                  và {selectedRows.length - 5} nhóm khác...
                 </li>
               )}
             </ul>
@@ -68,7 +66,7 @@ export function GroupMultiDeleteDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleteMutation.isPending}>
-            Cancel
+            Hủy
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
@@ -76,8 +74,8 @@ export function GroupMultiDeleteDialog({
             className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
           >
             {deleteMutation.isPending
-              ? 'Deleting...'
-              : `Delete ${selectedCount} ${selectedCount === 1 ? 'Group' : 'Groups'}`}
+              ? 'Đang xóa...'
+              : `Xóa ${selectedCount} nhóm`}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

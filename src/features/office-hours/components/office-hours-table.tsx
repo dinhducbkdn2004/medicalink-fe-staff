@@ -40,7 +40,7 @@ export function OfficeHoursTable({
     
     if (canDeleteOfficeHour({ officeHourId: officeHour.id })) {
       actions.push({
-        label: 'Delete',
+        label: 'Xóa',
         icon: Trash2,
         onClick: () => {
           setCurrentRow(officeHour)
@@ -67,12 +67,12 @@ export function OfficeHoursTable({
       
       pageCount={pageCount} 
       isLoading={isLoading}
-      entityName='office hour'
+      entityName='giờ làm việc'
       
       getRowActions={getRowActions}
       
       enableRowSelection={false}
-      emptyMessage='No office hours found. Add office hours to define working schedules.'
+      emptyMessage='Không tìm thấy giờ làm việc nào. Thêm giờ làm việc để xác định lịch làm việc.'
       hideToolbar={true}
     />
   )

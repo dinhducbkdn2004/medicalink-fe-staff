@@ -29,31 +29,31 @@ export function StatsCards({ stats, isLoading }: StatsCardsProps) {
 
   const statsData = [
     {
-      title: 'Total Permissions',
+      title: 'Tổng số quyền',
       value: stats.totalPermissions,
       icon: Shield,
       color: 'text-blue-600',
     },
     {
-      title: 'Total Groups',
+      title: 'Tổng số nhóm',
       value: stats.totalGroups,
       icon: UsersRound,
       color: 'text-green-600',
     },
     {
-      title: 'Direct Permissions',
+      title: 'Quyền trực tiếp',
       value: stats.totalUserPermissions,
       icon: Key,
       color: 'text-purple-600',
     },
     {
-      title: 'Group Permissions',
+      title: 'Quyền theo nhóm',
       value: stats.totalGroupPermissions,
       icon: Shield,
       color: 'text-orange-600',
     },
     {
-      title: 'Memberships',
+      title: 'Thành viên nhóm',
       value: stats.totalUserGroupMemberships,
       icon: UserPlus,
       color: 'text-pink-600',

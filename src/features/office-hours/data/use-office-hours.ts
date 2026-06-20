@@ -40,7 +40,7 @@ export function useCreateOfficeHour() {
       officeHourService.createOfficeHour(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: officeHourKeys.lists() })
-      toast.success('Office hours created successfully')
+      toast.success('Đã tạo giờ làm việc thành công')
     },
     onError: (error: unknown) => {
       const axiosError = error as {
@@ -56,11 +56,11 @@ export function useCreateOfficeHour() {
           axiosError.response.data?.message || 'Record not found'
         if (errorMessage.includes('Doctor')) {
           toast.error(
-            'Selected doctor not found. Please refresh and try again.'
+            'Không tìm thấy bác sĩ đã chọn. Vui lòng làm mới trang và thử lại.'
           )
         } else if (errorMessage.includes('WorkLocation')) {
           toast.error(
-            'Selected work location not found. Please refresh and try again.'
+            'Không tìm thấy cơ sở làm việc đã chọn. Vui lòng làm mới trang và thử lại.'
           )
         } else {
           toast.error(errorMessage)
@@ -68,10 +68,10 @@ export function useCreateOfficeHour() {
       } else if (axiosError?.response?.status === 400) {
         toast.error(
           axiosError.response.data?.message ||
-            'Invalid data. Please check your input.'
+            'Dữ liệu không hợp lệ. Vui lòng kiểm tra lại thông tin.'
         )
       } else {
-        toast.error(axiosError?.message || 'Failed to create office hours')
+        toast.error(axiosError?.message || 'Không thể tạo giờ làm việc')
       }
     },
   })
@@ -84,7 +84,7 @@ export function useDeleteOfficeHour() {
     mutationFn: (id: string) => officeHourService.deleteOfficeHour(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: officeHourKeys.lists() })
-      toast.success('Office hours deleted successfully')
+      toast.success('Đã xóa giờ làm việc thành công')
     },
     onError: (error: unknown) => {
       const axiosError = error as {
@@ -104,7 +104,7 @@ export function useDeleteOfficeHour() {
       toast.error(
         axiosError?.response?.data?.message ||
           axiosError?.message ||
-          'Failed to delete office hours'
+          'Không thể xóa giờ làm việc'
       )
     },
   })

@@ -32,10 +32,10 @@ export function useAssignUserPermission() {
         queryKey: [...userPermissionKeys.all, variables.userId],
       })
       queryClient.invalidateQueries({ queryKey: ['permission-stats'] })
-      toast.success('Permission assigned to user successfully')
+      toast.success('Đã cấp quyền cho người dùng thành công')
     },
     onError: (error: Error) => {
-      toast.error(`Failed to assign permission: ${error.message}`)
+      toast.error(`Không thể cấp quyền: ${error.message}`)
     },
   })
 }
@@ -51,10 +51,10 @@ export function useRevokeUserPermission() {
         queryKey: userPermissionKeys.user(variables.userId, variables.tenantId),
       })
       queryClient.invalidateQueries({ queryKey: ['permission-stats'] })
-      toast.success('Permission revoked from user successfully')
+      toast.success('Đã thu hồi quyền của người dùng thành công')
     },
     onError: (error: Error) => {
-      toast.error(`Failed to revoke permission: ${error.message}`)
+      toast.error(`Không thể thu hồi quyền: ${error.message}`)
     },
   })
 }
@@ -69,10 +69,10 @@ export function useRefreshUserPermissionCache() {
       queryClient.invalidateQueries({
         queryKey: userPermissionKeys.user(variables.userId, variables.tenantId),
       })
-      toast.success('Permission cache refreshed successfully')
+      toast.success('Đã làm mới bộ nhớ đệm quyền thành công')
     },
     onError: (error: Error) => {
-      toast.error(`Failed to refresh cache: ${error.message}`)
+      toast.error(`Không thể làm mới bộ nhớ đệm: ${error.message}`)
     },
   })
 }

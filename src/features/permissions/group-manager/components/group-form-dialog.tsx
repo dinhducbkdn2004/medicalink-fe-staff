@@ -27,11 +27,11 @@ import { useGroupManager } from './use-group-manager'
 const groupFormSchema = z.object({
   name: z
     .string()
-    .min(3, 'Group name must be at least 3 characters')
-    .max(50, 'Group name must not exceed 50 characters'),
+    .min(3, 'Tên nhóm phải có ít nhất 3 ký tự')
+    .max(50, 'Tên nhóm không được vượt quá 50 ký tự'),
   description: z
     .string()
-    .max(500, 'Description must not exceed 500 characters')
+    .max(500, 'Mô tả không được vượt quá 500 ký tự')
     .optional(),
   tenantId: z.string().optional(),
 })
@@ -95,12 +95,12 @@ export function GroupFormDialog({
       <DialogContent className='max-w-2xl'>
         <DialogHeader>
           <DialogTitle>
-            {isEditMode ? 'Edit Permission Group' : 'Create Permission Group'}
+            {isEditMode ? 'Chỉnh sửa nhóm quyền' : 'Tạo nhóm quyền'}
           </DialogTitle>
           <DialogDescription>
             {isEditMode
-              ? 'Update the permission group details.'
-              : 'Create a new permission group to organize permissions.'}
+              ? 'Cập nhật thông tin chi tiết của nhóm quyền.'
+              : 'Tạo nhóm quyền mới để tổ chức các quyền.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -111,16 +111,16 @@ export function GroupFormDialog({
               name='name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Group Name</FormLabel>
+                  <FormLabel>Tên nhóm</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder='e.g., Admins, Doctors'
+                      placeholder='vd. Quản trị viên, Bác sĩ'
                       {...field}
                       disabled={currentGroup?.name.toLowerCase() === 'admin'}
                     />
                   </FormControl>
                   <FormDescription>
-                    A unique name for this permission group.
+                    Tên duy nhất cho nhóm quyền này.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -132,16 +132,16 @@ export function GroupFormDialog({
               name='description'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Mô tả</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='Describe the purpose of this group...'
+                      placeholder='Mô tả mục đích của nhóm này...'
                       rows={3}
                       {...field}
                     />
                   </FormControl>
                   <FormDescription>
-                    Optional description of this permission group.
+                    Mô tả tùy chọn cho nhóm quyền này.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -155,14 +155,14 @@ export function GroupFormDialog({
                 onClick={handleClose}
                 disabled={isPending}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type='submit' disabled={isPending}>
                 {(() => {
                   if (isPending) {
-                    return isEditMode ? 'Updating...' : 'Creating...'
+                    return isEditMode ? 'Đang cập nhật...' : 'Đang tạo...'
                   }
-                  return isEditMode ? 'Update Group' : 'Create Group'
+                  return isEditMode ? 'Cập nhật nhóm' : 'Tạo nhóm'
                 })()}
               </Button>
             </DialogFooter>

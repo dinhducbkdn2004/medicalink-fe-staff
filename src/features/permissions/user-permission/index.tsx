@@ -50,11 +50,10 @@ export function UserPermission() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='space-y-1'>
           <h2 className='text-2xl font-bold tracking-tight'>
-            Direct user permissions
+            Quyền trực tiếp của người dùng
           </h2>
           <p className='text-muted-foreground'>
-            Browse staff in a table. Open a user to grant or revoke individual
-            overrides on a full page.
+            Duyệt danh sách nhân viên. Chọn người dùng để cấp hoặc thu hồi quyền cụ thể.
           </p>
         </div>
 
@@ -65,7 +64,7 @@ export function UserPermission() {
           navigate={navigate}
           isLoading={isLoading}
           manageTo='/user-permission/$userId'
-          manageLabel='Manage permissions'
+          manageLabel='Quản lý quyền'
           entityName='user'
         />
       </Main>

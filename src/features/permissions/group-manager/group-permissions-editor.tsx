@@ -91,14 +91,14 @@ export function GroupPermissionsEditor({ groupId }: GroupPermissionsEditorProps)
           <Button variant='ghost' size='sm' asChild>
             <Link to='/group-manager'>
               <ArrowLeft className='mr-2 h-4 w-4' />
-              Back to groups
+              Quay lại danh sách nhóm
             </Link>
           </Button>
         </div>
 
         <div className='space-y-1'>
           <h1 className='text-2xl font-bold tracking-tight'>
-            Group permissions
+            Quyền của nhóm
             {group?.name ? (
               <span className='text-muted-foreground font-normal'>
                 {' '}
@@ -107,15 +107,14 @@ export function GroupPermissionsEditor({ groupId }: GroupPermissionsEditorProps)
             ) : null}
           </h1>
           <p className='text-muted-foreground text-sm'>
-            Full-page editor: toggle permissions in the tree or use Assign new for
-            batch selection. Changes match the live permission catalog.
+            Trình chỉnh sửa toàn trang: bật/tắt quyền trong sơ đồ hoặc sử dụng Gán quyền mới để chọn hàng loạt. Các thay đổi được cập nhật trực tiếp vào danh mục quyền.
           </p>
         </div>
 
         <Tabs defaultValue='permissions' className='flex min-h-0 flex-1 flex-col'>
           <TabsList className='grid w-full max-w-md shrink-0 grid-cols-2'>
-            <TabsTrigger value='permissions'>Permissions</TabsTrigger>
-            <TabsTrigger value='assign'>Assign new</TabsTrigger>
+            <TabsTrigger value='permissions'>Quyền</TabsTrigger>
+            <TabsTrigger value='assign'>Gán quyền mới</TabsTrigger>
           </TabsList>
 
           <TabsContent
@@ -123,7 +122,7 @@ export function GroupPermissionsEditor({ groupId }: GroupPermissionsEditorProps)
             className='mt-4 flex min-h-0 flex-1 flex-col space-y-4'
           >
             <p className='text-muted-foreground shrink-0 text-sm'>
-              Use checkboxes to grant or revoke. Conditional rows show a badge.
+              Sử dụng hộp kiểm để cấp hoặc thu hồi quyền. Các quyền có điều kiện sẽ có huy hiệu.
             </p>
 
             {isLoading || catalogLoading ? (
@@ -131,7 +130,7 @@ export function GroupPermissionsEditor({ groupId }: GroupPermissionsEditorProps)
                 <div className='flex items-center gap-2'>
                   <RefreshCw className='text-primary h-4 w-4 animate-spin' />
                   <p className='text-muted-foreground text-sm'>
-                    Loading catalog and group permissions…
+                    Đang tải danh mục và quyền của nhóm...
                   </p>
                 </div>
               </div>
@@ -154,7 +153,7 @@ export function GroupPermissionsEditor({ groupId }: GroupPermissionsEditorProps)
               />
             ) : (
               <p className='text-muted-foreground text-sm'>
-                Group not found. Return to the group list and try again.
+                Không tìm thấy nhóm. Quay lại danh sách nhóm và thử lại.
               </p>
             )}
           </TabsContent>

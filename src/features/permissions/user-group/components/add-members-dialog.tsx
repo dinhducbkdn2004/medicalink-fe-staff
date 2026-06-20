@@ -74,34 +74,32 @@ export function AddMembersDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className='flex max-h-[85vh] max-w-2xl flex-col overflow-hidden'>
         <DialogHeader className='flex-shrink-0'>
-          <DialogTitle>Add Members to Group</DialogTitle>
+          <DialogTitle>Thêm thành viên vào nhóm</DialogTitle>
           <DialogDescription>
-            Select users to add to this permission group.
+            Chọn nhân viên để thêm vào nhóm quyền hạn này.
           </DialogDescription>
         </DialogHeader>
 
         <div className='flex min-h-0 flex-1 flex-col space-y-4'>
-          {}
           <div className='relative flex-shrink-0'>
             <Search className='text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4' />
             <Input
               type='search'
-              placeholder='Search users...'
+              placeholder='Tìm kiếm nhân viên...'
               className='pl-8'
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
-          {}
           <div className='min-h-0 flex-1 overflow-y-auto rounded-lg border'>
             {isLoading ? (
               <div className='text-muted-foreground flex items-center justify-center py-8'>
-                Loading users...
+                Đang tải danh sách người dùng...
               </div>
             ) : users.length === 0 ? (
               <div className='text-muted-foreground flex items-center justify-center py-8'>
-                No users found
+                Không tìm thấy người dùng nào
               </div>
             ) : (
               <div className='divide-y'>
@@ -136,14 +134,14 @@ export function AddMembersDialog({
           {selectedUserIds.length > 0 && (
             <div className='bg-muted/50 flex flex-shrink-0 items-center justify-between rounded-lg border p-3'>
               <span className='text-sm font-medium'>
-                {selectedUserIds.length} user(s) selected
+                {selectedUserIds.length} thành viên đã chọn
               </span>
               <Button
                 variant='ghost'
                 size='sm'
                 onClick={() => setSelectedUserIds([])}
               >
-                Clear
+                Hủy chọn
               </Button>
             </div>
           )}
@@ -156,7 +154,7 @@ export function AddMembersDialog({
             onClick={handleClose}
             disabled={addMutation.isPending}
           >
-            Cancel
+            Hủy
           </Button>
           <Button
             onClick={handleAdd}
@@ -164,8 +162,8 @@ export function AddMembersDialog({
           >
             <UserPlus className='mr-2 h-4 w-4' />
             {addMutation.isPending
-              ? 'Adding...'
-              : `Add ${selectedUserIds.length} Member(s)`}
+              ? 'Đang thêm...'
+              : `Thêm ${selectedUserIds.length} thành viên`}
           </Button>
         </DialogFooter>
       </DialogContent>

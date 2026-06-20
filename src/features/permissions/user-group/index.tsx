@@ -49,11 +49,10 @@ export function UserGroup() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='space-y-1'>
           <h2 className='text-2xl font-bold tracking-tight'>
-            User group memberships
+            Thành viên nhóm người dùng
           </h2>
           <p className='text-muted-foreground'>
-            Browse staff in a table. Open a user to assign groups and review
-            inherited permissions on a full page.
+            Duyệt danh sách nhân viên. Chọn người dùng để gán nhóm và xem các quyền được thừa kế.
           </p>
         </div>
 
@@ -64,7 +63,7 @@ export function UserGroup() {
           navigate={navigate}
           isLoading={isLoading}
           manageTo='/user-group/$userId'
-          manageLabel='Manage groups'
+          manageLabel='Quản lý nhóm'
           entityName='user'
         />
       </Main>

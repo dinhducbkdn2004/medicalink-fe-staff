@@ -39,10 +39,10 @@ export function useAssignGroupPermission() {
         ],
       })
       queryClient.invalidateQueries({ queryKey: ['permission-stats'] })
-      toast.success('Permission assigned to group successfully')
+      toast.success('Đã phân quyền cho nhóm thành công')
     },
     onError: (error: Error) => {
-      toast.error(`Failed to assign permission: ${error.message}`)
+      toast.error(`Không thể phân quyền: ${error.message}`)
     },
   })
 }
@@ -66,10 +66,10 @@ export function useRevokeGroupPermission() {
         ],
       })
       queryClient.invalidateQueries({ queryKey: ['permission-stats'] })
-      toast.success('Permission revoked from group successfully')
+      toast.success('Đã thu hồi quyền khỏi nhóm thành công')
     },
     onError: (error: Error) => {
-      toast.error(`Failed to revoke permission: ${error.message}`)
+      toast.error(`Không thể thu hồi quyền: ${error.message}`)
     },
   })
 }

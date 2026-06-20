@@ -52,14 +52,14 @@ export function ResourceActionSelector({
   return (
     <div className='space-y-4'>
       <div className='space-y-2'>
-        <Label>Resource</Label>
+        <Label>Tài nguyên</Label>
         <Select
           value={selectedResource}
           onValueChange={onResourceChange}
           disabled={disabled}
         >
           <SelectTrigger>
-            <SelectValue placeholder='Select resource' />
+            <SelectValue placeholder='Chọn tài nguyên' />
           </SelectTrigger>
           <SelectContent className='max-h-72'>
             {modules.map((mod) => (
@@ -80,7 +80,7 @@ export function ResourceActionSelector({
 
       {selectedResource && (
         <div className='space-y-2'>
-          <Label>Action</Label>
+          <Label>Hành động</Label>
           <div className='space-y-2 rounded-md border p-4'>
             {actionsForResource.map((action) => (
               <div key={action} className='flex items-center space-x-2'>
@@ -100,7 +100,7 @@ export function ResourceActionSelector({
             ))}
             {actionsForResource.length === 0 && (
               <p className='text-muted-foreground text-xs'>
-                No actions in the catalog for this resource.
+                Không có hành động nào trong danh mục cho tài nguyên này.
               </p>
             )}
           </div>

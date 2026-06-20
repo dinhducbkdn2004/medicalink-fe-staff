@@ -101,9 +101,9 @@ export function AssignUserPermissionDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className='max-h-[85vh] max-w-2xl overflow-hidden'>
         <DialogHeader>
-          <DialogTitle>Assign User Permission</DialogTitle>
+          <DialogTitle>Gán quyền người dùng</DialogTitle>
           <DialogDescription>
-            Assign direct permissions to the selected user.
+            Gán quyền trực tiếp cho người dùng đã chọn.
           </DialogDescription>
         </DialogHeader>
 
@@ -130,11 +130,10 @@ export function AssignUserPermissionDialog({
                     <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
                       <div className='space-y-0.5'>
                         <FormLabel className='text-base'>
-                          Permission Effect
+                          Hiệu lực của quyền
                         </FormLabel>
                         <FormDescription>
-                          ALLOW grants access. Turn off to DENY these
-                          permissions explicitly.
+                          CHO PHÉP cấp quyền truy cập. Tắt để TỪ CHỐI các quyền này một cách rõ ràng.
                         </FormDescription>
                       </div>
                       <FormControl>
@@ -159,15 +158,15 @@ export function AssignUserPermissionDialog({
                 onClick={handleClose}
                 disabled={assignMutation.isPending}
               >
-                Cancel
+                Hủy
               </Button>
               <Button
                 type='submit'
                 disabled={!canSubmit || assignMutation.isPending}
               >
                 {assignMutation.isPending
-                  ? 'Assigning...'
-                  : 'Assign Permissions'}
+                  ? 'Đang gán...'
+                  : 'Gán quyền'}
               </Button>
             </DialogFooter>
           </form>

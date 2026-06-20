@@ -17,7 +17,7 @@ export function createRbacUserColumns({
     {
       accessorKey: 'fullName',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Full name' />
+        <DataTableColumnHeader column={column} title='Họ và tên' />
       ),
       cell: ({ row }) => (
         <span className='max-w-[280px] truncate font-medium'>
@@ -43,7 +43,7 @@ export function createRbacUserColumns({
     {
       accessorKey: 'role',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Role' />
+        <DataTableColumnHeader column={column} title='Vai trò' />
       ),
       cell: ({ row }) => {
         const value = row.getValue<string>('role')
@@ -63,7 +63,7 @@ export function createRbacUserColumns({
     {
       accessorKey: 'phone',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Phone' />
+        <DataTableColumnHeader column={column} title='Số điện thoại' />
       ),
       cell: ({ row }) => {
         const phone = row.getValue<string | null>('phone')
@@ -78,7 +78,7 @@ export function createRbacUserColumns({
       accessorKey: 'createdAt',
       id: 'createdAt',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Created' />
+        <DataTableColumnHeader column={column} title='Ngày tạo' />
       ),
       cell: ({ row }) => {
         const dateString = row.getValue<string>('createdAt')

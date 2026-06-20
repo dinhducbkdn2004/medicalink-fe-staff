@@ -47,7 +47,7 @@ export function GroupInheritedPermissions({
   if (!assigned?.length) {
     return (
       <p className='text-muted-foreground px-1 py-2 text-xs'>
-        This group has no permissions assigned yet.
+        Nhóm này chưa được gán quyền nào.
       </p>
     )
   }
@@ -61,7 +61,7 @@ export function GroupInheritedPermissions({
       >
         <span className='flex items-center gap-1'>
           {open ? <ChevronDown className='h-3.5 w-3.5' /> : <ChevronRight className='h-3.5 w-3.5' />}
-          Permissions from this group
+          Các quyền từ nhóm này
         </span>
         <Badge variant='secondary' className='text-[10px]'>
           {assigned.length}
@@ -97,7 +97,7 @@ export function GroupInheritedPermissions({
                           <span className='capitalize'>{p.action}</span>
                           {row?.conditions && row.conditions.length > 0 && (
                             <Badge variant='outline' className='h-[18px] px-1 text-[9px]'>
-                              Conditional
+                              Có điều kiện
                             </Badge>
                           )}
                         </li>

@@ -29,15 +29,15 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
               size='icon'
               onClick={() => setShowDeleteDialog(true)}
               className='size-8'
-              aria-label='Delete selected groups'
-              title='Delete selected groups'
+              aria-label='Xóa các nhóm đã chọn'
+              title='Xóa các nhóm đã chọn'
             >
               <Trash2 />
-              <span className='sr-only'>Delete selected groups</span>
+              <span className='sr-only'>Xóa các nhóm đã chọn</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Delete selected groups</p>
+            <p>Xóa các nhóm đã chọn</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>

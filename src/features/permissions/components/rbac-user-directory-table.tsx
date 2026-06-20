@@ -48,7 +48,7 @@ export function RbacUserDirectoryTable({
   manageTo,
   manageLabel,
   entityName = 'user',
-  searchPlaceholder = 'Search by name or email…',
+  searchPlaceholder = 'Tìm kiếm theo tên hoặc email...',
 }: RbacUserDirectoryTableProps) {
   const columns = createRbacUserColumns({ manageTo, manageLabel })
 
@@ -66,7 +66,7 @@ export function RbacUserDirectoryTable({
       filters={[
         {
           columnId: 'role',
-          title: 'Role',
+          title: 'Vai trò',
           options: staffRoles.map((role) => ({
             label: role.label,
             value: role.value,
@@ -76,7 +76,7 @@ export function RbacUserDirectoryTable({
       ]}
       enableRowSelection={false}
       columnFilterConfigs={columnFilterConfigs}
-      emptyMessage='No users found.'
+      emptyMessage='Không tìm thấy người dùng nào.'
     />
   )
 }

@@ -99,9 +99,9 @@ export function PermissionTree({
     <div className='space-y-3 rounded-lg border p-4'>
       <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
         <div>
-          <h3 className='text-sm font-semibold'>Permissions by module</h3>
+          <h3 className='text-sm font-semibold'>Quyền theo mô-đun</h3>
           <p className='text-muted-foreground text-xs'>
-            {grantedAllowCount} ALLOW grants enabled · tree matches the live catalog
+            {grantedAllowCount} quyền CHO PHÉP đã bật · hiển thị theo danh mục
           </p>
         </div>
       </div>
@@ -109,7 +109,7 @@ export function PermissionTree({
       <div className='relative'>
         <Search className='text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4' />
         <Input
-          placeholder='Search resource, action, description…'
+          placeholder='Tìm kiếm tài nguyên, hành động, mô tả...'
           className='h-9 pl-8'
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -220,7 +220,7 @@ export function PermissionTree({
                                       )}
                                       {row?.conditions && row.conditions.length > 0 && (
                                         <Badge variant='outline' className='mt-1 text-[10px]'>
-                                          Conditional
+                                          Có điều kiện
                                         </Badge>
                                       )}
                                     </div>

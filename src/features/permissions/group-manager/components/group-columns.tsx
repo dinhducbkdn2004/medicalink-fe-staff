@@ -34,7 +34,7 @@ export const groupColumns: ColumnDef<PermissionGroup>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Group Name' />
+      <DataTableColumnHeader column={column} title='Tên nhóm' />
     ),
     cell: ({ row }) => {
       return (
@@ -47,14 +47,14 @@ export const groupColumns: ColumnDef<PermissionGroup>[] = [
   {
     accessorKey: 'description',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Description' />
+      <DataTableColumnHeader column={column} title='Mô tả' />
     ),
     cell: ({ row }) => {
       const description = row.getValue<string | undefined>('description')
       return (
         <div className='max-w-md truncate'>
           {description || (
-            <span className='text-muted-foreground italic'>No description</span>
+            <span className='text-muted-foreground italic'>Không có mô tả</span>
           )}
         </div>
       )
@@ -64,7 +64,7 @@ export const groupColumns: ColumnDef<PermissionGroup>[] = [
   {
     accessorKey: 'isActive',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Status' />
+      <DataTableColumnHeader column={column} title='Trạng thái' />
     ),
     cell: ({ row }) => {
       const isActive = row.getValue<boolean>('isActive')
@@ -77,13 +77,13 @@ export const groupColumns: ColumnDef<PermissionGroup>[] = [
   {
     accessorKey: 'createdAt',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Created At' />
+      <DataTableColumnHeader column={column} title='Ngày tạo' />
     ),
     cell: ({ row }) => {
       const date = new Date(row.getValue('createdAt'))
       return (
         <span className='text-muted-foreground text-sm'>
-          {date.toLocaleDateString('en-US', {
+          {date.toLocaleDateString('vi-VN', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',

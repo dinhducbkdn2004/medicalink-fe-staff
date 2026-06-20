@@ -101,10 +101,9 @@ export function AssignPermissionForm({
           render={({ field }) => (
             <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
               <div className='space-y-0.5'>
-                <FormLabel className='text-base'>Permission Effect</FormLabel>
+                <FormLabel className='text-base'>Hiệu lực của quyền</FormLabel>
                 <FormDescription>
-                  ALLOW grants access. Turn off to DENY these permissions
-                  explicitly.
+                  CHO PHÉP cấp quyền truy cập. Tắt để TỪ CHỐI các quyền này một cách rõ ràng.
                 </FormDescription>
               </div>
               <FormControl>
@@ -125,7 +124,7 @@ export function AssignPermissionForm({
             type='submit'
             disabled={!canSubmit || assignMutation.isPending}
           >
-            {assignMutation.isPending ? 'Assigning...' : 'Assign Permissions'}
+            {assignMutation.isPending ? 'Đang gán...' : 'Gán quyền'}
           </Button>
         </div>
       </form>

@@ -32,10 +32,10 @@ export function useCreatePermissionGroup() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: permissionGroupKeys.lists() })
       queryClient.invalidateQueries({ queryKey: ['permission-stats'] })
-      toast.success('Permission group created successfully')
+      toast.success('Đã tạo nhóm quyền thành công')
     },
     onError: (error: Error) => {
-      toast.error(`Failed to create group: ${error.message}`)
+      toast.error(`Không thể tạo nhóm quyền: ${error.message}`)
     },
   })
 }
@@ -56,10 +56,10 @@ export function useUpdatePermissionGroup() {
       queryClient.invalidateQueries({
         queryKey: permissionGroupKeys.detail(variables.groupId),
       })
-      toast.success('Permission group updated successfully')
+      toast.success('Đã cập nhật nhóm quyền thành công')
     },
     onError: (error: Error) => {
-      toast.error(`Failed to update group: ${error.message}`)
+      toast.error(`Không thể cập nhật nhóm quyền: ${error.message}`)
     },
   })
 }
@@ -73,10 +73,10 @@ export function useDeletePermissionGroup() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: permissionGroupKeys.lists() })
       queryClient.invalidateQueries({ queryKey: ['permission-stats'] })
-      toast.success('Permission group deleted successfully')
+      toast.success('Đã xóa nhóm quyền thành công')
     },
     onError: (error: Error) => {
-      toast.error(`Failed to delete group: ${error.message}`)
+      toast.error(`Không thể xóa nhóm quyền: ${error.message}`)
     },
   })
 }

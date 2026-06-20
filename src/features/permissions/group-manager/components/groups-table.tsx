@@ -31,7 +31,7 @@ export function GroupsTable({
 
     return [
       {
-        label: 'View permissions',
+        label: 'Xem quyền',
         icon: Shield,
         onClick: () => {
           routerNavigate({
@@ -41,7 +41,7 @@ export function GroupsTable({
         },
       },
       {
-        label: 'Edit',
+        label: 'Sửa',
         icon: Edit,
         onClick: () => {
           setCurrentGroup(group)
@@ -50,7 +50,7 @@ export function GroupsTable({
         separator: true,
       },
       {
-        label: 'Delete',
+        label: 'Xóa',
         icon: Trash2,
         onClick: () => {
           setCurrentGroup(group)
@@ -70,14 +70,14 @@ export function GroupsTable({
       navigate={navigate}
       
       isLoading={isLoading}
-      entityName='permission group'
+      entityName='nhóm quyền'
       
       
       getRowActions={getRowActions}
       renderBulkActions={(table) => <DataTableBulkActions table={table} />}
       
       enableRowSelection={true}
-      emptyMessage='No permission groups found.'
+      emptyMessage='Không tìm thấy nhóm quyền nào.'
       hideToolbar={true}
     />
   )

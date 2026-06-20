@@ -29,7 +29,7 @@ export function DataTableRowActions({
           className='data-[state=open]:bg-muted flex size-8 p-0'
         >
           <MoreHorizontal className='size-4' />
-          <span className='sr-only'>Open menu</span>
+          <span className='sr-only'>Mở menu</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-40'>
@@ -41,7 +41,7 @@ export function DataTableRowActions({
           className='text-destructive focus:text-destructive'
         >
           <Trash2 className='mr-2 size-4' />
-          Delete
+          Xóa
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
