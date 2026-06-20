@@ -57,13 +57,13 @@ const STATUS_VARIANTS = {
 } as const
 
 const STATUS_LABELS = {
-  BOOKED: 'Booked',
-  CONFIRMED: 'Confirmed',
-  RESCHEDULED: 'Rescheduled',
-  CANCELLED_BY_PATIENT: 'Cancelled by Patient',
-  CANCELLED_BY_STAFF: 'Cancelled by Staff',
-  NO_SHOW: 'No Show',
-  COMPLETED: 'Completed',
+  BOOKED: 'Đã đặt',
+  CONFIRMED: 'Đã xác nhận',
+  RESCHEDULED: 'Đã dời lịch',
+  CANCELLED_BY_PATIENT: 'Bệnh nhân hủy',
+  CANCELLED_BY_STAFF: 'Nhân viên hủy',
+  NO_SHOW: 'Không đến',
+  COMPLETED: 'Đã hoàn thành',
 } as const
 
 export function EventDetailsDialog({
@@ -101,16 +101,16 @@ export function EventDetailsDialog({
   }
 
   const getTitle = () => {
-    if (isEditing) return 'Update Appointment'
-    if (isRescheduling) return 'Reschedule Appointment'
-    return 'Appointment Details'
+    if (isEditing) return 'Cập nhật lịch hẹn'
+    if (isRescheduling) return 'Dời lịch hẹn'
+    return 'Chi tiết lịch hẹn'
   }
 
   const getDescription = () => {
-    if (isEditing) return 'Update appointment details below.'
+    if (isEditing) return 'Cập nhật chi tiết lịch hẹn dưới đây.'
     if (isRescheduling)
-      return 'Update the appointment date, time, doctor, or location.'
-    return 'View and manage appointment details.'
+      return 'Cập nhật ngày, giờ, bác sĩ hoặc địa điểm khám.'
+    return 'Xem và quản lý chi tiết lịch hẹn.'
   }
 
   const isActionView = isEditing || isRescheduling
@@ -166,10 +166,10 @@ export function EventDetailsDialog({
                   <div className='flex items-start gap-3'>
                     <User className='text-muted-foreground mt-1 size-5 shrink-0' />
                     <div className='space-y-1'>
-                      <p className='text-sm font-medium'>Patient</p>
+                      <p className='text-sm font-medium'>Bệnh nhân</p>
                       <p className='text-sm'>{appointment.patient.fullName}</p>
                       <p className='text-muted-foreground text-xs'>
-                        DOB:{' '}
+                        Ngày sinh:{' '}
                         {appointment.patient.dateOfBirth
                           ? format(
                               parseISO(appointment.patient.dateOfBirth),
@@ -183,13 +183,13 @@ export function EventDetailsDialog({
                   <div className='flex items-start gap-3'>
                     <Stethoscope className='text-muted-foreground mt-1 size-5 shrink-0' />
                     <div className='space-y-1'>
-                      <p className='text-sm font-medium'>Doctor</p>
+                      <p className='text-sm font-medium'>Bác sĩ</p>
                       <p className='text-sm'>
-                        {appointment.doctor?.name || 'Deleted Doctor'}
+                        {appointment.doctor?.name || 'Bác sĩ đã bị xóa'}
                       </p>
                       {appointment.specialty && (
                         <p className='text-muted-foreground text-xs'>
-                          Specialty: {appointment.specialty.name}
+                          Chuyên khoa: {appointment.specialty.name}
                         </p>
                       )}
                     </div>
@@ -199,7 +199,7 @@ export function EventDetailsDialog({
                     <div className='flex items-start gap-3'>
                       <MapPin className='text-muted-foreground mt-1 size-5 shrink-0' />
                       <div className='space-y-1'>
-                        <p className='text-sm font-medium'>Location</p>
+                        <p className='text-sm font-medium'>Địa điểm</p>
                         <p className='text-sm'>{appointment.location.name}</p>
                         <p className='text-muted-foreground text-xs'>
                           {appointment.location.address}
@@ -214,7 +214,7 @@ export function EventDetailsDialog({
                   <div className='flex items-start gap-3'>
                     <Calendar className='text-muted-foreground mt-1 size-5 shrink-0' />
                     <div className='space-y-1'>
-                      <p className='text-sm font-medium'>Date & Time</p>
+                      <p className='text-sm font-medium'>Ngày & Giờ</p>
                       <p className='text-sm'>
                         {format(
                           parseISO(appointment.event.serviceDate),
@@ -230,7 +230,7 @@ export function EventDetailsDialog({
                     <div className='flex items-start gap-3'>
                       <DollarSign className='text-muted-foreground mt-1 size-5 shrink-0' />
                       <div className='space-y-1'>
-                        <p className='text-sm font-medium'>Price</p>
+                        <p className='text-sm font-medium'>Giá</p>
                         <p className='text-sm'>
                           {appointment.priceAmount.toLocaleString()}{' '}
                           {appointment.currency}
@@ -243,7 +243,7 @@ export function EventDetailsDialog({
                     <div className='flex items-start gap-3'>
                       <FileText className='text-muted-foreground mt-1 size-5 shrink-0' />
                       <div className='space-y-1'>
-                        <p className='text-sm font-medium'>Reason</p>
+                        <p className='text-sm font-medium'>Lý do khám</p>
                         <p className='text-sm'>{appointment.reason}</p>
                       </div>
                     </div>
@@ -257,7 +257,7 @@ export function EventDetailsDialog({
                   <div className='flex items-start gap-3'>
                     <FileText className='text-muted-foreground mt-1 size-5 shrink-0' />
                     <div className='flex-1 space-y-1'>
-                      <p className='text-sm font-medium'>Notes</p>
+                      <p className='text-sm font-medium'>Ghi chú</p>
                       <div
                         className='prose prose-sm max-w-none text-sm'
                         dangerouslySetInnerHTML={{ __html: appointment.notes }}
@@ -274,7 +274,7 @@ export function EventDetailsDialog({
                     <div className='flex-1 space-y-2'>
                       <div className='flex items-center gap-2'>
                         <p className='text-sm font-medium'>
-                          AI Clinical Summary
+                          Tóm tắt lâm sàng (AI)
                         </p>
                         {aiData.is_emergency && (
                           <Badge
@@ -282,7 +282,7 @@ export function EventDetailsDialog({
                             className='h-5 px-1.5 text-[10px]'
                           >
                             <AlertTriangle className='mr-1 h-3 w-3' />
-                            Emergency Flag
+                            Cảnh báo khẩn cấp
                           </Badge>
                         )}
                         {aiData.triage_level &&
@@ -299,7 +299,7 @@ export function EventDetailsDialog({
                       <div className='bg-muted/50 rounded-lg border p-3 text-sm'>
                         {aiData.emergency_reason && (
                           <div className='text-destructive mb-2 text-xs font-medium'>
-                            Emergency Reason:{' '}
+                            Lý do khẩn cấp:{' '}
                             {aiData.emergency_reason}
                           </div>
                         )}
@@ -309,7 +309,7 @@ export function EventDetailsDialog({
                             0 && (
                             <div>
                               <p className='text-muted-foreground mb-1 text-xs font-medium'>
-                                Extracted Symptoms
+                                Triệu chứng phát hiện
                               </p>
                               <ul className='list-inside list-disc space-y-0.5 text-xs'>
                                 {aiData.extracted_symptoms?.map(
@@ -325,7 +325,7 @@ export function EventDetailsDialog({
                             0 && (
                             <div>
                               <p className='text-muted-foreground mb-1 text-xs font-medium'>
-                                Negated Symptoms
+                                Triệu chứng loại trừ
                               </p>
                               <ul className='list-inside list-disc space-y-0.5 text-xs'>
                                 {aiData.negated_symptoms?.map(
@@ -346,7 +346,7 @@ export function EventDetailsDialog({
                         {aiData.note && (
                           <div className='mt-3 border-t pt-2'>
                             <p className='text-muted-foreground mb-1 text-xs font-medium'>
-                              AI Note
+                              Ghi chú AI
                             </p>
                             <p className='text-xs'>
                               {aiData.note}
@@ -359,12 +359,12 @@ export function EventDetailsDialog({
                           <div className='text-muted-foreground mt-2 flex gap-4 text-xs'>
                             {aiData.severity && (
                               <span>
-                                Severity: {aiData.severity}
+                                Mức độ: {aiData.severity}
                               </span>
                             )}
                             {aiData.duration && (
                               <span>
-                                Duration: {aiData.duration}
+                                Thời gian: {aiData.duration}
                               </span>
                             )}
                           </div>
@@ -377,7 +377,7 @@ export function EventDetailsDialog({
 
               <div className='text-muted-foreground grid grid-cols-2 gap-4 border-t pt-4 text-xs'>
                 <div>
-                  <p className='text-foreground font-medium'>Created</p>
+                  <p className='text-foreground font-medium'>Ngày tạo</p>
                   <p>
                     {format(
                       parseISO(appointment.createdAt),
@@ -386,7 +386,7 @@ export function EventDetailsDialog({
                   </p>
                 </div>
                 <div>
-                  <p className='text-foreground font-medium'>Updated</p>
+                  <p className='text-foreground font-medium'>Ngày cập nhật</p>
                   <p>
                     {format(
                       parseISO(appointment.updatedAt),
@@ -396,7 +396,7 @@ export function EventDetailsDialog({
                 </div>
                 {appointment.completedAt && (
                   <div>
-                    <p className='text-foreground font-medium'>Completed</p>
+                    <p className='text-foreground font-medium'>Hoàn thành</p>
                     <p>
                       {format(
                         parseISO(appointment.completedAt),
@@ -407,7 +407,7 @@ export function EventDetailsDialog({
                 )}
                 {appointment.cancelledAt && (
                   <div>
-                    <p className='text-foreground font-medium'>Cancelled</p>
+                    <p className='text-foreground font-medium'>Đã hủy</p>
                     <p>
                       {format(
                         parseISO(appointment.cancelledAt),
@@ -430,7 +430,7 @@ export function EventDetailsDialog({
               className='w-full sm:w-auto'
               onClick={() => setIsEditing(true)}
             >
-              Update
+              Cập nhật
             </Button>
 
             {canReschedule && (
@@ -441,7 +441,7 @@ export function EventDetailsDialog({
                 className='w-full sm:w-auto'
                 onClick={() => setIsRescheduling(true)}
               >
-                Reschedule
+                Dời lịch
               </Button>
             )}
 
@@ -453,7 +453,7 @@ export function EventDetailsDialog({
                   size='sm'
                   className='w-full sm:w-auto'
                 >
-                  Confirm
+                  Xác nhận
                 </Button>
               </ConfirmAppointmentDialog>
             )}
@@ -466,7 +466,7 @@ export function EventDetailsDialog({
                   size='sm'
                   className='w-full sm:w-auto'
                 >
-                  Complete
+                  Hoàn thành
                 </Button>
               </CompleteAppointmentDialog>
             )}
@@ -479,7 +479,7 @@ export function EventDetailsDialog({
                   size='sm'
                   className='w-full sm:w-auto'
                 >
-                  Cancel
+                  Hủy
                 </Button>
               </CancelAppointmentDialog>
             )}

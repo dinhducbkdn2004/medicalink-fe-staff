@@ -60,29 +60,29 @@ export function ConfirmAppointmentDialog({
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             <CheckCircle className='size-5 text-green-600' />
-            Confirm Appointment
+            Xác nhận lịch hẹn
           </DialogTitle>
           <DialogDescription>
-            Are you sure you want to confirm this appointment?
+            Bạn có chắc chắn muốn xác nhận lịch hẹn này?
           </DialogDescription>
         </DialogHeader>
 
         <div className='py-4'>
           <div className='bg-muted space-y-2 rounded-lg p-4'>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Patient:</span>
+              <span className='text-muted-foreground'>Bệnh nhân:</span>
               <span className='font-medium'>
                 {appointment.patient.fullName}
               </span>
             </div>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Doctor:</span>
+              <span className='text-muted-foreground'>Bác sĩ:</span>
               <span className='font-medium'>
-                {appointment.doctor?.name || 'Deleted Doctor'}
+                {appointment.doctor?.name || 'Bác sĩ đã bị xóa'}
               </span>
             </div>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Date:</span>
+              <span className='text-muted-foreground'>Ngày:</span>
               <span className='font-medium'>
                 {format(
                   parseISO(appointment.event.serviceDate),
@@ -91,7 +91,7 @@ export function ConfirmAppointmentDialog({
               </span>
             </div>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Time:</span>
+              <span className='text-muted-foreground'>Giờ:</span>
               <span className='font-medium'>
                 {formatTime(appointment.event.timeStart)} -{' '}
                 {formatTime(appointment.event.timeEnd)}
@@ -110,12 +110,12 @@ export function ConfirmAppointmentDialog({
                 e.stopPropagation()
               }}
             >
-              Cancel
+              Hủy
             </Button>
           </DialogClose>
 
           <Button type='button' onClick={handleConfirm} disabled={isPending}>
-            {isPending ? 'Confirming...' : 'Confirm Appointment'}
+            {isPending ? 'Đang xác nhận...' : 'Xác nhận lịch hẹn'}
           </Button>
         </DialogFooter>
       </DialogContent>

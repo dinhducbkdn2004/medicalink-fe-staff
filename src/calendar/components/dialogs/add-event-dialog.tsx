@@ -221,21 +221,21 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
   ])
 
   const getSpecialtyPlaceholder = useCallback(() => {
-    if (isLoadingSpecialties) return 'Loading...'
-    return 'Select a specialty'
+    if (isLoadingSpecialties) return 'Đang tải...'
+    return 'Chọn chuyên khoa'
   }, [isLoadingSpecialties])
 
   const getDoctorPlaceholder = useCallback(() => {
-    if (isLoadingDoctors) return 'Loading...'
-    if (displayDoctors.length === 0) return 'No doctors available'
-    return 'Select a doctor'
+    if (isLoadingDoctors) return 'Đang tải...'
+    if (displayDoctors.length === 0) return 'Không có bác sĩ nào'
+    return 'Chọn bác sĩ'
   }, [isLoadingDoctors, displayDoctors.length])
 
   const patientOptions = useMemo(
     () =>
       patients.map((patient) => ({
         value: patient.id,
-        label: patient.fullName || 'Unknown',
+        label: patient.fullName || 'Không rõ',
         subtitle: patient.email || patient.phone || undefined,
       })),
     [patients]
@@ -267,14 +267,14 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
   }, [displayDoctors])
 
   const schedulerButtonText = useMemo(() => {
-    if (isLoadingDates) return 'Loading appointment dates...'
+    if (isLoadingDates) return 'Đang tải lịch khám...'
     if (selectedServiceDate && selectedSlot) {
       return `${format(selectedServiceDate, 'dd/MM/yyyy')} • ${selectedSlot.timeStart}-${selectedSlot.timeEnd}`
     }
     if (selectedServiceDate) {
-      return `${format(selectedServiceDate, 'dd/MM/yyyy')} • Select time slot`
+      return `${format(selectedServiceDate, 'dd/MM/yyyy')} • Chọn giờ khám`
     }
-    return 'Select date & time slot'
+    return 'Chọn ngày & giờ khám'
   }, [isLoadingDates, selectedServiceDate, selectedSlot])
 
   const onSubmit: SubmitHandler<TCreateAppointmentFormData> = useCallback(
@@ -319,10 +319,9 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
 
       <DialogContent className='max-h-[95vh] w-[95vw] max-w-6xl overflow-y-auto sm:min-w-[600px] md:min-w-[700px] lg:min-w-[800px]'>
         <DialogHeader>
-          <DialogTitle>Add New Appointment</DialogTitle>
+          <DialogTitle>Thêm lịch hẹn mới</DialogTitle>
           <DialogDescription>
-            Create a new appointment. You can select a doctor directly to
-            auto-fill location and specialty.
+            Tạo lịch hẹn mới. Bạn có thể chọn bác sĩ trước để tự động điền địa điểm và chuyên khoa.
           </DialogDescription>
         </DialogHeader>
 
@@ -340,7 +339,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>
-                    Patient <span className='text-red-500'>*</span>
+                    Bệnh nhân <span className='text-red-500'>*</span>
                   </FormLabel>
                   <FormControl>
                     <SearchableSelect
@@ -348,8 +347,8 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                       onValueChange={field.onChange}
                       onSearchChange={setPatientSearch}
                       options={patientOptions}
-                      placeholder='Search patient by name, email or phone...'
-                      emptyMessage='No patient found'
+                      placeholder='Tìm kiếm bệnh nhân theo tên, email hoặc SĐT...'
+                      emptyMessage='Không tìm thấy bệnh nhân'
                       isLoading={isLoadingPatients}
                       className={`w-full ${
                         fieldState.invalid
@@ -371,7 +370,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel>
-                      Location <span className='text-red-500'>*</span>
+                      Địa điểm <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Select
@@ -386,8 +385,8 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                           <SelectValue
                             placeholder={
                               isLoadingLocations
-                                ? 'Loading...'
-                                : 'Select a location'
+                                ? 'Đang tải...'
+                                : 'Chọn địa điểm'
                             }
                             className='truncate'
                           />
@@ -415,7 +414,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel>
-                      Specialty <span className='text-red-500'>*</span>
+                      Chuyên khoa <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Select
@@ -457,7 +456,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>
-                    Doctor <span className='text-red-500'>*</span>
+                    Bác sĩ <span className='text-red-500'>*</span>
                   </FormLabel>
                   <FormControl>
                     <Select
@@ -491,7 +490,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
             {}
             <div className='space-y-1'>
               <FormLabel>
-                Date & Time <span className='text-red-500'>*</span>
+                Ngày & Giờ <span className='text-red-500'>*</span>
               </FormLabel>
               <AppointmentSchedulerDialog
                 availableDates={availableDates}
@@ -551,12 +550,12 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel htmlFor='reason'>
-                    Reason <span className='text-red-500'>*</span>
+                    Lý do khám <span className='text-red-500'>*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
                       id='reason'
-                      placeholder='Reason for appointment'
+                      placeholder='Lý do khám'
                       maxLength={255}
                       data-invalid={fieldState.invalid}
                       {...field}
@@ -573,7 +572,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               name='priceAmount'
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Price (VND)</FormLabel>
+                  <FormLabel>Giá (VND)</FormLabel>
                   <FormControl>
                     <Input
                       type='number'
@@ -602,12 +601,12 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               name='notes'
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Notes</FormLabel>
+                  <FormLabel>Ghi chú</FormLabel>
                   <FormControl>
                     <RichTextEditor
                       value={field.value}
                       onChange={field.onChange}
-                      placeholder='Additional notes for the appointment'
+                      placeholder='Ghi chú thêm cho lịch hẹn'
                       accessToken={accessToken || ''}
                       toolbarOptions='minimal'
                       enableImageUpload={true}
@@ -631,12 +630,12 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
         <DialogFooter className='pt-6'>
           <DialogClose asChild>
             <Button type='button' variant='outline' disabled={isPending}>
-              Cancel
+              Hủy
             </Button>
           </DialogClose>
 
           <Button form='appointment-form' type='submit' disabled={isPending}>
-            {isPending ? 'Creating...' : 'Create Appointment'}
+            {isPending ? 'Đang tạo...' : 'Tạo lịch hẹn'}
           </Button>
         </DialogFooter>
       </DialogContent>

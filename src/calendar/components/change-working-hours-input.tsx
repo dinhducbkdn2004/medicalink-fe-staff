@@ -13,13 +13,13 @@ import {
 } from '@/components/ui/tooltip'
 
 const DAYS_OF_WEEK = [
-  { index: 0, name: 'Sunday' },
-  { index: 1, name: 'Monday' },
-  { index: 2, name: 'Tuesday' },
-  { index: 3, name: 'Wednesday' },
-  { index: 4, name: 'Thursday' },
-  { index: 5, name: 'Friday' },
-  { index: 6, name: 'Saturday' },
+  { index: 0, name: 'Chủ nhật' },
+  { index: 1, name: 'Thứ hai' },
+  { index: 2, name: 'Thứ ba' },
+  { index: 3, name: 'Thứ tư' },
+  { index: 4, name: 'Thứ năm' },
+  { index: 5, name: 'Thứ sáu' },
+  { index: 6, name: 'Thứ bảy' },
 ]
 
 export function ChangeWorkingHoursInput() {
@@ -80,7 +80,7 @@ export function ChangeWorkingHoursInput() {
   return (
     <div className='flex flex-col gap-2'>
       <div className='flex items-center gap-2'>
-        <p className='text-sm font-semibold'>Change working hours</p>
+        <p className='text-sm font-semibold'>Thay đổi giờ làm việc</p>
 
         <TooltipProvider delayDuration={100}>
           <Tooltip>
@@ -90,8 +90,7 @@ export function ChangeWorkingHoursInput() {
 
             <TooltipContent className='max-w-80 text-center'>
               <p>
-                This will apply a dashed background to the hour cells that fall
-                outside the working hours - only for week and day views.
+                Phần nền có đường gạch đứt sẽ hiển thị ở các ô giờ nằm ngoài giờ làm việc - chỉ áp dụng cho chế độ xem tuần và ngày.
               </p>
             </TooltipContent>
           </Tooltip>
@@ -117,7 +116,7 @@ export function ChangeWorkingHoursInput() {
               {isDayActive ? (
                 <div className='flex items-center gap-4'>
                   <div className='flex items-center gap-2'>
-                    <span>From</span>
+                    <span>Từ</span>
                     <TimeInput
                       id={`${day.name.toLowerCase()}-from`}
                       hourCycle={12}
@@ -135,7 +134,7 @@ export function ChangeWorkingHoursInput() {
                   </div>
 
                   <div className='flex items-center gap-2'>
-                    <span>To</span>
+                    <span>Đến</span>
                     <TimeInput
                       id={`${day.name.toLowerCase()}-to`}
                       hourCycle={12}
@@ -155,7 +154,7 @@ export function ChangeWorkingHoursInput() {
               ) : (
                 <div className='text-muted-foreground flex items-center gap-2'>
                   <Moon className='size-4' />
-                  <span>Closed</span>
+                  <span>Đóng cửa</span>
                 </div>
               )}
             </div>
@@ -164,7 +163,7 @@ export function ChangeWorkingHoursInput() {
       </div>
 
       <Button className='mt-4 w-fit' onClick={handleSave}>
-        Apply
+        Áp dụng
       </Button>
     </div>
   )

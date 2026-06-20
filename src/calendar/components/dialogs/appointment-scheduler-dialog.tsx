@@ -100,10 +100,10 @@ export function AppointmentSchedulerDialog({
 
       <DialogContent className='flex max-h-[90vh] max-w-md flex-col p-0'>
         <DialogTitle className='sr-only'>
-          Select Appointment Date and Time
+          Chọn ngày và giờ khám
         </DialogTitle>
         <DialogDescription className='sr-only'>
-          Choose an available date from the calendar and then select a time slot
+          Chọn ngày trống trên lịch, sau đó chọn khung giờ phù hợp
         </DialogDescription>
         <div className='flex-1 overflow-y-auto p-4 pt-10'>
           {}
@@ -118,7 +118,7 @@ export function AppointmentSchedulerDialog({
               <ChevronLeft className='h-4 w-4' />
             </Button>
             <div className='text-center font-semibold'>
-              Month {format(currentMonth, 'M / yyyy')}
+              Tháng {format(currentMonth, 'M / yyyy')}
             </div>
             <Button
               type='button'
@@ -189,25 +189,25 @@ export function AppointmentSchedulerDialog({
           <div className='mb-4 flex items-center gap-2 text-xs'>
             <div className='h-1 w-1 rounded-full bg-blue-600' />
             <span className='font-semibold'>
-              Days with available appointments
+              Ngày có lịch khám trống
             </span>
           </div>
 
           {}
           <div className='space-y-2'>
-            <div className='font-semibold'>Select appointment time slot</div>
+            <div className='font-semibold'>Chọn khung giờ khám</div>
 
             {selectedDate ? (
               <>
                 {isLoadingSlots && (
                   <div className='rounded-md border p-4 text-center text-sm'>
-                    Loading time slots...
+                    Đang tải danh sách khung giờ...
                   </div>
                 )}
 
                 {!isLoadingSlots && slots.length === 0 && (
                   <div className='border-destructive text-destructive rounded-md border p-4 text-center text-sm'>
-                    No available time slots for the selected date.
+                    Không có khung giờ trống cho ngày đã chọn.
                   </div>
                 )}
 
@@ -244,21 +244,21 @@ export function AppointmentSchedulerDialog({
                           >
                             <div className='font-medium'>{slot.timeStart}</div>
                             <div className='text-[10px] opacity-70'>
-                              to {slot.timeEnd}
+                              đến {slot.timeEnd}
                             </div>
                           </button>
                         )
                       })}
                     </div>
                     <div className='text-muted-foreground text-xs'>
-                      {availableSlotsCount} available time slots
+                      {availableSlotsCount} khung giờ trống
                     </div>
                   </>
                 )}
               </>
             ) : (
               <div className='text-muted-foreground rounded-md border border-dashed p-4 text-center text-sm'>
-                Please select a date first
+                Vui lòng chọn ngày trước
               </div>
             )}
           </div>
@@ -271,8 +271,8 @@ export function AppointmentSchedulerDialog({
             className='mt-4 w-full'
           >
             {canConfirm
-              ? `Confirm: ${format(selectedDate, 'dd/MM/yyyy')} • ${selectedSlot.timeStart}-${selectedSlot.timeEnd}`
-              : 'Please select both a date and a time slot'}
+              ? `Xác nhận: ${format(selectedDate, 'dd/MM/yyyy')} • ${selectedSlot.timeStart} - ${selectedSlot.timeEnd}`
+              : 'Vui lòng chọn cả ngày và giờ khám'}
           </Button>
         </div>
       </DialogContent>

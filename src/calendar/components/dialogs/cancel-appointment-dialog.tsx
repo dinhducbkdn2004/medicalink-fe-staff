@@ -83,30 +83,29 @@ export function CancelAppointmentDialog({ children, appointment }: IProps) {
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             <AlertTriangle className='text-destructive size-5' />
-            Cancel Appointment
+            Hủy lịch hẹn
           </DialogTitle>
           <DialogDescription>
-            Are you sure you want to cancel this appointment? This action will
-            update the appointment status to "Cancelled by Staff".
+            Bạn có chắc chắn muốn hủy lịch hẹn này? Hành động này sẽ cập nhật trạng thái lịch hẹn thành "Đã hủy bởi Nhân viên".
           </DialogDescription>
         </DialogHeader>
 
         <div className='py-2'>
           <div className='bg-muted mb-4 space-y-2 rounded-lg p-4'>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Patient:</span>
+              <span className='text-muted-foreground'>Bệnh nhân:</span>
               <span className='font-medium'>
                 {appointment.patient.fullName}
               </span>
             </div>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Doctor:</span>
+              <span className='text-muted-foreground'>Bác sĩ:</span>
               <span className='font-medium'>
-                {appointment.doctor?.name || 'Deleted Doctor'}
+                {appointment.doctor?.name || 'Bác sĩ đã bị xóa'}
               </span>
             </div>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Date:</span>
+              <span className='text-muted-foreground'>Ngày:</span>
               <span className='font-medium'>
                 {format(
                   parseISO(appointment.event.serviceDate),
@@ -115,7 +114,7 @@ export function CancelAppointmentDialog({ children, appointment }: IProps) {
               </span>
             </div>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Time:</span>
+              <span className='text-muted-foreground'>Giờ:</span>
               <span className='font-medium'>
                 {formatTime(appointment.event.timeStart)} -{' '}
                 {formatTime(appointment.event.timeEnd)}
@@ -134,11 +133,11 @@ export function CancelAppointmentDialog({ children, appointment }: IProps) {
                 name='reason'
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel>Cancellation Reason (Optional)</FormLabel>
+                    <FormLabel>Lý do hủy (Không bắt buộc)</FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
-                        placeholder='Enter the reason for cancellation...'
+                        placeholder='Nhập lý do hủy lịch hẹn...'
                         rows={3}
                         data-invalid={fieldState.invalid}
                       />
@@ -154,7 +153,7 @@ export function CancelAppointmentDialog({ children, appointment }: IProps) {
         <DialogFooter>
           <DialogClose asChild>
             <Button type='button' variant='outline' disabled={isPending}>
-              Keep Appointment
+              Giữ lại lịch hẹn
             </Button>
           </DialogClose>
 
@@ -164,7 +163,7 @@ export function CancelAppointmentDialog({ children, appointment }: IProps) {
             variant='destructive'
             disabled={isPending}
           >
-            {isPending ? 'Cancelling...' : 'Cancel Appointment'}
+            {isPending ? 'Đang hủy...' : 'Hủy lịch hẹn'}
           </Button>
         </DialogFooter>
       </DialogContent>

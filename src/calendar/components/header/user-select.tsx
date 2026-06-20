@@ -34,7 +34,7 @@ export function UserSelect() {
                 </Avatar>
               ))}
             </AvatarGroup>
-            All
+            Tất cả
           </div>
         </SelectItem>
 

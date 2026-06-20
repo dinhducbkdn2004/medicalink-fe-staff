@@ -167,7 +167,7 @@ export function AppointmentRescheduleForm({
             name='doctorId'
             render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel>Doctor</FormLabel>
+                <FormLabel>Bác sĩ</FormLabel>
                 <FormControl>
                   <Select
                     value={field.value}
@@ -182,7 +182,7 @@ export function AppointmentRescheduleForm({
                     >
                       <SelectValue
                         placeholder={
-                          isLoadingDoctors ? 'Loading...' : 'Select a doctor'
+                          isLoadingDoctors ? 'Đang tải...' : 'Chọn bác sĩ'
                         }
                       />
                     </SelectTrigger>
@@ -205,7 +205,7 @@ export function AppointmentRescheduleForm({
             name='locationId'
             render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel>Location</FormLabel>
+                <FormLabel>Địa điểm</FormLabel>
                 <FormControl>
                   <Select
                     value={field.value}
@@ -219,8 +219,8 @@ export function AppointmentRescheduleForm({
                       <SelectValue
                         placeholder={
                           isLoadingLocations
-                            ? 'Loading...'
-                            : 'Select a location'
+                            ? 'Đang tải...'
+                            : 'Chọn địa điểm'
                         }
                         className='truncate'
                       />
@@ -246,7 +246,7 @@ export function AppointmentRescheduleForm({
           name='serviceDate'
           render={({ fieldState }) => (
             <FormItem>
-              <FormLabel>Date & Time *</FormLabel>
+              <FormLabel>Ngày & Giờ *</FormLabel>
               <FormControl>
                 <AppointmentSchedulerDialog
                   availableDates={availableDates}
@@ -279,7 +279,7 @@ export function AppointmentRescheduleForm({
                       ? `${format(selectedDate, 'PPP')} • ${selectedSlot.timeStart} - ${selectedSlot.timeEnd}`
                       : selectedDate
                         ? format(selectedDate, 'PPP')
-                        : 'Select date and time'}
+                        : 'Chọn ngày và giờ'}
                   </Button>
                 </AppointmentSchedulerDialog>
               </FormControl>
@@ -295,11 +295,11 @@ export function AppointmentRescheduleForm({
             disabled={isPending}
             onClick={onCancel}
           >
-            Cancel
+            Hủy
           </Button>
 
           <Button type='submit' disabled={isPending}>
-            {isPending ? 'Rescheduling...' : 'Reschedule'}
+            {isPending ? 'Đang dời lịch...' : 'Dời lịch'}
           </Button>
         </div>
       </form>

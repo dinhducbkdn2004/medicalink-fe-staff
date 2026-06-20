@@ -74,24 +74,24 @@ export function AppointmentUpdateForm({
           name='status'
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel>Status</FormLabel>
+              <FormLabel>Trạng thái</FormLabel>
               <FormControl>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger data-invalid={fieldState.invalid}>
-                    <SelectValue placeholder='Select status' />
+                    <SelectValue placeholder='Chọn trạng thái' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='BOOKED'>Booked</SelectItem>
-                    <SelectItem value='CONFIRMED'>Confirmed</SelectItem>
-                    <SelectItem value='RESCHEDULED'>Rescheduled</SelectItem>
+                    <SelectItem value='BOOKED'>Đã đặt</SelectItem>
+                    <SelectItem value='CONFIRMED'>Đã xác nhận</SelectItem>
+                    <SelectItem value='RESCHEDULED'>Đã dời lịch</SelectItem>
                     <SelectItem value='CANCELLED_BY_PATIENT'>
-                      Cancelled by Patient
+                      Bệnh nhân hủy
                     </SelectItem>
                     <SelectItem value='CANCELLED_BY_STAFF'>
-                      Cancelled by Staff
+                      Nhân viên hủy
                     </SelectItem>
-                    <SelectItem value='NO_SHOW'>No Show</SelectItem>
-                    <SelectItem value='COMPLETED'>Completed</SelectItem>
+                    <SelectItem value='NO_SHOW'>Không đến</SelectItem>
+                    <SelectItem value='COMPLETED'>Hoàn thành</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -105,11 +105,11 @@ export function AppointmentUpdateForm({
           name='reason'
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel htmlFor='reason'>Reason</FormLabel>
+              <FormLabel htmlFor='reason'>Lý do khám</FormLabel>
               <FormControl>
                 <Input
                   id='reason'
-                  placeholder='Reason for appointment'
+                  placeholder='Lý do khám'
                   data-invalid={fieldState.invalid}
                   {...field}
                 />
@@ -124,12 +124,12 @@ export function AppointmentUpdateForm({
           name='notes'
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel>Notes</FormLabel>
+              <FormLabel>Ghi chú</FormLabel>
               <FormControl>
                 <RichTextEditor
                   value={field.value}
                   onChange={field.onChange}
-                  placeholder='Additional notes for the appointment'
+                  placeholder='Ghi chú thêm cho lịch hẹn'
                   accessToken={accessToken || ''}
                   toolbarOptions='minimal'
                   enableImageUpload={false}
@@ -154,7 +154,7 @@ export function AppointmentUpdateForm({
           name='priceAmount'
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel>Price Amount</FormLabel>
+              <FormLabel>Giá (VND)</FormLabel>
               <FormControl>
                 <Input
                   type='number'
@@ -184,11 +184,11 @@ export function AppointmentUpdateForm({
             disabled={isPending}
             onClick={onCancel}
           >
-            Cancel
+            Hủy
           </Button>
 
           <Button type='submit' disabled={isPending}>
-            {isPending ? 'Saving...' : 'Save Changes'}
+            {isPending ? 'Đang lưu...' : 'Lưu thay đổi'}
           </Button>
         </div>
       </form>

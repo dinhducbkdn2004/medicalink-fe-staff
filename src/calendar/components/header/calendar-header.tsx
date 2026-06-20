@@ -33,7 +33,7 @@ export function CalendarHeader({ view, events }: IProps) {
           <div className='inline-flex first:rounded-r-none last:rounded-l-none [&:not(:first-child):not(:last-child)]:rounded-none'>
             <Button
               asChild
-              aria-label='View by day'
+              aria-label='Xem theo ngày'
               size='icon'
               variant={view === 'day' ? 'default' : 'outline'}
               className='rounded-r-none [&_svg]:size-5'
@@ -45,7 +45,7 @@ export function CalendarHeader({ view, events }: IProps) {
 
             <Button
               asChild
-              aria-label='View by week'
+              aria-label='Xem theo tuần'
               size='icon'
               variant={view === 'week' ? 'default' : 'outline'}
               className='-ml-px rounded-none [&_svg]:size-5'
@@ -57,7 +57,7 @@ export function CalendarHeader({ view, events }: IProps) {
 
             <Button
               asChild
-              aria-label='View by month'
+              aria-label='Xem theo tháng'
               size='icon'
               variant={view === 'month' ? 'default' : 'outline'}
               className='-ml-px rounded-none [&_svg]:size-5'
@@ -69,7 +69,7 @@ export function CalendarHeader({ view, events }: IProps) {
 
             <Button
               asChild
-              aria-label='View by year'
+              aria-label='Xem theo năm'
               size='icon'
               variant={view === 'year' ? 'default' : 'outline'}
               className='-ml-px rounded-none [&_svg]:size-5'
@@ -81,7 +81,7 @@ export function CalendarHeader({ view, events }: IProps) {
 
             <Button
               asChild
-              aria-label='View by agenda'
+              aria-label='Xem theo lịch trình'
               size='icon'
               variant={view === 'agenda' ? 'default' : 'outline'}
               className='-ml-px rounded-l-none [&_svg]:size-5'
@@ -97,7 +97,7 @@ export function CalendarHeader({ view, events }: IProps) {
         <AddEventDialog>
           <Button className='w-full sm:w-auto'>
             <Plus />
-            Add Appointment
+            Thêm lịch hẹn
           </Button>
         </AddEventDialog>
       </div>

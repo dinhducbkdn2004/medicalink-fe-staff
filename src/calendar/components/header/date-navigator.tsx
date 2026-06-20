@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { formatDate } from 'date-fns'
+import { vi } from 'date-fns/locale'
 import { useCalendar } from '@/calendar/contexts/use-calendar'
 import { getEventsCount, navigateDate, rangeText } from '@/calendar/helpers'
 import type { IEvent } from '@/calendar/interfaces'
@@ -16,7 +17,7 @@ interface IProps {
 export function DateNavigator({ view, events }: Readonly<IProps>) {
   const { selectedDate, setSelectedDate } = useCalendar()
 
-  const month = formatDate(selectedDate, 'MMMM')
+  const month = formatDate(selectedDate, 'MMMM', { locale: vi })
   const year = selectedDate.getFullYear()
 
   const eventCount = useMemo(
@@ -36,7 +37,7 @@ export function DateNavigator({ view, events }: Readonly<IProps>) {
           {month} {year}
         </span>
         <Badge variant='outline' className='px-1.5'>
-          {eventCount} events
+          {eventCount} sự kiện
         </Badge>
       </div>
 

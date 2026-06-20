@@ -14,7 +14,7 @@ export function ChangeBadgeVariantInput() {
 
   return (
     <div className='space-y-2'>
-      <p className='text-sm font-semibold'>Change badge variant</p>
+      <p className='text-sm font-semibold'>Thay đổi kiểu hiển thị</p>
 
       <Select value={badgeVariant} onValueChange={setBadgeVariant}>
         <SelectTrigger className='w-48'>
@@ -22,9 +22,9 @@ export function ChangeBadgeVariantInput() {
         </SelectTrigger>
 
         <SelectContent>
-          <SelectItem value='dot'>Dot</SelectItem>
-          <SelectItem value='colored'>Colored</SelectItem>
-          <SelectItem value='mixed'>Mixed</SelectItem>
+          <SelectItem value='dot'>Dấu chấm</SelectItem>
+          <SelectItem value='colored'>Đổ màu</SelectItem>
+          <SelectItem value='mixed'>Hỗn hợp</SelectItem>
         </SelectContent>
       </Select>
     </div>

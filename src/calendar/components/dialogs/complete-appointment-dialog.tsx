@@ -49,31 +49,29 @@ export function CompleteAppointmentDialog({
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             <CheckCircle2 className='size-5 text-green-600' />
-            Mark Appointment as Completed
+            Đánh dấu hoàn thành lịch hẹn
           </DialogTitle>
           <DialogDescription>
-            Are you sure you want to mark this appointment as completed? This
-            action will update the appointment status and record the completion
-            time.
+            Bạn có chắc chắn muốn đánh dấu lịch hẹn này đã hoàn thành? Hành động này sẽ cập nhật trạng thái lịch hẹn và lưu thời gian hoàn thành.
           </DialogDescription>
         </DialogHeader>
 
         <div className='py-4'>
           <div className='bg-muted space-y-2 rounded-lg p-4'>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Patient:</span>
+              <span className='text-muted-foreground'>Bệnh nhân:</span>
               <span className='font-medium'>
                 {appointment.patient.fullName}
               </span>
             </div>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Doctor:</span>
+              <span className='text-muted-foreground'>Bác sĩ:</span>
               <span className='font-medium'>
-                {appointment.doctor?.name || 'Deleted Doctor'}
+                {appointment.doctor?.name || 'Bác sĩ đã bị xóa'}
               </span>
             </div>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Date:</span>
+              <span className='text-muted-foreground'>Ngày:</span>
               <span className='font-medium'>
                 {format(
                   parseISO(appointment.event.serviceDate),
@@ -82,14 +80,14 @@ export function CompleteAppointmentDialog({
               </span>
             </div>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Time:</span>
+              <span className='text-muted-foreground'>Giờ:</span>
               <span className='font-medium'>
                 {formatShiftTime(appointment.event.timeStart)} - {formatShiftTime(appointment.event.timeEnd)}
               </span>
             </div>
             {appointment.reason && (
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>Reason:</span>
+                <span className='text-muted-foreground'>Lý do khám:</span>
                 <span className='font-medium'>{appointment.reason}</span>
               </div>
             )}
@@ -99,12 +97,12 @@ export function CompleteAppointmentDialog({
         <DialogFooter>
           <DialogClose asChild>
             <Button type='button' variant='outline' disabled={isPending}>
-              Cancel
+              Hủy
             </Button>
           </DialogClose>
 
           <Button type='button' onClick={handleComplete} disabled={isPending}>
-            {isPending ? 'Completing...' : 'Mark as Completed'}
+            {isPending ? 'Đang cập nhật...' : 'Đánh dấu hoàn thành'}
           </Button>
         </DialogFooter>
       </DialogContent>
