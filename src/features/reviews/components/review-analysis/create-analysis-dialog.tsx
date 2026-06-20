@@ -43,7 +43,7 @@ export function CreateAnalysisDialog() {
         includeNonPublic,
       }),
     onSuccess: () => {
-      toast.success('Analysis generated successfully')
+      toast.success('Đã tạo báo cáo thành công')
       queryClient.invalidateQueries({ queryKey: ['review-analyses', doctorId] })
       onAnalysisCreated?.()
       handleClose()
@@ -56,15 +56,15 @@ export function CreateAnalysisDialog() {
       const message = error?.response?.data?.message || error.message
 
       if (status === 429) {
-        toast.error('Rate limit exceeded. Maximum 5 requests per hour.')
+        toast.error('Rất tiếc! Hệ thống chỉ cho phép tạo 5 báo cáo mỗi giờ.')
       } else if (status === 503) {
         toast.error(
-          'AI service is temporarily unavailable. Please try again later.'
+          'Rất tiếc! Hệ thống đang gặp sự cố. Vui lòng thử lại sau.'
         )
       } else if (status === 404) {
-        toast.error('No reviews found for the selected period.')
+        toast.error('Không tìm thấy đánh giá cho khoảng thời gian đã chọn.')
       } else {
-        toast.error(message || 'Failed to generate analysis')
+        toast.error(message || 'Không thể tạo báo cáo')
       }
     },
   })
@@ -87,9 +87,9 @@ export function CreateAnalysisDialog() {
       <DialogContent className='sm:max-w-[500px]'>
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Generate Review Analysis</DialogTitle>
+            <DialogTitle>Tạo phân tích đánh giá</DialogTitle>
             <DialogDescription>
-              Use AI to analyze doctor reviews and generate insights
+              Sử dụng AI để phân tích đánh giá và tạo báo cáo chuyên sâu
             </DialogDescription>
           </DialogHeader>
 
@@ -100,15 +100,15 @@ export function CreateAnalysisDialog() {
               </div>
               <Progress value={66} className='w-full' />
               <p className='text-muted-foreground text-center text-sm'>
-                Analyzing reviews from the past{' '}
-                {dateRange === 'mtd' ? '30 days' : '365 days'}. This may take
-                20-30 seconds.
+                Đang phân tích đánh giá từ{' '}
+                {dateRange === 'mtd' ? '30 ngày' : '365 ngày'}. Thao tác này sẽ
+                mất 20-30 giây.
               </p>
             </div>
           ) : (
             <div className='space-y-5 py-4'>
               <div className='space-y-3'>
-                <Label className='text-sm font-medium'>Analysis Period</Label>
+                <Label className='text-sm font-medium'>Khoảng thời gian</Label>
                 <RadioGroup
                   value={dateRange}
                   onValueChange={(value) =>
@@ -118,13 +118,13 @@ export function CreateAnalysisDialog() {
                   <div className='flex items-center space-x-2'>
                     <RadioGroupItem value='mtd' id='mtd' />
                     <Label htmlFor='mtd' className='font-normal'>
-                      Month-to-Date (Last 30 days)
+                      30 ngày vừa qua
                     </Label>
                   </div>
                   <div className='flex items-center space-x-2'>
                     <RadioGroupItem value='ytd' id='ytd' />
                     <Label htmlFor='ytd' className='font-normal'>
-                      Year-to-Date (Last 365 days)
+                      365 ngày vừa qua
                     </Label>
                   </div>
                 </RadioGroup>
@@ -143,10 +143,10 @@ export function CreateAnalysisDialog() {
                     htmlFor='includeNonPublic'
                     className='cursor-pointer font-normal'
                   >
-                    Include non-public reviews
+                    Bao gồm các đánh giá không công khai
                   </Label>
                   <p className='text-muted-foreground text-xs'>
-                    Include reviews from users without completed appointments
+                    Bao gồm các đánh giá từ người dùng chưa hoàn thành cuộc hẹn
                   </p>
                 </div>
               </div>
@@ -154,7 +154,7 @@ export function CreateAnalysisDialog() {
               <Alert>
                 <AlertCircle className='h-4 w-4' />
                 <AlertDescription className='text-xs'>
-                  This will use 1 of 5 hourly analysis requests
+                  sẽ sử dụng 1 trên 5 yêu cầu phân tích hàng giờ
                 </AlertDescription>
               </Alert>
             </div>
@@ -167,10 +167,10 @@ export function CreateAnalysisDialog() {
               onClick={handleClose}
               disabled={createMutation.isPending}
             >
-              Cancel
+              Hủy
             </Button>
             <Button type='submit' disabled={createMutation.isPending}>
-              {createMutation.isPending ? 'Generating...' : 'Generate Analysis'}
+              {createMutation.isPending ? 'Đang tạo...' : 'Tạo phân tích'}
             </Button>
           </DialogFooter>
         </form>

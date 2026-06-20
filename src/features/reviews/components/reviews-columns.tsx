@@ -15,7 +15,7 @@ import { RatingStars } from './rating-stars'
 
 
 export const columns: ColumnDef<Review>[] = [
-  
+
   {
     id: 'select',
     header: ({ table }) => (
@@ -43,11 +43,11 @@ export const columns: ColumnDef<Review>[] = [
       className: 'w-[40px]',
     },
   },
-    
+
   {
     accessorKey: 'authorName',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Author' />
+      <DataTableColumnHeader column={column} title='Người đánh giá' />
     ),
     cell: ({ row }) => {
       const name = row.original.authorName
@@ -69,11 +69,11 @@ export const columns: ColumnDef<Review>[] = [
       className: 'min-w-[180px]',
     },
   },
-  
+
   {
     accessorKey: 'rating',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Rating' />
+      <DataTableColumnHeader column={column} title='Đánh giá' />
     ),
     cell: ({ row }) => <RatingStars rating={row.original.rating} />,
     filterFn: (row, _id, value: string[]) => {
@@ -84,11 +84,11 @@ export const columns: ColumnDef<Review>[] = [
       className: 'w-[140px]',
     },
   },
-  
+
   {
     accessorKey: 'isPublic',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Verified' />
+      <DataTableColumnHeader column={column} title='Xác thực' />
     ),
     cell: ({ row }) => {
       const isPublic = row.original.isPublic
@@ -96,11 +96,11 @@ export const columns: ColumnDef<Review>[] = [
         <div className='flex items-center gap-2'>
           {isPublic ? (
             <span className='bg-primary/10 text-primary inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium'>
-              ✓ Verified
+              ✓ Đã xác thực
             </span>
           ) : (
             <span className='bg-muted text-muted-foreground inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium'>
-              Unverified
+              Chưa xác thực
             </span>
           )}
         </div>
@@ -114,11 +114,11 @@ export const columns: ColumnDef<Review>[] = [
       className: 'w-[120px]',
     },
   },
-  
+
   {
     accessorKey: 'title',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Review' />
+      <DataTableColumnHeader column={column} title='Nội dung đánh giá' />
     ),
     cell: ({ row }) => {
       const title = row.original.title
@@ -138,17 +138,17 @@ export const columns: ColumnDef<Review>[] = [
       className: 'min-w-[300px]',
     },
   },
-  
+
   {
     accessorKey: 'createdAt',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Submitted' />
+      <DataTableColumnHeader column={column} title='Ngày tạo' />
     ),
     cell: ({ row }) => {
       const date = new Date(row.original.createdAt)
       return (
         <div className='text-muted-foreground text-sm'>
-          {date.toLocaleDateString('en-US', {
+          {date.toLocaleDateString('vi-VN', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',

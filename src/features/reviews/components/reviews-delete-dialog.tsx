@@ -28,7 +28,7 @@ export function ReviewDeleteDialog() {
     try {
       await deleteMutation.mutateAsync(currentReview.id)
       setOpen(null)
-      
+
       onReviewDeleted?.()
     } catch (error) {
       console.error('Failed to delete review:', error)
@@ -41,18 +41,18 @@ export function ReviewDeleteDialog() {
         <DialogHeader>
           <DialogTitle className='text-destructive flex items-center gap-2'>
             <AlertTriangle className='size-5' />
-            Delete Review
+            Xóa đánh giá
           </DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this review? This action cannot be
-            undone.
+            Bạn có chắc chắn muốn xóa đánh giá này? Thao tác này sẽ xóa vĩnh viễn
+            khỏi hệ thống và không thể hoàn tác.
           </DialogDescription>
         </DialogHeader>
 
         <Alert variant='destructive'>
           <AlertTriangle className='size-4' />
           <AlertDescription>
-            Deleting this review will permanently remove it from the system.
+            Xóa đánh giá này sẽ xóa vĩnh viễn khỏi hệ thống.
           </AlertDescription>
         </Alert>
 
@@ -60,11 +60,11 @@ export function ReviewDeleteDialog() {
           <div className='mb-2 flex items-center justify-between'>
             <span className='font-medium'>{currentReview.authorName}</span>
             <span className='text-muted-foreground text-sm'>
-              Rating: {currentReview.rating}/5 ⭐
+              Đánh giá: {currentReview.rating}/5 ⭐
             </span>
           </div>
           <div className='text-muted-foreground mb-2 text-sm'>
-            For: {currentReview.doctor?.fullName ?? 'Unknown Doctor'}
+            bác sĩ: {currentReview.doctor?.fullName ?? 'Unknown Doctor'}
           </div>
           <p className='line-clamp-2 text-sm'>{currentReview.body}</p>
         </div>
@@ -75,7 +75,7 @@ export function ReviewDeleteDialog() {
             onClick={() => setOpen(null)}
             disabled={deleteMutation.isPending}
           >
-            Cancel
+            Hủy
           </Button>
           <Button
             variant='destructive'
@@ -85,12 +85,12 @@ export function ReviewDeleteDialog() {
             {deleteMutation.isPending ? (
               <>
                 <Loader2 className='mr-2 size-4 animate-spin' />
-                Deleting...
+                Đang xóa...
               </>
             ) : (
               <>
                 <Trash2 className='mr-2 size-4' />
-                Delete Review
+                Xóa đánh giá
               </>
             )}
           </Button>

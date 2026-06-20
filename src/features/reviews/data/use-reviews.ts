@@ -82,15 +82,15 @@ export function useCreateReview() {
   return useMutation({
     mutationFn: (data: CreateReviewRequest) => reviewService.createReview(data),
     onSuccess: () => {
-      toast.success('Review submitted successfully', {
+      toast.success('Đã gửi đánh giá thành công', {
         description:
-          'Your review will be reviewed and published by our administrators',
+          'Đánh giá của bạn sẽ được quản trị viên của chúng tôi xem xét và hiển thị',
       })
       queryClient.invalidateQueries({ queryKey: reviewKeys.lists() })
     },
     onError: (error: Error) => {
-      toast.error('Failed to submit review', {
-        description: error.message || 'Please try again later',
+      toast.error('Không thể gửi đánh giá', {
+        description: error.message || 'Vui lòng thử lại sau',
       })
     },
   })
@@ -110,11 +110,11 @@ export function useUpdateReview() {
       return Promise.resolve({ id, status })
     },
     onSuccess: () => {
-      toast.success('Review status updated successfully')
+      toast.success('Đã cập nhật trạng thái đánh giá thành công')
       queryClient.invalidateQueries({ queryKey: reviewKeys.lists() })
     },
     onError: (error: Error) => {
-      toast.error('Failed to update review', {
+      toast.error('Không thể cập nhật đánh giá', {
         description: error.message,
       })
     },
@@ -127,7 +127,7 @@ export function useDeleteReview() {
   return useMutation({
     mutationFn: (id: string) => reviewService.deleteReview(id),
     onSuccess: () => {
-      toast.success('Review deleted successfully')
+      toast.success('Đã xóa đánh giá thành công')
       queryClient.invalidateQueries({ queryKey: reviewKeys.lists() })
     },
     onError: (error: unknown) => {
@@ -137,16 +137,16 @@ export function useDeleteReview() {
       }
 
       if (err?.response?.status === 404) {
-        toast.error('Cannot delete review', {
+        toast.error('Không thể xóa đánh giá', {
           description:
-            'This review was not found. It may be an unverified review (no confirmed appointments) that is not accessible through the API.',
+            'Không tìm thấy đánh giá này. Có thể đây là đánh giá chưa được xác minh (không có lịch hẹn nào được xác nhận) và không thể truy cập qua API.',
         })
       } else {
-        toast.error('Failed to delete review', {
+        toast.error('Không thể xóa đánh giá', {
           description:
             err?.response?.data?.message ||
             err?.message ||
-            'Please try again later',
+            'Vui lòng thử lại sau',
         })
       }
     },

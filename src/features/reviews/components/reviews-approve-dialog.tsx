@@ -42,11 +42,11 @@ export function ReviewApproveDialog() {
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             <CheckCircle className='size-5 text-green-600' />
-            Approve Review
+            Duyệt đánh giá
           </DialogTitle>
           <DialogDescription>
-            Are you sure you want to approve this review? It will be visible to
-            all users once approved.
+            Bạn có chắc chắn muốn duyệt đánh giá này? Đánh giá sẽ hiển thị cho
+            tất cả người dùng sau khi được duyệt.
           </DialogDescription>
         </DialogHeader>
 
@@ -54,7 +54,7 @@ export function ReviewApproveDialog() {
           <div className='mb-2 flex items-center justify-between'>
             <span className='font-medium'>{currentReview.patientName}</span>
             <span className='text-muted-foreground text-sm'>
-              Rating: {currentReview.rating}/5 ⭐
+              Đánh giá: {currentReview.rating}/5 ⭐
             </span>
           </div>
           <p className='line-clamp-3 text-sm'>{currentReview.comment}</p>
@@ -66,7 +66,7 @@ export function ReviewApproveDialog() {
             onClick={() => setOpen(null)}
             disabled={updateMutation.isPending}
           >
-            Cancel
+            Hủy
           </Button>
           <Button
             onClick={handleApprove}
@@ -76,12 +76,12 @@ export function ReviewApproveDialog() {
             {updateMutation.isPending ? (
               <>
                 <Loader2 className='mr-2 size-4 animate-spin' />
-                Approving...
+                Đang duyệt...
               </>
             ) : (
               <>
                 <CheckCircle className='mr-2 size-4' />
-                Approve Review
+                Duyệt đánh giá
               </>
             )}
           </Button>

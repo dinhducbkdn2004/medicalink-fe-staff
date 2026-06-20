@@ -49,7 +49,7 @@ export function ReviewViewDialog() {
     <Dialog open={isOpen} onOpenChange={(open) => !open && setOpen(null)}>
       <DialogContent className='max-w-2xl'>
         <DialogHeader>
-          <DialogTitle>Review Details</DialogTitle>
+          <DialogTitle>Xem chi tiết đánh giá</DialogTitle>
         </DialogHeader>
 
         <div className='space-y-4'>
@@ -58,7 +58,7 @@ export function ReviewViewDialog() {
             <>
               <div>
                 <h3 className='text-muted-foreground mb-2 text-sm font-medium'>
-                  Doctor
+                  Thông tin bác sĩ
                 </h3>
                 <div className='flex items-center gap-3'>
                   <Avatar className='size-12'>
@@ -94,7 +94,7 @@ export function ReviewViewDialog() {
           {}
           <div>
             <h3 className='text-muted-foreground mb-2 text-sm font-medium'>
-              Author Information
+              Thông tin người đánh giá
             </h3>
             <div className='space-y-1.5'>
               <div className='flex items-center gap-2'>
@@ -114,7 +114,7 @@ export function ReviewViewDialog() {
           {}
           <div>
             <h3 className='text-muted-foreground mb-2 text-sm font-medium'>
-              Rating
+              Đánh giá
             </h3>
             <RatingStars rating={currentReview.rating} />
           </div>
@@ -124,7 +124,7 @@ export function ReviewViewDialog() {
           {}
           <div>
             <h3 className='text-muted-foreground mb-2 text-sm font-medium'>
-              Review Content
+              Nội dung đánh giá
             </h3>
             {currentReview.title && (
               <h4 className='mb-2 text-base font-semibold'>
@@ -141,7 +141,7 @@ export function ReviewViewDialog() {
           {}
           <div className='text-muted-foreground flex items-center justify-between text-xs'>
             <div>
-              Submitted on{' '}
+              Ngày đánh giá:{' '}
               {format(new Date(currentReview.createdAt), 'MMM dd, yyyy')}
             </div>
           </div>

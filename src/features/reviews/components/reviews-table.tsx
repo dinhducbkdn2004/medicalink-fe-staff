@@ -63,13 +63,13 @@ export function ReviewsTable({
 }: Readonly<ReviewsTableProps>) {
   const { setOpen, setCurrentReview } = useReviews()
 
-  
+
   const getRowActions = (row: { original: Review }): DataTableAction[] => {
     const review = row.original
 
     const actions: DataTableAction[] = [
       {
-        label: 'View Details',
+        label: 'Xem chi tiết',
         icon: Eye,
         onClick: () => {
           setCurrentReview(review)
@@ -78,10 +78,10 @@ export function ReviewsTable({
       },
     ]
 
-    
+
     if (canDeleteReview({ reviewId: review.id })) {
       actions.push({
-        label: 'Delete',
+        label: 'Xóa',
         icon: Trash2,
         onClick: () => {
           setCurrentReview(review)
@@ -97,20 +97,20 @@ export function ReviewsTable({
 
   return (
     <DataTable
-      
+
       data={data}
       columns={columns}
       search={search}
       navigate={navigate}
-      
+
       pageCount={pageCount}
       isLoading={isLoading}
       entityName='review'
-      
+
       filters={[
         {
           columnId: 'isPublic',
-          title: 'Verified Status',
+          title: 'Xác thực',
           options: verifiedOptions.map((option) => ({
             label: option.label,
             value: option.value,
@@ -118,13 +118,13 @@ export function ReviewsTable({
           })),
         },
       ]}
-      
+
       getRowActions={getRowActions}
       renderBulkActions={(table) => <DataTableBulkActions table={table} />}
-      
+
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
-      emptyMessage='No reviews found.'
+      emptyMessage='Không tìm thấy đánh giá.'
     />
   )
 }

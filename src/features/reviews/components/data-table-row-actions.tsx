@@ -49,7 +49,7 @@ export function DataTableRowActions({
           }}
         >
           <Eye className='mr-2 size-4' />
-          View Details
+          Xem chi tiết
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
@@ -59,7 +59,7 @@ export function DataTableRowActions({
           disabled={review.status === 'APPROVED'}
         >
           <CheckCircle className='mr-2 size-4' />
-          Approve
+          Phê duyệt
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -70,7 +70,7 @@ export function DataTableRowActions({
           className='text-destructive focus:text-destructive'
         >
           <Trash2 className='mr-2 size-4' />
-          Delete
+          Xóa
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
