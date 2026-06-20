@@ -14,7 +14,7 @@ type StaffMultiDeleteDialogProps = {
   table: Table<Staff>
 }
 
-const CONFIRM_TEXT = 'delete all'
+const CONFIRM_TEXT = 'xóa tất cả'
 
 export function StaffsMultiDeleteDialog({
   open,
@@ -31,7 +31,7 @@ export function StaffsMultiDeleteDialog({
     onOpenChange(false)
     showSubmittedData(
       selectedRows.map((row) => row.original),
-      `Successfully deleted ${selectedRows.length} staff member(s):`
+      `Xóa thành công ${selectedRows.length} nhân viên:`
     )
     setValue('')
   }
@@ -51,23 +51,23 @@ export function StaffsMultiDeleteDialog({
             className='stroke-destructive me-1 inline-block'
             size={18}
           />{' '}
-          Delete Multiple Staff Members
+          Xóa nhiều nhân viên
         </span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete{' '}
-            <span className='font-bold'>{selectedRows.length}</span> staff
-            member(s)?
+            Bạn có chắc chắn muốn xóa{' '}
+            <span className='font-bold'>{selectedRows.length}</span> nhân
+            viên?
             <br />
-            This action will permanently remove all selected staff members from
-            the system. This cannot be undone.
+            Thao tác này sẽ xóa vĩnh viễn tất cả nhân viên đã chọn khỏi hệ thống.
+            Hành động này không thể hoàn tác.
           </p>
 
           <div className='max-h-[200px] overflow-y-auto rounded-md border p-3'>
             <p className='mb-2 text-sm font-semibold'>
-              Selected staff members:
+              Các nhân viên đã chọn:
             </p>
             <ul className='list-inside list-disc space-y-1 text-sm'>
               {selectedRows.map((row) => (
@@ -79,23 +79,23 @@ export function StaffsMultiDeleteDialog({
           </div>
 
           <Label className='my-2'>
-            Type &quot;{CONFIRM_TEXT}&quot; to confirm:
+            Nhập &quot;{CONFIRM_TEXT}&quot; để xác nhận:
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder={`Type "${CONFIRM_TEXT}" to confirm`}
+              placeholder={`Nhập "${CONFIRM_TEXT}" để xác nhận`}
             />
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>Cảnh báo!</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation cannot be rolled back.
+              Vui lòng cẩn thận, thao tác này không thể hoàn tác.
             </AlertDescription>
           </Alert>
         </div>
       }
-      confirmText='Delete All'
+      confirmText='Xóa tất cả'
       destructive
     />
   )

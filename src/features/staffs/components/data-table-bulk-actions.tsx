@@ -37,15 +37,15 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
               size='icon'
               onClick={() => setShowDeleteConfirm(true)}
               className='size-8'
-              aria-label='Delete selected staffs'
-              title='Delete selected staffs'
+              aria-label='Xóa các nhân viên đã chọn'
+              title='Xóa các nhân viên đã chọn'
             >
               <Trash2 />
-              <span className='sr-only'>Delete selected staffs</span>
+              <span className='sr-only'>Xóa các nhân viên đã chọn</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Delete selected staffs</p>
+            <p>Xóa các nhân viên đã chọn</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>

@@ -2,31 +2,32 @@ import { Shield, UserCheck } from 'lucide-react'
 
 export const staffRoles = [
   {
-    label: 'Super Admin',
+    label: 'Quản trị viên cấp cao',
     value: 'SUPER_ADMIN',
     icon: Shield,
-    description: 'Full system access, can manage all resources',
+    description: 'Toàn quyền hệ thống, có thể quản lý tất cả tài nguyên',
   },
   {
-    label: 'Admin',
+    label: 'Quản trị viên',
     value: 'ADMIN',
     icon: UserCheck,
-    description: 'Can manage most resources except super admins',
+    description:
+      'Có thể quản lý hầu hết tài nguyên ngoại trừ quản trị viên cấp cao',
   },
 ] as const
 
 export const genderOptions = [
-  { label: 'Male', value: 'true' },
-  { label: 'Female', value: 'false' },
+  { label: 'Nam', value: 'true' },
+  { label: 'Nữ', value: 'false' },
 ] as const
 
 export const sortByOptions = [
-  { label: 'Created Date', value: 'createdAt' },
-  { label: 'Full Name', value: 'fullName' },
+  { label: 'Ngày tạo', value: 'createdAt' },
+  { label: 'Họ và tên', value: 'fullName' },
   { label: 'Email', value: 'email' },
 ] as const
 
 export const sortOrderOptions = [
-  { label: 'Ascending', value: 'asc' },
-  { label: 'Descending', value: 'desc' },
+  { label: 'Tăng dần', value: 'asc' },
+  { label: 'Giảm dần', value: 'desc' },
 ] as const

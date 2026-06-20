@@ -16,7 +16,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
           (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Select all'
+        aria-label='Chọn tất cả'
         className='translate-y-0.5'
       />
     ),
@@ -24,7 +24,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Select row'
+        aria-label='Chọn hàng'
         className='translate-y-0.5'
       />
     ),
@@ -41,7 +41,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
   {
     accessorKey: 'fullName',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Full Name' />
+      <DataTableColumnHeader column={column} title='Họ và tên' />
     ),
     cell: ({ row }) => {
       return (
@@ -52,7 +52,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
         </div>
       )
     },
-    enableSorting: true, 
+    enableSorting: true,
     meta: {
       className: 'min-w-[150px]',
       thClassName:
@@ -75,7 +75,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
         </div>
       )
     },
-    enableSorting: true, 
+    enableSorting: true,
     meta: {
       className: 'min-w-[200px]',
     },
@@ -83,7 +83,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
   {
     accessorKey: 'role',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Role' />
+      <DataTableColumnHeader column={column} title='Vai trò' />
     ),
     cell: ({ row }) => {
       const role = staffRoles.find(
@@ -106,7 +106,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
     filterFn: (row, id, value: string[]) => {
       return value.includes(row.getValue(id))
     },
-    enableSorting: false, 
+    enableSorting: false,
     meta: {
       className: 'min-w-[140px]',
     },
@@ -114,7 +114,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
   {
     accessorKey: 'phone',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Phone' />
+      <DataTableColumnHeader column={column} title='Số điện thoại' />
     ),
     cell: ({ row }) => {
       const phone = row.getValue<string | null>('phone')
@@ -124,7 +124,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
         </span>
       )
     },
-    enableSorting: false, 
+    enableSorting: false,
     meta: {
       className: 'min-w-[140px]',
     },
@@ -132,7 +132,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
   {
     accessorKey: 'isMale',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Gender' />
+      <DataTableColumnHeader column={column} title='Giới tính' />
     ),
     cell: ({ row }) => {
       const isMale = row.getValue<boolean | null>('isMale')
@@ -141,7 +141,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
       }
       return (
         <Badge variant='outline' className='font-normal'>
-          {isMale ? 'Male' : 'Female'}
+          {isMale ? 'Nam' : 'Nữ'}
         </Badge>
       )
     },
@@ -150,16 +150,16 @@ export const staffsColumns: ColumnDef<Staff>[] = [
       const isMale = row.original.isMale
       return value.includes(isMale)
     },
-    enableSorting: false, 
+    enableSorting: false,
     meta: {
       className: 'min-w-[100px]',
     },
   },
   {
     accessorKey: 'createdAt',
-    id: 'createdAt', 
+    id: 'createdAt',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Created At' />
+      <DataTableColumnHeader column={column} title='Ngày tạo' />
     ),
     cell: ({ row }) => {
       const dateString = row.getValue<string>('createdAt')
@@ -168,7 +168,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
       const date = new Date(dateString)
       return (
         <span className='text-muted-foreground'>
-          {date.toLocaleDateString('en-US', {
+          {date.toLocaleDateString('vi-VN', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',
@@ -176,7 +176,7 @@ export const staffsColumns: ColumnDef<Staff>[] = [
         </span>
       )
     },
-    enableSorting: true, 
+    enableSorting: true,
     meta: {
       className: 'min-w-[130px]',
     },

@@ -30,17 +30,17 @@ const formSchema = z
   .object({
     fullName: z
       .string()
-      .min(2, 'Full name must be at least 2 characters.')
-      .max(100, 'Full name must not exceed 100 characters.'),
-    email: z.string().email('Please enter a valid email address.'),
+      .min(2, 'Họ và tên phải có ít nhất 2 ký tự.')
+      .max(100, 'Họ và tên không được vượt quá 100 ký tự.'),
+    email: z.string().email('Vui lòng nhập địa chỉ email hợp lệ.'),
     password: z.string().transform((pwd) => pwd.trim()),
     confirmPassword: z.string().transform((pwd) => pwd.trim()),
     role: z.enum(['SUPER_ADMIN', 'ADMIN'], {
-      required_error: 'Please select a role.',
+      required_error: 'Vui lòng chọn vai trò.',
     }),
     phone: z
       .string()
-      .regex(/^\+?[0-9]{10,15}$/, 'Invalid phone number')
+      .regex(/^\+?[0-9]{10,15}$/, 'Số điện thoại không hợp lệ')
       .optional()
       .or(z.literal('')),
     isMale: z.string().optional(),
@@ -54,7 +54,7 @@ const formSchema = z
       return data.password.length > 0
     },
     {
-      message: 'Password is required.',
+      message: 'Vui lòng nhập mật khẩu.',
       path: ['password'],
     }
   )
@@ -65,7 +65,7 @@ const formSchema = z
       return password.length >= 8
     },
     {
-      message: 'Password must be at least 8 characters long.',
+      message: 'Mật khẩu phải có ít nhất 8 ký tự.',
       path: ['password'],
     }
   )
@@ -76,7 +76,7 @@ const formSchema = z
       return /[A-Z]/.test(password)
     },
     {
-      message: 'Password must contain at least one uppercase letter.',
+      message: 'Mật khẩu phải chứa ít nhất một chữ hoa.',
       path: ['password'],
     }
   )
@@ -87,7 +87,7 @@ const formSchema = z
       return /[a-z]/.test(password)
     },
     {
-      message: 'Password must contain at least one lowercase letter.',
+      message: 'Mật khẩu phải chứa ít nhất một chữ thường.',
       path: ['password'],
     }
   )
@@ -98,7 +98,7 @@ const formSchema = z
       return /\d/.test(password)
     },
     {
-      message: 'Password must contain at least one number.',
+      message: 'Mật khẩu phải chứa ít nhất một chữ số.',
       path: ['password'],
     }
   )
@@ -109,7 +109,7 @@ const formSchema = z
       return password === confirmPassword
     },
     {
-      message: "Passwords don't match.",
+      message: "Mật khẩu không khớp.",
       path: ['confirmPassword'],
     }
   )
@@ -180,7 +180,7 @@ export function StaffsActionDialog({
         })
       } else {
         if (!values.password) {
-          form.setError('password', { message: 'Password is required' })
+          form.setError('password', { message: 'Vui lòng nhập mật khẩu' })
           return
         }
         await createMutation.mutateAsync({
@@ -193,7 +193,7 @@ export function StaffsActionDialog({
       onOpenChange(false)
     } catch (error) {
       
-      console.error('Failed to save staff member:', error)
+      console.error('Lưu nhân viên thất bại:', error)
     }
   }
 
@@ -211,13 +211,13 @@ export function StaffsActionDialog({
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
           <DialogTitle>
-            {isEdit ? 'Edit Staff Member' : 'Add New Staff Member'}
+            {isEdit ? 'Chỉnh sửa nhân viên' : 'Thêm nhân viên mới'}
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? 'Update the staff member details here. '
-              : 'Create a new staff member account here. '}
-            Click save when you&apos;re done.
+              ? 'Cập nhật chi tiết nhân viên tại đây. '
+              : 'Tạo tài khoản nhân viên mới tại đây. '}
+            Nhấp vào lưu khi bạn hoàn tất.
           </DialogDescription>
         </DialogHeader>
         <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
@@ -233,7 +233,7 @@ export function StaffsActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Full Name
+                      Họ và tên
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -270,11 +270,11 @@ export function StaffsActionDialog({
                 name='role'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Role</FormLabel>
+                    <FormLabel className='col-span-2 text-end'>Vai trò</FormLabel>
                     <SelectDropdown
                       defaultValue={field.value}
                       onValueChange={field.onChange}
-                      placeholder='Select a role'
+                      placeholder='Chọn vai trò'
                       className='col-span-4'
                       items={staffRoles.map(({ label, value }) => ({
                         label,
@@ -291,7 +291,7 @@ export function StaffsActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Phone Number
+                      Số điện thoại
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -310,12 +310,12 @@ export function StaffsActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Gender
+                      Giới tính
                     </FormLabel>
                     <SelectDropdown
                       defaultValue={field.value}
                       onValueChange={field.onChange}
-                      placeholder='Select gender'
+                      placeholder='Chọn giới tính'
                       className='col-span-4'
                       items={genderOptions.map(({ label, value }) => ({
                         label,
@@ -332,13 +332,13 @@ export function StaffsActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Date of Birth
+                      Ngày sinh
                     </FormLabel>
                     <FormControl>
                       <DatePickerInput
                         value={field.value}
                         onChange={field.onChange}
-                        placeholder='Select date of birth'
+                        placeholder='Chọn ngày sinh'
                         className='col-span-4'
                       />
                     </FormControl>
@@ -353,13 +353,13 @@ export function StaffsActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Password
+                      Mật khẩu
                     </FormLabel>
                     <FormControl>
                       <PasswordInput
                         placeholder={
                           isEdit
-                            ? 'Leave empty to keep current'
+                            ? 'Để trống để giữ nguyên'
                             : 'e.g., SecureP@ss123'
                         }
                         className='col-span-4'
@@ -376,14 +376,14 @@ export function StaffsActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Confirm Password
+                      Xác nhận mật khẩu
                     </FormLabel>
                     <FormControl>
                       <PasswordInput
                         disabled={!isPasswordTouched}
                         placeholder={
                           isEdit
-                            ? 'Leave empty to keep current'
+                            ? 'Để trống để giữ nguyên'
                             : 'e.g., SecureP@ss123'
                         }
                         className='col-span-4'
@@ -399,7 +399,7 @@ export function StaffsActionDialog({
         </div>
         <DialogFooter>
           <Button type='submit' form='staff-form' disabled={isSubmitting}>
-            {isSubmitting ? 'Saving...' : 'Save changes'}
+            {isSubmitting ? 'Đang lưu...' : 'Lưu thay đổi'}
           </Button>
         </DialogFooter>
       </DialogContent>

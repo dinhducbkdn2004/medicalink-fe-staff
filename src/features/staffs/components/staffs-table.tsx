@@ -79,7 +79,7 @@ export function StaffsTable({
     
     if (canUpdateStaff()) {
       actions.push({
-        label: 'Edit',
+        label: 'Chỉnh sửa',
         icon: Edit,
         onClick: () => {
           setCurrentRow(staff)
@@ -91,7 +91,7 @@ export function StaffsTable({
     
     if (canDeleteSpecificStaff({ staffId: staff.id })) {
       actions.push({
-        label: 'Delete',
+        label: 'Xóa',
         icon: Trash2,
         onClick: () => {
           setCurrentRow(staff)
@@ -115,14 +115,14 @@ export function StaffsTable({
       
       pageCount={pageCount}
       isLoading={isLoading}
-      entityName='staff member'
+      entityName='nhân viên'
       
-      searchPlaceholder='Filter staff members...'
+      searchPlaceholder='Tìm kiếm nhân viên...'
       searchKey='fullName'
       filters={[
         {
           columnId: 'role',
-          title: 'Role',
+          title: 'Vai trò',
           options: staffRoles.map((role) => ({
             label: role.label,
             value: role.value,
@@ -131,7 +131,7 @@ export function StaffsTable({
         },
         {
           columnId: 'isMale',
-          title: 'Gender',
+          title: 'Giới tính',
           options: genderOptions.map((gender) => ({
             label: gender.label,
             value: gender.value,
@@ -144,7 +144,7 @@ export function StaffsTable({
       
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
-      emptyMessage='No staff members found.'
+      emptyMessage='Không tìm thấy nhân viên nào.'
     />
   )
 }

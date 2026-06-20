@@ -48,7 +48,7 @@ export function useCreateStaff() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: staffKeys.lists() })
       queryClient.invalidateQueries({ queryKey: staffKeys.stats() })
-      toast.success('Staff account created successfully')
+      toast.success('Đã tạo tài khoản nhân viên thành công')
     },
   })
 }
@@ -65,7 +65,7 @@ export function useUpdateStaff() {
         queryKey: staffKeys.detail(variables.id),
       })
       queryClient.invalidateQueries({ queryKey: staffKeys.stats() })
-      toast.success('Staff account updated successfully')
+      toast.success('Đã cập nhật tài khoản nhân viên thành công')
     },
   })
 }
@@ -78,7 +78,7 @@ export function useDeleteStaff() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: staffKeys.lists() })
       queryClient.invalidateQueries({ queryKey: staffKeys.stats() })
-      toast.success('Staff account deleted successfully')
+      toast.success('Đã xóa tài khoản nhân viên thành công')
     },
   })
 }

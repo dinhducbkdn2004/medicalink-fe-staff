@@ -30,7 +30,7 @@ export function StaffsDeleteDialog({
       setValue('')
     } catch (error) {
       
-      console.error('Failed to delete staff member:', error)
+      console.error('Xóa nhân viên thất bại:', error)
     }
   }
 
@@ -49,39 +49,39 @@ export function StaffsDeleteDialog({
             className='stroke-destructive me-1 inline-block'
             size={18}
           />{' '}
-          Delete Staff Member
+          Xóa nhân viên
         </span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete{' '}
+            Bạn có chắc chắn muốn xóa{' '}
             <span className='font-bold'>{currentRow.fullName}</span>?
             <br />
-            This action will permanently remove the staff member with the role
-            of <span className='font-bold'>{currentRow.role}</span> from the
-            system. This cannot be undone.
+            Thao tác này sẽ xóa vĩnh viễn nhân viên có vai trò
+            là <span className='font-bold'>{currentRow.role}</span> khỏi
+            hệ thống. Hành động này không thể hoàn tác.
           </p>
 
           <Label className='my-2'>
-            Email Address:
+            Địa chỉ email:
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder='Enter email address to confirm deletion.'
+              placeholder='Nhập địa chỉ email để xác nhận xóa.'
               disabled={deleteMutation.isPending}
             />
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>Cảnh báo!</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation cannot be rolled back.
+              Vui lòng cẩn thận, thao tác này không thể hoàn tác.
             </AlertDescription>
           </Alert>
         </div>
       }
-      confirmText={deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+      confirmText={deleteMutation.isPending ? 'Đang xóa...' : 'Xóa'}
       destructive
     />
   )
