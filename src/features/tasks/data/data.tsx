@@ -13,41 +13,41 @@ import {
 export const labels = [
   {
     value: 'bug',
-    label: 'Bug',
+    label: 'Lỗi',
   },
   {
     value: 'feature',
-    label: 'Feature',
+    label: 'Tính năng',
   },
   {
     value: 'documentation',
-    label: 'Documentation',
+    label: 'Tài liệu',
   },
 ]
 
 export const statuses = [
   {
-    label: 'Backlog',
+    label: 'Chưa làm',
     value: 'backlog' as const,
     icon: HelpCircle,
   },
   {
-    label: 'Todo',
+    label: 'Cần làm',
     value: 'todo' as const,
     icon: Circle,
   },
   {
-    label: 'In Progress',
+    label: 'Đang làm',
     value: 'in progress' as const,
     icon: Timer,
   },
   {
-    label: 'Done',
+    label: 'Hoàn thành',
     value: 'done' as const,
     icon: CheckCircle,
   },
   {
-    label: 'Canceled',
+    label: 'Đã hủy',
     value: 'canceled' as const,
     icon: CircleOff,
   },
@@ -55,22 +55,22 @@ export const statuses = [
 
 export const priorities = [
   {
-    label: 'Low',
+    label: 'Thấp',
     value: 'low' as const,
     icon: ArrowDown,
   },
   {
-    label: 'Medium',
+    label: 'Trung bình',
     value: 'medium' as const,
     icon: ArrowRight,
   },
   {
-    label: 'High',
+    label: 'Cao',
     value: 'high' as const,
     icon: ArrowUp,
   },
   {
-    label: 'Critical',
+    label: 'Nghiêm trọng',
     value: 'critical' as const,
     icon: AlertCircle,
   },

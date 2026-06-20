@@ -112,16 +112,16 @@ export function TasksTable({ data }: DataTableProps) {
     >
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Filter by title or ID...'
+        searchPlaceholder='Lọc theo tiêu đề hoặc ID...'
         filters={[
           {
             columnId: 'status',
-            title: 'Status',
+            title: 'Trạng thái',
             options: statuses,
           },
           {
             columnId: 'priority',
-            title: 'Priority',
+            title: 'Độ ưu tiên',
             options: priorities,
           },
         ]}
@@ -182,7 +182,7 @@ export function TasksTable({ data }: DataTableProps) {
                   colSpan={columns.length}
                   className='h-24 text-center'
                 >
-                  No results.
+                  Không có kết quả.
                 </TableCell>
               </TableRow>
             )}

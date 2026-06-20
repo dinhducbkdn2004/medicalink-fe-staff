@@ -33,12 +33,12 @@ export function DataTableBulkActions<TData>({
   const handleBulkStatusChange = (status: string) => {
     const selectedTasks = selectedRows.map((row) => row.original as Task)
     toast.promise(sleep(2000), {
-      loading: 'Updating status...',
+      loading: 'Đang cập nhật trạng thái...',
       success: () => {
         table.resetRowSelection()
-        return `Status updated to "${status}" for ${selectedTasks.length} task${selectedTasks.length > 1 ? 's' : ''}.`
+        return `Đã cập nhật trạng thái thành "${status}" cho ${selectedTasks.length} công việc.`
       },
-      error: 'Error',
+      error: 'Lỗi',
     })
     table.resetRowSelection()
   }
@@ -46,12 +46,12 @@ export function DataTableBulkActions<TData>({
   const handleBulkPriorityChange = (priority: string) => {
     const selectedTasks = selectedRows.map((row) => row.original as Task)
     toast.promise(sleep(2000), {
-      loading: 'Updating priority...',
+      loading: 'Đang cập nhật độ ưu tiên...',
       success: () => {
         table.resetRowSelection()
-        return `Priority updated to "${priority}" for ${selectedTasks.length} task${selectedTasks.length > 1 ? 's' : ''}.`
+        return `Đã cập nhật độ ưu tiên thành "${priority}" cho ${selectedTasks.length} công việc.`
       },
-      error: 'Error',
+      error: 'Lỗi',
     })
     table.resetRowSelection()
   }
@@ -59,12 +59,12 @@ export function DataTableBulkActions<TData>({
   const handleBulkExport = () => {
     const selectedTasks = selectedRows.map((row) => row.original as Task)
     toast.promise(sleep(2000), {
-      loading: 'Exporting tasks...',
+      loading: 'Đang xuất công việc...',
       success: () => {
         table.resetRowSelection()
-        return `Exported ${selectedTasks.length} task${selectedTasks.length > 1 ? 's' : ''} to CSV.`
+        return `Đã xuất ${selectedTasks.length} công việc ra CSV.`
       },
-      error: 'Error',
+      error: 'Lỗi',
     })
     table.resetRowSelection()
   }
@@ -80,16 +80,16 @@ export function DataTableBulkActions<TData>({
                   variant='outline'
                   size='icon'
                   className='size-8'
-                  aria-label='Update status'
-                  title='Update status'
+                  aria-label='Cập nhật trạng thái'
+                  title='Cập nhật trạng thái'
                 >
                   <CircleArrowUp />
-                  <span className='sr-only'>Update status</span>
+                  <span className='sr-only'>Cập nhật trạng thái</span>
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Update status</p>
+              <p>Cập nhật trạng thái</p>
             </TooltipContent>
           </Tooltip>
           <DropdownMenuContent sideOffset={14}>
@@ -116,16 +116,16 @@ export function DataTableBulkActions<TData>({
                   variant='outline'
                   size='icon'
                   className='size-8'
-                  aria-label='Update priority'
-                  title='Update priority'
+                  aria-label='Cập nhật độ ưu tiên'
+                  title='Cập nhật độ ưu tiên'
                 >
                   <ArrowUpDown />
-                  <span className='sr-only'>Update priority</span>
+                  <span className='sr-only'>Cập nhật độ ưu tiên</span>
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Update priority</p>
+              <p>Cập nhật độ ưu tiên</p>
             </TooltipContent>
           </Tooltip>
           <DropdownMenuContent sideOffset={14}>
@@ -151,15 +151,15 @@ export function DataTableBulkActions<TData>({
               size='icon'
               onClick={() => handleBulkExport()}
               className='size-8'
-              aria-label='Export tasks'
-              title='Export tasks'
+              aria-label='Xuất công việc'
+              title='Xuất công việc'
             >
               <Download />
-              <span className='sr-only'>Export tasks</span>
+              <span className='sr-only'>Xuất công việc</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Export tasks</p>
+            <p>Xuất công việc</p>
           </TooltipContent>
         </Tooltip>
 
@@ -170,15 +170,15 @@ export function DataTableBulkActions<TData>({
               size='icon'
               onClick={() => setShowDeleteConfirm(true)}
               className='size-8'
-              aria-label='Delete selected tasks'
-              title='Delete selected tasks'
+              aria-label='Xóa công việc đã chọn'
+              title='Xóa công việc đã chọn'
             >
               <Trash2 />
-              <span className='sr-only'>Delete selected tasks</span>
+              <span className='sr-only'>Xóa công việc đã chọn</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Delete selected tasks</p>
+            <p>Xóa công việc đã chọn</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>
