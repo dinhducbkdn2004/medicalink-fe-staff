@@ -74,7 +74,7 @@ export function PatientsTable({
     
     if (canUpdatePatients()) {
       actions.push({
-        label: 'Edit',
+        label: 'Chỉnh sửa',
         icon: Edit,
         onClick: () => {
           setCurrentRow(patient)
@@ -87,7 +87,7 @@ export function PatientsTable({
       
       if (canUpdatePatients()) {
         actions.push({
-          label: 'Restore',
+          label: 'Khôi phục',
           icon: RotateCcw,
           onClick: () => {
             setCurrentRow(patient)
@@ -100,7 +100,7 @@ export function PatientsTable({
       
       if (canDeletePatient({ patientId: patient.id })) {
         actions.push({
-          label: 'Delete',
+          label: 'Xóa',
           icon: Trash2,
           onClick: () => {
             setCurrentRow(patient)
@@ -125,14 +125,14 @@ export function PatientsTable({
       
       pageCount={pageCount}
       isLoading={isLoading}
-      entityName='patient'
+      entityName='bệnh nhân'
       
-      searchPlaceholder='Search patients...'
+      searchPlaceholder='Tìm kiếm bệnh nhân...'
       searchKey='fullName'
       filters={[
         {
           columnId: 'deletedAt',
-          title: 'Status',
+          title: 'Trạng thái',
           options: statusOptions.map((status) => ({
             label: status.label,
             value: status.value,
@@ -141,7 +141,7 @@ export function PatientsTable({
         },
         {
           columnId: 'isMale',
-          title: 'Gender',
+          title: 'Giới tính',
           options: genderOptions.map((gender) => ({
             label: gender.label,
             value: gender.value,
@@ -155,7 +155,7 @@ export function PatientsTable({
       
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
-      emptyMessage='No patients found.'
+      emptyMessage='Không tìm thấy bệnh nhân nào.'
     />
   )
 }

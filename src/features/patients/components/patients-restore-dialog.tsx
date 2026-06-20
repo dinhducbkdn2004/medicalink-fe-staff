@@ -33,17 +33,17 @@ export function PatientsRestoreDialog() {
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Restore Patient?</AlertDialogTitle>
+          <AlertDialogTitle>Khôi phục bệnh nhân?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will restore the patient record for{' '}
-            <span className='font-semibold'>{currentRow?.fullName}</span> and
-            make it active again.
+            Thao tác này sẽ khôi phục hồ sơ bệnh nhân{' '}
+            <span className='font-semibold'>{currentRow?.fullName}</span> và
+            làm cho hồ sơ này hoạt động trở lại.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>Hủy</AlertDialogCancel>
           <AlertDialogAction onClick={handleRestore} disabled={isPending}>
-            {isPending ? 'Restoring...' : 'Restore'}
+            {isPending ? 'Đang khôi phục...' : 'Khôi phục'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

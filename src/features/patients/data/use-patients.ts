@@ -40,14 +40,14 @@ export function useCreatePatient() {
       patientService.createPatient(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: patientKeys.lists() })
-      toast.success('Patient created successfully')
+      toast.success('Đã tạo bệnh nhân thành công')
     },
     onError: (
       error: Error | { response?: { data?: { message?: string } } }
     ) => {
       const message =
         (error as { response?: { data?: { message?: string } } })?.response
-          ?.data?.message || 'Failed to create patient'
+          ?.data?.message || 'Không thể tạo bệnh nhân'
       toast.error(message)
     },
   })
@@ -64,14 +64,14 @@ export function useUpdatePatient() {
       queryClient.invalidateQueries({
         queryKey: patientKeys.detail(variables.id),
       })
-      toast.success('Patient updated successfully')
+      toast.success('Đã cập nhật bệnh nhân thành công')
     },
     onError: (
       error: Error | { response?: { data?: { message?: string } } }
     ) => {
       const message =
         (error as { response?: { data?: { message?: string } } })?.response
-          ?.data?.message || 'Failed to update patient'
+          ?.data?.message || 'Không thể cập nhật bệnh nhân'
       toast.error(message)
     },
   })
@@ -84,14 +84,14 @@ export function useDeletePatient() {
     mutationFn: (id: string) => patientService.deletePatient(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: patientKeys.lists() })
-      toast.success('Patient deleted successfully')
+      toast.success('Đã xóa bệnh nhân thành công')
     },
     onError: (
       error: Error | { response?: { data?: { message?: string } } }
     ) => {
       const message =
         (error as { response?: { data?: { message?: string } } })?.response
-          ?.data?.message || 'Failed to delete patient'
+          ?.data?.message || 'Không thể xóa bệnh nhân'
       toast.error(message)
     },
   })
@@ -104,14 +104,14 @@ export function useRestorePatient() {
     mutationFn: (id: string) => patientService.restorePatient(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: patientKeys.lists() })
-      toast.success('Patient restored successfully')
+      toast.success('Đã khôi phục bệnh nhân thành công')
     },
     onError: (
       error: Error | { response?: { data?: { message?: string } } }
     ) => {
       const message =
         (error as { response?: { data?: { message?: string } } })?.response
-          ?.data?.message || 'Failed to restore patient'
+          ?.data?.message || 'Không thể khôi phục bệnh nhân'
       toast.error(message)
     },
   })
@@ -126,14 +126,14 @@ export function useBulkDeletePatients() {
     },
     onSuccess: (_, ids) => {
       queryClient.invalidateQueries({ queryKey: patientKeys.lists() })
-      toast.success(`${ids.length} patient(s) deleted successfully`)
+      toast.success(`Đã xóa ${ids.length} bệnh nhân thành công`)
     },
     onError: (
       error: Error | { response?: { data?: { message?: string } } }
     ) => {
       const message =
         (error as { response?: { data?: { message?: string } } })?.response
-          ?.data?.message || 'Failed to delete patients'
+          ?.data?.message || 'Không thể xóa bệnh nhân'
       toast.error(message)
     },
   })

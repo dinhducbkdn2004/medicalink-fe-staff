@@ -11,8 +11,8 @@ export type {
 export const createPatientSchema = z.object({
   fullName: z
     .string()
-    .min(2, 'Full name must be at least 2 characters')
-    .max(100, 'Full name must not exceed 100 characters'),
+    .min(2, 'Họ và tên phải có ít nhất 2 ký tự')
+    .max(100, 'Họ và tên không được vượt quá 100 ký tự'),
   email: z.string().optional(),
   phone: z.string().optional(),
   isMale: z.boolean().optional(),

@@ -14,7 +14,7 @@ type PatientsMultiDeleteDialogProps = {
   table: Table<Patient>
 }
 
-const CONFIRM_TEXT = 'delete all'
+const CONFIRM_TEXT = 'xóa tất cả'
 
 export function PatientsMultiDeleteDialog({
   open,
@@ -53,21 +53,20 @@ export function PatientsMultiDeleteDialog({
             className='stroke-destructive me-1 inline-block'
             size={18}
           />{' '}
-          Delete Multiple Patients
+          Xóa Nhiều Bệnh nhân
         </span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete{' '}
-            <span className='font-bold'>{selectedRows.length}</span> patient(s)?
+            Bạn có chắc chắn muốn xóa{' '}
+            <span className='font-bold'>{selectedRows.length}</span> bệnh nhân không?
             <br />
-            This action will soft delete all selected patients. They can be
-            restored later if needed.
+            Thao tác này sẽ xóa mềm tất cả các bệnh nhân đã chọn. Các bệnh nhân này có thể được khôi phục sau nếu cần.
           </p>
 
           <div className='max-h-[200px] overflow-y-auto rounded-md border p-3'>
-            <p className='mb-2 text-sm font-semibold'>Selected patients:</p>
+            <p className='mb-2 text-sm font-semibold'>Các bệnh nhân đã chọn:</p>
             <ul className='list-inside list-disc space-y-1 text-sm'>
               {selectedRows.map((row) => (
                 <li key={row.id}>
@@ -79,8 +78,8 @@ export function PatientsMultiDeleteDialog({
           </div>
 
           <Label className='my-2'>
-            Type <span className='font-bold'>&quot;{CONFIRM_TEXT}&quot;</span>{' '}
-            to confirm:
+            Nhập <span className='font-bold'>&quot;{CONFIRM_TEXT}&quot;</span>{' '}
+            để xác nhận:
           </Label>
           <Input
             value={value}
@@ -89,7 +88,7 @@ export function PatientsMultiDeleteDialog({
           />
         </div>
       }
-      confirmText={isPending ? 'Deleting...' : 'Delete All'}
+      confirmText={isPending ? 'Đang xóa...' : 'Xóa Tất cả'}
     />
   )
 }

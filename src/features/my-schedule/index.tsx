@@ -93,9 +93,9 @@ function MyScheduleContent() {
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>My Schedule</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>Lịch của tôi</h2>
             <p className='text-muted-foreground'>
-              View your final working schedule including regular hours and special shifts.
+              Xem lịch làm việc cuối cùng của bạn bao gồm giờ làm việc thường xuyên và ca đặc biệt.
             </p>
           </div>
         </div>
@@ -103,7 +103,7 @@ function MyScheduleContent() {
         <Alert className='mb-6'>
           <Info className='h-4 w-4' />
           <AlertDescription>
-            This page shows your final computed schedule. Special shifts (overrides) take precedence over regular office hours.
+            Trang này hiển thị lịch làm việc đã được tính toán cuối cùng. Các ca đặc biệt (ngoại lệ) sẽ được ưu tiên hơn so với giờ làm việc thường xuyên.
           </AlertDescription>
         </Alert>
 
@@ -121,7 +121,7 @@ function MyScheduleContent() {
             </Button>
           </div>
           <Button variant='outline' onClick={() => navigate({ search: { ...search, startDate: undefined, endDate: undefined } })}>
-            Today
+            Hôm nay
           </Button>
         </div>
 

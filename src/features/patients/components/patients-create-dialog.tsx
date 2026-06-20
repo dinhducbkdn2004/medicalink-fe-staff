@@ -81,9 +81,9 @@ export function PatientsCreateDialog() {
     >
       <DialogContent className='max-h-[90vh] overflow-y-auto sm:max-w-[600px]'>
         <DialogHeader>
-          <DialogTitle>Create New Patient</DialogTitle>
+          <DialogTitle>Tạo Bệnh nhân Mới</DialogTitle>
           <DialogDescription>
-            Add a new patient record to the system.
+            Thêm hồ sơ bệnh nhân mới vào hệ thống.
           </DialogDescription>
         </DialogHeader>
 
@@ -94,7 +94,7 @@ export function PatientsCreateDialog() {
               name='fullName'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name *</FormLabel>
+                  <FormLabel>Họ và tên *</FormLabel>
                   <FormControl>
                     <Input placeholder='John Doe' {...field} />
                   </FormControl>
@@ -127,7 +127,7 @@ export function PatientsCreateDialog() {
                 name='phone'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
+                    <FormLabel>Số điện thoại</FormLabel>
                     <FormControl>
                       <Input placeholder='+1234567890' {...field} />
                     </FormControl>
@@ -143,7 +143,7 @@ export function PatientsCreateDialog() {
                 name='isMale'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Gender</FormLabel>
+                    <FormLabel>Giới tính</FormLabel>
                     <Select
                       onValueChange={(value) =>
                         field.onChange(value === 'true')
@@ -154,12 +154,12 @@ export function PatientsCreateDialog() {
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder='Select gender' />
+                          <SelectValue placeholder='Chọn giới tính' />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='true'>Male</SelectItem>
-                        <SelectItem value='false'>Female</SelectItem>
+                        <SelectItem value='true'>Nam</SelectItem>
+                        <SelectItem value='false'>Nữ</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -172,12 +172,12 @@ export function PatientsCreateDialog() {
                 name='dateOfBirth'
                 render={({ field }) => (
                   <FormItem className='flex flex-col'>
-                    <FormLabel>Date of Birth</FormLabel>
+                    <FormLabel>Ngày sinh</FormLabel>
                     <FormControl>
                       <DatePickerInput
                         value={field.value}
                         onChange={field.onChange}
-                        placeholder='Select date of birth'
+                        placeholder='Chọn ngày sinh'
                         className='col-span-4'
                       />
                     </FormControl>
@@ -192,7 +192,7 @@ export function PatientsCreateDialog() {
               name='addressLine'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>Địa chỉ</FormLabel>
                   <FormControl>
                     <Input placeholder='123 Main Street, Apt 4B' {...field} />
                   </FormControl>
@@ -207,7 +207,7 @@ export function PatientsCreateDialog() {
                 name='district'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>District</FormLabel>
+                    <FormLabel>Quận/Huyện</FormLabel>
                     <FormControl>
                       <Input placeholder='Manhattan' {...field} />
                     </FormControl>
@@ -221,7 +221,7 @@ export function PatientsCreateDialog() {
                 name='province'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Province</FormLabel>
+                    <FormLabel>Tỉnh/Thành phố</FormLabel>
                     <FormControl>
                       <Input placeholder='New York' {...field} />
                     </FormControl>
@@ -238,10 +238,10 @@ export function PatientsCreateDialog() {
                 onClick={handleClose}
                 disabled={isPending}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type='submit' disabled={isPending}>
-                {isPending ? 'Creating...' : 'Create Patient'}
+                {isPending ? 'Đang tạo...' : 'Tạo Bệnh nhân'}
               </Button>
             </DialogFooter>
           </form>

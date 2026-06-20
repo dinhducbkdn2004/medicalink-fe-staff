@@ -52,10 +52,10 @@ export function Patients() {
           <div className='mb-2 flex items-center justify-between space-y-2'>
             <div>
               <h1 className='text-2xl font-bold tracking-tight'>
-                Patient Management
+                Quản lý Bệnh nhân
               </h1>
               <p className='text-muted-foreground'>
-                Manage patient records and information
+                Quản lý hồ sơ và thông tin bệnh nhân
               </p>
             </div>
             <Can I='patients:create'>
@@ -67,7 +67,7 @@ export function Patients() {
           {error && (
             <div className='rounded-md border border-red-200 bg-red-50 p-4'>
               <p className='text-sm text-red-800'>
-                Failed to load patients. Please try again later.
+                Không thể tải danh sách bệnh nhân. Vui lòng thử lại sau.
               </p>
             </div>
           )}

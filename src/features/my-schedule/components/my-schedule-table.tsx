@@ -80,7 +80,7 @@ export function MyScheduleTable({
               endTime: ce.endTime || '',
               status: 'OFF',
               type: 'holiday',
-              reason: ce.reason || 'Clinic Holiday',
+              reason: ce.reason || 'Ngày nghỉ phòng khám',
             })
           })
         } else {

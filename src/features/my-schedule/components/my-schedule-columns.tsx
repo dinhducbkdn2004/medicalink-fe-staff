@@ -36,7 +36,7 @@ export const myScheduleColumns: ColumnDef<ComputedScheduleItem>[] = [
   {
     id: 'date',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Date' />
+      <DataTableColumnHeader column={column} title='Ngày' />
     ),
     cell: ({ row }) => {
       const item = row.original
@@ -56,14 +56,14 @@ export const myScheduleColumns: ColumnDef<ComputedScheduleItem>[] = [
   },
   {
     id: 'timeRange',
-    header: 'Time Range',
+    header: 'Thời gian',
     cell: ({ row }) => {
       const item = row.original
       
       if (item.status === 'OFF') {
         return (
           <Badge variant='outline' className='text-red-500 border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/30'>
-            Off
+            Nghỉ
           </Badge>
         )
       }
@@ -85,7 +85,7 @@ export const myScheduleColumns: ColumnDef<ComputedScheduleItem>[] = [
   },
   {
     id: 'type',
-    header: 'Type',
+    header: 'Loại',
     cell: ({ row }) => {
       const item = row.original
       let typeLabel: string
@@ -96,16 +96,16 @@ export const myScheduleColumns: ColumnDef<ComputedScheduleItem>[] = [
       }
 
       if (item.type === 'override') {
-        typeLabel = 'Special Shift'
+        typeLabel = 'Ca đặc biệt'
         badgeClass = 'border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-800 dark:bg-purple-950 dark:text-purple-300'
       } else if (item.type === 'holiday') {
-        typeLabel = 'Clinic Holiday'
+        typeLabel = 'Ngày nghỉ phòng khám'
         badgeClass = 'border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-300'
       } else if (item.type === 'regular-doctor') {
-        typeLabel = 'Doctor Specific Hours'
+        typeLabel = 'Giờ riêng của Bác sĩ'
         badgeClass = 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300'
       } else {
-        typeLabel = 'Clinic Global Hours'
+        typeLabel = 'Giờ chung phòng khám'
         badgeClass = 'border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300'
       }
 
@@ -121,7 +121,7 @@ export const myScheduleColumns: ColumnDef<ComputedScheduleItem>[] = [
   },
   {
     id: 'details',
-    header: 'Details / Reason',
+    header: 'Chi tiết / Lý do',
     cell: ({ row }) => {
       const item = row.original
       if (!item.reason) return <span className="text-muted-foreground">-</span>

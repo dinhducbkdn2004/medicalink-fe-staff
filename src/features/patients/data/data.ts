@@ -2,30 +2,30 @@ import { CheckCircle2, XCircle, User, UserX } from 'lucide-react'
 
 export const statusOptions = [
   {
-    label: 'Active',
+    label: 'Hoạt động',
     value: 'false',
     icon: CheckCircle2,
   },
   {
-    label: 'Deleted',
+    label: 'Đã xóa',
     value: 'true',
     icon: XCircle,
   },
 ] as const
 
 export const genderOptions = [
-  { label: 'Male', value: 'true', icon: User },
-  { label: 'Female', value: 'false', icon: UserX },
+  { label: 'Nam', value: 'true', icon: User },
+  { label: 'Nữ', value: 'false', icon: UserX },
 ] as const
 
 export const sortByOptions = [
-  { label: 'Created Date', value: 'createdAt' },
-  { label: 'Updated Date', value: 'updatedAt' },
-  { label: 'Date of Birth', value: 'dateOfBirth' },
-  { label: 'Full Name', value: 'fullName' },
+  { label: 'Ngày tạo', value: 'createdAt' },
+  { label: 'Ngày cập nhật', value: 'updatedAt' },
+  { label: 'Ngày sinh', value: 'dateOfBirth' },
+  { label: 'Họ và tên', value: 'fullName' },
 ] as const
 
 export const sortOrderOptions = [
-  { label: 'Ascending', value: 'asc' },
-  { label: 'Descending', value: 'desc' },
+  { label: 'Tăng dần', value: 'asc' },
+  { label: 'Giảm dần', value: 'desc' },
 ] as const

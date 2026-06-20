@@ -37,15 +37,15 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
               size='icon'
               onClick={() => setShowDeleteConfirm(true)}
               className='size-8'
-              aria-label='Delete selected patients'
-              title='Delete selected patients'
+              aria-label='Xóa các bệnh nhân đã chọn'
+              title='Xóa các bệnh nhân đã chọn'
             >
               <Trash2 />
-              <span className='sr-only'>Delete selected patients</span>
+              <span className='sr-only'>Xóa các bệnh nhân đã chọn</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Delete selected patients</p>
+            <p>Xóa các bệnh nhân đã chọn</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>

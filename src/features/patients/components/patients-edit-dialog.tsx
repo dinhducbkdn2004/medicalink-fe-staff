@@ -103,9 +103,9 @@ export function PatientsEditDialog() {
     >
       <DialogContent className='max-h-[90vh] overflow-y-auto sm:max-w-[600px]'>
         <DialogHeader>
-          <DialogTitle>Edit Patient</DialogTitle>
+          <DialogTitle>Chỉnh sửa Bệnh nhân</DialogTitle>
           <DialogDescription>
-            Update patient information. Changes will be saved immediately.
+            Cập nhật thông tin bệnh nhân. Các thay đổi sẽ được lưu ngay lập tức.
           </DialogDescription>
         </DialogHeader>
 
@@ -116,7 +116,7 @@ export function PatientsEditDialog() {
               name='fullName'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name *</FormLabel>
+                  <FormLabel>Họ và tên *</FormLabel>
                   <FormControl>
                     <Input placeholder='John Doe' {...field} />
                   </FormControl>
@@ -149,7 +149,7 @@ export function PatientsEditDialog() {
                 name='phone'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
+                    <FormLabel>Số điện thoại</FormLabel>
                     <FormControl>
                       <Input placeholder='+1234567890' {...field} />
                     </FormControl>
@@ -165,7 +165,7 @@ export function PatientsEditDialog() {
                 name='isMale'
                 render={({ field }) => (
                   <FormItem className='flex flex-col'>
-                    <FormLabel>Gender</FormLabel>
+                    <FormLabel>Giới tính</FormLabel>
                     <Select
                       onValueChange={(value) =>
                         field.onChange(value === 'true' ? true : false)
@@ -178,12 +178,12 @@ export function PatientsEditDialog() {
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder='Select gender' />
+                          <SelectValue placeholder='Chọn giới tính' />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='true'>Male</SelectItem>
-                        <SelectItem value='false'>Female</SelectItem>
+                        <SelectItem value='true'>Nam</SelectItem>
+                        <SelectItem value='false'>Nữ</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -196,12 +196,12 @@ export function PatientsEditDialog() {
                 name='dateOfBirth'
                 render={({ field }) => (
                   <FormItem className='flex flex-col'>
-                    <FormLabel>Date of Birth</FormLabel>
+                    <FormLabel>Ngày sinh</FormLabel>
                     <FormControl>
                       <DatePickerInput
                         value={field.value}
                         onChange={field.onChange}
-                        placeholder='Select date of birth'
+                        placeholder='Chọn ngày sinh'
                         className='col-span-4'
                       />
                     </FormControl>
@@ -216,7 +216,7 @@ export function PatientsEditDialog() {
               name='addressLine'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>Địa chỉ</FormLabel>
                   <FormControl>
                     <Input placeholder='123 Main Street, Apt 4B' {...field} />
                   </FormControl>
@@ -231,7 +231,7 @@ export function PatientsEditDialog() {
                 name='district'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>District</FormLabel>
+                    <FormLabel>Quận/Huyện</FormLabel>
                     <FormControl>
                       <Input placeholder='Manhattan' {...field} />
                     </FormControl>
@@ -245,7 +245,7 @@ export function PatientsEditDialog() {
                 name='province'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Province</FormLabel>
+                    <FormLabel>Tỉnh/Thành phố</FormLabel>
                     <FormControl>
                       <Input placeholder='New York' {...field} />
                     </FormControl>
@@ -262,10 +262,10 @@ export function PatientsEditDialog() {
                 onClick={handleClose}
                 disabled={isPending}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type='submit' disabled={isPending}>
-                {isPending ? 'Updating...' : 'Update Patient'}
+                {isPending ? 'Đang cập nhật...' : 'Cập nhật Bệnh nhân'}
               </Button>
             </DialogFooter>
           </form>

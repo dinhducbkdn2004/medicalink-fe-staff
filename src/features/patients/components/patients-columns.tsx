@@ -17,7 +17,7 @@ export const patientsColumns: ColumnDef<Patient>[] = [
           (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Select all'
+        aria-label='Chọn tất cả'
         className='translate-y-0.5'
       />
     ),
@@ -25,7 +25,7 @@ export const patientsColumns: ColumnDef<Patient>[] = [
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Select row'
+        aria-label='Chọn hàng'
         className='translate-y-0.5'
       />
     ),
@@ -42,7 +42,7 @@ export const patientsColumns: ColumnDef<Patient>[] = [
   {
     accessorKey: 'fullName',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Full Name' />
+      <DataTableColumnHeader column={column} title='Họ và tên' />
     ),
     cell: ({ row }) => (
       <div className='flex space-x-2'>
@@ -84,7 +84,7 @@ export const patientsColumns: ColumnDef<Patient>[] = [
   {
     accessorKey: 'phone',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Phone' />
+      <DataTableColumnHeader column={column} title='Số điện thoại' />
     ),
     cell: ({ row }) => {
       const phone = row.getValue<string | null>('phone')
@@ -99,7 +99,7 @@ export const patientsColumns: ColumnDef<Patient>[] = [
   {
     accessorKey: 'isMale',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Gender' />
+      <DataTableColumnHeader column={column} title='Giới tính' />
     ),
     cell: ({ row }) => {
       const isMale = row.getValue<boolean | null>('isMale')
@@ -107,7 +107,7 @@ export const patientsColumns: ColumnDef<Patient>[] = [
         return <span className='text-muted-foreground'>-</span>
       return (
         <Badge variant={isMale ? 'default' : 'secondary'}>
-          {isMale ? 'Male' : 'Female'}
+          {isMale ? 'Nam' : 'Nữ'}
         </Badge>
       )
     },
@@ -119,7 +119,7 @@ export const patientsColumns: ColumnDef<Patient>[] = [
   {
     accessorKey: 'dateOfBirth',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Date of Birth' />
+      <DataTableColumnHeader column={column} title='Ngày sinh' />
     ),
     cell: ({ row }) => {
       const dateOfBirth = row.getValue<string | null>('dateOfBirth')
@@ -142,7 +142,7 @@ export const patientsColumns: ColumnDef<Patient>[] = [
   {
     accessorKey: 'province',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Province' />
+      <DataTableColumnHeader column={column} title='Tỉnh/Thành phố' />
     ),
     cell: ({ row }) => {
       const province = row.getValue<string | null>('province')
@@ -157,7 +157,7 @@ export const patientsColumns: ColumnDef<Patient>[] = [
   {
     accessorKey: 'district',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='District' />
+      <DataTableColumnHeader column={column} title='Quận/Huyện' />
     ),
     cell: ({ row }) => {
       const district = row.getValue<string | null>('district')
@@ -172,7 +172,7 @@ export const patientsColumns: ColumnDef<Patient>[] = [
   {
     accessorKey: 'createdAt',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Created At' />
+      <DataTableColumnHeader column={column} title='Ngày tạo' />
     ),
     cell: ({ row }) => {
       const createdAt = row.getValue<string>('createdAt')
@@ -194,13 +194,13 @@ export const patientsColumns: ColumnDef<Patient>[] = [
   {
     accessorKey: 'deletedAt',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Status' />
+      <DataTableColumnHeader column={column} title='Trạng thái' />
     ),
     cell: ({ row }) => {
       const deletedAt = row.getValue<string | null>('deletedAt')
       return (
         <Badge variant={deletedAt ? 'destructive' : 'secondary'}>
-          {deletedAt ? 'Deleted' : 'Active'}
+          {deletedAt ? 'Đã xóa' : 'Hoạt động'}
         </Badge>
       )
     },

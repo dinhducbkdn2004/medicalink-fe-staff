@@ -33,21 +33,20 @@ export function PatientsDeleteDialog() {
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogTitle>Bạn có chắc chắn không?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will soft delete the patient record for{' '}
-            <span className='font-semibold'>{currentRow?.fullName}</span>. The
-            record can be restored later if needed.
+            Thao tác này sẽ xóa mềm hồ sơ bệnh nhân{' '}
+            <span className='font-semibold'>{currentRow?.fullName}</span>. Hồ sơ này có thể được khôi phục lại sau này nếu cần.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>Hủy</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isPending}
             className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
           >
-            {isPending ? 'Deleting...' : 'Delete'}
+            {isPending ? 'Đang xóa...' : 'Xóa'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
