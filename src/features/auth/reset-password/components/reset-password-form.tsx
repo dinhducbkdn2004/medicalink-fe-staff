@@ -23,16 +23,16 @@ const formSchema = z
   .object({
     newPassword: z
       .string()
-      .min(8, 'Password must be at least 8 characters')
-      .max(50, 'Password must not exceed 50 characters')
+      .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
+      .max(50, 'Mật khẩu không được vượt quá 50 ký tự')
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        'Password must contain at least one lowercase letter, one uppercase letter, and one number'
+        'Mật khẩu phải chứa ít nhất một chữ hoa, một chữ thường và một số'
       ),
-    confirmPassword: z.string().min(1, 'Please confirm your new password'),
+    confirmPassword: z.string().min(1, 'Vui lòng xác nhận mật khẩu mới của bạn'),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Passwords do not match',
+    message: 'Mật khẩu không khớp',
     path: ['confirmPassword'],
   })
 
@@ -53,7 +53,7 @@ export function ResetPasswordForm({
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     if (!search.email || !search.code) {
-      toast.error('Missing email or reset code. Please try again.')
+      toast.error('Thiếu email hoặc mã xác nhận. Vui lòng thử lại.')
       return
     }
 
@@ -64,11 +64,11 @@ export function ResetPasswordForm({
         code: search.code,
         newPassword: data.newPassword,
       })
-      toast.success('Password reset successfully. Please log in.')
+      toast.success('Đặt lại mật khẩu thành công. Vui lòng đăng nhập.')
       navigate({ to: '/sign-in' })
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      toast.error(err.response?.data?.message || 'Failed to reset password')
+      toast.error(err.response?.data?.message || 'Không thể đặt lại mật khẩu')
     } finally {
       setIsLoading(false)
     }
@@ -86,7 +86,7 @@ export function ResetPasswordForm({
           name='newPassword'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>New Password</FormLabel>
+              <FormLabel>Mật khẩu mới</FormLabel>
               <FormControl>
                 <div className='relative'>
                   <Input
@@ -118,7 +118,7 @@ export function ResetPasswordForm({
           name='confirmPassword'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel>Xác nhận mật khẩu</FormLabel>
               <FormControl>
                 <div className='relative'>
                   <Input
@@ -146,7 +146,7 @@ export function ResetPasswordForm({
           )}
         />
         <Button className='mt-2' disabled={isLoading}>
-          Reset Password
+          Đặt lại mật khẩu
           {isLoading ? <Loader2 className='animate-spin' /> : <ArrowRight />}
         </Button>
       </form>

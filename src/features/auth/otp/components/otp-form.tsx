@@ -35,8 +35,8 @@ import {
 const formSchema = z.object({
   otp: z
     .string()
-    .min(6, 'Please enter the 6-digit code.')
-    .max(6, 'Please enter the 6-digit code.'),
+    .min(6, 'Vui lòng nhập mã gồm 6 chữ số.')
+    .max(6, 'Vui lòng nhập mã gồm 6 chữ số.'),
 })
 
 type OtpFormProps = React.HTMLAttributes<HTMLFormElement> & {
@@ -66,7 +66,7 @@ export function OtpForm({
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     if (!search.email) {
-      toast.error('Missing email. Please restart the process.')
+      toast.error('Thiếu email. Vui lòng bắt đầu lại quá trình.')
       navigate({ to: '/forgot-password' })
       return
     }
@@ -74,7 +74,7 @@ export function OtpForm({
     setIsLoading(true)
     try {
       await verifyResetCode({ email: search.email, code: data.otp })
-      toast.success('Code verified successfully.')
+      toast.success('Xác nhận mã thành công.')
       navigate({
         to: '/reset-password',
         search: { email: search.email, code: data.otp },
@@ -89,9 +89,9 @@ export function OtpForm({
   return (
     <Card className='mx-auto w-full max-w-md'>
       <CardHeader>
-        <CardTitle>Verify your login</CardTitle>
+        <CardTitle>Xác thực đăng nhập</CardTitle>
         <CardDescription>
-          Enter the verification code we sent to your email address:{' '}
+          Nhập mã xác nhận chúng tôi đã gửi đến địa chỉ email của bạn:{' '}
           <span className='font-medium'>{email}</span>.
         </CardDescription>
       </CardHeader>
@@ -109,7 +109,7 @@ export function OtpForm({
                 <FormItem>
                   <div className='flex items-center justify-between'>
                     <FormLabel htmlFor='otp-verification'>
-                      Verification code
+                      Mã xác nhận
                     </FormLabel>
                     <Button
                       type='button'
@@ -125,7 +125,7 @@ export function OtpForm({
                           isResending && 'animate-spin'
                         )}
                       />
-                      Resend Code
+                      Gửi lại mã
                     </Button>
                   </div>
                   <FormControl>
@@ -153,7 +153,7 @@ export function OtpForm({
                       href='/sign-in'
                       className='hover:text-primary transition-colors'
                     >
-                      I no longer have access to this email address.
+                      Tôi không còn quyền truy cập vào địa chỉ email này nữa.
                     </a>
                   </FormDescription>
                   <FormMessage />
@@ -168,15 +168,15 @@ export function OtpForm({
                 className='w-full'
                 disabled={otp.length < 6 || isLoading}
               >
-                {isLoading ? 'Verifying...' : 'Verify'}
+                {isLoading ? 'Đang xác thực...' : 'Xác thực'}
               </Button>
               <div className='text-muted-foreground mt-2 text-center text-sm'>
-                Having trouble signing in?{' '}
+                Gặp sự cố khi đăng nhập?{' '}
                 <a
                   href='mailto:support@medicalink.online'
                   className='hover:text-primary underline underline-offset-4 transition-colors'
                 >
-                  Contact support
+                  Liên hệ hỗ trợ
                 </a>
               </div>
             </div>

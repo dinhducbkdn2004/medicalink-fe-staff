@@ -20,7 +20,7 @@ import { Input } from '@/components/ui/input'
 
 const formSchema = z.object({
   email: z.email({
-    error: (iss) => (iss.input === '' ? 'Please enter your email' : undefined),
+    error: (iss) => (iss.input === '' ? 'Vui lòng nhập email của bạn' : undefined),
   }),
 })
 
@@ -42,7 +42,7 @@ export function ForgotPasswordForm({
       await requestPasswordReset({ email: data.email })
       
       localStorage.setItem('reset_email', data.email)
-      toast.success('If an account exists, a reset code has been sent.')
+      toast.success('Nếu tài khoản tồn tại, mã xác nhận đã được gửi.')
       navigate({ to: '/otp', search: { email: data.email } })
     } catch (error: unknown) {
       
@@ -73,7 +73,7 @@ export function ForgotPasswordForm({
           )}
         />
         <Button className='mt-2' disabled={isLoading}>
-          Continue
+          Tiếp tục
           {isLoading ? <Loader2 className='animate-spin' /> : <ArrowRight />}
         </Button>
       </form>

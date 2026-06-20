@@ -15,13 +15,13 @@ export function Otp() {
       const resetEmail = localStorage.getItem('reset_email')
       if (!resetEmail) {
         toast.error(
-          'Email not found. Please start the password reset process again.'
+          'Không tìm thấy email. Vui lòng bắt đầu lại quá trình đặt lại mật khẩu.'
         )
         return
       }
 
       await authService.requestPasswordReset({ email: resetEmail })
-      toast.success('A new verification code has been sent to your email')
+      toast.success('Một mã xác nhận mới đã được gửi đến email của bạn')
     } catch (error) {
       console.error('Resend code error:', error)
     } finally {

@@ -24,10 +24,10 @@ export function SignIn() {
     <AuthLayout>
       <Card className='dark:bg-background/60 gap-4 dark:backdrop-blur-md'>
         <CardHeader>
-          <CardTitle className='text-lg tracking-tight'>Sign in</CardTitle>
+          <CardTitle className='text-lg tracking-tight'>Đăng nhập</CardTitle>
           <CardDescription>
-            Enter your email and password below to <br />
-            log into your account
+            Nhập email và mật khẩu của bạn bên dưới để <br />
+            đăng nhập vào hệ thống
           </CardDescription>
           <div className='absolute top-4 right-4 flex items-center gap-2'>
             <Button asChild variant='outline' size='sm'>
@@ -36,7 +36,7 @@ export function SignIn() {
                 target='_blank'
                 rel='noreferrer'
               >
-                Client Portal
+                Cổng Bệnh Nhân
               </a>
             </Button>
             {/* <Popover>
@@ -89,19 +89,19 @@ export function SignIn() {
         </CardContent>
         <CardFooter className='flex flex-col gap-4'>
           <p className='text-muted-foreground px-8 text-center text-sm'>
-            By clicking sign in, you agree to our{' '}
+            Bằng cách nhấn đăng nhập, bạn đồng ý với{' '}
             <a
               href='/terms'
               className='hover:text-primary underline underline-offset-4'
             >
-              Terms of Service
+              Điều khoản Dịch vụ
             </a>{' '}
-            and{' '}
+            và{' '}
             <a
               href='/privacy'
               className='hover:text-primary underline underline-offset-4'
             >
-              Privacy Policy
+              Chính sách Bảo mật
             </a>
             .
           </p>
