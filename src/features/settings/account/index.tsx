@@ -4,8 +4,8 @@ import { ChangePasswordSection } from './change-password-section'
 export function SettingsAccount() {
   return (
     <ContentSection
-      title='Account'
-      desc='Manage your account settings and change your password.'
+      title='Tài khoản'
+      desc='Quản lý cài đặt tài khoản và thay đổi mật khẩu của bạn.'
     >
         <ChangePasswordSection />
     </ContentSection>

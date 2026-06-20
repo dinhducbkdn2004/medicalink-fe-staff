@@ -26,10 +26,10 @@ import { DatePicker } from '@/components/date-picker'
 const accountFormSchema = z.object({
   fullName: z
     .string()
-    .min(1, 'Please enter your full name')
-    .min(3, 'Full name must be at least 3 characters')
-    .max(50, 'Full name must not exceed 50 characters'),
-  email: z.string().email('Please enter a valid email address'),
+    .min(1, 'Vui lòng nhập họ và tên của bạn')
+    .min(3, 'Họ và tên phải có ít nhất 3 ký tự')
+    .max(50, 'Họ và tên không được vượt quá 50 ký tự'),
+  email: z.string().email('Vui lòng nhập địa chỉ email hợp lệ'),
   phone: z.string().optional(),
   dateOfBirth: z.date().optional(),
   isMale: z.enum(['true', 'false', 'null']).optional(),
@@ -65,13 +65,13 @@ export function AccountForm() {
     if (data.phone && data.phone.trim() !== '') {
       const phoneRegex = /^[0-9]{10,11}$/
       if (!phoneRegex.test(data.phone)) {
-        toast.error('Phone number must be 10-11 digits')
+        toast.error('Số điện thoại phải từ 10-11 chữ số')
         return
       }
     }
 
     
-    toast.success('Profile updated successfully')
+    toast.success('Cập nhật hồ sơ thành công')
   }
 
   return (
@@ -82,12 +82,12 @@ export function AccountForm() {
           name='fullName'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full name</FormLabel>
+              <FormLabel>Họ và tên</FormLabel>
               <FormControl>
-                <Input placeholder='Enter your full name' {...field} />
+                <Input placeholder='Nhập họ và tên của bạn' {...field} />
               </FormControl>
               <FormDescription>
-                This is your display name shown across the platform.
+                Đây là tên hiển thị của bạn trên toàn bộ nền tảng.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -99,7 +99,7 @@ export function AccountForm() {
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email address</FormLabel>
+              <FormLabel>Địa chỉ email</FormLabel>
               <FormControl>
                 <Input
                   type='email'
@@ -109,8 +109,8 @@ export function AccountForm() {
                 />
               </FormControl>
               <FormDescription>
-                Your email address is used for authentication and cannot be
-                changed.
+                Địa chỉ email của bạn được sử dụng để xác thực và không thể
+                thay đổi.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -122,7 +122,7 @@ export function AccountForm() {
           name='phone'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone number</FormLabel>
+              <FormLabel>Số điện thoại</FormLabel>
               <FormControl>
                 <Input
                   type='tel'
@@ -132,7 +132,7 @@ export function AccountForm() {
                 />
               </FormControl>
               <FormDescription>
-                Your contact phone number (10-11 digits).
+                Số điện thoại liên hệ của bạn (10-11 chữ số).
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -144,10 +144,10 @@ export function AccountForm() {
           name='dateOfBirth'
           render={({ field }) => (
             <FormItem className='flex flex-col'>
-              <FormLabel>Date of birth</FormLabel>
+              <FormLabel>Ngày sinh</FormLabel>
               <DatePicker selected={field.value} onSelect={field.onChange} />
               <FormDescription>
-                Your date of birth for identification purposes.
+                Ngày sinh của bạn để xác định danh tính.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -159,21 +159,21 @@ export function AccountForm() {
           name='isMale'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Gender</FormLabel>
+              <FormLabel>Giới tính</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder='Select your gender' />
+                    <SelectValue placeholder='Chọn giới tính của bạn' />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value='true'>Male</SelectItem>
-                  <SelectItem value='false'>Female</SelectItem>
-                  <SelectItem value='null'>Prefer not to say</SelectItem>
+                  <SelectItem value='true'>Nam</SelectItem>
+                  <SelectItem value='false'>Nữ</SelectItem>
+                  <SelectItem value='null'>Không muốn tiết lộ</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>
-                Your gender information (optional).
+                Thông tin giới tính của bạn (tùy chọn).
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -181,7 +181,7 @@ export function AccountForm() {
         />
 
         <Button type='submit' className='w-full sm:w-auto'>
-          Update account
+          Cập nhật tài khoản
         </Button>
       </form>
     </Form>

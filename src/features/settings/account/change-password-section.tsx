@@ -52,7 +52,7 @@ export function ChangePasswordSection() {
       {
         onSuccess: () => {
           form.reset()
-          toast.success('Password changed successfully')
+          toast.success('Thay đổi mật khẩu thành công')
         },
         onError: (error) => {
           
@@ -65,11 +65,9 @@ export function ChangePasswordSection() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Change password</CardTitle>
+        <CardTitle>Thay đổi mật khẩu</CardTitle>
         <CardDescription>
-          Update your password to keep your account secure. Make sure it's at
-          least 8 characters including a lowercase letter, uppercase letter, and
-          a number.
+          Cập nhật mật khẩu để giữ cho tài khoản của bạn an toàn. Đảm bảo mật khẩu có ít nhất 8 ký tự bao gồm chữ thường, chữ hoa và số.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -80,12 +78,12 @@ export function ChangePasswordSection() {
               name='currentPassword'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Current password</FormLabel>
+                  <FormLabel>Mật khẩu hiện tại</FormLabel>
                   <div className='relative'>
                     <FormControl>
                       <Input
                         type={showCurrentPassword ? 'text' : 'password'}
-                        placeholder='Enter your current password'
+                        placeholder='Nhập mật khẩu hiện tại của bạn'
                         autoComplete='current-password'
                         {...field}
                       />
@@ -99,7 +97,7 @@ export function ChangePasswordSection() {
                         setShowCurrentPassword(!showCurrentPassword)
                       }
                       aria-label={
-                        showCurrentPassword ? 'Hide password' : 'Show password'
+                        showCurrentPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'
                       }
                     >
                       {showCurrentPassword ? (
@@ -119,12 +117,12 @@ export function ChangePasswordSection() {
               name='newPassword'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New password</FormLabel>
+                  <FormLabel>Mật khẩu mới</FormLabel>
                   <div className='relative'>
                     <FormControl>
                       <Input
                         type={showNewPassword ? 'text' : 'password'}
-                        placeholder='Enter your new password'
+                        placeholder='Nhập mật khẩu mới của bạn'
                         autoComplete='new-password'
                         {...field}
                       />
@@ -136,7 +134,7 @@ export function ChangePasswordSection() {
                       className='absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent'
                       onClick={() => setShowNewPassword(!showNewPassword)}
                       aria-label={
-                        showNewPassword ? 'Hide password' : 'Show password'
+                        showNewPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'
                       }
                     >
                       {showNewPassword ? (
@@ -156,12 +154,12 @@ export function ChangePasswordSection() {
               name='confirmPassword'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm new password</FormLabel>
+                  <FormLabel>Xác nhận mật khẩu mới</FormLabel>
                   <div className='relative'>
                     <FormControl>
                       <Input
                         type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder='Re-enter your new password'
+                        placeholder='Nhập lại mật khẩu mới của bạn'
                         autoComplete='new-password'
                         {...field}
                       />
@@ -175,7 +173,7 @@ export function ChangePasswordSection() {
                         setShowConfirmPassword(!showConfirmPassword)
                       }
                       aria-label={
-                        showConfirmPassword ? 'Hide password' : 'Show password'
+                        showConfirmPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'
                       }
                     >
                       {showConfirmPassword ? (
@@ -196,8 +194,8 @@ export function ChangePasswordSection() {
               className='w-full sm:w-auto'
             >
               {changePasswordMutation.isPending
-                ? 'Updating...'
-                : 'Update password'}
+                ? 'Đang cập nhật...'
+                : 'Cập nhật mật khẩu'}
             </Button>
           </form>
         </Form>

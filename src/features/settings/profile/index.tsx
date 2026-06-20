@@ -6,8 +6,8 @@ import { ProfileForm } from './profile-form'
 export function SettingsProfile() {
   return (
     <ContentSection
-      title='Profile'
-      desc='View your account information and role in the system.'
+      title='Hồ sơ'
+      desc='Xem thông tin tài khoản và vai trò của bạn trong hệ thống.'
     >
       <div className='space-y-6'>
         <AccountForm />
