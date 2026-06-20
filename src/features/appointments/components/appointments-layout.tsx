@@ -60,7 +60,7 @@ function AppointmentsLayoutContent() {
         <div className='flex flex-col items-center gap-4'>
           <Loader2 className='text-primary size-8 animate-spin' />
           <p className='text-muted-foreground text-sm'>
-            Loading appointments...
+            Đang tải danh sách lịch hẹn...
           </p>
         </div>
       </div>
@@ -73,10 +73,10 @@ function AppointmentsLayoutContent() {
       <div className='flex h-screen items-center justify-center p-4'>
         <Alert variant='destructive' className='max-w-md'>
           <AlertCircle className='size-4' />
-          <AlertTitle>Error</AlertTitle>
+          <AlertTitle>Lỗi</AlertTitle>
           <AlertDescription>
             {error?.message ||
-              'Failed to load appointments. Please try again later.'}
+              'Tải lịch hẹn thất bại. Vui lòng thử lại sau.'}
           </AlertDescription>
         </Alert>
       </div>
@@ -111,7 +111,7 @@ function AppointmentsLayoutContent() {
               <AccordionTrigger className='flex-none gap-2 py-0 hover:no-underline'>
                 <div className='flex items-center gap-2'>
                   <Settings className='size-4' />
-                  <p className='text-base font-semibold'>Calendar settings</p>
+                  <p className='text-base font-semibold'>Cài đặt lịch</p>
                 </div>
               </AccordionTrigger>
 
