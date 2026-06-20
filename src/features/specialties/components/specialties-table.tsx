@@ -64,7 +64,7 @@ export function SpecialtiesTable({
 
     const actions: DataTableAction[] = [
       {
-        label: 'View Info Sections',
+        label: 'Xem các phần thông tin',
         icon: Info,
         onClick: () => {
           setCurrentRow(specialty)
@@ -76,7 +76,7 @@ export function SpecialtiesTable({
     
     if (canUpdateSpecialties()) {
       actions.push({
-        label: 'Edit',
+        label: 'Chỉnh sửa',
         icon: Edit,
         onClick: () => {
           setCurrentRow(specialty)
@@ -89,7 +89,7 @@ export function SpecialtiesTable({
     
     if (canDeleteSpecialty({ specialtyId: specialty.id })) {
       actions.push({
-        label: 'Delete',
+        label: 'Xóa',
         icon: Trash2,
         onClick: () => {
           setCurrentRow(specialty)
@@ -112,14 +112,14 @@ export function SpecialtiesTable({
       
       pageCount={pageCount}
       isLoading={isLoading}
-      entityName='specialty'
+      entityName='chuyên khoa'
       
-      searchPlaceholder='Search specialties by name...'
+      searchPlaceholder='Tìm kiếm chuyên khoa theo tên...'
       searchKey='name'
       filters={[
         {
           columnId: 'isActive',
-          title: 'Status',
+          title: 'Trạng thái',
           options: statusOptions.map((status) => ({
             label: status.label,
             value: status.value,
@@ -133,7 +133,7 @@ export function SpecialtiesTable({
       
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
-      emptyMessage='No specialties found. Create your first specialty to get started.'
+      emptyMessage='Không tìm thấy chuyên khoa nào. Tạo chuyên khoa đầu tiên của bạn để bắt đầu.'
     />
   )
 }

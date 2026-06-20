@@ -18,7 +18,7 @@ export function SpecialtiesPrimaryButtons() {
       >
         <Plus className='size-3.5' />
         <span className='sr-only sm:not-sr-only sm:whitespace-nowrap'>
-          Add Specialty
+          Thêm chuyên khoa
         </span>
       </Button>
     </div>

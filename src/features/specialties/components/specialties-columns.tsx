@@ -18,7 +18,7 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
+          aria-label='Chọn tất cả'
           className='translate-y-0.5'
         />
       </div>
@@ -28,7 +28,7 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Select row'
+          aria-label='Chọn hàng'
           className='translate-y-0.5'
         />
       </div>
@@ -42,7 +42,7 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Name' />
+      <DataTableColumnHeader column={column} title='Tên' />
     ),
     cell: ({ row }) => {
       return (
@@ -73,7 +73,7 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
   },
   {
     accessorKey: 'description',
-    header: 'Description',
+    header: 'Mô tả',
     cell: ({ row }) => {
       const description = row.original.description
       return (
@@ -89,7 +89,7 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
   {
     accessorKey: 'isActive',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Status' />
+      <DataTableColumnHeader column={column} title='Trạng thái' />
     ),
     cell: ({ row }) => {
       const isActive = row.original.isActive
@@ -103,7 +103,7 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
                 : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400'
             )}
           >
-            {isActive ? 'Active' : 'Inactive'}
+            {isActive ? 'Hoạt động' : 'Ngừng hoạt động'}
           </Badge>
         </div>
       )
@@ -120,13 +120,13 @@ export const specialtiesColumns: ColumnDef<Specialty>[] = [
   {
     accessorKey: 'createdAt',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Created Date' />
+      <DataTableColumnHeader column={column} title='Ngày tạo' />
     ),
     cell: ({ row }) => {
       const date = new Date(row.original.createdAt)
       return (
         <div className='text-muted-foreground text-sm'>
-          {date.toLocaleDateString('en-US', {
+          {date.toLocaleDateString('vi-VN', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',

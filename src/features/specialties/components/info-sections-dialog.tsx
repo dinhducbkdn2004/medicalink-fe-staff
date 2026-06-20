@@ -76,26 +76,25 @@ export function InfoSectionsDialog({
         >
           <DrawerHeader>
             <DrawerTitle className='flex items-center gap-2'>
-              Info Sections
+              Các phần thông tin
               <Badge variant='secondary' className='font-mono'>
                 {specialty.name}
               </Badge>
             </DrawerTitle>
             <DrawerDescription>
-              Manage information sections for this specialty. These sections
-              will be displayed on the specialty detail page.
+              Quản lý các phần thông tin cho chuyên khoa này. Các phần này sẽ được
+              hiển thị trên trang chi tiết chuyên khoa.
             </DrawerDescription>
           </DrawerHeader>
 
           <div className='flex flex-1 flex-col gap-4 overflow-y-auto p-4'>
             <div className='flex items-center justify-between'>
               <p className='text-muted-foreground text-sm'>
-                {sections?.length || 0} section
-                {sections?.length !== 1 ? 's' : ''}
+                {sections?.length || 0} phần thông tin
               </p>
               <Button onClick={handleAdd} size='sm'>
                 <Plus className='mr-2 size-4' />
-                Add Section
+                Thêm phần
               </Button>
             </div>
 
@@ -108,11 +107,11 @@ export function InfoSectionsDialog({
             ) : !sections || sections.length === 0 ? (
               <div className='flex h-[300px] flex-col items-center justify-center gap-2'>
                 <p className='text-muted-foreground text-sm'>
-                  No info sections yet
+                  Chưa có phần thông tin nào
                 </p>
                 <Button onClick={handleAdd} size='sm' variant='outline'>
                   <Plus className='mr-2 size-4' />
-                  Create First Section
+                  Tạo phần đầu tiên
                 </Button>
               </div>
             ) : (
@@ -126,7 +125,7 @@ export function InfoSectionsDialog({
                             {section.name}
                           </CardTitle>
                           <CardDescription className='text-xs'>
-                            Created:{' '}
+                            Ngày tạo:{' '}
                             {new Date(section.createdAt).toLocaleDateString(
                               'en-US',
                               {
@@ -145,7 +144,7 @@ export function InfoSectionsDialog({
                             className='size-8 p-0'
                           >
                             <Edit className='size-4' />
-                            <span className='sr-only'>Edit</span>
+                            <span className='sr-only'>Chỉnh sửa</span>
                           </Button>
                           {!isAdmin && (
                             <Button
@@ -155,7 +154,7 @@ export function InfoSectionsDialog({
                               className='text-destructive hover:text-destructive size-8 p-0'
                             >
                               <Trash2 className='size-4' />
-                              <span className='sr-only'>Delete</span>
+                              <span className='sr-only'>Xóa</span>
                             </Button>
                           )}
                         </div>

@@ -32,8 +32,8 @@ import {
 const formSchema = z.object({
   title: z
     .string()
-    .min(2, 'Title must be at least 2 characters')
-    .max(120, 'Title must be at most 120 characters'),
+    .min(2, 'Tiêu đề phải có ít nhất 2 ký tự')
+    .max(120, 'Tiêu đề không được vượt quá 120 ký tự'),
   content: z.string().optional(),
 })
 
@@ -121,12 +121,12 @@ export function InfoSectionForm({
       >
         <DrawerHeader>
           <DrawerTitle>
-            {isEditMode ? 'Edit Info Section' : 'Create Info Section'}
+            {isEditMode ? 'Chỉnh sửa phần thông tin' : 'Tạo phần thông tin'}
           </DrawerTitle>
           <DrawerDescription>
             {isEditMode
-              ? 'Update the information section content below.'
-              : `Add a new information section for ${specialty.name}.`}
+              ? 'Cập nhật nội dung phần thông tin dưới đây.'
+              : `Thêm phần thông tin mới cho ${specialty.name}.`}
           </DrawerDescription>
         </DrawerHeader>
 
@@ -143,17 +143,17 @@ export function InfoSectionForm({
                   name='title'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Section Title</FormLabel>
+                      <FormLabel>Tiêu đề phần</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder='e.g., Overview, Common Conditions, Treatment Options'
+                          placeholder='ví dụ: Tổng quan, Các bệnh lý phổ biến, Các phương pháp điều trị'
                           {...field}
                           disabled={isLoading}
                           required
                         />
                       </FormControl>
                       <FormDescription>
-                        The title of this information section (2-120 characters)
+                        Tiêu đề của phần thông tin này (2-120 ký tự)
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -166,12 +166,12 @@ export function InfoSectionForm({
                   name='content'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Content</FormLabel>
+                      <FormLabel>Nội dung</FormLabel>
                       <FormControl>
                         <RichTextEditor
                           value={field.value || ''}
                           onChange={field.onChange}
-                          placeholder='Enter the detailed content for this section...'
+                          placeholder='Nhập nội dung chi tiết cho phần này...'
                           disabled={isLoading}
                           toolbarOptions='basic'
                           accessToken={accessToken || ''}
@@ -183,8 +183,7 @@ export function InfoSectionForm({
                         />
                       </FormControl>
                       <FormDescription>
-                        The content of this section (supports rich text
-                        formatting, code blocks, and formulas)
+                        Nội dung của phần này (hỗ trợ định dạng văn bản đa dạng, khối mã và công thức)
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -198,13 +197,13 @@ export function InfoSectionForm({
                     onClick={onOpenChange}
                     disabled={isLoading}
                   >
-                    Cancel
+                    Hủy
                   </Button>
                   <Button type='submit' disabled={isLoading}>
                     {isLoading && (
                       <Loader2 className='mr-2 size-4 animate-spin' />
                     )}
-                    {isEditMode ? 'Update' : 'Create'}
+                    {isEditMode ? 'Cập nhật' : 'Tạo'}
                   </Button>
                 </div>
               </form>

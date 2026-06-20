@@ -2,12 +2,12 @@ import { CheckCircle, XCircle } from 'lucide-react'
 
 export const statusOptions = [
   {
-    label: 'Active',
+    label: 'Hoạt động',
     value: 'true',
     icon: CheckCircle,
   },
   {
-    label: 'Inactive',
+    label: 'Ngừng hoạt động',
     value: 'false',
     icon: XCircle,
   },
@@ -15,15 +15,15 @@ export const statusOptions = [
 
 export const sortOptions = [
   {
-    label: 'Name',
+    label: 'Tên',
     value: 'name',
   },
   {
-    label: 'Created Date',
+    label: 'Ngày tạo',
     value: 'createdAt',
   },
   {
-    label: 'Updated Date',
+    label: 'Ngày cập nhật',
     value: 'updatedAt',
   },
 ]

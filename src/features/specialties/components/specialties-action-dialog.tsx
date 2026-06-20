@@ -30,8 +30,8 @@ import { useCreateSpecialty, useUpdateSpecialty } from '../data/use-specialties'
 const formSchema = z.object({
   name: z
     .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(120, 'Name must be at most 120 characters'),
+    .min(2, 'Tên phải có ít nhất 2 ký tự')
+    .max(120, 'Tên không được vượt quá 120 ký tự'),
   description: z.string().optional(),
   iconUrl: z.string().optional().or(z.literal('')),
 })
@@ -106,12 +106,12 @@ export function SpecialtiesActionDialog({
       <DialogContent className='max-h-[90vh] overflow-y-auto sm:max-w-[525px]'>
         <DialogHeader>
           <DialogTitle>
-            {isEditMode ? 'Edit Specialty' : 'Create New Specialty'}
+            {isEditMode ? 'Chỉnh sửa chuyên khoa' : 'Tạo chuyên khoa mới'}
           </DialogTitle>
           <DialogDescription>
             {isEditMode
-              ? 'Update the specialty information below.'
-              : 'Fill in the information to create a new specialty.'}
+              ? 'Cập nhật thông tin chuyên khoa dưới đây.'
+              : 'Điền thông tin để tạo chuyên khoa mới.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -124,17 +124,17 @@ export function SpecialtiesActionDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Name <span className='text-destructive'>*</span>
+                    Tên <span className='text-destructive'>*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder='e.g., Cardiology'
+                      placeholder='ví dụ: Tim mạch'
                       {...field}
                       disabled={isLoading}
                     />
                   </FormControl>
                   <FormDescription>
-                    The name of the medical specialty (2-120 characters)
+                    Tên của chuyên khoa y tế (2-120 ký tự)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -147,17 +147,17 @@ export function SpecialtiesActionDialog({
               name='description'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Mô tả</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='Brief description of the specialty...'
+                      placeholder='Mô tả ngắn gọn về chuyên khoa...'
                       className='min-h-[100px] max-h-[200px] overflow-y-auto resize-none'
                       {...field}
                       disabled={isLoading}
                     />
                   </FormControl>
                   <FormDescription>
-                    Optional description of the specialty
+                    Mô tả tùy chọn về chuyên khoa
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -170,7 +170,7 @@ export function SpecialtiesActionDialog({
               name='iconUrl'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Icon</FormLabel>
+                  <FormLabel>Biểu tượng</FormLabel>
                   <FormControl>
                     <ImageUpload
                       value={field.value || undefined}
@@ -179,7 +179,7 @@ export function SpecialtiesActionDialog({
                     />
                   </FormControl>
                   <FormDescription>
-                    Upload an icon/image for this specialty (SVG, PNG, JPG)
+                    Tải lên biểu tượng/hình ảnh cho chuyên khoa này (SVG, PNG, JPG)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -193,11 +193,11 @@ export function SpecialtiesActionDialog({
                 onClick={onOpenChange}
                 disabled={isLoading}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type='submit' disabled={isLoading}>
                 {isLoading && <Loader2 className='mr-2 size-4 animate-spin' />}
-                {isEditMode ? 'Update' : 'Create'}
+                {isEditMode ? 'Cập nhật' : 'Tạo mới'}
               </Button>
             </DialogFooter>
           </form>

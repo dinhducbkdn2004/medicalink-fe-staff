@@ -53,10 +53,10 @@ export function Specialties() {
           <div className='flex flex-wrap items-end justify-between gap-2'>
             <div>
               <h2 className='text-2xl font-bold tracking-tight'>
-                Specialty Management
+                Quản lý chuyên khoa
               </h2>
               <p className='text-muted-foreground'>
-                Manage medical specialties and their information sections.
+                Quản lý các chuyên khoa y tế và các phần thông tin của chúng.
               </p>
             </div>
             <Can I='specialties:create'>

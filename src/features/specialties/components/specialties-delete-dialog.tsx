@@ -43,9 +43,9 @@ export function SpecialtiesDeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>Bạn có chắc chắn không?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action will delete the specialty{' '}
+            Thao tác này sẽ xóa chuyên khoa{' '}
             <span className='font-semibold'>&quot;{currentRow.name}&quot;</span>
             .
           </AlertDialogDescription>
@@ -55,9 +55,8 @@ export function SpecialtiesDeleteDialog({
           <Alert variant='destructive'>
             <AlertTriangle className='size-4' />
             <AlertDescription>
-              This specialty has {currentRow.infoSectionsCount} info section
-              {currentRow.infoSectionsCount > 1 ? 's' : ''} that will also be
-              affected. It may also be assigned to active doctors.
+              Chuyên khoa này có {currentRow.infoSectionsCount} phần thông tin
+              cũng sẽ bị ảnh hưởng. Nó cũng có thể đang được gán cho các bác sĩ đang hoạt động.
             </AlertDescription>
           </Alert>
         )}
@@ -68,7 +67,7 @@ export function SpecialtiesDeleteDialog({
             onClick={onOpenChange}
             disabled={isLoading}
           >
-            Cancel
+            Hủy
           </Button>
           <Button
             variant='destructive'
@@ -76,7 +75,7 @@ export function SpecialtiesDeleteDialog({
             disabled={isLoading}
           >
             {isLoading && <Loader2 className='mr-2 size-4 animate-spin' />}
-            Delete
+            Xóa
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

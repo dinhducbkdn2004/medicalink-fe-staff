@@ -46,17 +46,17 @@ export function InfoSectionDeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Info Section?</AlertDialogTitle>
+          <AlertDialogTitle>Xóa phần thông tin?</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete the section{' '}
+            Bạn có chắc chắn muốn xóa phần{' '}
             <span className='font-semibold'>&quot;{section.title}&quot;</span>?
-            This action cannot be undone.
+            Hành động này không thể hoàn tác.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
           <Button variant='outline' onClick={onOpenChange} disabled={isLoading}>
-            Cancel
+            Hủy
           </Button>
           <Button
             variant='destructive'
@@ -64,7 +64,7 @@ export function InfoSectionDeleteDialog({
             disabled={isLoading}
           >
             {isLoading && <Loader2 className='mr-2 size-4 animate-spin' />}
-            Delete
+            Xóa
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
