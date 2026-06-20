@@ -115,9 +115,9 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
     return (
       <div className='flex min-h-[400px] items-center justify-center'>
         <div className='text-center'>
-          <h2 className='text-2xl font-bold'>Access Denied</h2>
+          <h2 className='text-2xl font-bold'>Truy cập bị từ chối</h2>
           <p className='text-muted-foreground mt-2'>
-            You do not have permission to edit this profile.
+            Bạn không có quyền chỉnh sửa hồ sơ này.
           </p>
         </div>
       </div>
@@ -126,7 +126,7 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
 
   const onSubmit = (data: UpdateDoctorProfileFormData) => {
     if (!doctor?.profileId) {
-      toast.error('Profile ID not found')
+      toast.error('Không tìm thấy ID Hồ sơ')
       return
     }
 
@@ -134,7 +134,7 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
       { id: doctor.profileId, data },
       {
         onSuccess: () => {
-          toast.success('Profile updated successfully')
+          toast.success('Cập nhật hồ sơ thành công')
           if (onCancel) {
             onCancel()
           }
@@ -154,7 +154,7 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
       <div className='flex h-screen w-full items-center justify-center'>
         <div className='flex flex-col items-center gap-2'>
           <Loader2 className='text-primary h-8 w-8 animate-spin' />
-          <p className='text-muted-foreground text-sm'>Loading...</p>
+          <p className='text-muted-foreground text-sm'>Đang tải...</p>
         </div>
       </div>
     )
@@ -165,9 +165,9 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
     return (
       <div className='flex min-h-[400px] items-center justify-center'>
         <div className='text-center'>
-          <p className='text-lg font-medium'>Doctor not found</p>
+          <p className='text-lg font-medium'>Không tìm thấy Bác sĩ</p>
           <p className='text-muted-foreground mt-2 text-sm'>
-            The requested doctor profile does not exist
+            Hồ sơ bác sĩ yêu cầu không tồn tại
           </p>
         </div>
       </div>
@@ -192,14 +192,14 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
         <div className='flex items-start justify-between'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Edit Doctor Profile
+              Chỉnh sửa Hồ sơ Bác sĩ
             </h2>
             <p className='text-muted-foreground mt-1'>
-              Update profile information for {doctor.fullName}
+              Cập nhật thông tin hồ sơ cho {doctor.fullName}
             </p>
           </div>
           <Badge variant={doctor.isActive ? 'default' : 'secondary'}>
-            {doctor.isActive ? 'Active' : 'Inactive'}
+            {doctor.isActive ? 'Hoạt động' : 'Ngừng hoạt động'}
           </Badge>
         </div>
 
@@ -224,28 +224,28 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
                       <TabsList className='grid w-full grid-cols-4'>
                         <TabsTrigger value='academic' className='gap-2 text-xs'>
                           <Briefcase className='h-4 w-4' />
-                          <span className='hidden sm:inline'>Academic</span>
+                          <span className='hidden sm:inline'>Học thuật</span>
                         </TabsTrigger>
                         <TabsTrigger
                           value='professional'
                           className='gap-2 text-xs'
                         >
                           <Stethoscope className='h-4 w-4' />
-                          <span className='hidden sm:inline'>Professional</span>
+                          <span className='hidden sm:inline'>Chuyên môn</span>
                         </TabsTrigger>
                         <TabsTrigger
                           value='education'
                           className='gap-2 text-xs'
                         >
                           <GraduationCap className='h-4 w-4' />
-                          <span className='hidden sm:inline'>Education</span>
+                          <span className='hidden sm:inline'>Học vấn</span>
                         </TabsTrigger>
                         <TabsTrigger
                           value='locations'
                           className='gap-2 text-xs'
                         >
                           <MapPin className='h-4 w-4' />
-                          <span className='hidden sm:inline'>Locations</span>
+                          <span className='hidden sm:inline'>Địa điểm</span>
                         </TabsTrigger>
                       </TabsList>
 
@@ -290,13 +290,13 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
                 {form.formState.isDirty && !isUpdating && (
                   <div className='flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400'>
                     <div className='h-2 w-2 animate-pulse rounded-full bg-amber-500' />
-                    <span className='font-medium'>Unsaved changes</span>
+                    <span className='font-medium'>Có thay đổi chưa lưu</span>
                   </div>
                 )}
                 {!form.formState.isDirty && !isUpdating && (
                   <div className='flex items-center gap-2 text-sm text-green-600 dark:text-green-400'>
                     <div className='h-2 w-2 rounded-full bg-green-500' />
-                    <span className='font-medium'>All changes saved</span>
+                    <span className='font-medium'>Tất cả thay đổi đã được lưu</span>
                   </div>
                 )}
               </div>
@@ -311,7 +311,7 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
                   className='shadow-sm'
                 >
                   <X className='mr-2 h-4 w-4' />
-                  Cancel
+                  Hủy
                 </Button>
                 <Button
                   type='submit'
@@ -321,12 +321,12 @@ export function DoctorProfileForm({ onCancel }: DoctorProfileFormProps = {}) {
                   {isUpdating ? (
                     <>
                       <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                      Saving...
+                      Đang lưu...
                     </>
                   ) : (
                     <>
                       <Save className='mr-2 h-4 w-4' />
-                      Save Changes
+                      Lưu thay đổi
                     </>
                   )}
                 </Button>

@@ -53,15 +53,15 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
                 size='icon'
                 onClick={() => handleBulkToggleActive(false)}
                 className='size-8'
-                aria-label='Deactivate selected doctors'
-                title='Deactivate selected doctors'
+                aria-label='Ngừng hoạt động các bác sĩ đã chọn'
+                title='Ngừng hoạt động các bác sĩ đã chọn'
               >
                 <Power />
-                <span className='sr-only'>Deactivate selected doctors</span>
+                <span className='sr-only'>Ngừng hoạt động các bác sĩ đã chọn</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Deactivate selected doctors</p>
+              <p>Ngừng hoạt động các bác sĩ đã chọn</p>
             </TooltipContent>
           </Tooltip>
         )}
@@ -74,15 +74,15 @@ export function DataTableBulkActions({ table }: DataTableBulkActionsProps) {
                 size='icon'
                 onClick={() => setShowDeleteConfirm(true)}
                 className='size-8'
-                aria-label='Delete selected doctors'
-                title='Delete selected doctors'
+                aria-label='Xóa các bác sĩ đã chọn'
+                title='Xóa các bác sĩ đã chọn'
               >
                 <Trash2 />
-                <span className='sr-only'>Delete selected doctors</span>
+                <span className='sr-only'>Xóa các bác sĩ đã chọn</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Delete selected doctors</p>
+              <p>Xóa các bác sĩ đã chọn</p>
             </TooltipContent>
           </Tooltip>
         )}

@@ -75,11 +75,11 @@ export function ImageUploadField({
       const imageUrl = await uploadImageToCloudinary(file, accessToken)
       setProgress(100)
       onChange(imageUrl)
-      toast.success('Upload successful')
+      toast.success('Tải lên thành công')
       
       setPreview(imageUrl)
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Upload failed')
+      toast.error(error instanceof Error ? error.message : 'Tải lên thất bại')
       
       setPreview(value)
     } finally {
@@ -180,7 +180,7 @@ export function ImageUploadField({
                   disabled={disabled || uploading}
                 >
                   <Upload className='mr-1 h-3 w-3' />
-                  Change
+                  Thay đổi
                 </Button>
                 <Button
                   type='button'
@@ -190,7 +190,7 @@ export function ImageUploadField({
                   disabled={disabled || uploading}
                 >
                   <X className='mr-1 h-3 w-3' />
-                  Remove
+                  Xóa bỏ
                 </Button>
               </div>
             </div>
@@ -228,7 +228,7 @@ export function ImageUploadField({
               <>
                 <Loader2 className='text-primary h-8 w-8 animate-spin' />
                 <p className='text-muted-foreground mt-2 text-xs font-medium'>
-                  Uploading... {progress}%
+                  Đang tải lên... {progress}%
                 </p>
               </>
             ) : (
@@ -247,10 +247,10 @@ export function ImageUploadField({
                   />
                 </div>
                 <p className='text-muted-foreground mt-2 text-xs font-medium'>
-                  {isDragging ? 'Drop here' : 'Click or drag image'}
+                  {isDragging ? 'Thả vào đây' : 'Nhấp hoặc kéo thả ảnh'}
                 </p>
                 <p className='text-muted-foreground mt-1 text-[10px]'>
-                  Max 5MB
+                  Tối đa 5MB
                 </p>
               </>
             )}

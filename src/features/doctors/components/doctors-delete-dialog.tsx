@@ -34,10 +34,10 @@ export function DoctorsDeleteDialog() {
     <Dialog open={open === 'delete'} onOpenChange={(isOpen) => !isOpen && handleClose()}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Delete Doctor Account</DialogTitle>
+          <DialogTitle>Xóa tài khoản Bác sĩ</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this doctor account? This action cannot be
-            undone.
+            Bạn có chắc chắn muốn xóa tài khoản bác sĩ này không? Hành động này không thể
+            hoàn tác.
           </DialogDescription>
         </DialogHeader>
 
@@ -52,10 +52,10 @@ export function DoctorsDeleteDialog() {
 
         <DialogFooter>
           <Button variant="outline" onClick={handleClose} disabled={isPending}>
-            Cancel
+            Hủy
           </Button>
           <Button variant="destructive" onClick={handleDelete} disabled={isPending}>
-            {isPending ? 'Deleting...' : 'Delete'}
+            {isPending ? 'Đang xóa...' : 'Xóa'}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -77,7 +77,7 @@ export function DoctorsTable({
 
     const actions: DataTableAction[] = [
       {
-        label: 'View Reviews',
+        label: 'Xem đánh giá',
         icon: Star,
         onClick: () => {
           navigate({
@@ -87,7 +87,7 @@ export function DoctorsTable({
         },
       },
       {
-        label: 'View Profile',
+        label: 'Xem hồ sơ',
         icon: Eye,
         onClick: () => {
           navigate({
@@ -101,7 +101,7 @@ export function DoctorsTable({
     
     if (canUpdateDoctors()) {
       actions.push({
-        label: 'Edit',
+        label: 'Chỉnh sửa',
         icon: Edit,
         onClick: () => {
           setCurrentRow(doctor)
@@ -111,7 +111,7 @@ export function DoctorsTable({
     }
 
     actions.push({
-      label: 'View Stats',
+      label: 'Xem thống kê',
       icon: BarChart3,
       onClick: () => {
         navigate({
@@ -125,7 +125,7 @@ export function DoctorsTable({
     
     if (canToggleActive()) {
       actions.push({
-        label: doctor.isActive ? 'Deactivate' : 'Activate',
+        label: doctor.isActive ? 'Ngừng hoạt động' : 'Kích hoạt',
         icon: Power,
         onClick: () => {
           setCurrentRow(doctor)
@@ -137,7 +137,7 @@ export function DoctorsTable({
     
     if (canDeleteDoctor(false)) {
       actions.push({
-        label: 'Delete',
+        label: 'Xóa',
         icon: Trash2,
         onClick: () => {
           setCurrentRow(doctor)
@@ -160,14 +160,14 @@ export function DoctorsTable({
       
       pageCount={pageCount}
       isLoading={isLoading}
-      entityName='doctor'
+      entityName='bác sĩ'
       
-      searchPlaceholder='Search doctors...'
+      searchPlaceholder='Tìm kiếm bác sĩ...'
       searchKey='fullName'
       filters={[
         {
           columnId: 'isActive',
-          title: 'Status',
+          title: 'Trạng thái',
           options: statusOptions.map((status) => ({
             label: status.label,
             value: status.value,
@@ -176,7 +176,7 @@ export function DoctorsTable({
         },
         {
           columnId: 'isMale',
-          title: 'Gender',
+          title: 'Giới tính',
           options: genderOptions.map((gender) => ({
             label: gender.label,
             value: gender.value,
@@ -190,7 +190,7 @@ export function DoctorsTable({
       
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
-      emptyMessage='No doctors found.'
+      emptyMessage='Không tìm thấy bác sĩ nào.'
     />
   )
 }

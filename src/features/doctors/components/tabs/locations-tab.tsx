@@ -28,7 +28,7 @@ export function LocationsTab({
       <div>
         <h3 className='mb-4 flex items-center gap-2 text-base font-semibold'>
           <MapPin className='text-primary h-4 w-4' />
-          Specialties & Locations
+          Chuyên khoa & Nơi làm việc
         </h3>
         <div className='space-y-4'>
         {}
@@ -39,16 +39,16 @@ export function LocationsTab({
             <FormItem>
               <FormControl>
                 <MultiSelectField
-                  label='Specialties'
-                  description='Medical specialties and areas of expertise'
+                  label='Chuyên khoa'
+                  description='Các chuyên khoa y tế và lĩnh vực chuyên môn'
                   options={specialties.map((s) => ({
                     value: s.id,
                     label: s.name,
                   }))}
                   value={field.value || []}
                   onChange={field.onChange}
-                  placeholder='Select specialties'
-                  emptyText='No specialties available'
+                  placeholder='Chọn chuyên khoa'
+                  emptyText='Không có chuyên khoa nào'
                   loading={loadingSpecialties}
                 />
               </FormControl>
@@ -67,16 +67,16 @@ export function LocationsTab({
             <FormItem>
               <FormControl>
                 <MultiSelectField
-                  label='Work Locations'
-                  description='Hospitals and clinics where the doctor practices'
+                  label='Nơi làm việc'
+                  description='Các bệnh viện và phòng khám nơi bác sĩ hành nghề'
                   options={workLocations.map((l) => ({
                     value: l.id,
                     label: l.name,
                   }))}
                   value={field.value || []}
                   onChange={field.onChange}
-                  placeholder='Select work locations'
-                  emptyText='No locations available'
+                  placeholder='Chọn nơi làm việc'
+                  emptyText='Không có nơi làm việc nào'
                   loading={loadingLocations}
                 />
               </FormControl>

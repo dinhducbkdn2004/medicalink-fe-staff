@@ -16,7 +16,7 @@ export function EducationTab({ form }: Readonly<EducationTabProps>) {
       <div>
         <h3 className='mb-4 flex items-center gap-2 text-base font-semibold'>
           <GraduationCap className='text-primary h-4 w-4' />
-          Training & Experience
+          Đào tạo & Kinh nghiệm
         </h3>
         <div className='space-y-4'>
         <FormField
@@ -26,11 +26,11 @@ export function EducationTab({ form }: Readonly<EducationTabProps>) {
             <FormItem>
               <FormControl>
                 <ArrayInputField
-                  label='Education & Training'
-                  description='Educational background, degrees, and formal training'
+                  label='Học vấn & Đào tạo'
+                  description='Nền tảng học vấn, bằng cấp và đào tạo chính quy'
                   value={field.value || []}
                   onChange={field.onChange}
-                  placeholder='e.g., 2005-2009: Medical School - Harvard'
+                  placeholder='ví dụ: 2005-2009: Trường Y Dược'
                 />
               </FormControl>
               <FormMessage />
@@ -48,11 +48,11 @@ export function EducationTab({ form }: Readonly<EducationTabProps>) {
             <FormItem>
               <FormControl>
                 <ArrayInputField
-                  label='Professional Experience'
-                  description='Work history and career timeline'
+                  label='Kinh nghiệm làm việc'
+                  description='Lịch sử công việc và mốc thời gian sự nghiệp'
                   value={field.value || []}
                   onChange={field.onChange}
-                  placeholder='e.g., 2015-2017: Attending Physician at...'
+                  placeholder='ví dụ: 2015-2017: Bác sĩ điều trị tại...'
                 />
               </FormControl>
               <FormMessage />

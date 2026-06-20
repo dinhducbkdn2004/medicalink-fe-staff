@@ -77,7 +77,7 @@ export function RichTextEditor({
   value,
   defaultValue,
   onChange,
-  placeholder = 'Enter your content here...',
+  placeholder = 'Nhập nội dung của bạn ở đây...',
   accessToken,
   className = '',
   disabled = false,
@@ -94,7 +94,7 @@ export function RichTextEditor({
 
   const imageHandler = useCallback(() => {
     if (!enableImageUpload) {
-      toast.warning('Upload images is disabled')
+      toast.warning('Tính năng tải ảnh lên đã bị vô hiệu hóa')
       return
     }
 
@@ -110,19 +110,19 @@ export function RichTextEditor({
 
       const validation = validateImageFile(file)
       if (!validation.valid) {
-        toast.error(validation.error || 'Invalid file')
+        toast.error(validation.error || 'File không hợp lệ')
         return
       }
 
       const quill = quillInstanceRef.current
       if (!quill) {
-        toast.error('Editor is not ready')
+        toast.error('Trình soạn thảo chưa sẵn sàng')
         return
       }
 
       const range = quill.getSelection(true)
       if (!range) {
-        toast.error('Please click in the editor first')
+        toast.error('Vui lòng nhấp vào trình soạn thảo trước')
         return
       }
 
@@ -131,7 +131,7 @@ export function RichTextEditor({
       try {
         quill.enable(false)
 
-        toast.loading('Uploading image...', { id: 'image-upload' })
+        toast.loading('Đang tải ảnh lên...', { id: 'image-upload' })
 
         const result = await uploadMedia(file, accessToken)
 
@@ -145,11 +145,11 @@ export function RichTextEditor({
           onChange(html)
         }
 
-        toast.success('Image uploaded successfully', { id: 'image-upload' })
+        toast.success('Tải ảnh lên thành công', { id: 'image-upload' })
       } catch (error) {
         console.error('Image upload failed:', error)
         toast.error(
-          error instanceof Error ? error.message : 'Failed to upload image',
+          error instanceof Error ? error.message : 'Tải ảnh lên thất bại',
           { id: 'image-upload' }
         )
       } finally {
@@ -160,7 +160,7 @@ export function RichTextEditor({
 
   const videoHandler = useCallback(() => {
     if (!enableVideoUpload) {
-      toast.warning('Upload video is disabled')
+      toast.warning('Tính năng tải video lên đã bị vô hiệu hóa')
       return
     }
 
@@ -176,19 +176,19 @@ export function RichTextEditor({
 
       const validation = validateVideoFile(file)
       if (!validation.valid) {
-        toast.error(validation.error || 'Invalid file')
+        toast.error(validation.error || 'File không hợp lệ')
         return
       }
 
       const quill = quillInstanceRef.current
       if (!quill) {
-        toast.error('Editor is not ready')
+        toast.error('Trình soạn thảo chưa sẵn sàng')
         return
       }
 
       const range = quill.getSelection(true)
       if (!range) {
-        toast.error('Please click in the editor first')
+        toast.error('Vui lòng nhấp vào trình soạn thảo trước')
         return
       }
 
@@ -197,7 +197,7 @@ export function RichTextEditor({
       try {
         quill.enable(false)
 
-        toast.loading('Uploading video... This may take a few minutes.', {
+        toast.loading('Đang tải video lên... Việc này có thể mất vài phút.', {
           id: 'video-upload',
         })
 
@@ -213,11 +213,11 @@ export function RichTextEditor({
           onChange(html)
         }
 
-        toast.success('Video uploaded successfully', { id: 'video-upload' })
+        toast.success('Tải video lên thành công', { id: 'video-upload' })
       } catch (error) {
         console.error('Video upload failed:', error)
         toast.error(
-          error instanceof Error ? error.message : 'Failed to upload video',
+          error instanceof Error ? error.message : 'Tải video lên thất bại',
           { id: 'video-upload' }
         )
       } finally {
@@ -351,7 +351,7 @@ export function RichTextEditor({
     const uploadImageFromBlob = async (blob: File) => {
       const range = quill.getSelection(true)
       if (!range) {
-        toast.error('Please click in the editor first')
+        toast.error('Vui lòng nhấp vào trình soạn thảo trước')
         return
       }
 
@@ -360,7 +360,7 @@ export function RichTextEditor({
       try {
         quill.enable(false)
 
-        toast.loading('Uploading image from clipboard...', {
+        toast.loading('Đang tải ảnh từ khay nhớ tạm...', {
           id: 'clipboard-upload',
         })
 
@@ -376,10 +376,10 @@ export function RichTextEditor({
           onChange(html)
         }
 
-        toast.success('Image uploaded successfully', { id: 'clipboard-upload' })
+        toast.success('Tải ảnh lên thành công', { id: 'clipboard-upload' })
       } catch (error) {
         console.error('Clipboard image upload failed:', error)
-        toast.error('Failed to upload image from clipboard', {
+        toast.error('Tải ảnh từ khay nhớ tạm thất bại', {
           id: 'clipboard-upload',
         })
       } finally {
@@ -425,21 +425,21 @@ export function RichTextEditor({
         if (file.type.startsWith('image/')) {
           const validation = validateImageFile(file)
           if (!validation.valid) {
-            toast.error(validation.error || 'File is not valid')
+            toast.error(validation.error || 'File không hợp lệ')
             continue
           }
 
           try {
-            toast.info('Uploading image...')
+            toast.info('Đang tải ảnh lên...')
             const result = await uploadMedia(file, accessToken)
 
             quill.insertEmbed(index, 'image', result.secure_url)
             index++
 
-            toast.success('Uploading image successful!')
+            toast.success('Tải ảnh lên thành công!')
           } catch (error) {
             console.error('Drop image upload failed:', error)
-            toast.error('Uploading image failed')
+            toast.error('Tải ảnh lên thất bại')
           }
         }
       }
@@ -500,8 +500,8 @@ export function RichTextEditor({
               <Loader2 className='text-primary h-5 w-5 animate-spin' />
               <p className='text-sm font-medium text-gray-700 dark:text-gray-300'>
                 {uploadType === 'image'
-                  ? 'Uploading image...'
-                  : 'Uploading video...'}
+                  ? 'Đang tải ảnh lên...'
+                  : 'Đang tải video lên...'}
               </p>
             </div>
             <div className='flex items-center gap-2'>
@@ -517,7 +517,7 @@ export function RichTextEditor({
             </div>
             {uploadType === 'video' && (
               <p className='text-muted-foreground text-xs'>
-                Video is being processed, please wait...
+                Video đang được xử lý, vui lòng đợi...
               </p>
             )}
           </div>

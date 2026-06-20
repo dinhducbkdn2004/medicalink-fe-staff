@@ -73,10 +73,10 @@ export function useCreateSpecialty() {
       queryClient.invalidateQueries({ queryKey: specialtyKeys.lists() })
       queryClient.invalidateQueries({ queryKey: specialtyKeys.active() })
       queryClient.invalidateQueries({ queryKey: specialtyKeys.stats() })
-      toast.success('Specialty created successfully')
+      toast.success('Đã tạo chuyên khoa thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to create specialty')
+      toast.error(error.message || 'Không thể tạo chuyên khoa')
     },
   })
 }
@@ -93,10 +93,10 @@ export function useUpdateSpecialty() {
       queryClient.invalidateQueries({
         queryKey: specialtyKeys.detail(variables.id),
       })
-      toast.success('Specialty updated successfully')
+      toast.success('Đã cập nhật chuyên khoa thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update specialty')
+      toast.error(error.message || 'Không thể cập nhật chuyên khoa')
     },
   })
 }
@@ -110,10 +110,10 @@ export function useDeleteSpecialty() {
       queryClient.invalidateQueries({ queryKey: specialtyKeys.lists() })
       queryClient.invalidateQueries({ queryKey: specialtyKeys.active() })
       queryClient.invalidateQueries({ queryKey: specialtyKeys.stats() })
-      toast.success('Specialty deleted successfully')
+      toast.success('Đã xóa chuyên khoa thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to delete specialty')
+      toast.error(error.message || 'Không thể xóa chuyên khoa')
     },
   })
 }
@@ -131,10 +131,10 @@ export function useCreateInfoSection() {
       queryClient.invalidateQueries({
         queryKey: specialtyKeys.detail(variables.specialtyId),
       })
-      toast.success('Info section created successfully')
+      toast.success('Đã tạo mục thông tin thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to create info section')
+      toast.error(error.message || 'Không thể tạo mục thông tin')
     },
   })
 }
@@ -159,10 +159,10 @@ export function useUpdateInfoSection() {
       queryClient.invalidateQueries({
         queryKey: specialtyKeys.detail(variables._specialtyId),
       })
-      toast.success('Info section updated successfully')
+      toast.success('Đã cập nhật mục thông tin thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update info section')
+      toast.error(error.message || 'Không thể cập nhật mục thông tin')
     },
   })
 }
@@ -180,10 +180,10 @@ export function useDeleteInfoSection() {
       queryClient.invalidateQueries({
         queryKey: specialtyKeys.detail(variables._specialtyId),
       })
-      toast.success('Info section deleted successfully')
+      toast.success('Đã xóa mục thông tin thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to delete info section')
+      toast.error(error.message || 'Không thể xóa mục thông tin')
     },
   })
 }

@@ -41,8 +41,8 @@ export function ProfileSidebar({
               <FormItem>
                 <FormControl>
                   <ImageUploadField
-                    label='Avatar'
-                    description='Square image for listings'
+                    label='Ảnh đại diện'
+                    description='Ảnh vuông cho danh sách'
                     value={field.value}
                     onChange={field.onChange}
                     accessToken={accessToken}
@@ -65,8 +65,8 @@ export function ProfileSidebar({
               <FormItem>
                 <FormControl>
                   <ImageUploadField
-                    label='Portrait'
-                    description='Rectangular header photo'
+                    label='Ảnh chân dung'
+                    description='Ảnh chữ nhật dọc cho đầu trang'
                     value={field.value}
                     onChange={field.onChange}
                     accessToken={accessToken}

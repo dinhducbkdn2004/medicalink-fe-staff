@@ -46,10 +46,10 @@ export function DoctorStatsDialog({
       <DialogContent className='max-h-[90vh] max-w-6xl overflow-y-auto'>
         <DialogHeader className='space-y-3'>
           <DialogTitle className='text-3xl font-bold'>
-            Doctor Statistics
+            Thống kê Bác sĩ
           </DialogTitle>
           <DialogDescription className='text-base'>
-            Comprehensive performance metrics for{' '}
+            Các chỉ số hiệu suất chi tiết của{' '}
             <span className='text-foreground font-semibold'>
               {doctor?.fullName}
             </span>
@@ -64,9 +64,9 @@ export function DoctorStatsDialog({
                 <Calendar className='text-primary h-5 w-5' />
               </div>
               <div>
-                <h3 className='text-xl font-semibold'>Booking Performance</h3>
+                <h3 className='text-xl font-semibold'>Hiệu suất Lịch hẹn</h3>
                 <p className='text-muted-foreground text-sm'>
-                  Appointment statistics and completion metrics
+                  Thống kê lịch hẹn và chỉ số hoàn thành
                 </p>
               </div>
             </div>
@@ -74,28 +74,28 @@ export function DoctorStatsDialog({
             {}
             <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
               <MetricCard
-                title='Total Appointments'
+                title='Tổng Lịch hẹn'
                 value={stats?.booking.total || 0}
                 icon={Calendar}
                 color='blue'
                 isLoading={isLoading}
               />
               <MetricCard
-                title='Pending'
+                title='Chờ xử lý'
                 value={stats?.booking.bookedCount || 0}
                 icon={Clock}
                 color='orange'
                 isLoading={isLoading}
               />
               <MetricCard
-                title='Confirmed'
+                title='Đã xác nhận'
                 value={stats?.booking.confirmedCount || 0}
                 icon={CheckCircle}
                 color='cyan'
                 isLoading={isLoading}
               />
               <MetricCard
-                title='Completed'
+                title='Đã hoàn thành'
                 value={stats?.booking.completedCount || 0}
                 icon={CheckCircle}
                 color='green'
@@ -108,7 +108,7 @@ export function DoctorStatsDialog({
               <CardHeader>
                 <CardTitle className='flex items-center gap-2 text-lg'>
                   <TrendingUp className='text-primary h-5 w-5' />
-                  Performance Overview
+                  Tổng quan Hiệu suất
                 </CardTitle>
               </CardHeader>
               <CardContent className='space-y-6'>
@@ -124,7 +124,7 @@ export function DoctorStatsDialog({
                       <div className='flex items-center justify-between'>
                         <div className='flex items-center gap-2'>
                           <CheckCircle className='h-5 w-5 text-green-600' />
-                          <span className='font-semibold'>Completion Rate</span>
+                          <span className='font-semibold'>Tỷ lệ Hoàn thành</span>
                         </div>
                         <Badge
                           variant='default'
@@ -139,9 +139,9 @@ export function DoctorStatsDialog({
                       />
                       <div className='text-muted-foreground flex justify-between text-sm'>
                         <span>
-                          {stats?.booking.completedCount || 0} completed
+                          {stats?.booking.completedCount || 0} đã hoàn thành
                         </span>
-                        <span>of {stats?.booking.total || 0} total</span>
+                        <span>trong tổng số {stats?.booking.total || 0}</span>
                       </div>
                     </div>
 
@@ -155,10 +155,10 @@ export function DoctorStatsDialog({
                         </div>
                         <div>
                           <p className='font-semibold text-red-900 dark:text-red-100'>
-                            Cancelled Appointments
+                            Lịch hẹn đã hủy
                           </p>
                           <p className='text-sm text-red-600'>
-                            Appointments that were cancelled
+                            Các lịch hẹn đã bị hủy
                           </p>
                         </div>
                       </div>
@@ -181,9 +181,9 @@ export function DoctorStatsDialog({
                 <Star className='h-5 w-5 text-yellow-500' />
               </div>
               <div>
-                <h3 className='text-xl font-semibold'>Content Engagement</h3>
+                <h3 className='text-xl font-semibold'>Nội dung và Tương tác</h3>
                 <p className='text-muted-foreground text-sm'>
-                  Reviews, ratings, answers, and blog posts
+                  Đánh giá, xếp hạng, câu trả lời và bài viết
                 </p>
               </div>
             </div>
@@ -191,14 +191,14 @@ export function DoctorStatsDialog({
             {}
             <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
               <MetricCard
-                title='Total Reviews'
+                title='Tổng Đánh giá'
                 value={stats?.content.totalReviews || 0}
                 icon={Star}
                 color='yellow'
                 isLoading={isLoading}
               />
               <MetricCard
-                title='Average Rating'
+                title='Đánh giá Trung bình'
                 value={
                   stats?.content.averageRating
                     ? stats.content.averageRating.toFixed(1)
@@ -210,14 +210,14 @@ export function DoctorStatsDialog({
                 isLoading={isLoading}
               />
               <MetricCard
-                title='Total Answers'
+                title='Tổng Câu trả lời'
                 value={stats?.content.totalAnswers || 0}
                 icon={MessageSquare}
                 color='blue'
                 isLoading={isLoading}
               />
               <MetricCard
-                title='Published Blogs'
+                title='Bài viết đã xuất bản'
                 value={stats?.content.totalBlogs || 0}
                 icon={FileText}
                 color='purple'
@@ -230,7 +230,7 @@ export function DoctorStatsDialog({
               <CardHeader>
                 <CardTitle className='flex items-center gap-2 text-lg'>
                   <MessageSquare className='text-primary h-5 w-5' />
-                  Engagement Details
+                  Chi tiết Tương tác
                 </CardTitle>
               </CardHeader>
               <CardContent className='space-y-6'>
@@ -249,10 +249,10 @@ export function DoctorStatsDialog({
                         </div>
                         <div>
                           <p className='font-semibold text-yellow-900 dark:text-yellow-100'>
-                            Patient Satisfaction
+                            Mức độ Hài lòng
                           </p>
                           <p className='text-sm text-yellow-600'>
-                            Based on {stats?.content.totalReviews || 0} reviews
+                            Dựa trên {stats?.content.totalReviews || 0} đánh giá
                           </p>
                         </div>
                       </div>
@@ -274,7 +274,7 @@ export function DoctorStatsDialog({
                         <div className='flex items-center gap-2'>
                           <MessageSquare className='h-5 w-5 text-blue-600' />
                           <span className='font-semibold'>
-                            Answer Acceptance Rate
+                            Tỷ lệ Chấp nhận Câu trả lời
                           </span>
                         </div>
                         <Badge
@@ -290,10 +290,10 @@ export function DoctorStatsDialog({
                       />
                       <div className='text-muted-foreground flex justify-between text-sm'>
                         <span>
-                          {stats?.content.totalAcceptedAnswers || 0} accepted
+                          {stats?.content.totalAcceptedAnswers || 0} đã chấp nhận
                         </span>
                         <span>
-                          of {stats?.content.totalAnswers || 0} answers
+                          trong tổng số {stats?.content.totalAnswers || 0} câu trả lời
                         </span>
                       </div>
                     </div>

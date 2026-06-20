@@ -9,7 +9,7 @@ interface ProfileAvatarCardProps {
   doctor: CompleteDoctorData
 }
 
-function EmptyField({ text = 'No information provided' }: { text?: string }) {
+function EmptyField({ text = 'Chưa có thông tin' }: { text?: string }) {
   return (
     <div className='text-muted-foreground flex items-center gap-2 text-xs italic'>
       <span>-</span>
@@ -50,24 +50,24 @@ export function ProfileAvatarCard({ doctor }: ProfileAvatarCardProps) {
                   <User className='h-16 w-16' />
                 </AvatarFallback>
               </Avatar>
-              <EmptyField text='No avatar uploaded' />
+              <EmptyField text='Chưa có ảnh đại diện' />
             </div>
           )}
 
           <h2 className='mt-4 text-2xl font-bold'>
-            {doctor?.fullName || 'Unknown Doctor'}
+            {doctor?.fullName || 'Bác sĩ chưa xác định'}
           </h2>
 
           {doctor?.position?.[0] ? (
             <p className='text-muted-foreground text-sm'>{doctor.position[0]}</p>
           ) : (
-            <EmptyField text='No position specified' />
+            <EmptyField text='Chưa có chức vụ' />
           )}
 
           {}
           <div className='mt-4'>
             <Badge variant={doctor?.isActive ? 'default' : 'secondary'}>
-              {doctor?.isActive ? 'Active' : 'Inactive'}
+              {doctor?.isActive ? 'Đang hoạt động' : 'Ngưng hoạt động'}
             </Badge>
           </div>
 
@@ -83,12 +83,12 @@ export function ProfileAvatarCard({ doctor }: ProfileAvatarCardProps) {
                   <span className='truncate'>{doctor.email}</span>
                 </div>
               ) : (
-                <EmptyField text='No email provided' />
+                <EmptyField text='Chưa có email' />
               )}
             </div>
             <div className='bg-muted/50 rounded-md p-3'>
               <div className='text-muted-foreground mb-1 text-xs font-medium'>
-                Phone
+                Số điện thoại
               </div>
               {doctor?.phone ? (
                 <div className='flex items-center gap-2 text-sm'>
@@ -96,7 +96,7 @@ export function ProfileAvatarCard({ doctor }: ProfileAvatarCardProps) {
                   <span>{doctor.phone}</span>
                 </div>
               ) : (
-                <EmptyField text='No phone number' />
+                <EmptyField text='Chưa có số điện thoại' />
               )}
             </div>
           </div>

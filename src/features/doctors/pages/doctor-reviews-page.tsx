@@ -98,10 +98,10 @@ export function DoctorReviewsPage({
           <div className='flex items-center gap-4'>
             <div>
               <h2 className='text-2xl font-bold tracking-tight'>
-                Doctor Reviews
+                Đánh giá Bác sĩ
               </h2>
               <p className='text-muted-foreground'>
-                Manage and view reviews for this account.
+                Quản lý và xem các đánh giá cho tài khoản này.
               </p>
             </div>
           </div>

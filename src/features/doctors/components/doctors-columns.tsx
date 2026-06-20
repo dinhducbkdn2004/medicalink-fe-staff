@@ -18,7 +18,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
           (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Select all'
+        aria-label='Chọn tất cả'
         className='translate-y-0.5'
       />
     ),
@@ -26,7 +26,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Select row'
+        aria-label='Chọn dòng'
         className='translate-y-0.5'
       />
     ),
@@ -43,7 +43,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
   {
     accessorKey: 'fullName',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Full Name' />
+      <DataTableColumnHeader column={column} title='Họ và tên' />
     ),
     cell: ({ row }) => (
       <div className='flex space-x-2'>
@@ -81,7 +81,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
   {
     accessorKey: 'phone',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Phone' />
+      <DataTableColumnHeader column={column} title='Số điện thoại' />
     ),
     cell: ({ row }) => {
       const phone = row.getValue<string | null>('phone')
@@ -96,7 +96,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
   {
     id: 'specialties',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Specialties' />
+      <DataTableColumnHeader column={column} title='Chuyên khoa' />
     ),
     cell: ({ row }) => {
       
@@ -124,7 +124,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
   {
     id: 'workLocations',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Work Locations' />
+      <DataTableColumnHeader column={column} title='Nơi làm việc' />
     ),
     cell: ({ row }) => {
       
@@ -152,7 +152,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
   {
     accessorKey: 'isMale',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Gender' />
+      <DataTableColumnHeader column={column} title='Giới tính' />
     ),
     cell: ({ row }) => {
       const isMale = row.getValue<boolean | null>('isMale')
@@ -160,7 +160,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
         return <span className='text-muted-foreground'>-</span>
       return (
         <Badge variant='outline' className='text-xs'>
-          {isMale ? 'Male' : 'Female'}
+          {isMale ? 'Nam' : 'Nữ'}
         </Badge>
       )
     },
@@ -174,7 +174,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
   {
     accessorKey: 'isActive',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Status' />
+      <DataTableColumnHeader column={column} title='Trạng thái' />
     ),
     cell: ({ row }) => {
       
@@ -188,7 +188,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
               : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400'
           )}
         >
-          {isActive ? 'Active' : 'Inactive'}
+          {isActive ? 'Hoạt động' : 'Ngừng hoạt động'}
         </Badge>
       )
     },
@@ -204,7 +204,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
     accessorKey: 'createdAt',
     id: 'createdAt', 
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Created At' />
+      <DataTableColumnHeader column={column} title='Ngày tạo' />
     ),
     cell: ({ row }) => {
       const date = row.getValue<string>('createdAt')
@@ -212,7 +212,7 @@ export const doctorsColumns: ColumnDef<DoctorWithProfile>[] = [
 
       return (
         <div className='text-muted-foreground text-sm'>
-          {format(new Date(date), 'MMM dd, yyyy')}
+          {format(new Date(date), 'dd/MM/yyyy')}
         </div>
       )
     },

@@ -39,10 +39,10 @@ export function useCreateDoctorProfile() {
       doctorProfileService.createDoctorProfile(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: doctorProfileKeys.all })
-      toast.success('Doctor profile created successfully')
+      toast.success('Đã tạo hồ sơ bác sĩ thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to create doctor profile')
+      toast.error(error.message || 'Không thể tạo hồ sơ bác sĩ')
     },
   })
 }
@@ -57,7 +57,7 @@ export function useUpdateMyProfile() {
       queryClient.invalidateQueries({ queryKey: doctorProfileKeys.myProfile() })
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update profile')
+      toast.error(error.message || 'Không thể cập nhật hồ sơ')
     },
   })
 }
@@ -82,7 +82,7 @@ export function useUpdateDoctorProfile() {
       })
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update doctor profile')
+      toast.error(error.message || 'Không thể cập nhật hồ sơ bác sĩ')
     },
   })
 }
@@ -106,10 +106,10 @@ export function useToggleDoctorProfileActive() {
       queryClient.invalidateQueries({
         queryKey: doctorKeys.lists(),
       })
-      toast.success('Profile status updated successfully')
+      toast.success('Đã cập nhật trạng thái hồ sơ thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update profile status')
+      toast.error(error.message || 'Không thể cập nhật trạng thái hồ sơ')
     },
   })
 }
@@ -121,10 +121,10 @@ export function useDeleteDoctorProfile() {
     mutationFn: (id: string) => doctorProfileService.deleteDoctorProfile(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: doctorProfileKeys.all })
-      toast.success('Doctor profile deleted successfully')
+      toast.success('Đã xóa hồ sơ bác sĩ thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to delete doctor profile')
+      toast.error(error.message || 'Không thể xóa hồ sơ bác sĩ')
     },
   })
 }

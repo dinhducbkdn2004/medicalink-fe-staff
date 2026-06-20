@@ -28,7 +28,7 @@ export function ProfessionalTab({
       <div>
         <h3 className='mb-4 flex items-center gap-2 text-base font-semibold'>
           <Stethoscope className='text-primary h-4 w-4' />
-          Professional Information
+          Thông tin Chuyên môn
         </h3>
         <div className='space-y-4'>
           {}
@@ -38,17 +38,17 @@ export function ProfessionalTab({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className='flex items-center gap-2'>
-                  Introduction
+                  Giới thiệu
                 </FormLabel>
                 <FormDescription className='mb-2 text-xs'>
-                  Professional background and overview
+                  Tổng quan và nền tảng chuyên môn
                 </FormDescription>
                 <FormControl>
                   <RichTextEditor
                     value={field.value || ''}
                     onChange={field.onChange}
                     accessToken={accessToken}
-                    placeholder='Write a professional introduction...'
+                    placeholder='Viết phần giới thiệu chuyên môn...'
                     toolbarOptions='basic'
                     enableSyntax={true}
                     enableFormula={true}
@@ -71,11 +71,11 @@ export function ProfessionalTab({
               <FormItem>
                 <FormControl>
                   <ArrayInputField
-                    label='Medical Expertise'
-                    description='Specialized areas of medical knowledge'
+                    label='Chuyên môn y tế'
+                    description='Lĩnh vực chuyên môn sâu'
                     value={field.value || []}
                     onChange={field.onChange}
-                    placeholder='e.g., General Cardiology'
+                    placeholder='ví dụ: Tim mạch tổng quát'
                   />
                 </FormControl>
                 <FormMessage />
@@ -92,11 +92,11 @@ export function ProfessionalTab({
               <FormItem>
                 <FormControl>
                   <ArrayInputField
-                    label='Procedures'
-                    description='Medical procedures performed'
+                    label='Thủ thuật / Phẫu thuật'
+                    description='Các thủ thuật y tế đã thực hiện'
                     value={field.value || []}
                     onChange={field.onChange}
-                    placeholder='e.g., Echocardiogram'
+                    placeholder='ví dụ: Siêu âm tim'
                   />
                 </FormControl>
                 <FormMessage />
@@ -113,11 +113,11 @@ export function ProfessionalTab({
               <FormItem>
                 <FormControl>
                   <ArrayInputField
-                    label='Conditions Treated'
-                    description='Medical conditions and diseases treated'
+                    label='Bệnh lý Điều trị'
+                    description='Các tình trạng y tế và bệnh lý được điều trị'
                     value={field.value || []}
                     onChange={field.onChange}
-                    placeholder='e.g., Hypertension'
+                    placeholder='ví dụ: Cao huyết áp'
                   />
                 </FormControl>
                 <FormMessage />
@@ -134,11 +134,11 @@ export function ProfessionalTab({
               <FormItem>
                 <FormControl>
                   <ArrayInputField
-                    label='Symptoms Evaluated'
-                    description='Common symptoms evaluated and diagnosed'
+                    label='Triệu chứng Đánh giá'
+                    description='Các triệu chứng phổ biến được đánh giá và chẩn đoán'
                     value={field.value || []}
                     onChange={field.onChange}
-                    placeholder='e.g., Chest Pain'
+                    placeholder='ví dụ: Đau ngực'
                   />
                 </FormControl>
                 <FormMessage />
@@ -155,11 +155,11 @@ export function ProfessionalTab({
               <FormItem>
                 <FormControl>
                   <ArrayInputField
-                    label='Patient Groups'
-                    description='Specific patient demographics treated'
+                    label='Nhóm Bệnh nhân'
+                    description='Thông tin nhân khẩu học cụ thể của bệnh nhân được điều trị'
                     value={field.value || []}
                     onChange={field.onChange}
-                    placeholder='e.g., Adults, Seniors'
+                    placeholder='ví dụ: Người lớn, Người cao tuổi'
                   />
                 </FormControl>
                 <FormMessage />

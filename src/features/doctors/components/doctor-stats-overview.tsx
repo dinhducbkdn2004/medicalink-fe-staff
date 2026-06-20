@@ -49,7 +49,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
     return (
       <Card>
         <CardContent className='py-16 text-center'>
-          <p className='text-muted-foreground'>No statistics available</p>
+          <p className='text-muted-foreground'>Không có thống kê</p>
         </CardContent>
       </Card>
     )
@@ -62,24 +62,24 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
     <div className='space-y-5'>
       {}
       <div>
-        <h3 className='mb-3 text-sm font-semibold'>Appointment Statistics</h3>
+        <h3 className='mb-3 text-sm font-semibold'>Thống kê Lịch hẹn</h3>
         <div className='grid gap-3 md:grid-cols-2 lg:grid-cols-4'>
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium'>
-                Total Appointments
+                Tổng Lịch hẹn
               </CardTitle>
               <Calendar className='text-muted-foreground h-4 w-4' />
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-bold'>{booking.total || 0}</div>
-              <p className='text-muted-foreground text-xs'>All time bookings</p>
+              <p className='text-muted-foreground text-xs'>Tất cả lượt đặt lịch</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Completed</CardTitle>
+              <CardTitle className='text-sm font-medium'>Đã hoàn thành</CardTitle>
               <CheckCircle className='h-4 w-4 text-green-600' />
             </CardHeader>
             <CardContent>
@@ -87,14 +87,14 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
                 {booking.completedCount || 0}
               </div>
               <p className='text-muted-foreground text-xs'>
-                Successfully completed
+                Hoàn thành thành công
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Confirmed</CardTitle>
+              <CardTitle className='text-sm font-medium'>Đã xác nhận</CardTitle>
               <Clock className='h-4 w-4 text-blue-600' />
             </CardHeader>
             <CardContent>
@@ -102,7 +102,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
                 {booking.confirmedCount || 0}
               </div>
               <p className='text-muted-foreground text-xs'>
-                Awaiting completion
+                Đang chờ hoàn thành
               </p>
             </CardContent>
           </Card>
@@ -110,7 +110,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium'>
-                Completion Rate
+                Tỷ lệ Hoàn thành
               </CardTitle>
               <TrendingUp className='h-4 w-4 text-green-600' />
             </CardHeader>
@@ -118,7 +118,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
               <div className='text-2xl font-bold'>
                 {booking.completedRate || 0}%
               </div>
-              <p className='text-muted-foreground text-xs'>Success rate</p>
+              <p className='text-muted-foreground text-xs'>Tỷ lệ thành công</p>
             </CardContent>
           </Card>
         </div>
@@ -126,11 +126,11 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
 
       {}
       <div>
-        <h3 className='mb-3 text-sm font-semibold'>Content & Engagement</h3>
+        <h3 className='mb-3 text-sm font-semibold'>Nội dung & Tương tác</h3>
         <div className='grid gap-3 md:grid-cols-2 lg:grid-cols-4'>
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Reviews</CardTitle>
+              <CardTitle className='text-sm font-medium'>Đánh giá</CardTitle>
               <MessageSquare className='text-muted-foreground h-4 w-4' />
             </CardHeader>
             <CardContent>
@@ -144,7 +144,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
                     : '0.0'}
                 </span>
                 <span className='text-muted-foreground text-xs'>
-                  ★ avg rating
+                  ★ đánh giá trung bình
                 </span>
               </div>
             </CardContent>
@@ -152,7 +152,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
 
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Blog Posts</CardTitle>
+              <CardTitle className='text-sm font-medium'>Bài viết</CardTitle>
               <FileText className='text-muted-foreground h-4 w-4' />
             </CardHeader>
             <CardContent>
@@ -160,14 +160,14 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
                 {content.totalBlogs || 0}
               </div>
               <p className='text-muted-foreground text-xs'>
-                Published articles
+                Các bài đã xuất bản
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Q&A Answers</CardTitle>
+              <CardTitle className='text-sm font-medium'>Trả lời Q&A</CardTitle>
               <MessageSquare className='h-4 w-4 text-blue-600' />
             </CardHeader>
             <CardContent>
@@ -175,7 +175,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
                 {content.totalAnswers || 0}
               </div>
               <p className='text-muted-foreground text-xs'>
-                Questions answered
+                Số câu đã trả lời
               </p>
             </CardContent>
           </Card>
@@ -183,7 +183,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium'>
-                Accepted Answers
+                Câu trả lời được chấp nhận
               </CardTitle>
               <CheckCircle className='h-4 w-4 text-green-600' />
             </CardHeader>
@@ -192,7 +192,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
                 {content.totalAcceptedAnswers || 0}
               </div>
               <p className='text-muted-foreground text-xs'>
-                {content.answerAcceptedRate || 0}% acceptance rate
+                {content.answerAcceptedRate || 0}% tỷ lệ chấp nhận
               </p>
             </CardContent>
           </Card>
@@ -204,7 +204,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
         <Card>
           <CardHeader className='pb-3'>
             <CardTitle className='text-sm font-semibold'>
-              Performance Overview
+              Tổng quan Hiệu suất
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -214,7 +214,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
                   {content.averageRating.toFixed(1)}
                 </div>
                 <p className='text-muted-foreground mt-1 text-xs'>
-                  Average Rating
+                  Đánh giá Trung bình
                 </p>
               </div>
               <div className='bg-muted/50 rounded-lg p-4 text-center'>
@@ -222,7 +222,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
                   {content.totalReviews || 0}
                 </div>
                 <p className='text-muted-foreground mt-1 text-xs'>
-                  Total Reviews
+                  Tổng Đánh giá
                 </p>
               </div>
               <div className='bg-muted/50 rounded-lg p-4 text-center'>
@@ -230,7 +230,7 @@ export function DoctorStatsOverview({ doctorId }: DoctorStatsOverviewProps) {
                   {booking.completedCount || 0}
                 </div>
                 <p className='text-muted-foreground mt-1 text-xs'>
-                  Completed Visits
+                  Lượt khám đã hoàn thành
                 </p>
               </div>
             </div>

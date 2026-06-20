@@ -63,10 +63,10 @@ export function Doctors() {
           <div className='flex flex-wrap items-end justify-between gap-2'>
             <div>
               <h2 className='text-2xl font-bold tracking-tight'>
-                Doctor Management
+                Quản lý Bác sĩ
               </h2>
               <p className='text-muted-foreground'>
-                Manage doctor accounts and their profiles.
+                Quản lý tài khoản và hồ sơ bác sĩ.
               </p>
             </div>
             <Can I='doctors:create'>

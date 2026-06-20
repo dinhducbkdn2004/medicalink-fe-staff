@@ -18,7 +18,7 @@ export function ArrayInputField({
   description,
   value,
   onChange,
-  placeholder = 'Enter text',
+  placeholder = 'Nhập văn bản',
   disabled = false,
 }: ArrayInputFieldProps) {
   const handleAdd = () => {
@@ -68,7 +68,7 @@ export function ArrayInputField({
 
         {value.length === 0 && (
           <p className='text-muted-foreground text-sm italic'>
-            No items added yet.
+            Chưa có mục nào được thêm.
           </p>
         )}
       </div>
@@ -82,7 +82,7 @@ export function ArrayInputField({
         className='w-full'
       >
         <Plus className='mr-2 h-4 w-4' />
-        Add {label}
+        Thêm {label}
       </Button>
     </div>
   )

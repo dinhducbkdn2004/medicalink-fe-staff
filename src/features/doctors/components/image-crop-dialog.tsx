@@ -93,8 +93,8 @@ export function ImageCropDialog({
   imageSrc,
   aspectRatio = 1, 
   onCropComplete,
-  title = 'Crop Image',
-  description = 'Adjust the crop area to fit your image',
+  title = 'Cắt ảnh',
+  description = 'Điều chỉnh vùng cắt để vừa với ảnh của bạn',
 }: ImageCropDialogProps) {
   const [crop, setCrop] = useState<Crop>()
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
@@ -177,7 +177,7 @@ export function ImageCropDialog({
             onClick={() => onOpenChange(false)}
             disabled={processing}
           >
-            Cancel
+            Hủy
           </Button>
           <Button
             type='button'
@@ -187,10 +187,10 @@ export function ImageCropDialog({
             {processing ? (
               <>
                 <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                Processing...
+                Đang xử lý...
               </>
             ) : (
-              'Apply Crop'
+              'Áp dụng cắt'
             )}
           </Button>
         </DialogFooter>

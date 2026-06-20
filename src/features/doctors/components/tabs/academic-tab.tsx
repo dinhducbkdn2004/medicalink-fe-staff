@@ -20,7 +20,7 @@ export function AcademicTab({ form }: Readonly<AcademicTabProps>) {
       <div>
         <h3 className='mb-4 flex items-center gap-2 text-base font-semibold'>
           <Briefcase className='text-primary h-4 w-4' />
-          Academic Titles & Positions
+          Chức danh học thuật & Vị trí
         </h3>
         <div className='space-y-4'>
         {}
@@ -32,11 +32,11 @@ export function AcademicTab({ form }: Readonly<AcademicTabProps>) {
             <FormItem>
               <FormControl>
                 <ArrayInputField
-                  label='Positions'
-                  description='Current professional positions'
+                  label='Vị trí / Chức vụ'
+                  description='Vị trí chuyên môn hiện tại'
                   value={field.value || []}
                   onChange={field.onChange}
-                  placeholder='e.g., Chief of Cardiology'
+                  placeholder='ví dụ: Trưởng khoa Tim mạch'
                 />
               </FormControl>
               <FormMessage />

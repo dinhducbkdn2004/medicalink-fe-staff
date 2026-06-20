@@ -115,10 +115,10 @@ export function DoctorsEditDialog() {
     >
       <DialogContent className='sm:max-w-[500px]'>
         <DialogHeader>
-          <DialogTitle>Edit Doctor Account</DialogTitle>
+          <DialogTitle>Chỉnh sửa tài khoản Bác sĩ</DialogTitle>
           <DialogDescription>
-            Update doctor account information. Leave password empty to keep
-            unchanged.
+            Cập nhật thông tin tài khoản bác sĩ. Để trống mật khẩu nếu không muốn
+            thay đổi.
           </DialogDescription>
         </DialogHeader>
 
@@ -129,7 +129,7 @@ export function DoctorsEditDialog() {
               name='fullName'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel>Họ và tên</FormLabel>
                   <FormControl>
                     <Input placeholder='Dr. John Smith' {...field} />
                   </FormControl>
@@ -161,7 +161,7 @@ export function DoctorsEditDialog() {
               name='password'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New Password (optional)</FormLabel>
+                  <FormLabel>Mật khẩu mới (không bắt buộc)</FormLabel>
                   <FormControl>
                     <Input type='password' placeholder='••••••••' {...field} />
                   </FormControl>
@@ -175,7 +175,7 @@ export function DoctorsEditDialog() {
               name='confirmPassword'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm New Password</FormLabel>
+                  <FormLabel>Xác nhận mật khẩu mới</FormLabel>
                   <FormControl>
                     <Input
                       type='password'
@@ -194,7 +194,7 @@ export function DoctorsEditDialog() {
               name='phone'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel>Số điện thoại</FormLabel>
                   <FormControl>
                     <Input placeholder='+1234567890' {...field} />
                   </FormControl>
@@ -209,7 +209,7 @@ export function DoctorsEditDialog() {
                 name='isMale'
                 render={({ field }) => (
                   <FormItem className='flex flex-col'>
-                    <FormLabel>Gender</FormLabel>
+                    <FormLabel>Giới tính</FormLabel>
                     <Select
                       onValueChange={(value) =>
                         field.onChange(value === 'true' ? true : false)
@@ -222,12 +222,12 @@ export function DoctorsEditDialog() {
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder='Select gender' />
+                          <SelectValue placeholder='Chọn giới tính' />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='true'>Male</SelectItem>
-                        <SelectItem value='false'>Female</SelectItem>
+                        <SelectItem value='true'>Nam</SelectItem>
+                        <SelectItem value='false'>Nữ</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -240,12 +240,12 @@ export function DoctorsEditDialog() {
                 name='dateOfBirth'
                 render={({ field }) => (
                   <FormItem className='flex flex-col'>
-                    <FormLabel>Date of Birth</FormLabel>
+                    <FormLabel>Ngày sinh</FormLabel>
                     <FormControl>
                       <DatePickerInput
                         value={field.value}
                         onChange={field.onChange}
-                        placeholder='Select date of birth'
+                        placeholder='Chọn ngày sinh'
                         className='col-span-4'
                       />
                     </FormControl>
@@ -262,10 +262,10 @@ export function DoctorsEditDialog() {
                 onClick={handleClose}
                 disabled={isPending}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type='submit' disabled={isPending}>
-                {isPending ? 'Updating...' : 'Update Account'}
+                {isPending ? 'Đang cập nhật...' : 'Cập nhật tài khoản'}
               </Button>
             </DialogFooter>
           </form>

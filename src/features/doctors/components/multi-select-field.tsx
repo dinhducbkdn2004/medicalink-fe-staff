@@ -42,8 +42,8 @@ export function MultiSelectField({
   options,
   value,
   onChange,
-  placeholder = 'Select items...',
-  emptyText = 'No items found',
+  placeholder = 'Chọn mục...',
+  emptyText = 'Không tìm thấy mục nào',
   disabled = false,
   loading = false,
 }: MultiSelectFieldProps) {
@@ -82,17 +82,17 @@ export function MultiSelectField({
           >
             <span className='truncate'>
               {loading
-                ? 'Loading...'
+                ? 'Đang tải...'
                 : value.length === 0
                   ? placeholder
-                  : `${value.length} selected`}
+                  : `Đã chọn ${value.length}`}
             </span>
             <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-full p-0' align='start'>
           <Command>
-            <CommandInput placeholder={`Search ${label.toLowerCase()}...`} />
+            <CommandInput placeholder={`Tìm kiếm ${label.toLowerCase()}...`} />
             <CommandList>
               <CommandEmpty>{emptyText}</CommandEmpty>
               <CommandGroup>

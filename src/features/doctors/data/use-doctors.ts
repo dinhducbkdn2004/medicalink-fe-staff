@@ -66,7 +66,7 @@ export function useCreateDoctor() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: doctorKeys.lists() })
       queryClient.invalidateQueries({ queryKey: doctorKeys.stats() })
-      toast.success('Doctor created successfully')
+      toast.success('Đã tạo bác sĩ thành công')
     },
   })
 }
@@ -90,7 +90,7 @@ export function useUpdateDoctor() {
       queryClient.invalidateQueries({
         queryKey: doctorKeys.complete(variables.id),
       })
-      toast.success('Doctor updated successfully')
+      toast.success('Đã cập nhật bác sĩ thành công')
     },
   })
 }
@@ -103,7 +103,7 @@ export function useDeleteDoctor() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: doctorKeys.lists() })
       queryClient.invalidateQueries({ queryKey: doctorKeys.stats() })
-      toast.success('Doctor deleted successfully')
+      toast.success('Đã xóa bác sĩ thành công')
     },
   })
 }

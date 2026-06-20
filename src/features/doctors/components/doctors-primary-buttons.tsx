@@ -10,7 +10,7 @@ export function DoctorsPrimaryButtons() {
     <div className='flex items-center gap-2'>
       <Button onClick={() => setOpen('create')}>
         <Plus className='mr-2 h-4 w-4' />
-        Add Doctor
+        Thêm Bác sĩ
       </Button>
     </div>
   )

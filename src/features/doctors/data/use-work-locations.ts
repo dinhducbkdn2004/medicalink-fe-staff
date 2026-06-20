@@ -61,10 +61,10 @@ export function useCreateWorkLocation() {
       queryClient.invalidateQueries({ queryKey: workLocationKeys.lists() })
       queryClient.invalidateQueries({ queryKey: workLocationKeys.active() })
       queryClient.invalidateQueries({ queryKey: workLocationKeys.stats() })
-      toast.success('Work location created successfully')
+      toast.success('Đã tạo cơ sở làm việc thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to create work location')
+      toast.error(error.message || 'Không thể tạo cơ sở làm việc')
     },
   })
 }
@@ -86,10 +86,10 @@ export function useUpdateWorkLocation() {
       queryClient.invalidateQueries({
         queryKey: workLocationKeys.detail(variables.id),
       })
-      toast.success('Work location updated successfully')
+      toast.success('Đã cập nhật cơ sở làm việc thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update work location')
+      toast.error(error.message || 'Không thể cập nhật cơ sở làm việc')
     },
   })
 }
@@ -103,10 +103,10 @@ export function useDeleteWorkLocation() {
       queryClient.invalidateQueries({ queryKey: workLocationKeys.lists() })
       queryClient.invalidateQueries({ queryKey: workLocationKeys.active() })
       queryClient.invalidateQueries({ queryKey: workLocationKeys.stats() })
-      toast.success('Work location deleted successfully')
+      toast.success('Đã xóa cơ sở làm việc thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to delete work location')
+      toast.error(error.message || 'Không thể xóa cơ sở làm việc')
     },
   })
 }

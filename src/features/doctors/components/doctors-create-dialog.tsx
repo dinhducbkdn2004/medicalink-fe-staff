@@ -77,10 +77,10 @@ export function DoctorsCreateDialog() {
     >
       <DialogContent className='sm:max-w-[500px]'>
         <DialogHeader>
-          <DialogTitle>Add New Doctor</DialogTitle>
+          <DialogTitle>Thêm bác sĩ mới</DialogTitle>
           <DialogDescription>
-            Add a new doctor account to the system. An email will be sent with
-            login credentials.
+            Thêm tài khoản bác sĩ mới vào hệ thống. Một email sẽ được gửi kèm với
+            thông tin đăng nhập.
           </DialogDescription>
         </DialogHeader>
 
@@ -91,7 +91,7 @@ export function DoctorsCreateDialog() {
               name='fullName'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name *</FormLabel>
+                  <FormLabel>Họ và tên *</FormLabel>
                   <FormControl>
                     <Input placeholder='Dr. John Smith' {...field} />
                   </FormControl>
@@ -123,7 +123,7 @@ export function DoctorsCreateDialog() {
               name='password'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password *</FormLabel>
+                  <FormLabel>Mật khẩu *</FormLabel>
                   <FormControl>
                     <Input type='password' placeholder='••••••••' {...field} />
                   </FormControl>
@@ -137,7 +137,7 @@ export function DoctorsCreateDialog() {
               name='confirmPassword'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password *</FormLabel>
+                  <FormLabel>Xác nhận mật khẩu *</FormLabel>
                   <FormControl>
                     <Input type='password' placeholder='••••••••' {...field} />
                   </FormControl>
@@ -151,7 +151,7 @@ export function DoctorsCreateDialog() {
               name='phone'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel>Số điện thoại</FormLabel>
                   <FormControl>
                     <Input placeholder='+1234567890' {...field} />
                   </FormControl>
@@ -166,7 +166,7 @@ export function DoctorsCreateDialog() {
                 name='isMale'
                 render={({ field }) => (
                   <FormItem className='flex flex-col'>
-                    <FormLabel>Gender</FormLabel>
+                    <FormLabel>Giới tính</FormLabel>
                     <Select
                       onValueChange={(value) =>
                         field.onChange(value === 'true' ? true : false)
@@ -177,12 +177,12 @@ export function DoctorsCreateDialog() {
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder='Select gender' />
+                          <SelectValue placeholder='Chọn giới tính' />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='true'>Male</SelectItem>
-                        <SelectItem value='false'>Female</SelectItem>
+                        <SelectItem value='true'>Nam</SelectItem>
+                        <SelectItem value='false'>Nữ</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -195,12 +195,12 @@ export function DoctorsCreateDialog() {
                 name='dateOfBirth'
                 render={({ field }) => (
                   <FormItem className='flex flex-col'>
-                    <FormLabel>Date of Birth</FormLabel>
+                    <FormLabel>Ngày sinh</FormLabel>
                     <FormControl>
                       <DatePickerInput
                         value={field.value}
                         onChange={field.onChange}
-                        placeholder='Select date of birth'
+                        placeholder='Chọn ngày sinh'
                         className='col-span-4'
                       />
                     </FormControl>
@@ -217,10 +217,10 @@ export function DoctorsCreateDialog() {
                 onClick={handleClose}
                 disabled={isPending}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type='submit' disabled={isPending}>
-                {isPending ? 'Creating...' : 'Create Doctor'}
+                {isPending ? 'Đang tạo...' : 'Tạo Bác sĩ'}
               </Button>
             </DialogFooter>
           </form>

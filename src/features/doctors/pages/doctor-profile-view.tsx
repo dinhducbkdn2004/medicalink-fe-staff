@@ -32,7 +32,7 @@ import { canEditOwnProfile } from '../utils/permissions'
 import { DoctorProfileForm } from './doctor-profile-form'
 import { SpecialShiftsWidget } from '@/features/special-shifts'
 
-function EmptyField({ text = 'No information provided' }: { text?: string }) {
+function EmptyField({ text = 'Không có thông tin' }: { text?: string }) {
   return (
     <div className='text-muted-foreground flex items-center gap-2 text-xs italic'>
       <span>-</span>
@@ -65,7 +65,7 @@ export function DoctorProfileView() {
       <div className='flex h-screen w-full items-center justify-center'>
         <div className='flex flex-col items-center gap-2'>
           <Loader2 className='text-primary h-8 w-8 animate-spin' />
-          <p className='text-muted-foreground text-sm'>Loading...</p>
+          <p className='text-muted-foreground text-sm'>Đang tải...</p>
         </div>
       </div>
     )
@@ -76,10 +76,10 @@ export function DoctorProfileView() {
       <div className='flex min-h-[400px] items-center justify-center'>
         <div className='text-center'>
           <p className='text-lg font-medium text-red-500'>
-            Error loading doctor profile
+            Lỗi khi tải hồ sơ bác sĩ
           </p>
           <p className='text-muted-foreground mt-2 text-sm'>
-            {error instanceof Error ? error.message : 'Unknown error'}
+            {error instanceof Error ? error.message : 'Lỗi không xác định'}
           </p>
         </div>
       </div>
@@ -90,9 +90,9 @@ export function DoctorProfileView() {
     return (
       <div className='flex min-h-[400px] items-center justify-center'>
         <div className='text-center'>
-          <p className='text-lg font-medium'>Doctor not found</p>
+          <p className='text-lg font-medium'>Không tìm thấy Bác sĩ</p>
           <p className='text-muted-foreground mt-2 text-sm'>
-            The requested doctor profile does not exist
+            Hồ sơ bác sĩ yêu cầu không tồn tại
           </p>
         </div>
       </div>
@@ -122,16 +122,16 @@ export function DoctorProfileView() {
         <div className='flex items-start justify-between'>
           <div>
             <h1 className='text-2xl font-bold tracking-tight'>
-              Doctor Profile
+              Hồ sơ Bác sĩ
             </h1>
             <p className='text-muted-foreground mt-1'>
-              Detailed professional information for {doctor.fullName}
+              Thông tin chuyên môn chi tiết cho {doctor.fullName}
             </p>
           </div>
           {canEdit && (
             <Button onClick={handleEdit}>
               <Edit className='mr-2 h-4 w-4' />
-              Edit Profile
+              Chỉnh sửa Hồ sơ
             </Button>
           )}
         </div>
@@ -145,10 +145,10 @@ export function DoctorProfileView() {
                   <User className='h-5 w-5 text-yellow-600' />
                 </div>
                 <div className='flex-1'>
-                  <h3 className='font-semibold'>Profile Not Completed</h3>
+                  <h3 className='font-semibold'>Hồ sơ chưa hoàn tất</h3>
                   <p className='text-muted-foreground text-sm'>
-                    This doctor's profile has not been set up yet. Click "Edit
-                    Profile" to add information.
+                    Hồ sơ của bác sĩ này chưa được thiết lập. Nhấp vào "Chỉnh sửa
+                    Hồ sơ" để thêm thông tin.
                   </p>
                 </div>
               </div>
@@ -190,12 +190,12 @@ export function DoctorProfileView() {
                           <User className='h-16 w-16' />
                         </AvatarFallback>
                       </Avatar>
-                      <EmptyField text='No avatar uploaded' />
+                      <EmptyField text='Chưa tải ảnh đại diện' />
                     </div>
                   )}
 
                   <h2 className='mt-4 text-2xl font-bold'>
-                    {doctor?.fullName || 'Unknown Doctor'}
+                    {doctor?.fullName || 'Bác sĩ không xác định'}
                   </h2>
 
                   {doctor?.position?.[0] ? (
@@ -203,13 +203,13 @@ export function DoctorProfileView() {
                       {doctor.position[0]}
                     </p>
                   ) : (
-                    <EmptyField text='No position specified' />
+                    <EmptyField text='Chưa xác định chức vụ' />
                   )}
 
                   {/* Active Status */}
                   <div className='mt-4'>
                     <Badge variant={doctor?.isActive ? 'default' : 'secondary'}>
-                      {doctor?.isActive ? 'Active' : 'Inactive'}
+                      {doctor?.isActive ? 'Hoạt động' : 'Ngừng hoạt động'}
                     </Badge>
                   </div>
 
@@ -220,21 +220,21 @@ export function DoctorProfileView() {
                         <Star className='mr-1 h-3.5 w-3.5 fill-yellow-400 text-yellow-400' />
                         {doctor?.ratings || 'N/A'}
                       </div>
-                      <span className='text-[10px] text-muted-foreground uppercase tracking-wider'>Rating</span>
+                      <span className='text-[10px] text-muted-foreground uppercase tracking-wider'>Đánh giá</span>
                     </div>
                     <div className='flex flex-col items-center justify-center gap-1'>
                       <div className='flex items-center text-sm font-medium'>
                         <BadgeDollarSign className='mr-1 h-3.5 w-3.5 text-green-500' />
                         {doctor?.serviceCost ? `$${doctor.serviceCost}` : 'N/A'}
                       </div>
-                      <span className='text-[10px] text-muted-foreground uppercase tracking-wider'>Cost</span>
+                      <span className='text-[10px] text-muted-foreground uppercase tracking-wider'>Chi phí</span>
                     </div>
                     <div className='flex flex-col items-center justify-center gap-1'>
                       <div className='flex items-center text-sm font-medium'>
                         <Clock className='mr-1 h-3.5 w-3.5 text-blue-500' />
                         {doctor?.experienceYears ? `${doctor.experienceYears}y` : 'N/A'}
                       </div>
-                      <span className='text-[10px] text-muted-foreground uppercase tracking-wider'>Exp</span>
+                      <span className='text-[10px] text-muted-foreground uppercase tracking-wider'>Kinh nghiệm</span>
                     </div>
                   </div>
 
@@ -250,12 +250,12 @@ export function DoctorProfileView() {
                           <span className='truncate'>{doctor.email}</span>
                         </div>
                       ) : (
-                        <EmptyField text='No email provided' />
+                        <EmptyField text='Không có email' />
                       )}
                     </div>
                     <div className='bg-muted/50 rounded-md p-3'>
                       <div className='text-muted-foreground mb-1 text-xs font-medium'>
-                        Phone
+                        Số điện thoại
                       </div>
                       {doctor?.phone ? (
                         <div className='flex items-center gap-2 text-sm'>
@@ -263,21 +263,21 @@ export function DoctorProfileView() {
                           <span>{doctor.phone}</span>
                         </div>
                       ) : (
-                        <EmptyField text='No phone number' />
+                        <EmptyField text='Không có số điện thoại' />
                       )}
                     </div>
                     <div className='bg-muted/50 rounded-md p-3'>
                       <div className='text-muted-foreground mb-1 text-xs font-medium'>
-                        Personal Info
+                        Thông tin cá nhân
                       </div>
                       <div className='flex flex-col gap-2 text-sm'>
                         <div className='flex items-center gap-2'>
                           <User className='text-muted-foreground h-4 w-4' />
-                          <span>{doctor?.isMale === undefined ? 'Not specified' : doctor.isMale ? 'Male' : 'Female'}</span>
+                          <span>{doctor?.isMale === undefined ? 'Không xác định' : doctor.isMale ? 'Nam' : 'Nữ'}</span>
                         </div>
                         <div className='flex items-center gap-2'>
                           <Calendar className='text-muted-foreground h-4 w-4' />
-                          <span>{doctor?.dateOfBirth ? format(new Date(doctor.dateOfBirth), 'PPP') : 'No DOB provided'}</span>
+                          <span>{doctor?.dateOfBirth ? format(new Date(doctor.dateOfBirth), 'PPP') : 'Không có ngày sinh'}</span>
                         </div>
                       </div>
                     </div>
@@ -287,7 +287,7 @@ export function DoctorProfileView() {
             </Card>
 
             {/* Positions Card */}
-            <CollapsibleSection title='Positions'>
+            <CollapsibleSection title='Chức vụ'>
               {doctor?.position && doctor.position.length > 0 ? (
                 <ul className='space-y-2'>
                   {doctor.position.map((pos: string, idx: number) => (
@@ -297,7 +297,7 @@ export function DoctorProfileView() {
                   ))}
                 </ul>
               ) : (
-                <EmptyField text='No positions listed' />
+                <EmptyField text='Không có chức vụ nào' />
               )}
             </CollapsibleSection>
 
@@ -306,11 +306,11 @@ export function DoctorProfileView() {
               <Card>
                 <CardHeader>
                   <div className='flex items-center justify-between'>
-                    <CardTitle className='text-sm'>Specialties</CardTitle>
+                    <CardTitle className='text-sm'>Chuyên khoa</CardTitle>
                     <CollapsibleTrigger asChild>
                       <Button variant='ghost' size='sm' className='h-6 w-6 p-0'>
                         <ChevronDown className='h-3 w-3 transition-transform duration-200 data-[state=open]:rotate-180' />
-                        <span className='sr-only'>Toggle specialties</span>
+                        <span className='sr-only'>Chuyển đổi chuyên khoa</span>
                       </Button>
                     </CollapsibleTrigger>
                   </div>
@@ -328,7 +328,7 @@ export function DoctorProfileView() {
                         )}
                       </div>
                     ) : (
-                      <EmptyField text='No specialties assigned' />
+                      <EmptyField text='Không có chuyên khoa nào' />
                     )}
                   </CardContent>
                 </CollapsibleContent>
@@ -340,11 +340,11 @@ export function DoctorProfileView() {
               <Card>
                 <CardHeader>
                   <div className='flex items-center justify-between'>
-                    <CardTitle className='text-sm'>Patient Groups</CardTitle>
+                    <CardTitle className='text-sm'>Nhóm bệnh nhân</CardTitle>
                     <CollapsibleTrigger asChild>
                       <Button variant='ghost' size='sm' className='h-6 w-6 p-0'>
                         <ChevronDown className='h-3 w-3 transition-transform duration-200 data-[state=open]:rotate-180' />
-                        <span className='sr-only'>Toggle patient groups</span>
+                        <span className='sr-only'>Chuyển đổi nhóm bệnh nhân</span>
                       </Button>
                     </CollapsibleTrigger>
                   </div>
@@ -362,7 +362,7 @@ export function DoctorProfileView() {
                         )}
                       </div>
                     ) : (
-                      <EmptyField text='No patient groups specified' />
+                      <EmptyField text='Không có nhóm bệnh nhân nào' />
                     )}
                   </CardContent>
                 </CollapsibleContent>
@@ -374,11 +374,11 @@ export function DoctorProfileView() {
               <Card>
                 <CardHeader>
                   <div className='flex items-center justify-between'>
-                    <CardTitle className='text-sm'>Work Locations</CardTitle>
+                    <CardTitle className='text-sm'>Nơi làm việc</CardTitle>
                     <CollapsibleTrigger asChild>
                       <Button variant='ghost' size='sm' className='h-6 w-6 p-0'>
                         <ChevronDown className='h-3 w-3 transition-transform duration-200 data-[state=open]:rotate-180' />
-                        <span className='sr-only'>Toggle locations</span>
+                        <span className='sr-only'>Chuyển đổi nơi làm việc</span>
                       </Button>
                     </CollapsibleTrigger>
                   </div>
@@ -406,7 +406,7 @@ export function DoctorProfileView() {
                         )}
                       </ul>
                     ) : (
-                      <EmptyField text='No work locations assigned' />
+                      <EmptyField text='Không có nơi làm việc nào' />
                     )}
                   </CardContent>
                 </CollapsibleContent>
@@ -421,13 +421,13 @@ export function DoctorProfileView() {
           <div className='space-y-4 md:col-span-2'>
             {/* Introduction */}
             <CollapsibleSection
-              title='Introduction'
-              description='Professional background and overview'
+              title='Giới thiệu'
+              description='Nền tảng chuyên môn và tổng quan'
             >
               {doctor?.introduction ? (
                 <RichTextDisplay content={doctor.introduction} />
               ) : (
-                <EmptyField text='No introduction provided' />
+                <EmptyField text='Không có lời giới thiệu' />
               )}
             </CollapsibleSection>
 
@@ -438,16 +438,16 @@ export function DoctorProfileView() {
                   <div className='flex items-center justify-between'>
                     <div className='flex-1'>
                       <CardTitle className='text-base'>
-                        Education
+                        Học vấn
                       </CardTitle>
                       <CardDescription className='text-xs'>
-                        Educational background and training
+                        Quá trình học tập và đào tạo
                       </CardDescription>
                     </div>
                     <CollapsibleTrigger asChild>
                       <Button variant='ghost' size='sm' className='h-8 w-8 p-0'>
                         <ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
-                        <span className='sr-only'>Toggle education</span>
+                        <span className='sr-only'>Chuyển đổi học vấn</span>
                       </Button>
                     </CollapsibleTrigger>
                   </div>
@@ -466,7 +466,7 @@ export function DoctorProfileView() {
                         ))}
                       </ul>
                     ) : (
-                      <EmptyField text='No education documented' />
+                      <EmptyField text='Không có thông tin học vấn' />
                     )}
                   </CardContent>
                 </CollapsibleContent>
@@ -475,8 +475,8 @@ export function DoctorProfileView() {
 
             {/* Experience */}
             <CollapsibleSection
-              title='Professional Experience'
-              description='Work history and career timeline'
+              title='Kinh nghiệm làm việc'
+              description='Lịch sử làm việc và lộ trình nghề nghiệp'
               defaultOpen={true}
             >
               {doctor?.experience && doctor.experience.length > 0 ? (
@@ -491,15 +491,15 @@ export function DoctorProfileView() {
                   ))}
                 </ul>
               ) : (
-                <EmptyField text='No experience documented' />
+                <EmptyField text='Không có kinh nghiệm' />
               )}
             </CollapsibleSection>
 
             {/* Expertise & Procedures */}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <CollapsibleSection
-                title='Expertise'
-                description='Specialized medical skills'
+                title='Sở trường chuyên môn'
+                description='Các kỹ năng y tế chuyên biệt'
                 defaultOpen={true}
               >
                 {doctor?.expertise && doctor.expertise.length > 0 ? (
@@ -511,13 +511,13 @@ export function DoctorProfileView() {
                     ))}
                   </ul>
                 ) : (
-                  <EmptyField text='No expertise listed' />
+                  <EmptyField text='Không có sở trường' />
                 )}
               </CollapsibleSection>
 
               <CollapsibleSection
-                title='Procedures'
-                description='Medical procedures performed'
+                title='Thủ thuật y khoa'
+                description='Các thủ thuật y khoa đã thực hiện'
                 defaultOpen={true}
               >
                 {doctor?.procedures && doctor.procedures.length > 0 ? (
@@ -529,7 +529,7 @@ export function DoctorProfileView() {
                     ))}
                   </ul>
                 ) : (
-                  <EmptyField text='No procedures listed' />
+                  <EmptyField text='Không có thủ thuật' />
                 )}
               </CollapsibleSection>
             </div>
@@ -537,8 +537,8 @@ export function DoctorProfileView() {
             {/* Conditions & Symptoms */}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <CollapsibleSection
-                title='Conditions Treated'
-                description='Medical conditions managed'
+                title='Bệnh lý điều trị'
+                description='Các bệnh lý được quản lý'
                 defaultOpen={true}
               >
                 {doctor?.conditions && doctor.conditions.length > 0 ? (
@@ -550,13 +550,13 @@ export function DoctorProfileView() {
                     ))}
                   </div>
                 ) : (
-                  <EmptyField text='No conditions listed' />
+                  <EmptyField text='Không có bệnh lý' />
                 )}
               </CollapsibleSection>
 
               <CollapsibleSection
-                title='Symptoms Evaluated'
-                description='Common symptoms investigated'
+                title='Triệu chứng thăm khám'
+                description='Các triệu chứng thường gặp'
                 defaultOpen={true}
               >
                 {doctor?.symptoms && doctor.symptoms.length > 0 ? (
@@ -568,7 +568,7 @@ export function DoctorProfileView() {
                     ))}
                   </div>
                 ) : (
-                  <EmptyField text='No symptoms listed' />
+                  <EmptyField text='Không có triệu chứng' />
                 )}
               </CollapsibleSection>
             </div>

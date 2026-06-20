@@ -36,18 +36,18 @@ function DoctorStatsContent() {
         <div className='flex items-center justify-between'>
           <div>
             <h1 className='text-2xl font-bold tracking-tight'>
-              Doctor Statistics & Insights
+              Thống kê & Phân tích Bác sĩ
             </h1>
             <p className='text-muted-foreground text-sm'>
-              Comprehensive analytics and AI-powered review insights
+              Phân tích toàn diện và thông tin đánh giá bằng AI
             </p>
           </div>
         </div>
 
         <Tabs defaultValue='overview' className='w-full'>
           <TabsList className='grid w-full max-w-md grid-cols-2'>
-            <TabsTrigger value='overview'>Overview</TabsTrigger>
-            <TabsTrigger value='ai-analysis'>AI Analysis</TabsTrigger>
+            <TabsTrigger value='overview'>Tổng quan</TabsTrigger>
+            <TabsTrigger value='ai-analysis'>Phân tích AI</TabsTrigger>
           </TabsList>
 
           <TabsContent value='overview' className='mt-4'>
