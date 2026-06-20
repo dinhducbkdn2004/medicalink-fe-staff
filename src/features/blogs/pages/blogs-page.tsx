@@ -60,15 +60,15 @@ export function BlogsPage() {
           <div className='flex flex-wrap items-end justify-between gap-2'>
             <div>
               <h2 className='text-2xl font-bold tracking-tight'>
-                Blog Management
+                Quản lý Bài viết
               </h2>
               <p className='text-muted-foreground'>
-                Create, manage, and publish your content.
+                Tạo, quản lý và xuất bản nội dung của bạn.
               </p>
             </div>
             <Can I='blogs:create'>
               <Button onClick={() => navigate({ to: '/blogs/new' })}>
-                <Plus className='mr-2 h-4 w-4' /> Create New Post
+                <Plus className='mr-2 h-4 w-4' /> Thêm bài viết
               </Button>
             </Can>
           </div>
@@ -90,19 +90,19 @@ export function BlogsPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Bạn có chắc chắn không?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              blog post &quot;{deletingBlog?.title}&quot;.
+              Hành động này không thể hoàn tác. Bài viết này sẽ bị xóa vĩnh viễn
+              &quot;{deletingBlog?.title}&quot;.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
               className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
               onClick={handleDelete}
             >
-              Delete
+              Xóa
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

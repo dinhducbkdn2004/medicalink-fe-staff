@@ -50,14 +50,14 @@ export function BlogCategories() {
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Blog Categories
+              Danh mục Bài viết
             </h2>
             <p className='text-muted-foreground'>
-              Manage categories for your blog posts.
+              Quản lý các danh mục cho bài viết của bạn.
             </p>
           </div>
           <Button onClick={() => setIsCreateOpen(true)}>
-            <Plus className='mr-2 h-4 w-4' /> Create Category
+            <Plus className='mr-2 h-4 w-4' /> Thêm Danh mục
           </Button>
         </div>
 

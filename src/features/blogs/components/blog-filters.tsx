@@ -15,18 +15,18 @@ import { useBlogCategories } from '../data/use-blog-categories'
 
 
 const statuses = [
-  { label: 'Draft', value: 'DRAFT' },
-  { label: 'Published', value: 'PUBLISHED' },
-  { label: 'Archived', value: 'ARCHIVED' },
+  { label: 'Bản nháp', value: 'DRAFT' },
+  { label: 'Đã xuất bản', value: 'PUBLISHED' },
+  { label: 'Đã lưu trữ', value: 'ARCHIVED' },
 ]
 
 
 const sortOptions = [
-  { label: 'Newest', value: 'createdAt.desc' },
-  { label: 'Oldest', value: 'createdAt.asc' },
-  { label: 'Most Viewed', value: 'viewCount.desc' },
-  { label: 'Name A-Z', value: 'title.asc' },
-  { label: 'Name Z-A', value: 'title.desc' },
+  { label: 'Mới nhất', value: 'createdAt.desc' },
+  { label: 'Cũ nhất', value: 'createdAt.asc' },
+  { label: 'Xem nhiều nhất', value: 'viewCount.desc' },
+  { label: 'Tên A-Z', value: 'title.asc' },
+  { label: 'Tên Z-A', value: 'title.desc' },
 ]
 
 const route = getRouteApi('/_authenticated/blogs/list')
@@ -103,7 +103,7 @@ export function BlogFilters() {
     <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
       <div className='flex flex-1 flex-col gap-2 overflow-x-auto p-1 sm:flex-row sm:items-center'>
         <Input
-          placeholder='Search blogs...'
+          placeholder='Tìm kiếm bài viết...'
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className='h-8 w-full sm:w-[200px] lg:w-[250px]'
@@ -114,10 +114,10 @@ export function BlogFilters() {
           onValueChange={handleStatusChange}
         >
           <SelectTrigger className='h-8 w-full sm:w-[130px]'>
-            <SelectValue placeholder='Status' />
+            <SelectValue placeholder='Trạng thái' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value='all'>All Statuses</SelectItem>
+            <SelectItem value='all'>Tất cả trạng thái</SelectItem>
             {statuses.map((status) => (
               <SelectItem key={status.value} value={status.value}>
                 {status.label}
@@ -131,10 +131,10 @@ export function BlogFilters() {
           onValueChange={handleCategoryChange}
         >
           <SelectTrigger className='h-8 w-full sm:w-[140px]'>
-            <SelectValue placeholder='Category' />
+            <SelectValue placeholder='Danh mục' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value='all'>All Categories</SelectItem>
+            <SelectItem value='all'>Tất cả danh mục</SelectItem>
             {categories.map((cat) => (
               <SelectItem key={cat.id} value={cat.id}>
                 {cat.name}
@@ -152,7 +152,7 @@ export function BlogFilters() {
           onValueChange={handleSortChange}
         >
           <SelectTrigger className='h-8 w-full sm:w-[100px]'>
-            <SelectValue placeholder='Sort by' />
+            <SelectValue placeholder='Sắp xếp theo' />
           </SelectTrigger>
           <SelectContent>
             {sortOptions.map((option) => (
@@ -169,7 +169,7 @@ export function BlogFilters() {
             onClick={clearFilters}
             className='h-8 px-2 lg:px-3'
           >
-            Reset
+            Đặt lại
             <X className='ml-2 h-4 w-4' />
           </Button>
         )}

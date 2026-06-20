@@ -33,10 +33,10 @@ import {
 } from '../data/use-blogs'
 
 const blogSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  categoryId: z.string().min(1, 'Category is required'),
-  thumbnailUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
-  content: z.string().min(1, 'Content is required'),
+  title: z.string().min(1, 'Vui lòng nhập tiêu đề'),
+  categoryId: z.string().min(1, 'Vui lòng chọn danh mục'),
+  thumbnailUrl: z.string().url('Đường dẫn không hợp lệ').optional().or(z.literal('')),
+  content: z.string().min(1, 'Vui lòng nhập nội dung'),
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional(),
 })
 
@@ -125,7 +125,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
       {}
       <div className='mb-6 flex items-center justify-between'>
         <h1 className='text-2xl font-bold tracking-tight'>
-          {initialData ? 'Edit Blog Post' : 'Create Blog Post'}
+          {initialData ? 'Sửa bài viết' : 'Thêm bài viết'}
         </h1>
       </div>
 
@@ -133,7 +133,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           {}
           <div className='bg-card rounded-lg border p-6 shadow-sm'>
-            <h2 className='mb-4 text-lg font-semibold'>Basic Information</h2>
+            <h2 className='mb-4 text-lg font-semibold'>Thông tin cơ bản</h2>
 
             <div className='grid gap-6 lg:grid-cols-3'>
               {}
@@ -144,10 +144,10 @@ export function BlogForm({ initialData }: BlogFormProps) {
                   name='title'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Title</FormLabel>
+                      <FormLabel>Tiêu đề</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder='Enter blog title...'
+                          placeholder='Nhập tiêu đề bài viết...'
                           className='text-base'
                           {...field}
                         />
@@ -164,7 +164,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                     name='categoryId'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Category</FormLabel>
+                        <FormLabel>Danh mục</FormLabel>
                         <Select
                           key={`category-${field.value}`}
                           onValueChange={field.onChange}
@@ -172,7 +172,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder='Select category' />
+                              <SelectValue placeholder='Chọn danh mục' />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -195,7 +195,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                       name='status'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Status</FormLabel>
+                          <FormLabel>Trạng thái</FormLabel>
                           <Select
                             key={`status-${field.value}`}
                             onValueChange={field.onChange}
@@ -213,15 +213,15 @@ export function BlogForm({ initialData }: BlogFormProps) {
                                     'bg-gray-100 text-gray-800 hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-300'
                                 )}
                               >
-                                <SelectValue placeholder='Select status' />
+                                <SelectValue placeholder='Chọn trạng thái' />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value='DRAFT'>DRAFT</SelectItem>
+                              <SelectItem value='DRAFT'>Bản nháp</SelectItem>
                               <SelectItem value='PUBLISHED'>
-                                PUBLISHED
+                                Đã xuất bản
                               </SelectItem>
-                              <SelectItem value='ARCHIVED'>ARCHIVED</SelectItem>
+                              <SelectItem value='ARCHIVED'>Đã lưu trữ</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -239,7 +239,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                   name='thumbnailUrl'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Thumbnail</FormLabel>
+                      <FormLabel>Ảnh đại diện</FormLabel>
                       <FormControl>
                         <ImageUpload
                           value={field.value}
@@ -257,7 +257,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
 
           {}
           <div className='bg-card rounded-lg border p-6 shadow-sm'>
-            <h2 className='mb-4 text-lg font-semibold'>Content</h2>
+            <h2 className='mb-4 text-lg font-semibold'>Nội dung</h2>
             <FormField
               control={form.control}
               name='content'
@@ -268,7 +268,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                       value={field.value}
                       onChange={field.onChange}
                       accessToken={accessToken || ''}
-                      placeholder='Write your blog content here...'
+                      placeholder='Viết nội dung bài viết của bạn tại đây...'
                       toolbarOptions='full'
                       enableImageUpload={true}
                       enableVideoUpload={true}
@@ -288,7 +288,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
           <div className='bg-background/95 supports-backdrop-filter:bg-background/60 fixed inset-x-0 bottom-0 z-50 border-t backdrop-blur'>
             <div className='container flex h-16 items-center justify-between'>
               <div className='text-muted-foreground text-sm'>
-                {isPending ? 'Saving changes...' : 'All changes are autosaved'}
+                {isPending ? 'Đang lưu thay đổi...' : 'Tất cả thay đổi được lưu tự động'}
               </div>
               <div className='flex gap-3'>
                 <Button
@@ -297,10 +297,10 @@ export function BlogForm({ initialData }: BlogFormProps) {
                   onClick={() => navigate({ to: '/blogs/list' })}
                   disabled={isPending}
                 >
-                  Cancel
+                  Hủy
                 </Button>
                 <Button type='submit' disabled={isPending}>
-                  {isPending ? 'Saving...' : 'Save Blog Post'}
+                  {isPending ? 'Đang lưu...' : 'Lưu bài viết'}
                 </Button>
               </div>
             </div>

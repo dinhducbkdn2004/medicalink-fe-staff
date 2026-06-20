@@ -56,7 +56,7 @@ export function CategoryList({
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
+          aria-label='Chọn tất cả'
           className='translate-y-[2px]'
         />
       ),
@@ -64,7 +64,7 @@ export function CategoryList({
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Select row'
+          aria-label='Chọn hàng'
           className='translate-y-[2px]'
         />
       ),
@@ -73,21 +73,21 @@ export function CategoryList({
     },
     {
       accessorKey: 'name',
-      header: 'Name',
+      header: 'Tên',
       cell: ({ row }) => (
         <span className='font-medium'>{row.original.name}</span>
       ),
     },
     {
       accessorKey: 'slug',
-      header: 'Slug',
+      header: 'Đường dẫn (Slug)',
       cell: ({ row }) => (
         <span className='font-mono text-xs'>{row.original.slug}</span>
       ),
     },
     {
       accessorKey: 'description',
-      header: 'Description',
+      header: 'Mô tả',
       cell: ({ row }) => (
         <span className='text-muted-foreground line-clamp-1 max-w-[300px]'>
           {row.original.description || '-'}
@@ -96,7 +96,7 @@ export function CategoryList({
     },
     {
       accessorKey: 'createdAt',
-      header: 'Created At',
+      header: 'Ngày tạo',
       cell: ({ row }) =>
         format(new Date(row.original.createdAt), 'MMM d, yyyy'),
     },
@@ -108,12 +108,12 @@ export function CategoryList({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant='ghost' className='h-8 w-8 p-0'>
-                <span className='sr-only'>Open menu</span>
+                <span className='sr-only'>Mở menu</span>
                 <MoreHorizontal className='h-4 w-4' />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() =>
                   navigate({
@@ -123,19 +123,19 @@ export function CategoryList({
                 }
               >
                 <FileText className='mr-2 h-4 w-4' />
-                View Blogs
+                Xem bài viết
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => onEdit(category)}>
                 <Edit className='mr-2 h-4 w-4' />
-                Edit
+                Chỉnh sửa
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => onDelete(category)}
                 className='text-destructive focus:text-destructive'
               >
                 <Trash className='mr-2 h-4 w-4' />
-                Delete
+                Xóa
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -148,7 +148,7 @@ export function CategoryList({
 
   const getRowActions = (row: { original: BlogCategory }) => [
     {
-      label: 'View Blogs',
+      label: 'Xem bài viết',
       icon: FileText,
       onClick: () =>
         navigate({
@@ -157,12 +157,12 @@ export function CategoryList({
         }),
     },
     {
-      label: 'Edit',
+      label: 'Chỉnh sửa',
       icon: Edit,
       onClick: () => onEdit(row.original),
     },
     {
-      label: 'Delete',
+      label: 'Xóa',
       icon: Trash,
       onClick: () => onDelete(row.original),
       variant: 'destructive',
@@ -178,7 +178,7 @@ export function CategoryList({
       navigate={navigate}
       pageCount={pageCount}
       entityName='category'
-      searchPlaceholder='Search category...'
+      searchPlaceholder='Tìm kiếm danh mục...'
       searchKey='name'
       columnFilterConfigs={columnFilterConfigs}
       getRowActions={getRowActions}

@@ -39,10 +39,10 @@ export function useCreateBlog() {
     mutationFn: (data: CreateBlogRequest) => blogService.createBlog(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: blogPostKeys.posts() })
-      toast.success('Blog post created successfully')
+      toast.success('Đã tạo bài viết thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to create blog post')
+      toast.error(error.message || 'Không thể tạo bài viết')
     },
   })
 }
@@ -58,10 +58,10 @@ export function useUpdateBlog() {
       queryClient.invalidateQueries({
         queryKey: blogPostKeys.post(variables.id),
       })
-      toast.success('Blog post updated successfully')
+      toast.success('Đã cập nhật bài viết thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update blog post')
+      toast.error(error.message || 'Không thể cập nhật bài viết')
     },
   })
 }
@@ -82,10 +82,10 @@ export function useUpdateBlogAsDoctor() {
       queryClient.invalidateQueries({
         queryKey: blogPostKeys.post(variables.id),
       })
-      toast.success('Blog post updated successfully')
+      toast.success('Đã cập nhật bài viết thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update blog post')
+      toast.error(error.message || 'Không thể cập nhật bài viết')
     },
   })
 }
@@ -97,10 +97,10 @@ export function useDeleteBlog() {
     mutationFn: (id: string) => blogService.deleteBlog(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: blogPostKeys.posts() })
-      toast.success('Blog post deleted successfully')
+      toast.success('Đã xóa bài viết thành công')
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to delete blog post')
+      toast.error(error.message || 'Không thể xóa bài viết')
     },
   })
 }

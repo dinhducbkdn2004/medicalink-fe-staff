@@ -26,7 +26,7 @@ export function BlogViewPage() {
   }
 
   if (!blog) {
-    return <Main>Blog not found</Main>
+    return <Main>Không tìm thấy bài viết</Main>
   }
 
   return (
@@ -46,7 +46,7 @@ export function BlogViewPage() {
           <div className='space-y-4'>
             <div className='text-muted-foreground flex items-center gap-2 text-sm'>
               <span className='bg-muted rounded-md px-2 py-1 text-xs font-medium'>
-                {blog.category?.name || 'Uncategorized'}
+                {blog.category?.name || 'Chưa phân loại'}
               </span>
               <span>•</span>
               <span>{format(new Date(blog.createdAt), 'MMMM d, yyyy')}</span>
@@ -70,12 +70,12 @@ export function BlogViewPage() {
                   <p className='text-sm leading-none font-medium'>
                     {blog.authorName || 'Super Admin'}
                   </p>
-                  <p className='text-muted-foreground text-xs'>Author</p>
+                  <p className='text-muted-foreground text-xs'>Tác giả</p>
                 </div>
               </div>
               <div className='text-muted-foreground flex items-center gap-1 text-sm'>
                 <Eye className='h-4 w-4' />
-                <span>{blog.viewCount} views</span>
+                <span>{blog.viewCount} lượt xem</span>
               </div>
             </div>
           </div>

@@ -36,14 +36,13 @@ export function CategoryDeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogTitle>Bạn có chắc chắn không?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the
-            category &quot;{category?.name}&quot;.
+            Hành động này không thể hoàn tác. Danh mục này sẽ bị xóa vĩnh viễn &quot;{category?.name}&quot;.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>Hủy</AlertDialogCancel>
           <AlertDialogAction
             onClick={(e) => {
               e.preventDefault()
@@ -52,7 +51,7 @@ export function CategoryDeleteDialog({
             disabled={isPending}
             className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
           >
-            {isPending ? 'Deleting...' : 'Delete'}
+            {isPending ? 'Đang xóa...' : 'Xóa'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

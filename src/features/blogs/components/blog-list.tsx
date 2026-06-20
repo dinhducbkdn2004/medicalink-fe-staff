@@ -57,10 +57,10 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className='w-[400px]'>Blog Details</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Author</TableHead>
-              <TableHead>Created At</TableHead>
+              <TableHead className='w-[400px]'>Chi tiết Bài viết</TableHead>
+              <TableHead>Trạng thái</TableHead>
+              <TableHead>Tác giả</TableHead>
+              <TableHead>Ngày tạo</TableHead>
               <TableHead className='sticky right-0 w-[50px]'></TableHead>
             </TableRow>
           </TableHeader>
@@ -104,9 +104,9 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
         <div className='bg-muted mx-auto flex h-12 w-12 items-center justify-center rounded-full'>
           <Edit className='text-muted-foreground h-6 w-6' />
         </div>
-        <h3 className='mt-4 text-lg font-semibold'>No blogs found</h3>
+        <h3 className='mt-4 text-lg font-semibold'>Không tìm thấy bài viết nào</h3>
         <p className='text-muted-foreground mt-2 mb-4 text-sm'>
-          Try adjusting your filters or create a new blog post.
+          Hãy thử thay đổi bộ lọc hoặc thêm một bài viết mới.
         </p>
       </div>
     )
@@ -117,10 +117,10 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className='w-[400px]'>Blog Details</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Author</TableHead>
-            <TableHead>Created At</TableHead>
+            <TableHead className='w-[400px]'>Chi tiết Bài viết</TableHead>
+            <TableHead>Trạng thái</TableHead>
+            <TableHead>Tác giả</TableHead>
+            <TableHead>Ngày tạo</TableHead>
             <TableHead className='sticky right-0 w-[50px]'></TableHead>
           </TableRow>
         </TableHeader>
@@ -141,7 +141,7 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                           {blog.title}
                         </Link>
                         <span className='text-muted-foreground truncate text-xs'>
-                          {blog.category?.name || 'Uncategorized'}
+                          {blog.category?.name || 'Chưa phân loại'}
                         </span>
                       </div>
                     </div>
@@ -160,7 +160,7 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                             'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
                         )}
                       >
-                        {blog.status}
+                        {blog.status === 'PUBLISHED' ? 'Đã xuất bản' : blog.status === 'ARCHIVED' ? 'Đã lưu trữ' : 'Bản nháp'}
                       </span>
                     ) : (
                       <Select
@@ -184,9 +184,9 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value='DRAFT'>DRAFT</SelectItem>
-                          <SelectItem value='PUBLISHED'>PUBLISHED</SelectItem>
-                          <SelectItem value='ARCHIVED'>ARCHIVED</SelectItem>
+                          <SelectItem value='DRAFT'>Bản nháp</SelectItem>
+                          <SelectItem value='PUBLISHED'>Đã xuất bản</SelectItem>
+                          <SelectItem value='ARCHIVED'>Đã lưu trữ</SelectItem>
                         </SelectContent>
                       </Select>
                     )}
@@ -211,7 +211,7 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                             className='data-[state=open]:bg-muted h-8 w-8 p-0'
                           >
                             <MoreVertical className='h-4 w-4' />
-                            <span className='sr-only'>Open menu</span>
+                            <span className='sr-only'>Mở menu</span>
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align='end'>
@@ -224,7 +224,7 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                             }
                           >
                             <Eye className='mr-2 h-4 w-4' />
-                            View Details
+                            Xem chi tiết
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() =>
@@ -235,14 +235,14 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                             }
                           >
                             <Edit className='mr-2 h-4 w-4' />
-                            Edit Post
+                            Chỉnh sửa
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => onDelete(blog)}
                             className='text-destructive focus:text-destructive'
                           >
                             <Trash className='mr-2 h-4 w-4' />
-                            Delete Post
+                            Xóa
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -260,7 +260,7 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                   }
                 >
                   <Eye className='mr-2 h-4 w-4' />
-                  View Details
+                  Xem chi tiết
                 </ContextMenuItem>
                 {(!isDoctor || blog.authorId === user?.id) && (
                   <>
@@ -273,14 +273,14 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                       }
                     >
                       <Edit className='mr-2 h-4 w-4' />
-                      Edit Post
+                      Chỉnh sửa
                     </ContextMenuItem>
                     <ContextMenuItem
                       onClick={() => onDelete(blog)}
                       className='text-destructive focus:text-destructive'
                     >
                       <Trash className='mr-2 h-4 w-4' />
-                      Delete Post
+                      Xóa
                     </ContextMenuItem>
                   </>
                 )}

@@ -87,12 +87,12 @@ export function CategoryFormDialog({
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
           <DialogTitle>
-            {category ? 'Edit Category' : 'Create Category'}
+            {category ? 'Sửa danh mục' : 'Thêm danh mục'}
           </DialogTitle>
           <DialogDescription>
             {category
-              ? 'Make changes to the category here.'
-              : 'Add a new category for your blog posts.'}
+              ? 'Thực hiện thay đổi cho danh mục tại đây.'
+              : 'Thêm danh mục mới cho bài viết của bạn.'}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -102,9 +102,9 @@ export function CategoryFormDialog({
               name='name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Tên</FormLabel>
                   <FormControl>
-                    <Input placeholder='Enter category name' {...field} />
+                    <Input placeholder='Nhập tên danh mục' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -115,10 +115,10 @@ export function CategoryFormDialog({
               name='description'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Mô tả</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='Enter category description'
+                      placeholder='Nhập mô tả danh mục'
                       {...field}
                     />
                   </FormControl>
@@ -133,10 +133,10 @@ export function CategoryFormDialog({
                 onClick={() => onOpenChange(false)}
                 disabled={isPending}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type='submit' disabled={isPending}>
-                {isPending ? 'Saving...' : 'Save'}
+                {isPending ? 'Đang lưu...' : 'Lưu'}
               </Button>
             </DialogFooter>
           </form>
