@@ -6,15 +6,19 @@ import { type ClinicException } from '../data/schema'
 export const clinicExceptionsColumns: ColumnDef<ClinicException>[] = [
   {
     accessorKey: 'date',
-    header: 'Date',
+    header: 'Ngày',
     cell: ({ row }) => {
       const date = new Date(row.original.date)
-      return <div className='font-medium'>{format(date, 'MMM dd, yyyy')}</div>
+      return <div className='font-medium'>{date.toLocaleDateString('vi-VN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      })}</div>
     },
   },
   {
     accessorKey: 'scope',
-    header: 'Scope',
+    header: 'Phạm vi',
     cell: ({ row }) => {
       const workLocation = row.original.workLocation
       return workLocation ? (
@@ -24,17 +28,17 @@ export const clinicExceptionsColumns: ColumnDef<ClinicException>[] = [
           variant='default'
           className='bg-destructive text-destructive-foreground'
         >
-          Global Holiday
+          Ngày lễ toàn hệ thống
         </Badge>
       )
     },
   },
   {
     accessorKey: 'time',
-    header: 'Time',
+    header: 'Thời gian',
     cell: ({ row }) => {
       const { isFullDay, startTime, endTime } = row.original
-      if (isFullDay) return <Badge variant='secondary'>Full Day</Badge>
+      if (isFullDay) return <Badge variant='secondary'>Cả ngày</Badge>
       return (
         <span className='text-muted-foreground text-sm'>
           {startTime?.slice(0, 5)} - {endTime?.slice(0, 5)}
@@ -44,7 +48,7 @@ export const clinicExceptionsColumns: ColumnDef<ClinicException>[] = [
   },
   {
     accessorKey: 'reason',
-    header: 'Reason',
+    header: 'Lý do',
     cell: ({ row }) => {
       return <span>{row.original.reason || '-'}</span>
     },

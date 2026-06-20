@@ -95,9 +95,9 @@ export function ClinicExceptionsActionDialog() {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className='sm:max-w-[500px]'>
         <DialogHeader>
-          <DialogTitle>Add Holiday</DialogTitle>
+          <DialogTitle>Thêm ngày nghỉ</DialogTitle>
           <DialogDescription>
-            Configure holidays or special closing days for the clinic.
+            Thêm ngày nghỉ hoặc ngày đóng cửa đặc biệt cho phòng khám.
           </DialogDescription>
         </DialogHeader>
 
@@ -111,14 +111,14 @@ export function ClinicExceptionsActionDialog() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Date <span className='text-destructive'>*</span>
+                      Ngày <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
                       <SingleDayPicker
                         id='date-picker'
                         value={field.value ? parse(field.value, 'yyyy-MM-dd', new Date()) : undefined}
                         onSelect={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
-                        placeholder='Select a date'
+                        placeholder='Chọn ngày'
                         disabled={isLoading}
                       />
                     </FormControl>
@@ -140,9 +140,9 @@ export function ClinicExceptionsActionDialog() {
                     />
                   </FormControl>
                   <div className='space-y-1 leading-none'>
-                    <FormLabel>Full Day Holiday</FormLabel>
+                    <FormLabel>Ngày nghỉ trong ngày</FormLabel>
                     <FormDescription>
-                      Check this if the clinic is closed for the entire day.
+                      Chọn nếu phòng khám đóng cửa cả ngày.
                     </FormDescription>
                   </div>
                 </FormItem>
@@ -177,7 +177,7 @@ export function ClinicExceptionsActionDialog() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        End Time <span className='text-destructive'>*</span>
+                        Thời gian kết thúc <span className='text-destructive'>*</span>
                       </FormLabel>
                       <FormControl>
                         <TimeInput
@@ -198,10 +198,10 @@ export function ClinicExceptionsActionDialog() {
               name='reason'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Reason / Note</FormLabel>
+                  <FormLabel>Lý do / Ghi chú</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder='e.g. Independence Day, Maintenance...'
+                      placeholder='Ví dụ: Ngày Quốc khánh, Bảo trì...'
                       {...field}
                       value={field.value || ''}
                       disabled={isLoading}
@@ -219,11 +219,11 @@ export function ClinicExceptionsActionDialog() {
                 onClick={handleClose}
                 disabled={isLoading}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type='submit' disabled={isLoading}>
                 {isLoading && <Loader2 className='mr-2 size-4 animate-spin' />}
-                Add Holiday
+                Thêm ngày nghỉ
               </Button>
             </DialogFooter>
           </form>

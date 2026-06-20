@@ -30,7 +30,7 @@ export function useCreateClinicException() {
       clinicExceptionService.createClinicException(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: clinicExceptionKeys.lists() })
-      toast.success('Holiday created successfully')
+      toast.success('Đã tạo ngày nghỉ lễ thành công')
     },
     onError: (error: unknown) => {
       const axiosError = error as {
@@ -42,7 +42,7 @@ export function useCreateClinicException() {
       }
       const errData = axiosError.response?.data?.message
       const errString = Array.isArray(errData) ? errData[0] : errData
-      toast.error(errString || 'Failed to create holiday')
+      toast.error(errString || 'Không thể tạo ngày nghỉ lễ')
     },
   })
 }
@@ -60,7 +60,7 @@ export function useUpdateClinicException() {
     }) => clinicExceptionService.updateClinicException(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: clinicExceptionKeys.lists() })
-      toast.success('Holiday updated successfully')
+      toast.success('Đã cập nhật ngày nghỉ lễ thành công')
     },
     onError: (error: unknown) => {
       const axiosError = error as {
@@ -72,7 +72,7 @@ export function useUpdateClinicException() {
       }
       const errData = axiosError.response?.data?.message
       const errString = Array.isArray(errData) ? errData[0] : errData
-      toast.error(errString || 'Failed to update holiday')
+      toast.error(errString || 'Không thể cập nhật ngày nghỉ lễ')
     },
   })
 }
@@ -85,7 +85,7 @@ export function useDeleteClinicException() {
       clinicExceptionService.deleteClinicException(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: clinicExceptionKeys.lists() })
-      toast.success('Holiday deleted successfully')
+      toast.success('Đã xóa ngày nghỉ lễ thành công')
     },
     onError: (error: unknown) => {
       const axiosError = error as {
@@ -97,7 +97,7 @@ export function useDeleteClinicException() {
       }
       const errData = axiosError.response?.data?.message
       const errString = Array.isArray(errData) ? errData[0] : errData
-      toast.error(errString || 'Failed to delete holiday')
+      toast.error(errString || 'Không thể xóa ngày nghỉ lễ')
     },
   })
 }

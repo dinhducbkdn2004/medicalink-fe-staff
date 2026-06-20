@@ -25,7 +25,7 @@ export function ClinicExceptionsTable({
     const actions: DataTableAction[] = []
 
     actions.push({
-      label: 'Delete',
+      label: 'Xóa',
       icon: Trash2,
       onClick: () => {
         setCurrentRow(exception)
@@ -45,10 +45,10 @@ export function ClinicExceptionsTable({
       navigate={navigate}
       pageCount={1}
       isLoading={isLoading}
-      entityName='holiday'
+      entityName='ngày nghỉ'
       getRowActions={getRowActions}
       enableRowSelection={false}
-      emptyMessage='No holidays found. Add a holiday to override regular schedules.'
+      emptyMessage='Không tìm thấy ngày nghỉ nào. Thêm ngày nghỉ để ghi đè lịch thông thường.'
       hideToolbar={true}
     />
   )

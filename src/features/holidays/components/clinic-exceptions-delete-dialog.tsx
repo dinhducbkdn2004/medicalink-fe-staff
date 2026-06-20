@@ -42,10 +42,10 @@ export function ClinicExceptionsDeleteDialog() {
     <AlertDialog open={isOpen} onOpenChange={handleClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>Bạn có chắc chắn muốn xóa?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the holiday
-            configured for{' '}
+            Hành động này không thể hoàn tác. Nó sẽ xóa vĩnh viễn ngày nghỉ
+            được cấu hình cho{' '}
             <span className='text-foreground font-medium'>
               {currentRow?.date ? format(new Date(currentRow.date), 'MMM dd, yyyy') : ''}
             </span>
@@ -54,7 +54,7 @@ export function ClinicExceptionsDeleteDialog() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleteMutation.isPending}>
-            Cancel
+            Hủy
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
@@ -64,7 +64,7 @@ export function ClinicExceptionsDeleteDialog() {
             {deleteMutation.isPending && (
               <Loader2 className='mr-2 size-4 animate-spin' />
             )}
-            Delete
+            Xóa
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
