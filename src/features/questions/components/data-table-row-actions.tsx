@@ -45,7 +45,7 @@ export function DataTableRowActions({
           }}
         >
           <Eye className='mr-2 size-4' />
-          View Details
+          Xem chi tiết
         </DropdownMenuItem>
         {!isDoctor && (
           <>
@@ -56,7 +56,7 @@ export function DataTableRowActions({
               }}
             >
               <Edit className='mr-2 size-4' />
-              Edit
+              Sửa
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -67,7 +67,7 @@ export function DataTableRowActions({
               className='text-destructive'
             >
               <Trash2 className='mr-2 size-4' />
-              Delete
+              Xóa
             </DropdownMenuItem>
           </>
         )}

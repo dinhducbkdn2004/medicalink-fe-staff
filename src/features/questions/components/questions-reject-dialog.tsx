@@ -36,10 +36,10 @@ export function QuestionsRejectDialog() {
     <AlertDialog open={open.reject} onOpenChange={() => setOpen('reject')}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Reject Question</AlertDialogTitle>
+          <AlertDialogTitle>Từ chối câu hỏi</AlertDialogTitle>
           <AlertDialogDescription>
-            Reject this question? It will be hidden from doctors and will not
-            receive answers.
+            Từ chối câu hỏi này? Nó sẽ bị ẩn khỏi bác sĩ và không nhận được câu
+            trả lời.
           </AlertDialogDescription>
         </AlertDialogHeader>
         {currentQuestion && (
@@ -47,21 +47,21 @@ export function QuestionsRejectDialog() {
             <p className='text-sm font-medium'>{currentQuestion.title}</p>
             {currentQuestion.authorName && (
               <p className='text-muted-foreground mt-1 text-xs'>
-                by {currentQuestion.authorName}
+                bởi {currentQuestion.authorName}
               </p>
             )}
           </div>
         )}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={updateQuestion.isPending}>
-            Cancel
+            Hủy
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleReject}
             disabled={updateQuestion.isPending}
             className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
           >
-            {updateQuestion.isPending ? 'Rejecting...' : 'Reject'}
+            {updateQuestion.isPending ? 'Đang từ chối...' : 'Từ chối'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

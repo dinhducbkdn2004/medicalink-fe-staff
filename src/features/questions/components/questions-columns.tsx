@@ -14,7 +14,7 @@ import { SpecialtyCell } from './specialty-cell'
 
 
 export const columns: ColumnDef<Question>[] = [
-  
+
   {
     id: 'select',
     header: ({ table }) => (
@@ -46,11 +46,11 @@ export const columns: ColumnDef<Question>[] = [
         'sticky left-0 z-10 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
     },
   },
-  
+
   {
     accessorKey: 'title',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Question Title' />
+      <DataTableColumnHeader column={column} title='Tiêu đề câu hỏi' />
     ),
     cell: ({ row }) => {
       const title = row.original.title
@@ -64,7 +64,7 @@ export const columns: ColumnDef<Question>[] = [
           </div>
           {row.original.authorName && (
             <div className='text-muted-foreground max-w-[220px] truncate text-xs'>
-              by {row.original.authorName}
+              bởi: {row.original.authorName}
             </div>
           )}
         </div>
@@ -79,11 +79,11 @@ export const columns: ColumnDef<Question>[] = [
         'sticky left-[32px] z-10 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
     },
   },
-  
+
   {
     accessorKey: 'authorEmail',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Author Email' />
+      <DataTableColumnHeader column={column} title='Email người hỏi' />
     ),
     filterFn: (row, id, value: string) => {
       return value === row.getValue(id)
@@ -92,11 +92,11 @@ export const columns: ColumnDef<Question>[] = [
       className: 'min-w-[200px]',
     },
   },
-  
+
   {
     accessorKey: 'specialtyId',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Specialty' />
+      <DataTableColumnHeader column={column} title='Chuyên khoa' />
     ),
     cell: ({ row }) => (
       <SpecialtyCell
@@ -114,11 +114,11 @@ export const columns: ColumnDef<Question>[] = [
       className: 'min-w-[140px]',
     },
   },
-  
+
   {
     accessorKey: 'answersCount',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Answers' />
+      <DataTableColumnHeader column={column} title='Số câu trả lời' />
     ),
     cell: ({ row }) => {
       const count = row.original.answersCount
@@ -133,11 +133,11 @@ export const columns: ColumnDef<Question>[] = [
       className: 'w-[140px]',
     },
   },
-  
+
   {
     accessorKey: 'viewCount',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Views' />
+      <DataTableColumnHeader column={column} title='Lượt xem' />
     ),
     cell: ({ row }) => {
       const count = row.original.viewCount
@@ -152,11 +152,11 @@ export const columns: ColumnDef<Question>[] = [
       className: 'w-[100px]',
     },
   },
-  
+
   {
     accessorKey: 'status',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Status' />
+      <DataTableColumnHeader column={column} title='Trạng thái' />
     ),
     cell: ({ row }) => {
       const status = row.original.status
@@ -165,19 +165,19 @@ export const columns: ColumnDef<Question>[] = [
         { label: string; icon: typeof Clock; className: string }
       > = {
         PENDING: {
-          label: 'Pending',
+          label: 'Đang chờ',
           icon: Clock,
           className:
             'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
         },
         ANSWERED: {
-          label: 'Answered',
+          label: 'Đã trả lời',
           icon: MessageCircle,
           className:
             'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
         },
         CLOSED: {
-          label: 'Closed',
+          label: 'Đã đóng',
           icon: XCircle,
           className:
             'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
@@ -186,7 +186,7 @@ export const columns: ColumnDef<Question>[] = [
 
       const config = statusConfig[status]
 
-      
+
       if (!config) {
         return (
           <div className='flex justify-center'>
@@ -216,17 +216,17 @@ export const columns: ColumnDef<Question>[] = [
       className: 'w-[120px]',
     },
   },
-  
+
   {
     accessorKey: 'createdAt',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Created' />
+      <DataTableColumnHeader column={column} title='Ngày tạo' />
     ),
     cell: ({ row }) => {
       const date = new Date(row.original.createdAt)
       return (
         <div className='text-muted-foreground text-sm'>
-          {date.toLocaleDateString('en-US', {
+          {date.toLocaleDateString('vi-VN', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',
@@ -238,7 +238,7 @@ export const columns: ColumnDef<Question>[] = [
       className: 'w-[120px]',
     },
   },
-  
+
   {
     id: 'actions',
     enablePinning: true,

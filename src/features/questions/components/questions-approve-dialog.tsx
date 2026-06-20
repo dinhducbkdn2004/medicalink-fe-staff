@@ -36,9 +36,9 @@ export function QuestionsApproveDialog() {
     <AlertDialog open={open.approve} onOpenChange={() => setOpen('approve')}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Approve Question</AlertDialogTitle>
+          <AlertDialogTitle>Duyệt câu hỏi</AlertDialogTitle>
           <AlertDialogDescription>
-            Approve this question to make it visible to doctors for answering?
+            Duyệt câu hỏi này để hiển thị cho bác sĩ trả lời?
           </AlertDialogDescription>
         </AlertDialogHeader>
         {currentQuestion && (
@@ -46,20 +46,20 @@ export function QuestionsApproveDialog() {
             <p className='text-sm font-medium'>{currentQuestion.title}</p>
             {currentQuestion.authorName && (
               <p className='text-muted-foreground mt-1 text-xs'>
-                by {currentQuestion.authorName}
+                bởi {currentQuestion.authorName}
               </p>
             )}
           </div>
         )}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={updateQuestion.isPending}>
-            Cancel
+            Hủy
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleApprove}
             disabled={updateQuestion.isPending}
           >
-            {updateQuestion.isPending ? 'Approving...' : 'Approve'}
+            {updateQuestion.isPending ? 'Đang duyệt...' : 'Duyệt'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

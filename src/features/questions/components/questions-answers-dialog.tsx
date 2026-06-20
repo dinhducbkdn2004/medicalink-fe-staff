@@ -99,7 +99,7 @@ export function QuestionAnswersDialog() {
           }}
         >
           <DrawerHeader>
-            <DrawerTitle className='text-xl'>Manage Answers</DrawerTitle>
+            <DrawerTitle className='text-xl'>Quản lý câu trả lời</DrawerTitle>
             <DrawerDescription className='line-clamp-2'>
               {currentQuestion.title}
             </DrawerDescription>
@@ -113,11 +113,11 @@ export function QuestionAnswersDialog() {
                 className='w-full'
                 variant='outline'
               >
-                Write an Answer
+                Viết câu trả lời
               </Button>
             ) : isCreating ? (
               <div className='rounded-lg border p-4'>
-                <h4 className='mb-3 font-semibold'>Write your answer</h4>
+                <h4 className='mb-3 font-semibold'>Viết câu trả lời của bạn</h4>
                 <QuestionsAnswerForm
                   questionId={currentQuestion.id}
                   onSuccess={() => setIsCreating(false)}
@@ -148,9 +148,9 @@ export function QuestionAnswersDialog() {
                     <div className='bg-muted text-muted-foreground mb-4 rounded-full p-4'>
                       <User className='size-8' />
                     </div>
-                    <h3 className='mb-2 font-semibold'>No answers yet</h3>
+                    <h3 className='mb-2 font-semibold'>Chưa có câu trả lời nào</h3>
                     <p className='text-muted-foreground text-sm'>
-                      This question hasn't received any answers from doctors.
+                      Câu hỏi này chưa nhận được câu trả lời nào từ bác sĩ.
                     </p>
                   </div>
                 ) : (
@@ -178,7 +178,7 @@ export function QuestionAnswersDialog() {
                                     alt={
                                       answer.authorFullName ||
                                       answer.doctor?.fullName ||
-                                      'Doctor'
+                                      'Bác sĩ'
                                     }
                                   />
                                   <AvatarFallback>
@@ -198,7 +198,7 @@ export function QuestionAnswersDialog() {
                                   <div className='font-semibold'>
                                     {answer.authorFullName ||
                                       answer.doctor?.fullName ||
-                                      'Unknown Doctor'}
+                                      'Bác sĩ không xác định'}
                                   </div>
                                   {answer.doctor?.specialty && (
                                     <div className='text-muted-foreground text-xs'>
@@ -210,7 +210,7 @@ export function QuestionAnswersDialog() {
                               {answer.isAccepted && (
                                 <Badge className='bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'>
                                   <CheckCircle className='mr-1 size-3' />
-                                  Accepted
+                                  Đã chấp nhận
                                 </Badge>
                               )}
                             </div>
@@ -227,7 +227,7 @@ export function QuestionAnswersDialog() {
                               <div className='text-muted-foreground flex items-center gap-4 text-xs'>
                                 <div className='flex items-center gap-1'>
                                   <ThumbsUp className='size-3' />
-                                  <span>{answer.upvotes || 0} upvotes</span>
+                                  <span>{answer.upvotes || 0} lượt thích</span>
                                 </div>
                                 <div>
                                   {format(
@@ -248,7 +248,7 @@ export function QuestionAnswersDialog() {
                                     }}
                                     disabled={!!editingAnswerId || isCreating}
                                   >
-                                    Edit
+                                    Chỉnh sửa
                                   </Button>
                                 )}
                                 {!answer.isAccepted && !isDoctor && (
@@ -262,7 +262,7 @@ export function QuestionAnswersDialog() {
                                     className='border-green-600 text-green-600 hover:bg-green-50'
                                   >
                                     <CheckCircle className='mr-1 size-3' />
-                                    Accept
+                                    Chấp nhận
                                   </Button>
                                 )}
                                 {(!isDoctor ||
@@ -291,7 +291,7 @@ export function QuestionAnswersDialog() {
           <div className='mt-4 flex justify-end'>
             <Button variant='outline' onClick={() => setOpen('answers')}>
               <X className='mr-2 size-4' />
-              Close
+              Đóng
             </Button>
           </div>
         </DrawerContent>
@@ -304,19 +304,19 @@ export function QuestionAnswersDialog() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Answer</AlertDialogTitle>
+            <AlertDialogTitle>Xóa câu trả lời</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this answer? This action cannot be
-              undone.
+              Bạn có chắc chắn muốn xóa câu trả lời này không? Thao tác này không thể
+              hoàn tác.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteAnswer}
               className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
             >
-              Delete
+              Xóa
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -65,7 +65,7 @@ export function QuestionsTable({
 
     const actions: DataTableAction[] = [
       {
-        label: 'View Details',
+        label: 'Xem chi tiết',
         icon: Eye,
         onClick: () => {
           setCurrentQuestion(question)
@@ -76,7 +76,7 @@ export function QuestionsTable({
 
     if (canUpdateQuestions()) {
       actions.push({
-        label: 'Edit',
+        label: 'Sửa',
         icon: Edit,
         onClick: () => {
           setCurrentQuestion(question)
@@ -87,7 +87,7 @@ export function QuestionsTable({
 
     if (canDeleteQuestion({ questionId: question.id })) {
       actions.push({
-        label: 'Delete',
+        label: 'Xóa',
         icon: Trash2,
         onClick: () => {
           setCurrentQuestion(question)
@@ -110,12 +110,12 @@ export function QuestionsTable({
       pageCount={pageCount}
       isLoading={isLoading}
       entityName='question'
-      searchPlaceholder='Search by author email...'
+      searchPlaceholder='Tìm kiếm theo tên người dùng...'
       searchKey='authorEmail'
       filters={[
         {
           columnId: 'status',
-          title: 'Status',
+          title: 'Trạng thái',
           options: statusOptions.map((status) => ({
             label: status.label,
             value: status.value,
@@ -124,7 +124,7 @@ export function QuestionsTable({
         },
         {
           columnId: 'specialtyId',
-          title: 'Specialty',
+          title: 'Chuyên khoa',
           options: specialties.map((s) => ({
             label: s.name,
             value: s.id,
@@ -135,7 +135,7 @@ export function QuestionsTable({
       renderBulkActions={(table) => <DataTableBulkActions table={table} />}
       enableRowSelection={true}
       columnFilterConfigs={columnFilterConfigs}
-      emptyMessage='No questions found.'
+      emptyMessage='Không tìm thấy câu hỏi.'
     />
   )
 }

@@ -49,7 +49,7 @@ export function useCreateAnswer() {
       data: CreateAnswerRequest
     }) => answerService.createAnswer(questionId, data),
     onSuccess: (_answer, variables) => {
-      toast.success('Answer submitted successfully')
+      toast.success('Đã gửi câu trả lời thành công')
       queryClient.invalidateQueries({
         queryKey: answerKeys.lists(),
       })
@@ -58,7 +58,7 @@ export function useCreateAnswer() {
       })
     },
     onError: (error: Error) => {
-      toast.error('Failed to submit answer', {
+      toast.error('Không thể gửi câu trả lời', {
         description: error.message,
       })
     },
@@ -77,7 +77,7 @@ export function useUpdateAnswer() {
       data: UpdateAnswerRequest
     }) => answerService.updateAnswer(answerId, data),
     onSuccess: (updatedAnswer) => {
-      toast.success('Answer updated successfully')
+      toast.success('Đã cập nhật câu trả lời thành công')
       queryClient.invalidateQueries({ queryKey: answerKeys.lists() })
       queryClient.invalidateQueries({
         queryKey: answerKeys.detail(updatedAnswer.id),
@@ -87,7 +87,7 @@ export function useUpdateAnswer() {
       })
     },
     onError: (error: Error) => {
-      toast.error('Failed to update answer', {
+      toast.error('Không thể cập nhật câu trả lời', {
         description: error.message,
       })
     },
@@ -100,7 +100,7 @@ export function useAcceptAnswer() {
   return useMutation({
     mutationFn: (answerId: string) => answerService.acceptAnswer(answerId),
     onSuccess: (acceptedAnswer) => {
-      toast.success('Answer accepted successfully')
+      toast.success('Đã duyệt câu trả lời thành công')
       queryClient.invalidateQueries({ queryKey: answerKeys.lists() })
       queryClient.invalidateQueries({
         queryKey: answerKeys.detail(acceptedAnswer.id),
@@ -110,7 +110,7 @@ export function useAcceptAnswer() {
       })
     },
     onError: (error: Error) => {
-      toast.error('Failed to accept answer', {
+      toast.error('Không thể duyệt câu trả lời', {
         description: error.message,
       })
     },
@@ -123,12 +123,12 @@ export function useDeleteAnswer() {
   return useMutation({
     mutationFn: (answerId: string) => answerService.deleteAnswer(answerId),
     onSuccess: () => {
-      toast.success('Answer deleted successfully')
+      toast.success('Đã xóa câu trả lời thành công')
       queryClient.invalidateQueries({ queryKey: answerKeys.lists() })
       queryClient.invalidateQueries({ queryKey: questionKeys.lists() })
     },
     onError: (error: Error) => {
-      toast.error('Failed to delete answer', {
+      toast.error('Không thể xóa câu trả lời', {
         description: error.message,
       })
     },

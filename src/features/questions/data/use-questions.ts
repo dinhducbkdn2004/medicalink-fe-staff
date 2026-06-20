@@ -39,15 +39,15 @@ export function useCreateQuestion() {
     mutationFn: (data: CreateQuestionRequest) =>
       questionService.createQuestion(data),
     onSuccess: () => {
-      toast.success('Question submitted successfully', {
+      toast.success('Đã gửi câu hỏi thành công', {
         description:
-          'Your question will be reviewed and answered by our doctors',
+          'Câu hỏi của bạn sẽ được các bác sĩ của chúng tôi xem xét và trả lời',
       })
       queryClient.invalidateQueries({ queryKey: questionKeys.lists() })
     },
     onError: (error: Error) => {
-      toast.error('Failed to submit question', {
-        description: error.message || 'Please try again later',
+      toast.error('Không thể gửi câu hỏi', {
+        description: error.message || 'Vui lòng thử lại sau',
       })
     },
   })
@@ -60,14 +60,14 @@ export function useUpdateQuestion() {
     mutationFn: ({ id, data }: { id: string; data: UpdateQuestionRequest }) =>
       questionService.updateQuestion(id, data),
     onSuccess: (updatedQuestion) => {
-      toast.success('Question updated successfully')
+      toast.success('Đã cập nhật câu hỏi thành công')
       queryClient.invalidateQueries({ queryKey: questionKeys.lists() })
       queryClient.invalidateQueries({
         queryKey: questionKeys.detail(updatedQuestion.id),
       })
     },
     onError: (error: Error) => {
-      toast.error('Failed to update question', {
+      toast.error('Không thể cập nhật câu hỏi', {
         description: error.message,
       })
     },
@@ -80,11 +80,11 @@ export function useDeleteQuestion() {
   return useMutation({
     mutationFn: (id: string) => questionService.deleteQuestion(id),
     onSuccess: () => {
-      toast.success('Question deleted successfully')
+      toast.success('Đã xóa câu hỏi thành công')
       queryClient.invalidateQueries({ queryKey: questionKeys.lists() })
     },
     onError: (error: Error) => {
-      toast.error('Failed to delete question', {
+      toast.error('Không thể xóa câu hỏi', {
         description: error.message,
       })
     },

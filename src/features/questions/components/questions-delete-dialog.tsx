@@ -30,10 +30,10 @@ export function QuestionsDeleteDialog() {
     <AlertDialog open={open.delete} onOpenChange={() => setOpen('delete')}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Question</AlertDialogTitle>
+          <AlertDialogTitle>Xóa câu hỏi</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this question? This will also delete
-            all associated answers. This action cannot be undone.
+            Bạn có chắc chắn muốn xóa câu hỏi này? Thao tác này sẽ xóa tất cả các
+            câu trả lời liên quan. Thao tác này không thể hoàn tác.
           </AlertDialogDescription>
         </AlertDialogHeader>
         {currentQuestion && (
@@ -41,14 +41,14 @@ export function QuestionsDeleteDialog() {
             <p className='text-sm font-medium'>{currentQuestion.title}</p>
             {currentQuestion.authorName && (
               <p className='text-muted-foreground mt-1 text-xs'>
-                by {currentQuestion.authorName}
+                bởi {currentQuestion.authorName}
               </p>
             )}
           </div>
         )}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleteQuestion.isPending}>
-            Cancel
+            Hủy
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={(e) => {
@@ -58,7 +58,7 @@ export function QuestionsDeleteDialog() {
             disabled={deleteQuestion.isPending}
             className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
           >
-            {deleteQuestion.isPending ? 'Deleting...' : 'Delete'}
+            {deleteQuestion.isPending ? 'Đang xóa...' : 'Xóa'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

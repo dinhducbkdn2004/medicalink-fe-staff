@@ -62,7 +62,7 @@ export function QuestionsEditDialog() {
     },
   })
 
-  
+
   useEffect(() => {
     if (currentQuestion) {
       form.reset({
@@ -78,7 +78,7 @@ export function QuestionsEditDialog() {
     try {
       await updateQuestionMutation.mutateAsync({
         id: currentQuestion.id,
-        
+
         data: {
           status: values.status,
           specialtyId: values.specialtyId,
@@ -90,7 +90,7 @@ export function QuestionsEditDialog() {
     }
   }
 
-  
+
   const handleOpenChange = () => {
     setOpen('edit')
   }
@@ -99,10 +99,9 @@ export function QuestionsEditDialog() {
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
-          <DialogTitle>Edit Question Status</DialogTitle>
+          <DialogTitle>Cập nhật câu hỏi</DialogTitle>
           <DialogDescription>
-            Update the status of this question. Title and content cannot be
-            changed.
+            Cập nhật trạng thái của câu hỏi này. Không thể thay đổi tiêu đề và nội dung.
           </DialogDescription>
         </DialogHeader>
 
@@ -113,7 +112,7 @@ export function QuestionsEditDialog() {
               name='specialtyId'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Specialty</FormLabel>
+                  <FormLabel>Chuyên khoa</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value || undefined}
@@ -142,7 +141,7 @@ export function QuestionsEditDialog() {
               name='status'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel>Trạng thái</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -157,19 +156,19 @@ export function QuestionsEditDialog() {
                       <SelectItem value='PENDING'>
                         <span className='flex items-center'>
                           <span className='mr-2 size-2 rounded-full bg-yellow-400' />
-                          Pending
+                          Chờ xử lý
                         </span>
                       </SelectItem>
                       <SelectItem value='ANSWERED'>
                         <span className='flex items-center'>
                           <span className='mr-2 size-2 rounded-full bg-green-500' />
-                          Answered
+                          Đã trả lời
                         </span>
                       </SelectItem>
                       <SelectItem value='CLOSED'>
                         <span className='flex items-center'>
                           <span className='mr-2 size-2 rounded-full bg-red-500' />
-                          Closed
+                          Đóng
                         </span>
                       </SelectItem>
                     </SelectContent>
@@ -185,7 +184,7 @@ export function QuestionsEditDialog() {
                 variant='outline'
                 onClick={() => setOpen('edit')}
               >
-                Cancel
+                Hủy
               </Button>
               <Button
                 type='submit'
@@ -196,7 +195,7 @@ export function QuestionsEditDialog() {
                 {updateQuestionMutation.isPending && (
                   <Loader2 className='mr-2 size-4 animate-spin' />
                 )}
-                Save Changes
+                Lưu thay đổi
               </Button>
             </DialogFooter>
           </form>

@@ -74,8 +74,8 @@ export function QuestionViewDialog() {
             )}
           </div>
           <DrawerDescription className='sr-only'>
-            View detailed information about this question including author,
-            specialty, answers, and statistics
+            Xem chi tiết thông tin về câu hỏi này bao gồm tác giả, chuyên khoa,
+            câu trả lời và số liệu thống kê
           </DrawerDescription>
         </DrawerHeader>
 
@@ -86,13 +86,13 @@ export function QuestionViewDialog() {
             <div className='flex flex-col gap-2 text-sm'>
               {currentQuestion.authorName && (
                 <div className='text-muted-foreground flex items-center gap-2'>
-                  <span className='font-medium'>Asked by:</span>
+                  <span className='font-medium'>Hỏi bởi:</span>
                   <span>{currentQuestion.authorName}</span>
                 </div>
               )}
               {currentQuestion.specialty && (
                 <div className='text-muted-foreground flex items-center gap-2'>
-                  <span className='font-medium'>Specialty:</span>
+                  <span className='font-medium'>Chuyên khoa:</span>
                   <Badge variant='outline' className='font-normal'>
                     {currentQuestion.specialty.name}
                   </Badge>
@@ -105,7 +105,7 @@ export function QuestionViewDialog() {
             {}
             <div>
               <h3 className='text-muted-foreground mb-3 text-sm font-medium'>
-                Question Details
+                Nội dung câu hỏi
               </h3>
               <div className='bg-muted rounded-lg p-4'>
                 <p className='leading-relaxed whitespace-pre-wrap'>
@@ -124,7 +124,7 @@ export function QuestionViewDialog() {
                   <div className='text-2xl font-bold'>
                     {currentQuestion.answersCount}
                   </div>
-                  <div className='text-muted-foreground text-xs'>Answers</div>
+                  <div className='text-muted-foreground text-xs'>Trả lời</div>
                 </div>
               </div>
               <div className='flex flex-col items-center gap-2 rounded-lg border p-4'>
@@ -133,7 +133,7 @@ export function QuestionViewDialog() {
                   <div className='text-2xl font-bold'>
                     {currentQuestion.acceptedAnswersCount || 0}
                   </div>
-                  <div className='text-muted-foreground text-xs'>Accepted</div>
+                  <div className='text-muted-foreground text-xs'>Đã duyệt</div>
                 </div>
               </div>
               <div className='flex flex-col items-center gap-2 rounded-lg border p-4'>
@@ -142,7 +142,7 @@ export function QuestionViewDialog() {
                   <div className='text-2xl font-bold'>
                     {currentQuestion.viewCount}
                   </div>
-                  <div className='text-muted-foreground text-xs'>Views</div>
+                  <div className='text-muted-foreground text-xs'>Lượt xem</div>
                 </div>
               </div>
             </div>
@@ -151,12 +151,12 @@ export function QuestionViewDialog() {
             {}
             <div className='text-muted-foreground flex flex-col gap-1 text-sm'>
               <div>
-                Asked on{' '}
+                Ngày tạo{' '}
                 {format(new Date(currentQuestion.createdAt), 'MMMM dd, yyyy')}
               </div>
               {currentQuestion.updatedAt !== currentQuestion.createdAt && (
                 <div>
-                  Updated{' '}
+                  Ngày cập nhật{' '}
                   {format(new Date(currentQuestion.updatedAt), 'MMMM dd, yyyy')}
                 </div>
               )}
@@ -167,16 +167,16 @@ export function QuestionViewDialog() {
         <div className='flex justify-end gap-2 p-4 pt-0'>
           <Button variant='outline' onClick={() => setOpen('view')}>
             <X className='mr-2 size-4' />
-            Close
+            Đóng
           </Button>
           <Button
             onClick={() => {
-              setOpen('view') 
-              setOpen('answers') 
+              setOpen('view')
+              setOpen('answers')
             }}
           >
             <MessageCircle className='mr-2 size-4' />
-            Manage Answers
+            Trả lời
           </Button>
         </div>
       </DrawerContent>

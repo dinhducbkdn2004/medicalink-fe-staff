@@ -59,10 +59,10 @@ function QuestionsContent() {
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Questions & Answers
+              Hỏi & Đáp
             </h2>
             <p className='text-muted-foreground'>
-              Manage patient questions and doctor answers
+              Quản lý câu hỏi của bệnh nhân và câu trả lời của bác sĩ
             </p>
           </div>
         </div>

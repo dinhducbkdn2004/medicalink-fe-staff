@@ -104,8 +104,8 @@ export function QuestionsAnswerForm({
                 <Textarea
                   placeholder={
                     isEditing
-                      ? 'Update your answer...'
-                      : 'Write your answer here...'
+                      ? 'Cập nhật câu trả lời của bạn...'
+                      : 'Viết câu trả lời của bạn tại đây...'
                   }
                   className='min-h-[100px] resize-y'
                   {...field}
@@ -124,7 +124,7 @@ export function QuestionsAnswerForm({
               size='sm'
               onClick={onCancel}
             >
-              Cancel
+              Hủy
             </Button>
           )}
           <Button
@@ -137,7 +137,7 @@ export function QuestionsAnswerForm({
             ) : (
               <Send className='mr-2 size-3' />
             )}
-            {isEditing ? 'Update Answer' : 'Post Answer'}
+            {isEditing ? 'Cập nhật câu trả lời' : 'Đăng câu trả lời'}
           </Button>
         </div>
       </form>
