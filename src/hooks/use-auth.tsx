@@ -90,8 +90,8 @@ export function useChangePassword() {
     mutationFn: (data: ChangePasswordRequest) =>
       authService.changePassword(data),
     onSuccess: (data) => {
-      toast.success(data.message || 'Password changed successfully')
-      
+      toast.success(data?.message || 'Thay đổi mật khẩu thành công')
+      // Optional: invalidate queries if you want to refresh user data
       queryClient.invalidateQueries({ queryKey: authKeys.profile() })
     },
     onError: () => {

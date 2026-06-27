@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff } from 'lucide-react'
-import { toast } from 'sonner'
 import {
   changePasswordSchema,
   type ChangePasswordFormData,
@@ -34,7 +33,7 @@ export function ChangePasswordSection() {
   const changePasswordMutation = useChangePassword()
 
   const form = useForm<ChangePasswordFormData>({
-    
+
     resolver: zodResolver(changePasswordSchema),
     defaultValues: {
       currentPassword: '',
@@ -52,10 +51,9 @@ export function ChangePasswordSection() {
       {
         onSuccess: () => {
           form.reset()
-          toast.success('Thay đổi mật khẩu thành công')
         },
         onError: (error) => {
-          
+
           console.error('Password change error:', error)
         },
       }

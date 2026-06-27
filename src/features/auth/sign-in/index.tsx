@@ -89,7 +89,7 @@ export function SignIn() {
         </CardContent>
         <CardFooter className='flex flex-col gap-4'>
           <p className='text-muted-foreground px-8 text-center text-sm'>
-            Bằng cách nhấn đăng nhập, bạn đồng ý với{' '}
+            Bằng việc đăng nhập, bạn đồng ý với{' '}
             <a
               href='/terms'
               className='hover:text-primary underline underline-offset-4'
