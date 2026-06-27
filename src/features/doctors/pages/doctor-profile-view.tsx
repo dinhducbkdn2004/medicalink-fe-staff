@@ -225,7 +225,7 @@ export function DoctorProfileView() {
                     <div className='flex flex-col items-center justify-center gap-1'>
                       <div className='flex items-center text-sm font-medium'>
                         <BadgeDollarSign className='mr-1 h-3.5 w-3.5 text-green-500' />
-                        {doctor?.serviceCost ? `$${doctor.serviceCost}` : 'N/A'}
+                        {doctor?.serviceCost ? `${doctor.serviceCost} VNĐ` : 'N/A'}
                       </div>
                       <span className='text-[10px] text-muted-foreground uppercase tracking-wider'>Chi phí</span>
                     </div>
