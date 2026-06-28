@@ -62,8 +62,8 @@ export const permissionService = {
     data: RevokeUserPermissionRequest
   ): Promise<SuccessResponse> {
     const response = await apiClient.delete<SuccessResponse>(
-      '/permissions/users/revoke',
-      { data }
+      `/permissions/users/${data.userId}/permissions/${data.permissionId}`,
+      { params: { tenantId: data.tenantId } }
     )
     return response.data
   },
@@ -164,8 +164,8 @@ export const permissionService = {
     data: RevokeGroupPermissionRequest
   ): Promise<SuccessResponse> {
     const response = await apiClient.delete<SuccessResponse>(
-      `/permissions/groups/${groupId}/permissions`,
-      { data }
+      `/permissions/groups/${groupId}/permissions/${data.permissionId}`,
+      { params: { tenantId: data.tenantId } }
     )
     return response.data
   },
