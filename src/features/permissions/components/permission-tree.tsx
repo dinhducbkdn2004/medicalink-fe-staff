@@ -203,8 +203,8 @@ export function PermissionTree({
                                   <div className='flex items-start gap-2'>
                                     <Checkbox
                                       checked={granted}
-                                      onCheckedChange={() =>
-                                        handleToggle(perm.resource, perm.action, granted)
+                                      onCheckedChange={(checked) =>
+                                        handleToggle(perm.resource, perm.action, !!checked)
                                       }
                                       disabled={readOnly}
                                       className='mt-0.5'
