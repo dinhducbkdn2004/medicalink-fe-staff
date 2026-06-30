@@ -173,7 +173,7 @@ export function EventDetailsDialog({
                         {appointment.patient.dateOfBirth
                           ? format(
                               parseISO(appointment.patient.dateOfBirth),
-                              'MMM d, yyyy'
+                              'dd/MM/yyyy'
                             )
                           : 'N/A'}
                       </p>
@@ -218,7 +218,7 @@ export function EventDetailsDialog({
                       <p className='text-sm'>
                         {format(
                           parseISO(appointment.event.serviceDate),
-                          'MMM d, yyyy'
+                          'dd/MM/yyyy'
                         )}{' '}
                         • {formatShiftTime(appointment.event.timeStart)} -{' '}
                         {formatShiftTime(appointment.event.timeEnd)}
@@ -381,7 +381,7 @@ export function EventDetailsDialog({
                   <p>
                     {format(
                       parseISO(appointment.createdAt),
-                      'MMM d, yyyy HH:mm'
+                      'dd/MM/yyyy HH:mm'
                     )}
                   </p>
                 </div>
@@ -390,7 +390,7 @@ export function EventDetailsDialog({
                   <p>
                     {format(
                       parseISO(appointment.updatedAt),
-                      'MMM d, yyyy HH:mm'
+                      'dd/MM/yyyy HH:mm'
                     )}
                   </p>
                 </div>
@@ -400,7 +400,7 @@ export function EventDetailsDialog({
                     <p>
                       {format(
                         parseISO(appointment.completedAt),
-                        'MMM d, yyyy HH:mm'
+                        'dd/MM/yyyy HH:mm'
                       )}
                     </p>
                   </div>
@@ -411,7 +411,7 @@ export function EventDetailsDialog({
                     <p>
                       {format(
                         parseISO(appointment.cancelledAt),
-                        'MMM d, yyyy HH:mm'
+                        'dd/MM/yyyy HH:mm'
                       )}
                     </p>
                   </div>

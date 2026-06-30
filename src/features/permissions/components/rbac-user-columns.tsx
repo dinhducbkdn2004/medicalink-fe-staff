@@ -3,6 +3,7 @@ import { DataTableColumnHeader } from '@/components/data-table'
 import { staffRoles } from '@/features/staffs/data/data'
 import { type Staff } from '@/features/staffs/data/schema'
 import { RbacUserRowActions } from './rbac-user-row-actions'
+import { format } from 'date-fns'
 
 type RbacUserColumnsOptions = {
   manageTo: '/user-permission/$userId' | '/user-group/$userId'
@@ -85,11 +86,7 @@ export function createRbacUserColumns({
         if (!dateString) return <span className='text-muted-foreground'>—</span>
         return (
           <span className='text-muted-foreground'>
-            {new Date(dateString).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            })}
+            {format(new Date(dateString), 'dd/MM/yyyy')}
           </span>
         )
       },

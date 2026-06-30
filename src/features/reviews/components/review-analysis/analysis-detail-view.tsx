@@ -31,11 +31,10 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
             <BarChart3 className='h-8 w-8 text-blue-600 dark:text-blue-400' />
           </div>
           <h3 className='mb-2 text-base font-semibold text-gray-900 dark:text-gray-100'>
-            Select an Analysis
+            Chọn một bản phân tích
           </h3>
           <p className='text-muted-foreground mx-auto max-w-[280px] text-sm leading-relaxed'>
-            Choose an analysis from the list to view detailed AI-powered
-            insights and metrics
+            Chọn một bản phân tích từ danh sách để xem các thông tin chi tiết và số liệu đánh giá bằng AI
           </p>
         </CardContent>
       </Card>
@@ -76,17 +75,17 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
           <div className='flex-1 space-y-1'>
             <div className='mb-2 flex items-center gap-2'>
               <CardTitle className='text-lg'>
-                {fullAnalysis.dateRange.toUpperCase()} Analysis
+                Phân tích {fullAnalysis.dateRange.toUpperCase()}
               </CardTitle>
               <Badge variant='secondary' className='text-xs font-normal'>
-                {fullAnalysis.includeNonPublic ? 'All Reviews' : 'Public Only'}
+                {fullAnalysis.includeNonPublic ? 'Tất cả đánh giá' : 'Chỉ công khai'}
               </Badge>
             </div>
             <div className='text-muted-foreground flex items-center gap-4 text-xs'>
               <span>
-                {format(new Date(fullAnalysis.createdAt), 'MMM dd, yyyy')}
+                {format(new Date(fullAnalysis.createdAt), 'dd/MM/yyyy')}
               </span>
-              <span>by {currentAnalysis.creatorName}</span>
+              <span>bởi {currentAnalysis.creatorName}</span>
             </div>
           </div>
         </div>
@@ -100,7 +99,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
             <CardContent className='pt-4 pb-4'>
               <div>
                 <p className='text-muted-foreground mb-2 text-xs font-medium'>
-                  Average Rating
+                  Đánh giá trung bình
                 </p>
                 <div className='flex items-end justify-between'>
                   <div>
@@ -108,7 +107,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
                       {fullAnalysis.period1Avg.toFixed(1)}
                     </p>
                     <p className='text-muted-foreground mt-0.5 text-xs'>
-                      was {fullAnalysis.period2Avg.toFixed(1)}
+                      trước đó là {fullAnalysis.period2Avg.toFixed(1)}
                     </p>
                   </div>
                   <div className='flex items-center gap-1'>
@@ -141,7 +140,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
             <CardContent className='pt-4 pb-4'>
               <div>
                 <p className='text-muted-foreground mb-2 text-xs font-medium'>
-                  Total Reviews
+                  Tổng số đánh giá
                 </p>
                 <div className='flex items-end justify-between'>
                   <div>
@@ -149,7 +148,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
                       {fullAnalysis.period1Total}
                     </p>
                     <p className='text-muted-foreground mt-0.5 text-xs'>
-                      was {fullAnalysis.period2Total}
+                      trước đó là {fullAnalysis.period2Total}
                     </p>
                   </div>
                   <div className='flex items-center gap-1'>
@@ -183,12 +182,12 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
             <CardContent className='pt-4 pb-4'>
               <div>
                 <p className='text-muted-foreground mb-2 text-xs font-medium'>
-                  Change
+                  Thay đổi
                 </p>
                 <div className='space-y-2'>
                   <div className='flex items-center justify-between'>
                     <span className='text-muted-foreground text-xs'>
-                      Reviews
+                      Đánh giá
                     </span>
                     <div className='flex items-center gap-1'>
                       {fullAnalysis.totalChange > 0 ? (
@@ -213,7 +212,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
                   </div>
                   <div className='flex items-center justify-between'>
                     <span className='text-muted-foreground text-xs'>
-                      Rating
+                      Điểm đánh giá
                     </span>
                     <div className='flex items-center gap-1'>
                       {fullAnalysis.avgChange > 0 ? (
@@ -246,7 +245,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
 
         {}
         <div className='space-y-2'>
-          <h3 className='text-sm font-semibold'>Summary</h3>
+          <h3 className='text-sm font-semibold'>Tóm tắt</h3>
           <div
             className='prose prose-sm dark:prose-invert max-w-none text-sm'
             dangerouslySetInnerHTML={{
@@ -260,7 +259,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
         {}
         <div className='space-y-2'>
           <h3 className='text-sm font-semibold text-green-600'>
-            Key Strengths
+            Điểm mạnh chính
           </h3>
           <div
             className='prose prose-sm dark:prose-invert max-w-none text-sm [&_li]:mb-1 [&_ul]:list-disc [&_ul]:pl-4'
@@ -275,7 +274,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
         {}
         <div className='space-y-2'>
           <h3 className='text-sm font-semibold text-amber-600'>
-            Areas for Improvement
+            Các điểm cần cải thiện
           </h3>
           <div
             className='prose prose-sm dark:prose-invert max-w-none text-sm [&_li]:mb-1 [&_ul]:list-disc [&_ul]:pl-4'
@@ -290,7 +289,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
         {}
         <div className='space-y-2'>
           <h3 className='text-sm font-semibold text-blue-600'>
-            Notable Changes
+            Những thay đổi đáng chú ý
           </h3>
           <div
             className='prose prose-sm dark:prose-invert max-w-none text-sm'
@@ -305,7 +304,7 @@ export function AnalysisDetailView({ className }: AnalysisDetailViewProps) {
         {}
         <div className='space-y-2'>
           <h3 className='text-sm font-semibold text-purple-600'>
-            Recommendations
+            Khuyến nghị
           </h3>
           <div
             className='prose prose-sm dark:prose-invert max-w-none text-sm [&_li]:mb-1 [&_ul]:list-disc [&_ul]:pl-4'

@@ -198,7 +198,7 @@ export function BlogList({ data, isLoading, onDelete }: BlogListProps) {
                   </TableCell>
                   <TableCell>
                     <div className='text-sm text-nowrap'>
-                      {format(new Date(blog.createdAt), 'MMM dd, yyyy')}
+                      {format(new Date(blog.createdAt), 'dd/MM/yyyy')}
                     </div>
                   </TableCell>
                   <TableCell className='sticky right-0 shadow-[0_0_10px_rgba(0,0,0,0.05)]'>

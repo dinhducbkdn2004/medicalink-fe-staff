@@ -5,6 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { PermissionStatusBadge } from '../../components/permission-badge'
 import { DataTableRowActions } from './data-table-row-actions'
+import { format } from 'date-fns'
 
 export const groupColumns: ColumnDef<PermissionGroup>[] = [
   {
@@ -83,11 +84,7 @@ export const groupColumns: ColumnDef<PermissionGroup>[] = [
       const date = new Date(row.getValue('createdAt'))
       return (
         <span className='text-muted-foreground text-sm'>
-          {date.toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-          })}
+          {format(date, 'dd/MM/yyyy')}
         </span>
       )
     },

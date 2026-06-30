@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/form'
 import { Switch } from '@/components/ui/switch'
 import { ResourceActionSelector } from '../../components'
-import { useAssignUserPermission, usePermissions } from '../../hooks'
+import { useAssignUserPermission, usePermissions, useUserPermissions } from '../../hooks'
 
 const assignPermissionSchema = z.object({
   effect: z.enum(['ALLOW', 'DENY']).default('ALLOW'),
@@ -44,7 +44,15 @@ export function AssignUserPermissionDialog({
   const [selectedActions, setSelectedActions] = useState<string[]>([])
 
   const { data: allPermissions } = usePermissions()
+  const { data: userPermissions } = useUserPermissions(userId || '')
   const assignMutation = useAssignUserPermission()
+
+  const existingActions =
+    userPermissions
+      ?.filter(
+        (p) => p.resource === selectedResource && p.effect === 'ALLOW'
+      )
+      .map((p) => p.action) || []
 
   const form = useForm<AssignPermissionFormValues>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -121,6 +129,7 @@ export function AssignUserPermissionDialog({
                   onResourceChange={setSelectedResource}
                   onActionsChange={setSelectedActions}
                   disabled={assignMutation.isPending}
+                  existingActions={existingActions}
                 />
 
                 <FormField

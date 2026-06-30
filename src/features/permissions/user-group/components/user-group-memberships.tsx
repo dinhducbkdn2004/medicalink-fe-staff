@@ -9,6 +9,7 @@ import {
   Calendar,
   Shield,
 } from 'lucide-react'
+import { format } from 'date-fns'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -189,13 +190,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                               <div className='text-muted-foreground flex items-center gap-1.5 text-xs'>
                                 <Calendar className='h-3 w-3' />
                                 Tham gia từ {' '}
-                                {new Date(
-                                  membership.createdAt
-                                ).toLocaleDateString('en-US', {
-                                  year: 'numeric',
-                                  month: 'short',
-                                  day: 'numeric',
-                                })}
+                                {format(new Date(membership.createdAt), 'dd/MM/yyyy')}
                               </div>
                             </div>
                             <RoleGate roles={['SUPER_ADMIN']}>
@@ -264,14 +259,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                             </span>
                             <p className='mt-1 flex items-center gap-1.5 text-sm'>
                               <Calendar className='h-3.5 w-3.5' />
-                              {new Date(
-                                membership.createdAt
-                              ).toLocaleDateString('en-US', {
-                                weekday: 'long',
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                              })}
+                              {format(new Date(membership.createdAt), 'dd/MM/yyyy')}
                             </p>
                           </div>
                         </div>

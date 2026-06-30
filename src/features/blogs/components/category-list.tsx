@@ -98,7 +98,7 @@ export function CategoryList({
       accessorKey: 'createdAt',
       header: 'Ngày tạo',
       cell: ({ row }) =>
-        format(new Date(row.original.createdAt), 'MMM d, yyyy'),
+        format(new Date(row.original.createdAt), 'dd/MM/yyyy'),
     },
     {
       id: 'actions',

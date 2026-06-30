@@ -9,6 +9,7 @@ import {
   getDayLabel,
 } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { format } from 'date-fns'
 
 
 function formatTime(timeString: string): string {
@@ -105,11 +106,7 @@ export const officeHoursColumns: ColumnDef<OfficeHour>[] = [
       const date = new Date(row.original.createdAt)
       return (
         <div className='text-muted-foreground text-sm'>
-          {date.toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-          })}
+          {format(date, 'dd/MM/yyyy')}
         </div>
       )
     },

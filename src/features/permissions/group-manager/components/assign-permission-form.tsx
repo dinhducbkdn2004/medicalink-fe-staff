@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/form'
 import { Switch } from '@/components/ui/switch'
 import { ResourceActionSelector } from '../../components'
-import { useAssignGroupPermission, usePermissions } from '../../hooks'
+import { useAssignGroupPermission, usePermissions, useGroupPermissions } from '../../hooks'
 
 const assignPermissionSchema = z.object({
   effect: z.enum(['ALLOW', 'DENY']).default('ALLOW'),
@@ -36,7 +36,15 @@ export function AssignPermissionForm({
   const [selectedActions, setSelectedActions] = useState<string[]>([])
 
   const { data: allPermissions } = usePermissions()
+  const { data: groupPermissions } = useGroupPermissions(groupId)
   const assignMutation = useAssignGroupPermission()
+
+  const existingActions =
+    groupPermissions
+      ?.filter(
+        (p) => p.resource === selectedResource && p.effect === 'ALLOW'
+      )
+      .map((p) => p.action) || []
 
   const form = useForm<AssignPermissionFormValues>({
     resolver: zodResolver(assignPermissionSchema),
@@ -93,6 +101,7 @@ export function AssignPermissionForm({
           onResourceChange={setSelectedResource}
           onActionsChange={setSelectedActions}
           disabled={assignMutation.isPending}
+          existingActions={existingActions}
         />
 
         <FormField

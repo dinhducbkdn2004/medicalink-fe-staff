@@ -62,10 +62,10 @@ export function AnalysisList({ className }: AnalysisListProps) {
     <Card className={cn('flex flex-col', className)}>
       <CardHeader className='border-b pb-3'>
         <div className='flex items-center justify-between'>
-          <CardTitle className='text-base'>Analysis History</CardTitle>
+          <CardTitle className='text-base'>Lịch sử phân tích</CardTitle>
           <Button size='sm' onClick={handleCreateClick}>
             <Plus className='mr-1 h-4 w-4' />
-            New
+            Mới
           </Button>
         </div>
         <div className='pt-2'>
@@ -77,9 +77,9 @@ export function AnalysisList({ className }: AnalysisListProps) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='all'>All Periods</SelectItem>
-              <SelectItem value='mtd'>Month to Date</SelectItem>
-              <SelectItem value='ytd'>Year to Date</SelectItem>
+              <SelectItem value='all'>Tất cả thời gian</SelectItem>
+              <SelectItem value='mtd'>Từ đầu tháng đến nay</SelectItem>
+              <SelectItem value='ytd'>Từ đầu năm đến nay</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -106,13 +106,13 @@ export function AnalysisList({ className }: AnalysisListProps) {
             <div className='bg-muted mb-4 flex h-12 w-12 items-center justify-center rounded-full'>
               <BarChart3 className='text-muted-foreground h-6 w-6' />
             </div>
-            <h3 className='mb-2 text-sm font-medium'>No analyses available</h3>
+            <h3 className='mb-2 text-sm font-medium'>Không có bản phân tích nào</h3>
             <p className='text-muted-foreground mb-1 max-w-[200px] text-xs'>
-              Create your first AI-powered review analysis
+              Tạo bản phân tích đánh giá bằng AI đầu tiên của bạn
             </p>
             <p className='text-muted-foreground text-xs'>
-              Use the <span className='font-medium text-blue-600'>"New"</span>{' '}
-              button above to get started
+              Sử dụng nút <span className='font-medium text-blue-600'>"Mới"</span>{' '}
+              ở trên để bắt đầu
             </p>
           </div>
         ) : (
@@ -134,14 +134,14 @@ export function AnalysisList({ className }: AnalysisListProps) {
                       {analysis.dateRange.toUpperCase()}
                     </Badge>
                     <span className='text-muted-foreground text-xs'>
-                      {format(new Date(analysis.createdAt), 'MMM dd')}
+                      {format(new Date(analysis.createdAt), 'dd/MM/yyyy')}
                     </span>
                   </div>
                   <p className='line-clamp-3 text-xs leading-relaxed'>
                     {truncateSummary(analysis.summary)}
                   </p>
                   <p className='text-muted-foreground text-xs'>
-                    By {analysis.creatorName}
+                    Bởi {analysis.creatorName}
                   </p>
                 </div>
               </CardContent>

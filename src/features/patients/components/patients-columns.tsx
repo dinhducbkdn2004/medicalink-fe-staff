@@ -127,7 +127,7 @@ export const patientsColumns: ColumnDef<Patient>[] = [
       try {
         return (
           <span className='text-muted-foreground'>
-            {format(new Date(dateOfBirth), 'MMM dd, yyyy')}
+            {format(new Date(dateOfBirth), 'dd/MM/yyyy')}
           </span>
         )
       } catch {
@@ -179,7 +179,7 @@ export const patientsColumns: ColumnDef<Patient>[] = [
       try {
         return (
           <span className='text-muted-foreground'>
-            {format(new Date(createdAt), 'MMM dd, yyyy HH:mm')}
+            {format(new Date(createdAt), 'dd/MM/yyyy HH:mm')}
           </span>
         )
       } catch {

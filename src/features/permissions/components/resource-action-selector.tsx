@@ -21,6 +21,7 @@ type ResourceActionSelectorProps = {
   onResourceChange: (resource: string) => void
   onActionsChange: (actions: string[]) => void
   disabled?: boolean
+  existingActions?: string[]
 }
 
 export function ResourceActionSelector({
@@ -30,6 +31,7 @@ export function ResourceActionSelector({
   onResourceChange,
   onActionsChange,
   disabled = false,
+  existingActions = [],
 }: ResourceActionSelectorProps) {
   const actionsForResource = useMemo(() => {
     if (!selectedResource) return []
@@ -86,15 +88,20 @@ export function ResourceActionSelector({
               <div key={action} className='flex items-center space-x-2'>
                 <Checkbox
                   id={`action-${action}`}
-                  checked={selectedActions.includes(action)}
+                  checked={selectedActions.includes(action) || existingActions.includes(action)}
                   onCheckedChange={() => handleActionToggle(action)}
-                  disabled={disabled}
+                  disabled={disabled || existingActions.includes(action)}
                 />
                 <label
                   htmlFor={`action-${action}`}
-                  className='text-sm leading-none font-medium capitalize peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                  className='text-sm leading-none font-medium capitalize peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2'
                 >
                   {action}
+                  {existingActions.includes(action) && (
+                    <span className='text-muted-foreground text-xs font-normal normal-case'>
+                      (Đã có)
+                    </span>
+                  )}
                 </label>
               </div>
             ))}
