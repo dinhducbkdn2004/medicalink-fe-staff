@@ -3,6 +3,7 @@ import type { PaginationParams, PaginatedResponse } from './common.types'
 export enum StaffRole {
   SUPER_ADMIN = 'SUPER_ADMIN',
   ADMIN = 'ADMIN',
+  DOCTOR = 'DOCTOR',
 }
 
 export interface Staff {

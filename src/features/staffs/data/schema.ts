@@ -1,6 +1,10 @@
 import { z } from 'zod'
 
-const staffRoleSchema = z.union([z.literal('SUPER_ADMIN'), z.literal('ADMIN')])
+const staffRoleSchema = z.union([
+  z.literal('SUPER_ADMIN'),
+  z.literal('ADMIN'),
+  z.literal('DOCTOR'),
+])
 export type StaffRole = z.infer<typeof staffRoleSchema>
 
 const staffSchema = z.object({
