@@ -253,7 +253,7 @@ export function EventDetailsDialog({
 
               {}
               {appointment.notes && (
-                <div className='border-t pt-6'>
+                <div className='border-t'>
                   <div className='flex items-start gap-3'>
                     <FileText className='text-muted-foreground mt-1 size-5 shrink-0' />
                     <div className='flex-1 space-y-1'>
@@ -268,7 +268,7 @@ export function EventDetailsDialog({
               )}
 
               {aiData && (
-                <div className='border-t pt-6'>
+                <div className='border-t'>
                   <div className='flex items-start gap-3'>
                     <Brain className='text-muted-foreground mt-1 size-5 shrink-0' />
                     <div className='flex-1 space-y-2'>

@@ -88,7 +88,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
   if (isLoading) {
     return (
       <Card className='border-muted/40 shadow-sm'>
-        <CardHeader className='space-y-3 pb-4'>
+        <CardHeader>
           <div className='flex items-start justify-between'>
             <div className='space-y-2'>
               <Skeleton className='h-6 w-48' />
@@ -109,7 +109,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
   return (
     <>
       <Card className='border-muted/40 shadow-sm'>
-        <CardHeader className='space-y-3 pb-4'>
+        <CardHeader>
           <div className='flex items-start justify-between'>
             <div className='space-y-1'>
               <CardTitle className='flex items-center gap-2 text-lg'>

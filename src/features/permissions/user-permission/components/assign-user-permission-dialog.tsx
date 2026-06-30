@@ -20,6 +20,7 @@ import {
   FormLabel,
 } from '@/components/ui/form'
 import { Switch } from '@/components/ui/switch'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { ResourceActionSelector } from '../../components'
 import { useAssignUserPermission, usePermissions, useUserPermissions } from '../../hooks'
 
@@ -120,7 +121,7 @@ export function AssignUserPermissionDialog({
             onSubmit={form.handleSubmit(onSubmit)}
             className='flex max-h-full flex-col space-y-6 overflow-hidden'
           >
-            <div className='overflow-y-auto pr-2'>
+            <ScrollArea className='max-h-[60vh] pr-4'>
               <div className='space-y-6'>
                 <ResourceActionSelector
                   catalog={allPermissions ?? []}
@@ -158,7 +159,7 @@ export function AssignUserPermissionDialog({
                   )}
                 />
               </div>
-            </div>
+            </ScrollArea>
 
             <DialogFooter className='flex-shrink-0'>
               <Button

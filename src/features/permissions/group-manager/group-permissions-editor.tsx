@@ -135,7 +135,7 @@ export function GroupPermissionsEditor({ groupId }: GroupPermissionsEditorProps)
                 </div>
               </div>
             ) : (
-              <div className='min-h-0 flex-1 max-w-5xl overflow-y-auto pr-2'>
+              <div className='min-h-0 flex-1 max-w-5xl'>
                 <PermissionTree
                   catalog={allPermissions ?? []}
                   assigned={permissions || []}

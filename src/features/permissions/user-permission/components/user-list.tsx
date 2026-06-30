@@ -33,7 +33,7 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [roleFilter, setRoleFilter] = useState<string>('all')
 
-  
+
   const { data, isLoading } = useStaffs({
     page: 1,
     limit: 50,
@@ -70,7 +70,7 @@ export function UserList({ selectedUserId, onSelectUser }: UserListProps) {
 
   return (
     <Card className='border-muted/40 shadow-sm'>
-      <CardHeader className='space-y-3 pb-4'>
+      <CardHeader>
         <div className='flex items-center justify-between'>
           <CardTitle className='flex items-center gap-2 text-lg'>
             <div className='bg-primary/10 rounded-lg p-2'>

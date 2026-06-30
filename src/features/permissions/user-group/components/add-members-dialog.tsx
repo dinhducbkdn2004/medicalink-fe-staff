@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { useStaffs } from '@/features/staffs/data/use-staffs'
 import { useAddUserToGroup } from '../../hooks'
 
@@ -92,16 +93,16 @@ export function AddMembersDialog({
             />
           </div>
 
-          <div className='min-h-0 flex-1 overflow-y-auto rounded-lg border'>
-            {isLoading ? (
-              <div className='text-muted-foreground flex items-center justify-center py-8'>
-                Đang tải danh sách người dùng...
-              </div>
-            ) : users.length === 0 ? (
-              <div className='text-muted-foreground flex items-center justify-center py-8'>
-                Không tìm thấy người dùng nào
-              </div>
-            ) : (
+          {isLoading ? (
+            <div className='text-muted-foreground flex min-h-[200px] flex-1 items-center justify-center rounded-lg border py-8'>
+              Đang tải danh sách người dùng...
+            </div>
+          ) : users.length === 0 ? (
+            <div className='text-muted-foreground flex min-h-[200px] flex-1 items-center justify-center rounded-lg border py-8'>
+              Không tìm thấy người dùng nào
+            </div>
+          ) : (
+            <ScrollArea className='min-h-[200px] flex-1 rounded-lg border'>
               <div className='divide-y'>
                 {users.map((user) => (
                   <div
@@ -127,10 +128,9 @@ export function AddMembersDialog({
                   </div>
                 ))}
               </div>
-            )}
-          </div>
+            </ScrollArea>
+          )}
 
-          {}
           {selectedUserIds.length > 0 && (
             <div className='bg-muted/50 flex flex-shrink-0 items-center justify-between rounded-lg border p-3'>
               <span className='text-sm font-medium'>
