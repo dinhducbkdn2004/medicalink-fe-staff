@@ -36,6 +36,7 @@ export interface StaffQueryParams extends PaginationParams {
   isActive?: boolean
   createdFrom?: string
   createdTo?: string
+  excludeRole?: StaffRole
   sortBy?: 'createdAt' | 'fullName' | 'email'
   sortOrder?: 'asc' | 'desc'
 }

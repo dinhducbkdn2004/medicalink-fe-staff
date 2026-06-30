@@ -162,7 +162,7 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
   }
 
   return (
-    <Card className='border-muted/40 shadow-sm'>
+    <Card className='border-muted/40 shadow-sm flex min-h-0 flex-1 flex-col'>
       <CardHeader className='space-y-4 pb-4'>
         <div className='flex items-start justify-between'>
           <div className='space-y-1'>
@@ -260,9 +260,9 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
         )}
       </CardHeader>
 
-      <CardContent className='p-0'>
+      <CardContent className='flex flex-col flex-1 p-0 min-h-0'>
         {!permissions || permissions.length === 0 ? (
-          <div className='flex flex-col items-center justify-center gap-4 py-12'>
+          <div className='flex flex-col items-center justify-center gap-4 py-12 flex-1'>
             <div className='bg-muted rounded-full p-3'>
               <AlertCircle className='text-muted-foreground h-6 w-6' />
             </div>
@@ -274,7 +274,7 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
             </div>
           </div>
         ) : filteredPermissions.length === 0 ? (
-          <div className='flex flex-col items-center justify-center gap-4 py-12'>
+          <div className='flex flex-col items-center justify-center gap-4 py-12 flex-1'>
             <div className='bg-muted rounded-full p-3'>
               <Eye className='text-muted-foreground h-6 w-6' />
             </div>
@@ -286,7 +286,7 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
             </div>
           </div>
         ) : (
-          <ScrollArea className='max-h-[70vh] min-h-[200px]'>
+          <ScrollArea className='h-full flex-1 min-h-[200px]'>
             <div className='space-y-2 p-4'>
               {moduleTree.map((mod) => (
                 <Collapsible key={mod.moduleId} defaultOpen>

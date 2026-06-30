@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ChevronDown, ChevronRight, Check, X } from 'lucide-react'
+import { ChevronDown, ChevronRight } from 'lucide-react'
 import type { GroupPermission, Permission } from '@/api/types/permission.types'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'

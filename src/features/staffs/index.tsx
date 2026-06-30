@@ -44,6 +44,7 @@ export function Staffs() {
     sortOrder: (search.sortOrder as 'asc' | 'desc' | undefined) || undefined,
     createdFrom: (search.createdFrom as string | undefined) || undefined,
     createdTo: (search.createdTo as string | undefined) || undefined,
+    excludeRole: StaffRole.DOCTOR,
   }
 
   const { data, isLoading } = useStaffs(queryParams)

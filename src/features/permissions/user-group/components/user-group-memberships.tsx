@@ -108,7 +108,7 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
 
   return (
     <>
-      <Card className='border-muted/40 shadow-sm'>
+      <Card className='border-muted/40 shadow-sm flex min-h-0 flex-1 flex-col'>
         <CardHeader>
           <div className='flex items-start justify-between'>
             <div className='space-y-1'>
@@ -135,9 +135,9 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
           </div>
         </CardHeader>
 
-        <CardContent className='p-0'>
+        <CardContent className='flex flex-col flex-1 p-0 min-h-0'>
           {!memberships || memberships.length === 0 ? (
-            <div className='flex flex-col items-center justify-center gap-4 py-12'>
+            <div className='flex flex-col items-center justify-center gap-4 py-12 flex-1'>
               <div className='bg-muted rounded-full p-3'>
                 <AlertCircle className='text-muted-foreground h-6 w-6' />
               </div>
@@ -159,8 +159,8 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
               </RoleGate>
             </div>
           ) : (
-            <ScrollArea className='max-h-[70vh] min-h-[200px]'>
-              <div className='space-y-2 p-4'>
+            <ScrollArea className='h-full flex-1 min-h-[200px]'>
+              <div className='space-y-2 px-4 py-2'>
                 {memberships.map((membership) => (
                   <HoverCard key={membership.id} openDelay={300}>
                     <HoverCardTrigger asChild>
