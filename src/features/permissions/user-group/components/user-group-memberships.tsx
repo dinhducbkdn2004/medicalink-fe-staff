@@ -162,15 +162,15 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                         <div className='flex-1 space-y-2'>
                           <div className='flex flex-wrap items-center gap-2'>
                             <div className='bg-primary/10 rounded-md p-1.5'>
-                              <Shield className='text-primary h-3.5 w-3.5' />
+                              <Shield className='text-primary h-4 w-4' />
                             </div>
-                            <h4 className='font-semibold'>
+                            <h4 className='font-semibold text-base'>
                               {membership.groupName}
                             </h4>
-                            <Badge variant='secondary' className='text-xs'>
+                            <Badge variant='secondary' className='text-sm font-medium'>
                               Thành viên
                             </Badge>
-                            <Badge variant='outline' className='text-xs'>
+                            <Badge variant='outline' className='text-sm'>
                               {membership.tenantId}
                             </Badge>
                           </div>
@@ -179,8 +179,8 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                               {membership.groupDescription}
                             </p>
                           )}
-                          <div className='text-muted-foreground flex items-center gap-1.5 text-xs'>
-                            <Calendar className='h-3 w-3' />
+                          <div className='text-muted-foreground flex items-center gap-1.5 text-sm'>
+                            <Calendar className='h-3.5 w-3.5' />
                             Tham gia từ {' '}
                             {format(new Date(membership.createdAt), 'dd/MM/yyyy')}
                           </div>
