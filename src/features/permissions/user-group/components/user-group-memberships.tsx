@@ -23,13 +23,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Tooltip,
@@ -162,78 +156,17 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
             <ScrollArea className='h-full flex-1 min-h-[200px]'>
               <div className='space-y-2 px-4 py-2'>
                 {memberships.map((membership) => (
-                  <HoverCard key={membership.id} openDelay={300}>
-                    <HoverCardTrigger asChild>
-                      <Card className='border-muted/40 transition-all hover:shadow-md'>
-                        <CardContent className='flex flex-col gap-2 p-4'>
-                          <div className='flex items-start justify-between gap-2'>
-                            <div className='flex-1 space-y-2'>
-                              <div className='flex flex-wrap items-center gap-2'>
-                                <div className='bg-primary/10 rounded-md p-1.5'>
-                                  <Shield className='text-primary h-3.5 w-3.5' />
-                                </div>
-                                <h4 className='font-semibold'>
-                                  {membership.groupName}
-                                </h4>
-                                <Badge variant='secondary' className='text-xs'>
-                                  Thành viên
-                                </Badge>
-                                <Badge variant='outline' className='text-xs'>
-                                  {membership.tenantId}
-                                </Badge>
-                              </div>
-                              {membership.groupDescription && (
-                                <p className='text-muted-foreground line-clamp-1 text-sm'>
-                                  {membership.groupDescription}
-                                </p>
-                              )}
-                              <div className='text-muted-foreground flex items-center gap-1.5 text-xs'>
-                                <Calendar className='h-3 w-3' />
-                                Tham gia từ {' '}
-                                {format(new Date(membership.createdAt), 'dd/MM/yyyy')}
-                              </div>
-                            </div>
-                            <RoleGate roles={['SUPER_ADMIN']}>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant='ghost'
-                                    size='sm'
-                                    className='h-8 w-8 shrink-0 p-0'
-                                    onClick={() =>
-                                      setRemoveGroupId(membership.groupId)
-                                    }
-                                    disabled={removeMutation.isPending}
-                                  >
-                                    <X className='text-destructive h-4 w-4' />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Xóa khỏi nhóm</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </RoleGate>
-                          </div>
-                          <GroupInheritedPermissions
-                            groupId={membership.groupId}
-                            tenantId={membership.tenantId}
-                            catalog={permissionCatalog ?? []}
-                          />
-                        </CardContent>
-                      </Card>
-                    </HoverCardTrigger>
-                    <HoverCardContent side='left' className='w-80'>
-                      <div className='space-y-3'>
-                        <div>
-                          <div className='flex items-center gap-2'>
+                  <Card key={membership.id} className='border-muted/40 transition-all hover:shadow-md'>
+                    <CardContent className='flex flex-col gap-2 p-4'>
+                      <div className='flex items-start justify-between gap-2'>
+                        <div className='flex-1 space-y-2'>
+                          <div className='flex flex-wrap items-center gap-2'>
                             <div className='bg-primary/10 rounded-md p-1.5'>
-                              <Shield className='text-primary h-4 w-4' />
+                              <Shield className='text-primary h-3.5 w-3.5' />
                             </div>
                             <h4 className='font-semibold'>
                               {membership.groupName}
                             </h4>
-                          </div>
-                          <div className='mt-2 flex gap-2'>
                             <Badge variant='secondary' className='text-xs'>
                               Thành viên
                             </Badge>
@@ -241,31 +174,45 @@ export function UserGroupMemberships({ userId }: UserGroupMembershipsProps) {
                               {membership.tenantId}
                             </Badge>
                           </div>
-                        </div>
-                        <Separator />
-                        <div className='space-y-2'>
-                          <div>
-                            <span className='text-muted-foreground text-xs'>
-                              Mô tả
-                            </span>
-                            <p className='mt-1 text-sm'>
-                              {membership.groupDescription ||
-                                'Không có mô tả'}
+                          {membership.groupDescription && (
+                            <p className='text-muted-foreground line-clamp-1 text-sm'>
+                              {membership.groupDescription}
                             </p>
-                          </div>
-                          <div>
-                            <span className='text-muted-foreground text-xs'>
-                              Ngày tham gia
-                            </span>
-                            <p className='mt-1 flex items-center gap-1.5 text-sm'>
-                              <Calendar className='h-3.5 w-3.5' />
-                              {format(new Date(membership.createdAt), 'dd/MM/yyyy')}
-                            </p>
+                          )}
+                          <div className='text-muted-foreground flex items-center gap-1.5 text-xs'>
+                            <Calendar className='h-3 w-3' />
+                            Tham gia từ {' '}
+                            {format(new Date(membership.createdAt), 'dd/MM/yyyy')}
                           </div>
                         </div>
+                        <RoleGate roles={['SUPER_ADMIN']}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant='ghost'
+                                size='sm'
+                                className='h-8 w-8 shrink-0 p-0'
+                                onClick={() =>
+                                  setRemoveGroupId(membership.groupId)
+                                }
+                                disabled={removeMutation.isPending}
+                              >
+                                <X className='text-destructive h-4 w-4' />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Xóa khỏi nhóm</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </RoleGate>
                       </div>
-                    </HoverCardContent>
-                  </HoverCard>
+                      <GroupInheritedPermissions
+                        groupId={membership.groupId}
+                        tenantId={membership.tenantId}
+                        catalog={permissionCatalog ?? []}
+                      />
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
             </ScrollArea>
