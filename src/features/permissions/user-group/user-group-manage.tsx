@@ -1,6 +1,3 @@
-import { Link } from '@tanstack/react-router'
-import { ArrowLeft } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -29,14 +26,6 @@ export function UserGroupManage({ userId }: UserGroupManageProps) {
       </Header>
 
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        <div className='flex flex-wrap items-center gap-3'>
-          <Button variant='ghost' size='sm' asChild>
-            <Link to='/user-group'>
-              <ArrowLeft className='mr-2 h-4 w-4' />
-              Quay lại danh mục
-            </Link>
-          </Button>
-        </div>
 
         <div className='space-y-1'>
           <h2 className='text-2xl font-bold tracking-tight'>

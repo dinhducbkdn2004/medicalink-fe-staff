@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { format } from 'date-fns'
 import { UsersRound, UserPlus, X } from 'lucide-react'
 import {
   AlertDialog,
@@ -102,36 +103,32 @@ export function GroupMembersPanel({ groupId }: GroupMembersPanelProps) {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Tên</TableHead>
-                  <TableHead>Email</TableHead>
+                  <TableHead>Thành viên</TableHead>
                   <TableHead>Vai trò</TableHead>
                   <TableHead>Ngày tham gia</TableHead>
-                  <TableHead>Hành động</TableHead>
+                  <TableHead className='w-[100px] text-right'>Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {members.map((member) => (
                   <TableRow key={member.id}>
-                    <TableCell className='font-medium'>
-                      {member.fullName}
+                    <TableCell>
+                      <div className='flex flex-col gap-0.5'>
+                        <span className='font-medium text-base'>{member.fullName}</span>
+                        <span className='text-muted-foreground text-sm'>{member.email}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant='outline' className='font-normal'>{member.role}</Badge>
                     </TableCell>
                     <TableCell className='text-muted-foreground'>
-                      {member.email}
+                      {format(new Date(member.createdAt), 'dd/MM/yyyy')}
                     </TableCell>
-                    <TableCell>
-                      <Badge variant='outline'>{member.role}</Badge>
-                    </TableCell>
-                    <TableCell className='text-muted-foreground text-sm'>
-                      {new Date(member.createdAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </TableCell>
-                    <TableCell>
+                    <TableCell className='text-right'>
                       <Button
                         variant='ghost'
-                        size='sm'
+                        size='icon'
+                        className='h-8 w-8 text-muted-foreground hover:text-destructive'
                         onClick={() => setRemoveMemberId(member.id)}
                       >
                         <X className='h-4 w-4' />

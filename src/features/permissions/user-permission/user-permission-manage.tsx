@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Link } from '@tanstack/react-router'
-import { ArrowLeft, UserPlus } from 'lucide-react'
+import { UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Can } from '@/components/auth/permission-gate'
 import { RequirePermission } from '@/components/auth/require-permission'
@@ -34,14 +33,6 @@ export function UserPermissionManage({ userId }: UserPermissionManageProps) {
       </Header>
 
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        <div className='flex flex-wrap items-center gap-3'>
-          <Button variant='ghost' size='sm' asChild>
-            <Link to='/user-permission'>
-              <ArrowLeft className='mr-2 h-4 w-4' />
-              Quay lại danh mục
-            </Link>
-          </Button>
-        </div>
 
         <div className='flex flex-wrap items-end justify-between gap-4'>
           <div className='space-y-1'>

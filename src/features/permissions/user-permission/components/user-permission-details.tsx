@@ -333,19 +333,19 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
                                     : 'border-destructive/30 bg-destructive/5'
                                 )}
                               >
-                                <div className='flex gap-2'>
+                                <div className='flex flex-1 gap-2 min-w-0'>
                                   <span
                                     className={cn(
                                       'mt-1 inline-block h-2.5 w-2.5 shrink-0 rounded-full',
                                       allowed ? 'bg-green-600' : 'bg-destructive'
                                     )}
                                   />
-                                  <div>
-                                    <div className='text-sm font-medium capitalize'>
+                                  <div className='flex-1 min-w-0'>
+                                    <div className='text-sm font-medium capitalize truncate'>
                                       {p.action}
                                     </div>
                                     {p.description && (
-                                      <p className='text-muted-foreground text-xs'>
+                                      <p className='text-muted-foreground text-xs line-clamp-2'>
                                         {p.description}
                                       </p>
                                     )}
