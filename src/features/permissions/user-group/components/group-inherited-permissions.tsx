@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ChevronDown, ChevronRight, Check, X } from 'lucide-react'
 import type { GroupPermission, Permission } from '@/api/types/permission.types'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
@@ -68,44 +68,61 @@ export function GroupInheritedPermissions({
         </Badge>
       </button>
       {open && (
-        <div className='max-h-64 space-y-2 overflow-y-auto border-t px-2 py-2'>
+        <div className='max-h-[300px] space-y-3 overflow-y-auto border-t px-3 py-3'>
           {modules.map((mod) => (
-            <div key={mod.moduleId} className='rounded border bg-muted/10 px-2 py-1.5'>
-              <div className='text-muted-foreground mb-1 text-[10px] font-semibold tracking-wide uppercase'>
-                {mod.meta.title}
+            <div key={mod.moduleId} className='space-y-2'>
+              <div className='text-muted-foreground flex items-center gap-2 text-[11px] font-semibold tracking-wide uppercase'>
+                <span>{mod.meta.title}</span>
+                <div className='h-px flex-1 bg-border/50' />
               </div>
-              {mod.resources.map(({ resource, permissions }) => (
-                <div key={resource} className='mb-1.5 last:mb-0'>
-                  <div className='text-xs font-medium capitalize'>
-                    {formatResourceLabel(resource)}
-                  </div>
-                  <ul className='mt-1 space-y-0.5 pl-2'>
-                    {permissions.map((p) => {
-                      const row = assignedMap.get(`${p.resource}:${p.action}`)
-                      const allowed = row?.effect === 'ALLOW'
-                      return (
-                        <li
-                          key={p.id}
-                          className='flex items-center gap-2 text-[11px]'
-                        >
-                          <span
+              <div className='grid gap-2 sm:grid-cols-2'>
+                {mod.resources.map(({ resource, permissions }) => (
+                  <div
+                    key={resource}
+                    className='rounded-md border bg-muted/20 p-2.5 transition-colors hover:bg-muted/30'
+                  >
+                    <div className='mb-2 flex items-center gap-1.5 text-xs font-medium capitalize text-foreground'>
+                      <ChevronRight className='h-3 w-3 text-muted-foreground' />
+                      {formatResourceLabel(resource)}
+                    </div>
+                    <div className='flex flex-wrap gap-1.5 pl-4'>
+                      {permissions.map((p) => {
+                        const row = assignedMap.get(`${p.resource}:${p.action}`)
+                        const allowed = row?.effect === 'ALLOW'
+                        const hasConditions = row?.conditions && row.conditions.length > 0
+                        return (
+                          <Badge
+                            key={p.id}
+                            variant='outline'
                             className={cn(
-                              'inline-block h-2 w-2 shrink-0 rounded-full',
-                              allowed ? 'bg-green-600' : 'bg-destructive'
+                              'flex items-center gap-1.5 border px-1.5 py-0.5 text-[10px] font-normal transition-colors',
+                              allowed
+                                ? 'border-green-200/50 bg-green-50/50 text-green-700 dark:border-green-900/50 dark:bg-green-950/20 dark:text-green-400'
+                                : 'border-destructive/20 bg-destructive/5 text-destructive'
                             )}
-                          />
-                          <span className='capitalize'>{p.action}</span>
-                          {row?.conditions && row.conditions.length > 0 && (
-                            <Badge variant='outline' className='h-[18px] px-1 text-[9px]'>
-                              Có điều kiện
-                            </Badge>
-                          )}
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </div>
-              ))}
+                          >
+                            <span
+                              className={cn(
+                                'h-1.5 w-1.5 rounded-full',
+                                allowed ? 'bg-green-500' : 'bg-destructive'
+                              )}
+                            />
+                            <span className='capitalize leading-none'>{p.action}</span>
+                            {hasConditions && (
+                              <span
+                                className='ml-0.5 border-l pl-1.5 text-[9px] opacity-70'
+                                title='Có điều kiện'
+                              >
+                                {row.conditions.length} đ.k
+                              </span>
+                            )}
+                          </Badge>
+                        )
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>

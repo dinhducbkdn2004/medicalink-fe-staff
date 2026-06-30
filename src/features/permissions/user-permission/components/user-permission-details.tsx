@@ -327,35 +327,30 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
                               <div
                                 key={`${p.resource}-${p.action}`}
                                 className={cn(
-                                  'flex items-start justify-between gap-2 rounded-md border px-2 py-2',
+                                  'flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-md border px-3 py-2.5 transition-colors',
                                   allowed
-                                    ? 'border-green-200 bg-green-50/80 dark:border-green-900 dark:bg-green-950/20'
-                                    : 'border-destructive/30 bg-destructive/5'
+                                    ? 'border-green-200/60 bg-green-50/50 hover:bg-green-50/80 dark:border-green-900/50 dark:bg-green-950/10 dark:hover:bg-green-950/20'
+                                    : 'border-destructive/20 bg-destructive/5 hover:bg-destructive/10'
                                 )}
                               >
-                                <div className='flex flex-1 gap-2 min-w-0'>
+                                <div className='flex items-start sm:items-center gap-3 flex-1 min-w-0'>
                                   <span
                                     className={cn(
-                                      'mt-1 inline-block h-2.5 w-2.5 shrink-0 rounded-full',
-                                      allowed ? 'bg-green-600' : 'bg-destructive'
+                                      'mt-1 sm:mt-0 inline-block h-2 w-2 shrink-0 rounded-full',
+                                      allowed ? 'bg-green-500' : 'bg-destructive'
                                     )}
                                   />
-                                  <div className='flex-1 min-w-0'>
-                                    <div className='text-sm font-medium capitalize truncate'>
-                                      {p.action}
-                                    </div>
-                                    {p.description && (
-                                      <p className='text-muted-foreground text-xs line-clamp-2'>
-                                        {p.description}
-                                      </p>
-                                    )}
-                                    {snap?.conditions &&
-                                      snap.conditions.length > 0 && (
+                                  <div className='flex-1 min-w-0 flex flex-col justify-center'>
+                                    <div className='flex flex-wrap items-center gap-2'>
+                                      <span className='text-sm font-medium capitalize truncate'>
+                                        {p.action}
+                                      </span>
+                                      {snap?.conditions && snap.conditions.length > 0 && (
                                         <Tooltip>
                                           <TooltipTrigger asChild>
                                             <Badge
                                               variant='outline'
-                                              className='mt-1 cursor-help text-[10px]'
+                                              className='cursor-help text-[10px] h-5 px-1.5 bg-background/50'
                                             >
                                               {snap.conditions.length} điều kiện
                                             </Badge>
@@ -375,14 +370,20 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
                                           </TooltipContent>
                                         </Tooltip>
                                       )}
+                                    </div>
+                                    {p.description && (
+                                      <p className='text-muted-foreground text-xs line-clamp-1 mt-0.5'>
+                                        {p.description}
+                                      </p>
+                                    )}
                                   </div>
                                 </div>
-                                <div className='flex shrink-0 items-center gap-1'>
+                                <div className='flex shrink-0 items-center gap-2 sm:ml-4'>
                                   <Badge
                                     variant={allowed ? 'default' : 'destructive'}
                                     className={cn(
-                                      'text-[10px]',
-                                      allowed && 'bg-green-600'
+                                      'text-[10px] h-5',
+                                      allowed && 'bg-green-600 hover:bg-green-700 text-white'
                                     )}
                                   >
                                     {snap?.effect}
@@ -392,17 +393,17 @@ export function UserPermissionDetails({ userId }: UserPermissionDetailsProps) {
                                       <TooltipTrigger asChild>
                                         <Button
                                           variant='ghost'
-                                          size='sm'
-                                          className='h-8 w-8 p-0'
+                                          size='icon'
+                                          className='h-7 w-7 text-muted-foreground hover:text-destructive'
                                           onClick={() =>
                                             handleRevoke(p.resource, p.action)
                                           }
                                           disabled={revokeMutation.isPending}
                                         >
-                                          <XCircle className='text-destructive h-4 w-4' />
+                                          <XCircle className='h-4 w-4' />
                                         </Button>
                                       </TooltipTrigger>
-                                        <TooltipContent>Thu hồi quyền</TooltipContent>
+                                      <TooltipContent>Thu hồi quyền</TooltipContent>
                                     </Tooltip>
                                   </RoleGate>
                                 </div>
