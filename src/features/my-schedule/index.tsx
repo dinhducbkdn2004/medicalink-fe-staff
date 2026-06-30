@@ -114,7 +114,7 @@ function MyScheduleContent() {
             </Button>
             <div className='flex items-center font-medium'>
               <CalendarIcon className='mr-2 h-4 w-4 text-muted-foreground' />
-              {format(currentWeekStart, 'MMM dd, yyyy')} - {format(currentWeekEnd, 'MMM dd, yyyy')}
+              {format(currentWeekStart, 'dd/MM/yyyy')} - {format(currentWeekEnd, 'dd/MM/yyyy')}
             </div>
             <Button variant='outline' size='icon' onClick={handleNextWeek}>
               <ChevronRight className='h-4 w-4' />

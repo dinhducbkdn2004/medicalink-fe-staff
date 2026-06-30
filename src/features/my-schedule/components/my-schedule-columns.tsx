@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { getDayLabel } from '@/features/office-hours/data/schema'
 import { format } from 'date-fns'
+import { vi } from 'date-fns/locale'
 
 export type ComputedScheduleItem = {
   id: string
@@ -44,8 +45,8 @@ export const myScheduleColumns: ColumnDef<ComputedScheduleItem>[] = [
       return (
         <div className='flex items-center gap-2'>
           <Calendar className='text-muted-foreground size-4' />
-          <span className='font-medium'>
-            {format(item.date, 'EEEE, MMM dd')}
+          <span className='font-medium capitalize'>
+            {format(item.date, 'EEEE, dd/MM', { locale: vi })}
           </span>
         </div>
       )

@@ -54,7 +54,7 @@ export function normalizeAppointment(appointment: IAppointment): IAppointment {
 }
 
 export function rangeText(view: TCalendarView, date: Date) {
-  const formatString = 'MMM d, yyyy'
+  const formatString = 'dd/MM/yyyy'
   let start: Date
   let end: Date
 
